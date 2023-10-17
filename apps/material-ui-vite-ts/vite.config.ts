@@ -3,20 +3,17 @@ import { defineConfig, mergeConfig } from "vite";
 const sharedConfig = getConfig({
   type: "react",
   dirname: __dirname,
+  micro: true,
+  moduleName: "material-ui-vite-ts",
 });
 
 // https://vitejs.dev/config/
 export default defineConfig(
   mergeConfig(sharedConfig, {
     server: {
-      port: 5200,
-      proxy: {
-        "/api": {
-          target: "http://120.79.8.215:5200",
-          secure: false,
-        },
-        "/material-ui-vite-ts": "http://localhost:8001/",
-      },
+      host: true,
+      port: 8001,
+      hmr: { port: 8081 },
     },
   })
 );
