@@ -94,16 +94,19 @@ const routes: TLayoutRoutes = [
       ...defineRoutes,
       {
         menu: true,
-        title: "demo-react-1",
-        path: "demo-react-1",
+        title: "material-ui-vite-ts",
+        path: "material-ui-vite-ts",
         element: (
-          <MicroApp
-            name="demo-react-1"
-            sandbox={{
-              experimentalStyleIsolation: true,
-            }}
-            props={{}}
-          />
+          <div>
+            2222
+            <MicroApp
+              name="material-ui-vite-ts"
+              sandbox={{
+                experimentalStyleIsolation: true,
+              }}
+              props={{}}
+            />
+          </div>
         ),
       },
     ],

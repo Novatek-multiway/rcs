@@ -1,8 +1,8 @@
 import { FrameworkConfiguration, initGlobalState, loadMicroApp } from "qiankun";
-import React, { lazy, memo, useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useLocation } from "react-router-dom";
 
-const Lazy = lazy(() => new Promise(() => null));
+// const Lazy = lazy(() => new Promise(() => null));
 
 const microAppEntryCache: any = {};
 const actions = initGlobalState({ hash: "" });
@@ -25,14 +25,14 @@ interface MicroAppProps extends FrameworkConfiguration {
 let prevAppUnmountPromise: Promise<any> = Promise.resolve();
 
 // https://qiankun.umijs.org/zh/api#loadmicroappapp-configuration
-const MicroApp = memo(function MicroApp({
+const MicroApp = ({
   name,
   entry,
   sandbox = true,
   props = {},
-}: MicroAppProps) {
+}: MicroAppProps) => {
   const location = useLocation();
-  const [ready, setReady] = useState(false);
+  const [, setReady] = useState(false);
   const microApp = useRef<any>();
   const container = useRef<any>();
 
@@ -90,6 +90,7 @@ const MicroApp = memo(function MicroApp({
         location,
       },
     });
+    console.log(container.current);
   }, [location, Object.values(props)]);
 
   useEffect(() => {
@@ -99,10 +100,11 @@ const MicroApp = memo(function MicroApp({
   return (
     <>
       <div className="micro-wrapper" ref={container} />
-      {!ready && <Lazy />}
+      121
+      {/* {!ready && <Lazy />} */}
     </>
   );
-});
+};
 
 export default function MicroAppWrapper(props: MicroAppProps) {
   return <MicroApp key={props.name} entry={`/${props.name}/`} {...props} />;
