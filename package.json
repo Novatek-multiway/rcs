@@ -1,0 +1,38 @@
+{
+  "private": true,
+  "scripts": {
+    "bootstrap": "pnpm install",
+    "build": "turbo run build",
+    "dev": "turbo run dev",
+    "lint": "turbo run lint",
+    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
+    "prepare": "husky install",
+    "commit": "cz",
+    "clean": "turbo run clean",
+    "reinstall": "pnpm run clean && rm -rf node_modules && rm -rf pnpm-lock.yaml && pnpm run bootstrap"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^17.7.1",
+    "@commitlint/config-conventional": "^17.7.0",
+    "commitizen": "^4.3.0",
+    "cz-conventional-changelog": "^3.3.0",
+    "eslint": "^7.32.0",
+    "eslint-config-custom": "workspace:*",
+    "husky": "^8.0.0",
+    "prettier": "^2.5.1",
+    "turbo": "latest"
+  },
+  "packageManager": "pnpm@8.6.4",
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
+  },
+  "resolutions": {
+    "@mui/styled-engine": "npm:@mui/styled-engine-sc@latest"
+  },
+  "engines": {
+    "node": ">=16.20.0",
+    "pnpm": ">=8.6.4"
+  }
+}

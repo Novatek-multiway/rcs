@@ -1,0 +1,22 @@
+{
+  "name": "theme",
+  "version": "0.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "dependencies": {
+    "@mui/material": "^5.14.8",
+    "@mui/styled-engine-sc": "^5.14.8",
+    "@typescript-eslint/eslint-plugin": "^5.30.7",
+    "@typescript-eslint/parser": "^5.30.7",
+    "eslint-config-prettier": "^8.5.0"
+  },
+  "devDependencies": {
+    "eslint": "^7.32.0",
+    "eslint-config-custom": "workspace:*",
+    "tsconfig": "workspace:*",
+    "typescript": "^4.9.4"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}
