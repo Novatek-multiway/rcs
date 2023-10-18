@@ -1,20 +1,18 @@
-import 'normalize.css'
-import './style.css'
+import "normalize.css";
+import "./style.css";
 
-import { HashRouter } from 'react-router-dom'
+import { RouterProvider } from "react-router-dom";
 
-import SignalR from './components/signalR'
-import RouterConfig from './router'
+import SignalR from "./components/signalR";
+import RouterConfig from "./router";
 
 function App() {
   return (
     <>
       <SignalR></SignalR>
-      <HashRouter>
-        <RouterConfig />
-      </HashRouter>
+      <RouterProvider router={RouterConfig()}></RouterProvider>
     </>
-  )
+  );
 }
 
-export default App
+export default App;
