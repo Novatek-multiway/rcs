@@ -1,9 +1,6 @@
 import { FrameworkConfiguration, initGlobalState, loadMicroApp } from "qiankun";
 import React, { useEffect, useRef, useState } from "react";
 import { useLocation } from "react-router-dom";
-
-// const Lazy = lazy(() => new Promise(() => null));
-
 const microAppEntryCache: any = {};
 const actions = initGlobalState({ hash: "" });
 
@@ -100,8 +97,6 @@ const MicroApp = ({
   return (
     <>
       <div className="micro-wrapper" ref={container} />
-      121
-      {/* {!ready && <Lazy />} */}
     </>
   );
 };

@@ -1,12 +1,6 @@
-import { ComponentType, type FC, lazy, Suspense } from "react";
-import { Navigate, useRoutes } from "react-router-dom";
-import {
-  type ILayoutData,
-  Layout,
-  NotFound,
-  PageLoading,
-  type TLayoutRoutes,
-} from "ui";
+import { ComponentType, lazy, Suspense } from "react";
+import { createBrowserRouter, Navigate } from "react-router-dom";
+import { type ILayoutData, Layout, PageLoading, type TLayoutRoutes } from "ui";
 
 import MicroApp from "@/components/microApp";
 /**
@@ -77,7 +71,26 @@ const generatePageRoutes = () => {
 
   return routes;
 };
-const defineRoutes = [...generatePageRoutes()];
+const defineRoutes = [
+  ...generatePageRoutes(),
+  {
+    menu: true,
+    title: "material-ui-vite-ts",
+    path: "material-ui-vite-ts",
+    name: "子应用1",
+    element: (
+      <div>
+        <MicroApp
+          name="material-ui-vite-ts"
+          sandbox={{
+            experimentalStyleIsolation: true,
+          }}
+          props={{}}
+        />
+      </div>
+    ),
+  },
+];
 
 const routes: TLayoutRoutes = [
   {
@@ -90,38 +103,12 @@ const routes: TLayoutRoutes = [
     element: <Layout routes={defineRoutes} />,
     id: "layout",
     name: "布局",
-    children: [
-      ...defineRoutes,
-      {
-        menu: true,
-        title: "material-ui-vite-ts",
-        path: "material-ui-vite-ts",
-        element: (
-          <div>
-            2222
-            <MicroApp
-              name="material-ui-vite-ts"
-              sandbox={{
-                experimentalStyleIsolation: true,
-              }}
-              props={{}}
-            />
-          </div>
-        ),
-      },
-    ],
-  },
-
-  {
-    path: "*",
-    element: <NotFound />,
-    name: "404",
-    id: "notfound",
+    children: [...defineRoutes],
   },
 ];
 
-const RouterConfig: FC = () => {
-  return useRoutes(routes);
+const RouterConfig = () => {
+  return createBrowserRouter(routes);
 };
 
 export default RouterConfig;
