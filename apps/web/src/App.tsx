@@ -3,15 +3,12 @@ import "./style.css";
 
 import { RouterProvider } from "react-router-dom";
 
-import SignalR from "./components/signalR";
 import RouterConfig from "./router";
 
 function App() {
   return (
     <>
-      <SignalR></SignalR>
-      13123133
-      <RouterProvider router={RouterConfig()}></RouterProvider>
+      <RouterProvider router={RouterConfig}></RouterProvider>
     </>
   );
 }
