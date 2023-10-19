@@ -75,13 +75,13 @@ const defineRoutes = [
   ...generatePageRoutes(),
   {
     menu: true,
-    title: "material-ui-vite-ts",
-    path: "material-ui-vite-ts",
+    title: "system",
+    path: "system",
     name: "子应用1",
     element: (
       <div>
         <MicroApp
-          name="material-ui-vite-ts"
+          name="system"
           sandbox={{
             experimentalStyleIsolation: true,
           }}

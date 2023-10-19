@@ -4,7 +4,7 @@ const sharedConfig = getConfig({
   type: "react",
   dirname: __dirname,
   micro: true,
-  moduleName: "material-ui-vite-ts",
+  moduleName: "system",
 });
 
 // https://vitejs.dev/config/

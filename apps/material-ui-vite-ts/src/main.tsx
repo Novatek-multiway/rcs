@@ -5,7 +5,7 @@ import { CssBaseline } from "@mui/material";
 import theme from "./theme";
 import App from "./App";
 import { renderWithQiankun } from "vite-plugin-qiankun/dist/helper";
-const appName = "material-ui-vite-ts";
+const appName = "system";
 
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import routerList from "@/router/router";
