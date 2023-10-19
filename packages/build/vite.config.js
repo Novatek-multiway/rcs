@@ -46,14 +46,17 @@ const getConfig = ({
       },
     },
   };
-
+  console.log("micro", micro);
   if (!micro) {
     return sharedViteConfig;
   }
-
   const microViteConfig = mergeConfig(sharedViteConfig, {
     base: `/${moduleName}`,
-    plugins: [qiankun(moduleName, {})],
+    plugins: [
+      qiankun("react18", {
+        useDevMode: true,
+      }),
+    ],
     build: {
       rollupOptions: {
         external: ["@/hmr.fix"],

@@ -48,7 +48,6 @@
     "dayjs": "^1.11.9",
     "hooks": "workspace:*",
     "mui-daterange-picker": "^1.0.5",
-    "mui-form": "workspace:*",
     "react": "^18.2.0",
     "react-router-dom": "^6.15.0",
     "store": "workspace:*",

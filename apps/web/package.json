@@ -30,7 +30,8 @@
     "three": "^0.156.1",
     "ui": "workspace:*",
     "use-immer": "^0.9.0",
-    "utils": "workspace:*"
+    "utils": "workspace:*",
+    "vite-plugin-qiankun": "^1.0.15"
   },
   "devDependencies": {
     "@packages/build": "workspace:^",
