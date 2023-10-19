@@ -1,5 +1,5 @@
 // @ts-nocheck
-import RefreshRuntime from "/material-ui-vite-ts/@react-refresh";
+import RefreshRuntime from "/system/@react-refresh";
 RefreshRuntime.injectIntoGlobalHook(window);
 window.$RefreshReg$ = () => {};
 window.$RefreshSig$ = () => (type) => type;

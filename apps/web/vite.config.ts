@@ -15,7 +15,7 @@ export default defineConfig(
           target: "http://120.79.8.215:5200",
           secure: false,
         },
-        "/material-ui-vite-ts": "http://localhost:8001/",
+        "/system": "http://localhost:8001",
       },
     },
   })
