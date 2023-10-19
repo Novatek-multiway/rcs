@@ -12,6 +12,7 @@ const getConfig = ({
   micro = false,
   moduleName = "",
   dirname = process.cwd(),
+  env,
 } = {}) => {
   const serverConfig = {
     strictPort: true,
@@ -24,6 +25,10 @@ const getConfig = ({
   }[type];
 
   const sharedViteConfig = {
+    base: env.VITE_APP_HOST,
+    define: {
+      qiankunMainAppHost: `'${env.VITE_FEDERATION_HOST}'`,
+    },
     root: dirname,
     server: serverConfig,
     preview: serverConfig,
@@ -46,7 +51,6 @@ const getConfig = ({
       },
     },
   };
-  console.log("micro", micro);
   if (!micro) {
     return sharedViteConfig;
   }
