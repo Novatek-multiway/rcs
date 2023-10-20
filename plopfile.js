@@ -76,7 +76,10 @@ module.exports = function main(plop) {
           destination: `./{{outDir}}/{{dashCase ${gen}Name}}`,
           base: `plop/${gen}`,
           data,
-          abortOnFail: true
+          abortOnFail: true,
+          globOptions: {
+            dot: true
+          }
         })
 
         return actions

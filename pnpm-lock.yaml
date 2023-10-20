@@ -66,6 +66,58 @@ importers:
       react-router-dom:
         specifier: ^6.17.0
         version: 6.17.0(react-dom@18.2.0)(react@18.2.0)
+      theme:
+        specifier: workspace:*
+        version: link:../../packages/theme
+      vite-plugin-qiankun:
+        specifier: ^1.0.15
+        version: 1.0.15(typescript@5.2.2)(vite@4.5.0)
+    devDependencies:
+      '@packages/build':
+        specifier: workspace:^
+        version: link:../../packages/build
+      '@types/react':
+        specifier: latest
+        version: 18.2.30
+      '@types/react-dom':
+        specifier: latest
+        version: 18.2.14
+      eslint-config-custom:
+        specifier: workspace:*
+        version: link:../../packages/eslint-config-custom
+      typescript:
+        specifier: latest
+        version: 5.2.2
+      vite:
+        specifier: ^4.4.5
+        version: 4.5.0(@types/node@20.5.1)
+
+  apps/my-app:
+    dependencies:
+      '@emotion/react':
+        specifier: latest
+        version: 11.11.1(@types/react@18.2.30)(react@18.2.0)
+      '@emotion/styled':
+        specifier: latest
+        version: 11.11.0(@emotion/react@11.11.1)(@types/react@18.2.30)(react@18.2.0)
+      '@mui/icons-material':
+        specifier: latest
+        version: 5.14.14(@mui/material@5.14.14)(@types/react@18.2.30)(react@18.2.0)
+      '@mui/material':
+        specifier: latest
+        version: 5.14.14(@emotion/react@11.11.1)(@emotion/styled@11.11.0)(@types/react@18.2.30)(react-dom@18.2.0)(react@18.2.0)(styled-components@6.1.0)
+      react:
+        specifier: latest
+        version: 18.2.0
+      react-dom:
+        specifier: latest
+        version: 18.2.0(react@18.2.0)
+      react-router-dom:
+        specifier: ^6.17.0
+        version: 6.17.0(react-dom@18.2.0)(react@18.2.0)
+      theme:
+        specifier: workspace:*
+        version: link:../../packages/theme
       vite-plugin-qiankun:
         specifier: ^1.0.15
         version: 1.0.15(typescript@5.2.2)(vite@4.5.0)

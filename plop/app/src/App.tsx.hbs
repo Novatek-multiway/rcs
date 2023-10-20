@@ -1,84 +1,25 @@
-import MenuIcon from '@mui/icons-material/Menu'
-import { AppBar, Box, BoxProps, Button, ButtonProps, Container, IconButton, Toolbar, Typography } from '@mui/material'
+import { ThemeProvider } from '@emotion/react'
+import { CssBaseline } from '@mui/material'
+import * as React from 'react'
+import { BrowserRouter, Route, Routes } from 'react-router-dom'
+import { theme } from 'theme'
+import { qiankunWindow } from 'vite-plugin-qiankun/dist/helper'
+
+import routerList from '@/router/router'
 
 export default function App() {
-  const boxSx: BoxProps['sx'] = { my: 4 }
-  const buttonSx: ButtonProps['sx'] = { mx: 1 }
   return (
-    <Container maxWidth={false}>
-      <Box>
-        <AppBar position="static">
-          <Toolbar>
-            <IconButton size="large" edge="start" color="inherit" aria-label="menu">
-              <MenuIcon />
-            </IconButton>
-            <Typography variant="h6" component="div">
-              Material UI - Vite.js in TypeScript Template
-            </Typography>
-          </Toolbar>
-        </AppBar>
-      </Box>
-      <Box sx={boxSx}>
-        <Button variant="contained" color="primary" sx={buttonSx}>
-          primary
-        </Button>
-        <Button variant="contained" color="secondary" sx={buttonSx}>
-          secondary
-        </Button>
-        <Button variant="contained" color="info" sx={buttonSx}>
-          info
-        </Button>
-        <Button variant="contained" color="success" sx={buttonSx}>
-          success
-        </Button>
-        <Button variant="contained" color="warning" sx={buttonSx}>
-          warning
-        </Button>
-        <Button variant="contained" color="error" sx={buttonSx}>
-          error
-        </Button>
-      </Box>
-
-      <Box sx={boxSx}>
-        <Button variant="outlined" color="primary" sx={buttonSx}>
-          primary
-        </Button>
-        <Button variant="outlined" color="secondary" sx={buttonSx}>
-          secondary
-        </Button>
-        <Button variant="outlined" color="info" sx={buttonSx}>
-          info
-        </Button>
-        <Button variant="outlined" color="success" sx={buttonSx}>
-          success
-        </Button>
-        <Button variant="outlined" color="warning" sx={buttonSx}>
-          warning
-        </Button>
-        <Button variant="outlined" color="error" sx={buttonSx}>
-          error
-        </Button>
-      </Box>
-      <Box sx={boxSx}>
-        <Button variant="text" color="primary" sx={buttonSx}>
-          primary
-        </Button>
-        <Button variant="text" color="secondary" sx={buttonSx}>
-          secondary
-        </Button>
-        <Button variant="text" color="info" sx={buttonSx}>
-          info
-        </Button>
-        <Button variant="text" color="success" sx={buttonSx}>
-          success
-        </Button>
-        <Button variant="text" color="warning" sx={buttonSx}>
-          warning
-        </Button>
-        <Button variant="text" color="error" sx={buttonSx}>
-          error
-        </Button>
-      </Box>
-    </Container>
+    <React.StrictMode>
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+        <BrowserRouter basename={qiankunWindow.__POWERED_BY_QIANKUN__ ? `/${import.meta.env.VITE_APP_NAME}` : '/'}>
+          <Routes>
+            {routerList.map((item) => (
+              <Route key={item.path} path={item.path} element={item.element}></Route>
+            ))}
+          </Routes>
+        </BrowserRouter>
+      </ThemeProvider>
+    </React.StrictMode>
   )
 }

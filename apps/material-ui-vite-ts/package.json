@@ -17,6 +17,7 @@
     "react": "latest",
     "react-dom": "latest",
     "react-router-dom": "^6.17.0",
+    "theme": "workspace:*",
     "vite-plugin-qiankun": "^1.0.15"
   },
   "devDependencies": {

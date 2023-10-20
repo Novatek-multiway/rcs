@@ -8,7 +8,7 @@ export default defineConfig(({ mode }) => {
     type: 'react',
     dirname: __dirname,
     micro: true,
-    moduleName: 'system',
+    moduleName: env.VITE_APP_NAME,
     env
   })
 
@@ -17,7 +17,7 @@ export default defineConfig(({ mode }) => {
       target: 'esnext',
       rollupOptions: {
         output: {
-          name: 'system'
+          name: env.VITE_APP_NAME
         }
       }
     }

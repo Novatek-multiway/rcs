@@ -4,12 +4,14 @@ import { renderWithQiankun } from 'vite-plugin-qiankun/dist/helper'
 
 import App from './App'
 
-export const appName = 'system'
+const appName = import.meta.env.VITE_APP_NAME
 
 let root: ReactDOM.Root | null = null
 
 export default function start(props: any = {}) {
   const { container } = props
+  console.log("🚀 ~ file: main.tsx ~ line 10 ~ root", root)
+
   root = ReactDOM.createRoot(
     container ? container.querySelector(`#${appName}-root`) : document.getElementById(`${appName}-root`)!
   )
