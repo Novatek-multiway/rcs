@@ -1,4 +1,4 @@
-import { ReactNode } from "react";
+import { ReactNode } from 'react'
 /**
  * 预留组件，为后续统一处理路由模块准备
  *
@@ -6,17 +6,15 @@ import { ReactNode } from "react";
  * @param {ReactNode} children - The children elements to render.
  * @returns {ReactNode} - The rendered children elements.
  */
+/* eslint-disable */
 function Keeper({ name, children }: { name: string; children: ReactNode }) {
-  return <>{children}</>;
+  return <>{children}</>
 }
 
-export default function KeeperHoc(
-  name: string,
-  Component: ReactNode
-): ReactNode {
+export default function KeeperHoc(name: string, Component: ReactNode): ReactNode {
   return (
     <Keeper key={name} name={name}>
       {Component}
     </Keeper>
-  );
+  )
 }

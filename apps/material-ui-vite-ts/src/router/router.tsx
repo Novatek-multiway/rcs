@@ -1,17 +1,18 @@
-import KeeperHoc from "./keeperHoc";
-import Databoard from "@/pages/dashboard";
-import NotFound from "@/pages/noFound";
-import DataTable from "@/pages/dataTable";
+import Dashboard from '@/pages/dashboard'
+import DataTable from '@/pages/dataTable'
+import NotFound from '@/pages/noFound'
+
+import KeeperHoc from './keeperHoc'
 const router = [
   {
-    path: "/",
-    element: KeeperHoc("/", <Databoard />),
-    errorElement: <NotFound />,
+    path: '/',
+    element: KeeperHoc('/', <Dashboard />),
+    errorElement: <NotFound />
   },
   {
-    path: "/data-table",
-    element: KeeperHoc("/data-table", <DataTable />),
-  },
-];
+    path: '/data-table',
+    element: KeeperHoc('/data-table', <DataTable />)
+  }
+]
 
-export default router;
+export default router

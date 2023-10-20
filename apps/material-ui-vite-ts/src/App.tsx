@@ -1,33 +1,28 @@
-import * as React from "react";
-import Container from "@mui/material/Container";
-import Typography from "@mui/material/Typography";
-import Box from "@mui/material/Box";
-import Link from "@mui/material/Link";
-import ProTip from "./ProTip";
+import { ThemeProvider } from '@emotion/react'
+import { CssBaseline } from '@mui/material'
+import * as React from 'react'
+import { BrowserRouter, Route, Routes } from 'react-router-dom'
+import { qiankunWindow } from 'vite-plugin-qiankun/dist/helper'
 
-function Copyright() {
-  return (
-    <Typography variant="body2" color="text.secondary" align="center">
-      {"Copyright © "}
-      <Link color="inherit" href="https://mui.com/">
-        Your Website
-      </Link>{" "}
-      {new Date().getFullYear()}.
-    </Typography>
-  );
-}
+import routerList from '@/router/router'
 
-export default function App(props: any) {
+import { appName } from './main'
+import theme from './theme'
+
+export default function App() {
   return (
-    <Container maxWidth="sm">
-      <Box sx={{ my: 4 }}>
-        <Typography variant="h4" component="h1" gutterBottom>
-          Material UI Vite.js example in TypeScript
-        </Typography>
-        {props.children}
-        <ProTip />
-        <Copyright />
-      </Box>
-    </Container>
-  );
+    <React.StrictMode>
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+        <BrowserRouter basename={qiankunWindow.__POWERED_BY_QIANKUN__ ? `/${appName}` : '/'}>
+          <Routes>
+            {routerList.map((item) => (
+              <Route key={item.path} path={item.path} element={item.element}></Route>
+            ))}
+            <Route path="*" element={routerList[0].errorElement} />
+          </Routes>
+        </BrowserRouter>
+      </ThemeProvider>
+    </React.StrictMode>
+  )
 }
