@@ -1,17 +1,24 @@
-import { registerMicroApps, start } from "qiankun";
+import { registerMicroApps, start } from 'qiankun'
+
+const getActiveRule = (path: string) => (location: Location) => location.pathname.startsWith(path)
 
 function qiankunInit() {
   registerMicroApps(
     [
       {
-        name: "system",
-        entry: "http://localhost:8001",
-        container: "#app",
-        activeRule: (location) => {
-          return location.pathname.startsWith("/system");
-        },
-        props: {},
+        name: 'micro-dashboard',
+        entry: 'http://localhost:8001',
+        container: '#app',
+        activeRule: getActiveRule('/micro-dashboard'),
+        props: {}
       },
+      {
+        name: 'micro-data-management',
+        entry: 'http://localhost:8002',
+        container: '#app',
+        activeRule: getActiveRule('/micro-data-management'),
+        props: {}
+      }
     ],
     {
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -24,11 +31,11 @@ function qiankunInit() {
       // @ts-ignore
       afterMount: () => {
         // 子应用挂载后隐藏loading
-      },
+      }
     }
-  );
+  )
 
-  start();
+  start()
 }
 
-export default qiankunInit;
+export default qiankunInit

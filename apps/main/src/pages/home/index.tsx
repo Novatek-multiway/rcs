@@ -1,5 +1,4 @@
-import React from "react";
-import { Card, Layout } from "ui";
+import { Layout } from 'ui'
 
 export default function Home() {
   // useEffect(() => {
@@ -9,8 +8,8 @@ export default function Home() {
   // }, []);
   return (
     <Layout>
-      <Card>主应用</Card>
+      {/* <Card>主应用</Card> */}
       <div id="app"></div>
     </Layout>
-  );
+  )
 }
