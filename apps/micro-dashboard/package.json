@@ -1,6 +1,6 @@
 {
-  "name": "{{appName}}",
-  "description": "{{description}}",
+  "name": "micro-dashboard",
+  "description": "RCS调度监控系统-监控页面",
   "private": true,
   "version": "1.0.0",
   "type": "module",

@@ -1,6 +1,6 @@
-# {{appName}}
+# micro-dashboard
 
-{{description}}
+RCS调度监控系统-监控页面
 
 ## How to use
 

@@ -1,6 +1,6 @@
 {
-  "name": "{{appName}}",
-  "description": "{{description}}",
+  "name": "micro-data-management",
+  "description": "RCS调度监控系统-数据管理（任务、车辆、配置等界面）",
   "private": true,
   "version": "1.0.0",
   "type": "module",

@@ -4,6 +4,7 @@
     "bootstrap": "pnpm install",
     "build": "turbo run build",
     "dev": "turbo run dev --concurrency 14",
+    "dev:apps": "turbo run dev --filter='./apps/*'",
     "lint": "turbo run lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "prepare": "husky install",
