@@ -12,7 +12,6 @@ import routerList from "@/router/router";
 import { qiankunWindow } from "vite-plugin-qiankun/dist/helper";
 
 export default function start(props: any = {}) {
-  debugger;
   const { container } = props;
   ReactDOM.createRoot(
     container

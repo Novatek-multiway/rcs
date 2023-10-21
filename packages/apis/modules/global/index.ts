@@ -1,21 +1,28 @@
-import { request } from '../../request'
-import { IResponse } from '../../type'
-import { IKeyValue, Layout } from './type'
+import { request } from "../../request";
+import { IResponse } from "../../type";
+import { Login } from "./type";
+
+interface LoginParams {
+  userName: string;
+  passWord: string;
+  jwtToken?: string;
+  refreshToken?: string;
+  hash?: string;
+  code?: string;
+  uuid?: string;
+}
 
 /**
  * Fetches the layout from the server.
  *
  * @returns Promise of the layout object.
  */
-export const getLayout = () => {
-  return request<IResponse<Layout>>('/api/dts/layout', {
-    method: 'GET'
-  })
-}
+export const postLogin = (data: LoginParams) => {
+  return request<IResponse<Login>>("/api/User/Login", {
+    method: "POST",
+    data,
+  });
+};
 
-export const getKeyValue = () => {
-  return request<IResponse<IKeyValue[]>>('/api/dts/key-value/items')
-}
-
-export * from './type.d'
+export * from "./type.d";
 // export type { Layout };

@@ -25,10 +25,19 @@ export default defineConfig(({ mode }) => {
   const developmentConfig: UserConfig = {
     server: {
       port: 8001,
-      cors: true, // 慎用
+      // cors: true, // 慎用
       origin: "http://localhost:8001",
       headers: {
         "Access-Control-Allow-Origin": "*",
+      },
+      proxy: {
+        "/api": {
+          target: "http://192.168.1.240:5202",
+          changeOrigin: true,
+          secure: true, // 如果是https接口，需要配置这个参数
+          // ws: true, //websocket支持
+          rewrite: (path) => path.replace(/^\/api/, ""),
+        },
       },
     },
   };

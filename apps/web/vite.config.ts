@@ -19,8 +19,11 @@ export default defineConfig({
     strictPort: true,
     proxy: {
       "/api": {
-        target: "http://120.79.8.215:5200",
-        secure: false,
+        target: "http://192.168.1.240:5202",
+        changeOrigin: true,
+        secure: true, // 如果是https接口，需要配置这个参数
+        // ws: true, //websocket支持
+        rewrite: (path) => path.replace(/^\/api/, ""),
       },
     },
   },

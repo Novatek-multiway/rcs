@@ -13,9 +13,12 @@
     "@emotion/styled": "latest",
     "@mui/icons-material": "latest",
     "@mui/material": "latest",
+    "ahooks": "^3.7.8",
+    "apis": "workspace:^",
     "react": "latest",
     "react-dom": "latest",
     "react-router-dom": "^6.17.0",
+    "ui": "workspace:*",
     "vite-plugin-qiankun": "^1.0.15"
   },
   "devDependencies": {

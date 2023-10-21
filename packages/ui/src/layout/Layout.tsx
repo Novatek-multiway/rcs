@@ -11,7 +11,7 @@ import { ThemeProvider } from "@mui/material/styles";
 import type { FC } from "react";
 import React, { memo } from "react";
 import { useNavigate } from "react-router-dom";
-import { theme } from "theme";
+// import { theme } from "theme";
 
 interface LayoutProps {
   children: React.ReactNode;
