@@ -12,6 +12,7 @@
   "dependencies": {
     "qs": "^6.11.2",
     "tsconfig": "workspace:*",
+    "store": "workspace:*",
     "umi-request": "^1.4.0"
   }
 }

@@ -1,4 +1,9 @@
 import { extend } from "umi-request";
+import { useGlobalStore } from "store";
+
+interface RCSResponse extends Omit<Response, "status"> {
+  code: number;
+}
 
 //全局请求参数设置
 export const request = extend({
@@ -8,7 +13,7 @@ export const request = extend({
 
 request.interceptors.request.use((url, options) => {
   const headers: any = options.headers;
-  headers["__tenant"] = "446a5211-3d72-4339-9adc-845151f8ada0";
+  headers["Authorization"] = useGlobalStore.getState().userInfo.jwtToken;
   return {
     url,
     options: {

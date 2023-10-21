@@ -1,13 +1,24 @@
-import { Button } from "@mui/material";
-import { Link } from "react-router-dom";
 import { MuiTable } from "ui";
+import { useRequest, useAsyncEffect } from "ahooks";
+import { postGTaskList } from "apis";
 
 const DataTable = () => {
+  const { data, loading, runAsync } = useRequest(postGTaskList, {
+    manual: true,
+  });
+
+  useAsyncEffect(async () => {
+    const res = await runAsync({
+      pageNum: 1,
+      pageSize: 10,
+    });
+    if (res) {
+      console.log(res);
+    }
+  }, []);
+
   return (
     <>
-      <Button type="button">
-        <Link to={"/"}>跳转到首页</Link>
-      </Button>
       <MuiTable
         columns={[
           {
