@@ -2,6 +2,7 @@ import { createTheme } from '@mui/material/styles'
 
 export const theme = createTheme({
   palette: {
+    mode: 'dark',
     primary: {
       main: '#00d1d1'
       // light: will be calculated from palette.primary.main,
@@ -9,7 +10,7 @@ export const theme = createTheme({
       // contrastText: will be calculated to contrast with palette.primary.main
     },
     text: {
-      primary: '#f1f1f1',
+      primary: '#e1e1e3',
       secondary: '#9ba0a6'
     }
   },
@@ -17,7 +18,7 @@ export const theme = createTheme({
     MuiTypography: {
       styleOverrides: {
         root: {
-          color: '#000'
+          color: '#e1e1e3'
         }
       }
     }
