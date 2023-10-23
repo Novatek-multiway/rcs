@@ -3,7 +3,7 @@
   "scripts": {
     "bootstrap": "pnpm install",
     "build": "turbo run build",
-    "dev": "turbo run dev --concurrency 14",
+    "dev": "pnpm run --parallel dev",
     "dev:apps": "turbo run dev --filter='./apps/*'",
     "lint": "turbo run lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
