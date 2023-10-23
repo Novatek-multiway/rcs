@@ -182,11 +182,12 @@ const Nav: FC = () => {
   const [activeTabIndex, setActiveTabIndex] = React.useState(0) // 当前选中的Tab索引
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setActiveTabIndex(newValue)
+    setSelectedMenuItemIndex(-1)
   }
 
   const [anchorEl, setAnchorEl] = React.useState<HTMLElement | null>(null) // 当前菜单的锚点元素
 
-  const handleClose = () => {
+  const handleCloseMenu = () => {
     anchorEl && setAnchorEl(null)
   }
 
@@ -229,6 +230,8 @@ const Nav: FC = () => {
                 setAnchorEl(e.currentTarget)
                 setMenuList(tab.children)
                 setMenuOpenedTabIndex(index)
+              } else {
+                handleCloseMenu()
               }
             }}
             icon={tab.icon}
@@ -238,11 +241,18 @@ const Nav: FC = () => {
       </Tabs>
       <Menu
         open={menuOpen}
+        disablePortal
+        hideBackdrop
         anchorEl={anchorEl}
-        onClose={handleClose}
+        onClose={handleCloseMenu}
         anchorOrigin={{
           vertical: 'bottom',
           horizontal: 'left'
+        }}
+        sx={{
+          '&.MuiModal-root': {
+            zIndex: -1
+          }
         }}
       >
         {menuList.map((menu, index) => (
