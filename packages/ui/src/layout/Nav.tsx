@@ -210,6 +210,14 @@ const Nav: FC = () => {
     }
   })
 
+  useEffect(() => {
+    window.addEventListener('click', handleCloseMenu, true)
+
+    return () => {
+      window.removeEventListener('click', handleCloseMenu, true)
+    }
+  }, [])
+
   return (
     <>
       <Tabs value={activeTabIndex} onChange={handleChange}>
