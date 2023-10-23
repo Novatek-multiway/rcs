@@ -54,7 +54,12 @@ const getConfig = ({ type = 'react', micro = false, moduleName = '', dirname = p
       qiankun('react18', {
         useDevMode: true
       })
-    ]
+    ],
+    build: {
+      rollupOptions: {
+        external: ['@/hmr.fix']
+      }
+    }
   })
 
   return microViteConfig
