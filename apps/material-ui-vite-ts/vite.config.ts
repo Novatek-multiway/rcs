@@ -32,7 +32,7 @@ export default defineConfig(({ mode }) => {
       },
       proxy: {
         "/api": {
-          target: "http://192.168.1.240:5202",
+          target: "http://192.168.1.240:5203",
           changeOrigin: true,
           secure: true, // 如果是https接口，需要配置这个参数
           // ws: true, //websocket支持

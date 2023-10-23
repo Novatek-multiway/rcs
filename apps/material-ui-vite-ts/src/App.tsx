@@ -1,6 +1,5 @@
 import * as React from "react";
 import Box from "@mui/material/Box";
-import ProTip from "./ProTip";
 import { postLogin } from "apis";
 import { useRequest, useAsyncEffect } from "ahooks";
 import { useGlobalStore } from "store";
@@ -23,10 +22,5 @@ export default function App(props: any) {
       setUserInfo(res.data);
     }
   }, []);
-  return (
-    <Box sx={{ my: 4 }}>
-      {loading ? "" : props.children}
-      <ProTip />
-    </Box>
-  );
+  return <Box sx={{ my: 4 }}>{loading ? "" : props.children}</Box>;
 }

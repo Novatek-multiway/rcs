@@ -7,7 +7,7 @@ import { IResponse } from "../../type";
  * @returns Promise of the layout object.
  */
 export const postGTaskList = (data: Record<string, any>) => {
-  return request<IResponse<any>>("/api/Job/GetTaskGInfo", {
+  return request<IResponse<any>>("/api/Job/GetTaskGInfos", {
     method: "POST",
     data,
   });

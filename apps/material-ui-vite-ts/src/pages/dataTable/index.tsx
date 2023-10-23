@@ -1,11 +1,18 @@
 import { MuiTable } from "ui";
 import { useRequest, useAsyncEffect } from "ahooks";
 import { postGTaskList } from "apis";
+import { useState } from "react";
 
 const DataTable = () => {
   const { data, loading, runAsync } = useRequest(postGTaskList, {
     manual: true,
   });
+
+  const [page, setPage] = useState({
+    pageIndex: 1,
+    pageSize: 10,
+  });
+  const [tableData, setTableData] = useState([]);
 
   useAsyncEffect(async () => {
     const res = await runAsync({
@@ -13,7 +20,7 @@ const DataTable = () => {
       pageSize: 10,
     });
     if (res) {
-      console.log(res);
+      setTableData(res.data.data);
     }
   }, []);
 
@@ -24,26 +31,34 @@ const DataTable = () => {
           {
             accessorKey: "id",
             id: "id",
-            header: "ID",
+            header: "任务组ID",
           },
           {
-            accessorKey: "name",
-            id: "name",
-            header: "Name",
+            accessorKey: "taskCarrier",
+            id: "taskCarrier",
+            header: "分配小车",
+            Cell: ({ cell, row }) => {
+              console.log(row);
+
+              return <>111</>;
+            },
           },
           {
             accessorKey: "age",
             id: "age",
-            header: "Age",
+            header: "任务点",
           },
-        ]}
-        data={[
           {
-            id: 1,
-            name: "张三",
-            age: 18,
+            accessorKey: "taskDirection",
+            id: "taskDirection",
+            header: "描述",
           },
         ]}
+        data={tableData}
+        pageChange={setPage}
+        state={{
+          isLoading: loading,
+        }}
       ></MuiTable>
     </>
   );
