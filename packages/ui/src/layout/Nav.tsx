@@ -188,6 +188,7 @@ const Nav: FC = () => {
   const [anchorEl, setAnchorEl] = React.useState<HTMLElement | null>(null) // 当前菜单的锚点元素
 
   const handleCloseMenu = () => {
+    console.log(anchorEl)
     anchorEl && setAnchorEl(null)
   }
 
@@ -216,7 +217,7 @@ const Nav: FC = () => {
     return () => {
       window.removeEventListener('click', handleCloseMenu, true)
     }
-  }, [])
+  }, [anchorEl])
 
   return (
     <>
