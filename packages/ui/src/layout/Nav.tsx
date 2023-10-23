@@ -181,14 +181,21 @@ const Nav: FC = () => {
 
   const [activeTabIndex, setActiveTabIndex] = React.useState(0) // 当前选中的Tab索引
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
-    setActiveTabIndex(newValue)
+    const navItem = navItems[newValue]
+    if (navItem.children?.length) {
+      setAnchorEl(event.currentTarget as HTMLElement)
+      setMenuList(navItem.children)
+      setMenuOpenedTabIndex(newValue)
+    } else {
+      navigate(navItem.link)
+      setActiveTabIndex(newValue)
+    }
     setSelectedMenuItemIndex(-1)
   }
 
   const [anchorEl, setAnchorEl] = React.useState<HTMLElement | null>(null) // 当前菜单的锚点元素
 
   const handleCloseMenu = () => {
-    console.log(anchorEl)
     anchorEl && setAnchorEl(null)
   }
 
@@ -209,7 +216,7 @@ const Nav: FC = () => {
         if (selectedMenuItemIndex !== -1) setSelectedMenuItemIndex(selectedMenuItemIndex)
       }
     }
-  })
+  }, [])
 
   useEffect(() => {
     window.addEventListener('click', handleCloseMenu, true)
@@ -233,7 +240,6 @@ const Nav: FC = () => {
                 marginBottom: '2px'
               }
             }}
-            onClick={() => navigate(tab.link)}
             onMouseEnter={(e) => {
               if (tab.children?.length) {
                 setAnchorEl(e.currentTarget)
