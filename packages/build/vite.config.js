@@ -35,15 +35,15 @@ const getConfig = ({ type = 'react', micro = false, moduleName = '', dirname = p
         { find: '@', replacement: path.resolve(dirname, './src') }
       ]
     },
-    plugins: initialPlugins,
-    css: {
-      preprocessorOptions: {
-        less: {
-          javascriptEnabled: true
-          // plugins: [new LessNodeModules()],
-        }
-      }
-    }
+    plugins: initialPlugins
+    // css: {
+    //   preprocessorOptions: {
+    //     less: {
+    //       javascriptEnabled: true
+    //       // plugins: [new LessNodeModules()],
+    //     }
+    //   }
+    // }
   }
   if (!micro) {
     return sharedViteConfig

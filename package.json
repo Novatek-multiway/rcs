@@ -30,9 +30,6 @@
       "path": "./node_modules/cz-conventional-changelog"
     }
   },
-  "resolutions": {
-    "@mui/styled-engine": "npm:@mui/styled-engine-sc@latest"
-  },
   "engines": {
     "node": ">=16.20.0",
     "pnpm": ">=8.6.4"

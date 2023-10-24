@@ -35,11 +35,7 @@ function qiankunInit() {
     }
   )
 
-  start({
-    sandbox: {
-      experimentalStyleIsolation: true
-    }
-  })
+  start()
 }
 
 export default qiankunInit
