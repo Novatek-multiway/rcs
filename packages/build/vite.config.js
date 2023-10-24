@@ -4,7 +4,10 @@ const qiankun = require("vite-plugin-qiankun");
 const { default: react } = require("@vitejs/plugin-react");
 const { default: vue } = require("@vitejs/plugin-vue");
 const nodeIP = require("ip");
+const { visualizer } = require("rollup-plugin-visualizer");
 const ip = nodeIP.address();
+
+const visualizerPlugin = visualizer;
 
 // https://vitejs.dev/config/
 const getConfig = ({
@@ -48,7 +51,14 @@ const getConfig = ({
         { find: "@", replacement: path.resolve(dirname, "./src") },
       ],
     },
-    plugins: initialPlugins,
+    plugins: [
+      ...initialPlugins,
+      visualizerPlugin({
+        open: true,
+        gzipSize: true,
+        brotliSize: true,
+      }),
+    ],
     css: {
       preprocessorOptions: {
         less: {
@@ -66,6 +76,11 @@ const getConfig = ({
     plugins: [
       qiankun(`${moduleName}`, {
         useDevMode: true,
+      }),
+      visualizerPlugin({
+        open: true,
+        gzipSize: true,
+        brotliSize: true,
       }),
     ],
     build: {

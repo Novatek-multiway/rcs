@@ -1,23 +1,48 @@
-import { Assignment, Event, ModeStandby, Monitor, People, Place, Power, Warehouse } from '@mui/icons-material'
-import { ListItemIcon, ListItemText, Menu, MenuItem, SvgIcon, Tab, Tabs } from '@mui/material'
-import type { FC } from 'react'
-import React, { memo, useEffect, useState } from 'react'
-import { useLocation, useNavigate } from 'react-router-dom'
+import {
+  Assignment,
+  Event,
+  ModeStandby,
+  Monitor,
+  People,
+  Place,
+  Power,
+  Warehouse,
+} from "@mui/icons-material";
+import {
+  ListItemIcon,
+  ListItemText,
+  Menu,
+  MenuItem,
+  SvgIcon,
+  Tab,
+  Tabs,
+} from "@mui/material";
+import type { FC } from "react";
+import React, { memo, useEffect, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 
 interface NavItem {
-  name: string
-  link: string
-  icon: React.JSX.Element
-  children?: NavItem[]
+  name: string;
+  link: string;
+  icon: React.JSX.Element;
+  children?: NavItem[];
 }
 
 // TODO 进入监控页面菜单UI问题
 const navItems: NavItem[] = [
-  { name: '监控', link: '/micro-dashboard', icon: <Monitor fontSize="small" /> },
-  { name: '任务', link: '/micro-data-management/assignment', icon: <Assignment fontSize="small" /> },
   {
-    name: '车辆',
-    link: '/micro-data-management/vehicle',
+    name: "监控",
+    link: "/micro-dashboard",
+    icon: <Monitor fontSize="small" />,
+  },
+  {
+    name: "任务",
+    link: "/micro-data-management/assignment",
+    icon: <Assignment fontSize="small" />,
+  },
+  {
+    name: "车辆",
+    link: "/micro-data-management/vehicle",
     icon: (
       <SvgIcon fontSize="small">
         <svg
@@ -40,11 +65,11 @@ const navItems: NavItem[] = [
           ></path>
         </svg>
       </SvgIcon>
-    )
+    ),
   },
   {
-    name: '统计',
-    link: '/micro-data-management/stats',
+    name: "统计",
+    link: "/micro-data-management/stats",
     icon: (
       <SvgIcon fontSize="small">
         <svg
@@ -65,8 +90,8 @@ const navItems: NavItem[] = [
     ),
     children: [
       {
-        name: '车辆运行数据统计',
-        link: '/micro-data-management/stats/vehicle-operation',
+        name: "车辆运行数据统计",
+        link: "/micro-data-management/stats/vehicle-operation",
         icon: (
           <SvgIcon fontSize="small">
             <svg
@@ -94,13 +119,13 @@ const navItems: NavItem[] = [
               ></path>
             </svg>
           </SvgIcon>
-        )
-      }
-    ]
+        ),
+      },
+    ],
   },
   {
-    name: '配置',
-    link: '/micro-data-management/configuration',
+    name: "配置",
+    link: "/micro-data-management/configuration",
     icon: (
       <SvgIcon fontSize="small">
         <svg
@@ -121,13 +146,13 @@ const navItems: NavItem[] = [
     ),
     children: [
       {
-        name: '地图配置',
-        link: '/micro-data-management/configuration/map',
-        icon: <Warehouse fontSize="small" />
+        name: "地图配置",
+        link: "/micro-data-management/configuration/map",
+        icon: <Warehouse fontSize="small" />,
       },
       {
-        name: '车型配置',
-        link: '/micro-data-management/configuration/vehicle-type',
+        name: "车型配置",
+        link: "/micro-data-management/configuration/vehicle-type",
         icon: (
           <SvgIcon fontSize="small">
             <svg
@@ -145,86 +170,91 @@ const navItems: NavItem[] = [
               ></path>
             </svg>
           </SvgIcon>
-        )
+        ),
       },
       {
-        name: '站点配置',
-        link: '/micro-data-management/configuration/point',
-        icon: <Place fontSize="small" />
+        name: "站点配置",
+        link: "/micro-data-management/configuration/point",
+        icon: <Place fontSize="small" />,
       },
       {
-        name: '事件配置',
-        link: '/micro-data-management/configuration/event',
-        icon: <Event fontSize="small" />
+        name: "事件配置",
+        link: "/micro-data-management/configuration/event",
+        icon: <Event fontSize="small" />,
       },
       {
-        name: '充电配置',
-        link: '/micro-data-management/configuration/charge',
-        icon: <Power fontSize="small" />
+        name: "充电配置",
+        link: "/micro-data-management/configuration/charge",
+        icon: <Power fontSize="small" />,
       },
       {
-        name: '待命点配置',
-        link: '/micro-data-management/configuration/stand-by-point',
-        icon: <ModeStandby fontSize="small" />
+        name: "待命点配置",
+        link: "/micro-data-management/configuration/stand-by-point",
+        icon: <ModeStandby fontSize="small" />,
       },
       {
-        name: '用户配置',
-        link: '/micro-data-management/configuration/user',
-        icon: <People fontSize="small" />
-      }
-    ]
-  }
-]
+        name: "用户配置",
+        link: "/micro-data-management/configuration/user",
+        icon: <People fontSize="small" />,
+      },
+    ],
+  },
+];
 
 const Nav: FC = () => {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
-  const [activeTabIndex, setActiveTabIndex] = React.useState(0) // 当前选中的Tab索引
+  const [activeTabIndex, setActiveTabIndex] = React.useState(0); // 当前选中的Tab索引
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
-    const navItem = navItems[newValue]
+    const navItem = navItems[newValue];
     if (navItem.children?.length) {
-      setAnchorEl(event.currentTarget as HTMLElement)
-      setMenuList(navItem.children)
-      setMenuOpenedTabIndex(newValue)
+      setAnchorEl(event.currentTarget as HTMLElement);
+      setMenuList(navItem.children);
+      setMenuOpenedTabIndex(newValue);
     } else {
-      navigate(navItem.link)
-      setActiveTabIndex(newValue)
+      navigate(navItem.link);
+      setActiveTabIndex(newValue);
     }
-    setSelectedMenuItemIndex(-1)
-  }
+    setSelectedMenuItemIndex(-1);
+  };
 
-  const [anchorEl, setAnchorEl] = React.useState<HTMLElement | null>(null) // 当前菜单的锚点元素
+  const [anchorEl, setAnchorEl] = React.useState<HTMLElement | null>(null); // 当前菜单的锚点元素
 
   const handleCloseMenu = () => {
-    anchorEl && setAnchorEl(null)
-  }
+    anchorEl && setAnchorEl(null);
+  };
 
-  const menuOpen = Boolean(anchorEl)
-  const [menuOpenedTabIndex, setMenuOpenedTabIndex] = useState(-1) // 当前显示菜单的Tab索引
-  const [menuList, setMenuList] = useState<typeof navItems>([]) // 当前菜单列表
-  const [selectedMenuItemIndex, setSelectedMenuItemIndex] = useState(-1)
+  const menuOpen = Boolean(anchorEl);
+  const [menuOpenedTabIndex, setMenuOpenedTabIndex] = useState(-1); // 当前显示菜单的Tab索引
+  const [menuList, setMenuList] = useState<typeof navItems>([]); // 当前菜单列表
+  const [selectedMenuItemIndex, setSelectedMenuItemIndex] = useState(-1);
 
-  const location = useLocation()
+  const location = useLocation();
 
   useEffect(() => {
-    const activeTabIndex = navItems.findIndex((navItem) => location.pathname.includes(navItem.link))
+    const activeTabIndex = navItems.findIndex((navItem) =>
+      location.pathname.includes(navItem.link)
+    );
     if (activeTabIndex !== -1) {
-      setActiveTabIndex(activeTabIndex)
+      setActiveTabIndex(activeTabIndex);
       if (navItems[activeTabIndex].children?.length) {
-        const menus = navItems[activeTabIndex].children!
-        const selectedMenuItemIndex = menus.findIndex((menu) => menu.link === location.pathname)
-        if (selectedMenuItemIndex !== -1) setSelectedMenuItemIndex(selectedMenuItemIndex)
+        const menus = navItems[activeTabIndex].children!;
+        const selectedMenuItemIndex = menus.findIndex(
+          (menu) => menu.link === location.pathname
+        );
+        if (selectedMenuItemIndex !== -1)
+          setSelectedMenuItemIndex(selectedMenuItemIndex);
       }
     }
-  }, [])
+  }, []);
 
   useEffect(() => {
-    window.addEventListener('click', handleCloseMenu, true)
+    window.addEventListener("click", handleCloseMenu, true);
 
     return () => {
-      window.removeEventListener('click', handleCloseMenu, true)
-    }
-  }, [anchorEl])
+      window.removeEventListener("click", handleCloseMenu, true);
+    };
+  }, [anchorEl]);
 
   return (
     <>
@@ -233,20 +263,20 @@ const Nav: FC = () => {
           <Tab
             key={tab.name}
             sx={{
-              color: '#fff',
-              minHeight: '48px',
-              padding: '0 16px',
-              '.MuiTab-iconWrapper': {
-                marginBottom: '2px'
-              }
+              color: "#fff",
+              minHeight: "48px",
+              padding: "0 16px",
+              ".MuiTab-iconWrapper": {
+                marginBottom: "2px",
+              },
             }}
             onMouseEnter={(e) => {
               if (tab.children?.length) {
-                setAnchorEl(e.currentTarget)
-                setMenuList(tab.children)
-                setMenuOpenedTabIndex(index)
+                setAnchorEl(e.currentTarget);
+                setMenuList(tab.children);
+                setMenuOpenedTabIndex(index);
               } else {
-                handleCloseMenu()
+                handleCloseMenu();
               }
             }}
             icon={tab.icon}
@@ -261,13 +291,13 @@ const Nav: FC = () => {
         anchorEl={anchorEl}
         onClose={handleCloseMenu}
         anchorOrigin={{
-          vertical: 'bottom',
-          horizontal: 'left'
+          vertical: "bottom",
+          horizontal: "left",
         }}
         sx={{
-          '&.MuiModal-root': {
-            zIndex: -1
-          }
+          "&.MuiModal-root": {
+            zIndex: -1,
+          },
         }}
       >
         {menuList.map((menu, index) => (
@@ -275,9 +305,9 @@ const Nav: FC = () => {
             key={menu.name}
             selected={selectedMenuItemIndex === index}
             onClick={() => {
-              setActiveTabIndex(menuOpenedTabIndex)
-              setSelectedMenuItemIndex(index)
-              navigate(menu.link)
+              setActiveTabIndex(menuOpenedTabIndex);
+              setSelectedMenuItemIndex(index);
+              navigate(menu.link);
             }}
           >
             <ListItemIcon>{menu.icon}</ListItemIcon>
@@ -286,7 +316,7 @@ const Nav: FC = () => {
         ))}
       </Menu>
     </>
-  )
-}
+  );
+};
 
-export default memo(Nav)
+export default memo(Nav);
