@@ -1,6 +1,16 @@
-import { registerMicroApps, start } from 'qiankun'
+import { initGlobalState, MicroAppStateActions, registerMicroApps, start } from 'qiankun'
 
 const getActiveRule = (path: string) => (location: Location) => location.pathname.startsWith(path)
+
+const globalState = {
+  logoTitleClickTime: Date.now()
+}
+const actions: MicroAppStateActions = initGlobalState(globalState)
+
+export const updateMicroAppState = (getNewState: (oldState: Record<string, any>) => Partial<typeof globalState>) => {
+  const newState = getNewState(globalState)
+  actions.setGlobalState(newState)
+}
 
 function qiankunInit() {
   registerMicroApps(

@@ -11,9 +11,11 @@ import Time from './Time'
 
 interface LayoutProps {
   children: React.ReactNode
+  onLogoTitleClick?: () => void
 }
 
 const Layout: FC<LayoutProps> = (props) => {
+  const { onLogoTitleClick } = props
   const [collapsed, setCollapsed] = useState(false)
 
   return (
@@ -22,7 +24,7 @@ const Layout: FC<LayoutProps> = (props) => {
         <CssBaseline />
         <AppBar component="nav" sx={{ background: 'rgb(24, 26, 33)', color: theme.palette.text.primary }}>
           <Toolbar variant="dense" sx={{ alignItems: 'center' }}>
-            <img src={logo} alt="logo" height={28} />
+            <img src={logo} alt="logo" height={28} onClick={onLogoTitleClick} />
             <Typography
               variant="h6"
               component="div"
@@ -32,6 +34,7 @@ const Layout: FC<LayoutProps> = (props) => {
                 marginLeft: '6px',
                 transform: 'translateY(2px)'
               }}
+              onClick={onLogoTitleClick}
             >
               调度监控系统
             </Typography>
@@ -56,7 +59,7 @@ const Layout: FC<LayoutProps> = (props) => {
             <Time />
           </Toolbar>
         </AppBar>
-        <Box component="main" sx={{ p: 3, mt: theme.spacing(6), flex: 1 }}>
+        <Box component="main" sx={{ p: 0, mt: theme.spacing(6), flex: 1 }}>
           {props?.children}
         </Box>
       </Box>
