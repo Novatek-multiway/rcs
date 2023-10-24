@@ -1,5 +1,4 @@
 import { extend } from "umi-request";
-import { useGlobalStore } from "store";
 
 interface RCSResponse extends Omit<Response, "status"> {
   code: number;
@@ -12,8 +11,9 @@ export const request = extend({
 });
 
 request.interceptors.request.use((url, options) => {
+  const userInfo = localStorage.getItem("userInfo");
   const headers: any = options.headers;
-  headers["Authorization"] = useGlobalStore.getState().userInfo.jwtToken;
+  headers["Authorization"] = JSON.parse(userInfo || "{}").jwtToken;
   return {
     url,
     options: {

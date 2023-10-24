@@ -31,6 +31,7 @@ const useAuth = () => {
     });
     if (res) {
       res.data && setUserInfo(res.data);
+      localStorage.setItem("userInfo", JSON.stringify(res.data));
     }
   };
 
