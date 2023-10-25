@@ -11,20 +11,26 @@
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0"
   },
   "dependencies": {
+    "@emotion/cache": "latest",
     "@emotion/react": "latest",
     "@emotion/styled": "latest",
     "@mui/icons-material": "latest",
     "@mui/material": "latest",
+    "@react-spring/web": "^9.7.3",
+    "ahooks": "^3.7.8",
     "react": "latest",
     "react-dom": "latest",
     "react-router-dom": "^6.17.0",
+    "store": "workspace:*",
     "theme": "workspace:*",
+    "ui": "workspace:*",
     "vite-plugin-qiankun": "^1.0.15"
   },
   "devDependencies": {
     "@packages/build": "workspace:^",
     "@types/react": "latest",
     "@types/react-dom": "latest",
+    "@vitejs/plugin-react": "^4.0.3",
     "eslint-config-custom": "workspace:*",
     "typescript": "latest",
     "vite": "^4.4.5"

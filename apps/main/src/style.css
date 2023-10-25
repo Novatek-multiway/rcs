@@ -6,6 +6,7 @@
   background-color: #17171b;
 }
 
-#app {
+#app,
+#app > div {
   height: 100%;
 }

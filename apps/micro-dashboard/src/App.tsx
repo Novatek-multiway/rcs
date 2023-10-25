@@ -9,17 +9,17 @@ import routerList from '@/router/router'
 
 export default function App() {
   return (
-    <React.StrictMode>
-      <ThemeProvider theme={theme}>
-        <CssBaseline />
-        <BrowserRouter basename={qiankunWindow.__POWERED_BY_QIANKUN__ ? `/${import.meta.env.VITE_APP_NAME}` : '/'}>
-          <Routes>
-            {routerList.map((item) => (
-              <Route key={item.path} path={item.path} element={item.element}></Route>
-            ))}
-          </Routes>
-        </BrowserRouter>
-      </ThemeProvider>
-    </React.StrictMode>
+    // <React.StrictMode>
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+      <BrowserRouter basename={qiankunWindow.__POWERED_BY_QIANKUN__ ? `/${import.meta.env.VITE_APP_NAME}` : '/'}>
+        <Routes>
+          {routerList.map((item) => (
+            <Route key={item.path} path={item.path} element={item.element}></Route>
+          ))}
+        </Routes>
+      </BrowserRouter>
+    </ThemeProvider>
+    // </React.StrictMode>
   )
 }

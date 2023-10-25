@@ -1,44 +1,30 @@
-import { getConfig } from '@packages/build/vite.config'
-import { defineConfig, loadEnv, mergeConfig, type UserConfig } from 'vite'
+import react from '@vitejs/plugin-react'
+import path from 'path'
+import { defineConfig } from 'vite'
+import qiankun from 'vite-plugin-qiankun'
 
-const ipRegex = /:\d+(\/)?/g
 // https://vitejs.dev/config/
-export default defineConfig(({ mode }) => {
-  const env = loadEnv(mode, process.cwd(), '')
-
-  const matches = env.VITE_APP_HOST.match(ipRegex)
-  const ip = matches[0].slice(1).replace('/', '')
-
-  const sharedConfig = getConfig({
-    type: 'react',
-    dirname: __dirname,
-    micro: true,
-    moduleName: env.VITE_APP_NAME,
-    env
-  })
-
-  const productionConfig: UserConfig = {
-    build: {
-      target: 'esnext',
-      rollupOptions: {
-        output: {
-          name: env.VITE_APP_NAME
-        }
-      }
-    }
-  }
-  const developmentConfig: UserConfig = {
-    server: {
-      port: parseInt(ip),
-      cors: true, // 慎用
-      origin: env.VITE_APP_HOST,
-      headers: {
-        'Access-Control-Allow-Origin': '*'
-      }
-    }
-  }
-
-  return {
-    ...mergeConfig(sharedConfig, mode === 'production' ? productionConfig : developmentConfig)
-  }
+export default defineConfig({
+  base: 'micro-dashboard',
+  define: {
+    qiankunMainAppHost: `'http://localhost:8000'`
+  },
+  resolve: {
+    alias: [
+      // fix less import by: @import ~
+      // less import no support webpack alias '~' · Issue #2185 · vitejs/vite
+      // https://github.com/vitejs/vite/issues/2185
+      { find: /^~/, replacement: '' },
+      { find: '@', replacement: path.resolve(process.cwd(), './src') }
+    ]
+  },
+  server: {
+    port: 8001
+  },
+  plugins: [
+    react(),
+    qiankun('react18', {
+      useDevMode: true
+    })
+  ]
 })
