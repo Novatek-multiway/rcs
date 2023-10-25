@@ -1,59 +1,55 @@
-import { useAsyncEffect, useRequest } from "ahooks";
-import { postGTaskList } from "apis";
-import { useCallback, useState } from "react";
-import { Grid, MuiTable } from "ui";
+import DeleteIcon from '@mui/icons-material/Delete'
+import { useAsyncEffect, useRequest } from 'ahooks'
+import { postGTaskList } from 'apis'
+import { useCallback, useState } from 'react'
+import { Grid, MuiTable } from 'ui'
 
-import { ChildTaskColumn, TaskColumn, TaskPointsColumn } from "./columns";
+import { ChildTaskColumn, TaskColumn, TaskPointsColumn } from './columns'
 
 const DataTable = () => {
   const { loading, runAsync } = useRequest(postGTaskList, {
-    manual: true,
-  });
+    manual: true
+  })
 
   const [page, setPage] = useState({
     pageIndex: 0,
-    pageSize: 10,
-  });
-  const [rowCount, setRowCount] = useState(0);
-  const [tableData, setTableData] = useState([]);
-  const [rowData, setRowData] = useState({}) as any;
-  const [rowTask, setRowTask] = useState([]) as any;
+    pageSize: 10
+  })
+  const [rowCount, setRowCount] = useState(0)
+  const [tableData, setTableData] = useState([])
+  const [rowData, setRowData] = useState({}) as any
+  const [rowTask, setRowTask] = useState([]) as any
 
   useAsyncEffect(async () => {
-    const res = await runAsync({ ...page, pageIndex: page.pageIndex + 1 });
+    const res = await runAsync({ ...page, pageIndex: page.pageIndex + 1 })
     if (res) {
-      setTableData(res.data.data);
-      setRowCount(res.data.total);
+      setTableData(res.data.data)
+      setRowCount(res.data.total)
     }
-  }, [page.pageIndex]);
+  }, [page.pageIndex])
 
   const actionPoints = useCallback(() => {
     if (!rowData.tasks) {
-      return [];
+      return []
     }
     if (rowTask.actionPoint?.length) {
-      return rowTask.actionPoint;
+      return rowTask.actionPoint
     }
-    console.log(rowData.tasks.length);
+    console.log(rowData.tasks.length)
 
     if (rowData?.tasks.length) {
-      return rowData.tasks[0].actionPoint;
+      return rowData.tasks[0].actionPoint
     }
-    return [];
-  }, [rowData, rowTask]);
+    return []
+  }, [rowData, rowTask])
 
   return (
-    <Grid
-      container
-      rowSpacing={2}
-      columnSpacing={{ xs: 1, sm: 2, md: 2 }}
-      sx={{ height: "100%" }}
-    >
+    <Grid container rowSpacing={2} columnSpacing={{ xs: 1, sm: 2, md: 2 }} sx={{ height: '100%' }}>
       <Grid
         xs={6}
         item
         sx={{
-          overflow: "auto",
+          overflow: 'auto'
         }}
       >
         {tableData.length && (
@@ -61,53 +57,52 @@ const DataTable = () => {
             columns={TaskColumn}
             data={tableData}
             pageChange={(pages) => {
-              setPage(pages);
-              setRowData({});
+              setPage(pages)
+              setRowData({})
             }}
             rowCount={rowCount}
             // enableColumnResizing
             defaultColumn={{
               minSize: 100,
               size: 100,
-              maxSize: 200,
+              maxSize: 200
             }}
             enableRowSelection={false}
             muiTableBodyRowProps={({ row }) => {
               return {
                 sx: {
-                  cursor: "pointer",
-                  backgroundColor:
-                    row.getValue("id") === rowData.id ? "#1e4141" : "",
+                  cursor: 'pointer',
+                  backgroundColor: row.getValue('id') === rowData.id ? '#1e4141' : ''
                 },
                 onClick: () => {
-                  setRowData(row.original);
-                },
-              };
+                  setRowData(row.original)
+                }
+              }
             }}
             initialState={{
               columnPinning: {
-                right: ["actions"],
-              },
+                right: ['actions']
+              }
             }}
             state={{
               isLoading: loading,
               showLoadingOverlay: false,
               showProgressBars: loading,
-              pagination: { ...page },
+              pagination: { ...page }
             }}
             muiTablePaperProps={{
               sx: {
-                height: "100%",
-                padding: 2,
-              },
+                height: '100%',
+                padding: 2
+              }
             }}
             muiTableProps={{
-              sx: {},
+              sx: {}
             }}
             muiTableBodyProps={{
               sx: {
-                overflow: "auto",
-              },
+                overflow: 'auto'
+              }
             }}
           ></MuiTable>
         )}
@@ -122,7 +117,7 @@ const DataTable = () => {
               defaultColumn={{
                 minSize: 100,
                 size: 100,
-                maxSize: 300,
+                maxSize: 300
               }}
               enableRowSelection={false}
               enablePagination={false}
@@ -131,39 +126,39 @@ const DataTable = () => {
               muiTableBodyRowProps={({ row }) => {
                 return {
                   sx: {
-                    cursor: "pointer",
+                    cursor: 'pointer'
                   },
                   onClick: () => {
-                    setRowTask(row.original);
-                  },
-                };
+                    setRowTask(row.original)
+                  }
+                }
               }}
               initialState={{
                 columnPinning: {
-                  right: ["actions"],
-                },
+                  right: ['actions']
+                }
               }}
               state={{
                 isLoading: loading,
                 showLoadingOverlay: false,
-                showProgressBars: loading,
+                showProgressBars: loading
               }}
               muiTablePaperProps={{
                 sx: {
-                  height: "100%",
-                  padding: 2,
-                },
+                  height: '100%',
+                  padding: 2
+                }
               }}
               muiTableProps={{
                 sx: {
-                  height: "100%",
-                },
+                  height: '100%'
+                }
               }}
               muiTableBodyProps={{
                 sx: {
-                  height: "100%",
-                  overflow: "auto",
-                },
+                  height: '100%',
+                  overflow: 'auto'
+                }
               }}
             ></MuiTable>
           )}
@@ -178,7 +173,7 @@ const DataTable = () => {
               defaultColumn={{
                 minSize: 100,
                 size: 100,
-                maxSize: 300,
+                maxSize: 300
               }}
               enableRowSelection={false}
               enablePagination={false}
@@ -186,37 +181,37 @@ const DataTable = () => {
               enableColumnActions={false}
               initialState={{
                 columnPinning: {
-                  right: ["actions"],
-                },
+                  right: ['actions']
+                }
               }}
               state={{
                 isLoading: loading,
                 showLoadingOverlay: false,
-                showProgressBars: loading,
+                showProgressBars: loading
               }}
               muiTablePaperProps={{
                 sx: {
-                  height: "100%",
-                  padding: 2,
-                },
+                  height: '100%',
+                  padding: 2
+                }
               }}
               muiTableProps={{
                 sx: {
-                  height: "100%",
-                },
+                  height: '100%'
+                }
               }}
               muiTableBodyProps={{
                 sx: {
-                  height: "100%",
-                  overflow: "auto",
-                },
+                  height: '100%',
+                  overflow: 'auto'
+                }
               }}
             ></MuiTable>
           )}
         </Grid>
       </Grid>
     </Grid>
-  );
-};
+  )
+}
 
-export default DataTable;
+export default DataTable
