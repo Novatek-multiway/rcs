@@ -3,6 +3,7 @@ import {
   type MRT_ColumnDef,
   MRT_TableOptions,
 } from "material-react-table";
+import { MRT_Localization_ZH_HANS } from "material-react-table/locales/zh-Hans";
 import React, { FC } from "react";
 
 interface TableProps extends MRT_TableOptions<Record<any, any>> {
@@ -25,6 +26,7 @@ const MuiTable: FC<TableProps> = (props) => {
         enableRowSelection
         onPaginationChange={pageChange}
         manualPagination={true}
+        localization={MRT_Localization_ZH_HANS}
         // rowCount={data.length}
         {...rest}
       />
