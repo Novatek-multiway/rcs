@@ -1,7 +1,7 @@
 import { useAsyncEffect, useRequest } from "ahooks";
 import { postGTaskList } from "apis";
-import { useMemo, useState } from "react";
-import { Chip, MuiTable } from "ui";
+import { useState } from "react";
+import { Box, Chip, Divider, Grid, MuiTable } from "ui";
 
 const DataTable = () => {
   const { loading, runAsync } = useRequest(postGTaskList, {
@@ -39,23 +39,60 @@ const DataTable = () => {
               header: "分配小车",
               Cell: ({ row }) => {
                 const { original } = row;
-
                 const { tasks } = original;
-                const tasksVDom = useMemo(() => {
-                  if (!tasks.length) {
-                    return <>o</>;
-                  }
-                  return tasks[0].actionPoints?.map((item) => (
-                    <Chip key={item.taskCarrier} label={item.taskCarrier} />
-                  ));
-                }, [tasks]);
-                return <>{tasksVDom}</>;
+                return (
+                  <Chip
+                    label={tasks[0].taskCarrier}
+                    color="primary"
+                    size="small"
+                  ></Chip>
+                );
               },
             },
             {
-              accessorKey: "age",
-              id: "age",
+              accessorKey: "taskPoint",
+              id: "taskPoint",
               header: "任务点",
+              Cell: ({ row }) => {
+                const { original } = row;
+
+                const { tasks } = original;
+                const tasksVDom = () => {
+                  if (!tasks.length) {
+                    return <></>;
+                  }
+                  return (
+                    <>
+                      <Grid container>
+                        {tasks[0].actionPoint?.map(
+                          (item: { vertexID: string }, i: number) => (
+                            <Box
+                              sx={{
+                                display: "flex",
+                                alignItems: "center",
+                              }}
+                            >
+                              <Chip
+                                key={item.vertexID + i}
+                                size="small"
+                                label={item.vertexID}
+                                variant="outlined"
+                                color="primary"
+                              />
+                              {i !== tasks[0].actionPoint.length - 1 && (
+                                <Divider orientation="vertical" flexItem>
+                                  -
+                                </Divider>
+                              )}
+                            </Box>
+                          )
+                        )}
+                      </Grid>
+                    </>
+                  );
+                };
+                return <>{tasksVDom()}</>;
+              },
             },
             {
               accessorKey: "taskDirection",

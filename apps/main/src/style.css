@@ -1,7 +1,6 @@
 #root {
   width: 100vw;
   height: 100vh;
-  overflow: hidden;
   position: relative;
   background-color: #17171b;
 }
