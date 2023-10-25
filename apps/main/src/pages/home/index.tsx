@@ -1,13 +1,16 @@
 import { Layout } from 'ui'
 
+import { updateMicroAppState } from '@/qiankun'
+
 export default function Home() {
-  // useEffect(() => {
-  //   if (location.pathname === "/") {
-  //     navigate("/system");
-  //   }
-  // }, []);
+  const handleOnLogoTitleClick = () => {
+    console.log('nav logo title click')
+    updateMicroAppState(() => ({
+      logoTitleClickTime: Date.now()
+    }))
+  }
   return (
-    <Layout>
+    <Layout onLogoTitleClick={handleOnLogoTitleClick}>
       {/* <Card>主应用</Card> */}
       <div id="app"></div>
     </Layout>

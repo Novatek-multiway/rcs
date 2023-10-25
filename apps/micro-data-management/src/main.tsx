@@ -1,4 +1,5 @@
-import * as React from "react";
+import createCache from "@emotion/cache";
+import { CacheProvider } from "@emotion/react";
 import * as ReactDOM from "react-dom/client";
 import { renderWithQiankun } from "vite-plugin-qiankun/dist/helper";
 
@@ -10,12 +11,23 @@ let root: ReactDOM.Root | null = null;
 
 export default function start(props: any = {}) {
   const { container } = props;
-  root = ReactDOM.createRoot(
-    container
-      ? container.querySelector(`#${appName}-root`)
-      : document.getElementById(`${appName}-root`)!
+
+  const isRenderByQiankun = !!container;
+  const rootContainer = container
+    ? container.querySelector(`#${appName}-root`)
+    : document.getElementById(`${appName}-root`);
+  const myCache = createCache({
+    key: appName,
+    container: isRenderByQiankun
+      ? container.querySelector("qiankun-head")
+      : rootContainer,
+  });
+  root = ReactDOM.createRoot(rootContainer);
+  root.render(
+    <CacheProvider value={myCache}>
+      <App />
+    </CacheProvider>
   );
-  root.render(<App />);
 }
 
 renderWithQiankun({
