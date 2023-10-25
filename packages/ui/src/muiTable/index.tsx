@@ -27,6 +27,13 @@ const MuiTable: FC<TableProps> = (props) => {
         onPaginationChange={pageChange}
         manualPagination={true}
         localization={MRT_Localization_ZH_HANS}
+        // enableColumnResizing
+        enableColumnFilters={false}
+        enableFilters={false}
+        enableSorting={false}
+        initialState={{
+          density: "compact",
+        }}
         // rowCount={data.length}
         {...rest}
       />

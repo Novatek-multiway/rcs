@@ -1,7 +1,10 @@
+import DeleteIcon from "@mui/icons-material/Delete";
 import { useAsyncEffect, useRequest } from "ahooks";
 import { postGTaskList } from "apis";
 import { useState } from "react";
-import { Box, Chip, Divider, Grid, MuiTable } from "ui";
+import { Button, Grid, MuiTable } from "ui";
+
+import { TaskColumn } from "./columns";
 
 const DataTable = () => {
   const { loading, runAsync } = useRequest(postGTaskList, {
@@ -24,92 +27,74 @@ const DataTable = () => {
   }, [page.pageIndex]);
 
   return (
-    <>
-      {tableData.length && (
-        <MuiTable
-          columns={[
-            {
-              accessorKey: "id",
-              id: "id",
-              header: "任务组ID",
-            },
-            {
-              accessorKey: "taskCarrier",
-              id: "taskCarrier",
-              header: "分配小车",
-              Cell: ({ row }) => {
-                const { original } = row;
-                const { tasks } = original;
-                return (
-                  <Chip
-                    label={tasks[0].taskCarrier}
-                    color="primary"
-                    size="small"
-                  ></Chip>
-                );
-              },
-            },
-            {
-              accessorKey: "taskPoint",
-              id: "taskPoint",
-              header: "任务点",
-              Cell: ({ row }) => {
-                const { original } = row;
-
-                const { tasks } = original;
-                const tasksVDom = () => {
-                  if (!tasks.length) {
-                    return <></>;
-                  }
-                  return (
-                    <>
-                      <Grid container>
-                        {tasks[0].actionPoint?.map(
-                          (item: { vertexID: string }, i: number) => (
-                            <Box
-                              sx={{
-                                display: "flex",
-                                alignItems: "center",
-                              }}
-                            >
-                              <Chip
-                                key={item.vertexID + i}
-                                size="small"
-                                label={item.vertexID}
-                                variant="outlined"
-                                color="primary"
-                              />
-                              {i !== tasks[0].actionPoint.length - 1 && (
-                                <Divider orientation="vertical" flexItem>
-                                  -
-                                </Divider>
-                              )}
-                            </Box>
-                          )
-                        )}
-                      </Grid>
-                    </>
-                  );
-                };
-                return <>{tasksVDom()}</>;
-              },
-            },
-            {
-              accessorKey: "taskDirection",
-              id: "taskDirection",
-              header: "描述",
-            },
-          ]}
-          data={tableData}
-          pageChange={setPage}
-          rowCount={rowCount}
-          state={{
-            isLoading: loading,
-            pagination: { ...page },
-          }}
-        ></MuiTable>
-      )}
-    </>
+    <Grid
+      container
+      rowSpacing={2}
+      columnSpacing={{ xs: 1, sm: 2, md: 2 }}
+      sx={{ height: "100%" }}
+    >
+      <Grid xs={6} item>
+        {tableData.length && (
+          <MuiTable
+            columns={TaskColumn}
+            data={tableData}
+            pageChange={setPage}
+            rowCount={rowCount}
+            // enableColumnResizing
+            defaultColumn={{
+              minSize: 100,
+              size: 100,
+              maxSize: 200,
+            }}
+            enableRowActions
+            enableRowSelection={false}
+            positionActionsColumn="last"
+            muiTableBodyRowProps={(row) => {
+              return {
+                sx: {
+                  cursor: "pointer",
+                },
+                onClick: () => {
+                  alert(row);
+                },
+              };
+            }}
+            renderRowActions={() => (
+              <div
+                style={{
+                  display: "flex",
+                  flexWrap: "nowrap",
+                  gap: "0.5rem",
+                  width: "100px",
+                }}
+              >
+                <Button
+                  component="label"
+                  size="small"
+                  startIcon={<DeleteIcon />}
+                >
+                  设置取消
+                </Button>
+              </div>
+            )}
+            state={{
+              isLoading: loading,
+              showLoadingOverlay: false,
+              showProgressBars: loading,
+              pagination: { ...page },
+            }}
+          ></MuiTable>
+        )}
+      </Grid>
+      <Grid xs={6} item container rowSpacing={2}>
+        <Grid item xs={12}>
+          1212
+        </Grid>
+        <Grid item xs={12}>
+          1212
+        </Grid>
+      </Grid>
+    </Grid>
   );
 };
 
