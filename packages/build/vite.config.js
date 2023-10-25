@@ -4,13 +4,23 @@ const qiankun = require('vite-plugin-qiankun')
 const { default: react } = require('@vitejs/plugin-react')
 const { default: vue } = require('@vitejs/plugin-vue')
 const nodeIP = require('ip')
+const { visualizer } = require('rollup-plugin-visualizer')
 const ip = nodeIP.address()
+
+const visualizerPlugin = visualizer
 
 // https://vitejs.dev/config/
 const getConfig = ({ type = 'react', micro = false, moduleName = '', dirname = process.cwd(), env } = {}) => {
   const serverConfig = {
     strictPort: true,
-    proxy: {}
+    proxy: {
+      '/api': {
+        target: 'http://192.168.1.240:5203',
+        changeOrigin: true,
+        secure: true,
+        rewrite: (path) => path.replace(/^\/api/, '')
+      }
+    }
   }
 
   const initialPlugins = {
@@ -35,15 +45,22 @@ const getConfig = ({ type = 'react', micro = false, moduleName = '', dirname = p
         { find: '@', replacement: path.resolve(dirname, './src') }
       ]
     },
-    plugins: initialPlugins
-    // css: {
-    //   preprocessorOptions: {
-    //     less: {
-    //       javascriptEnabled: true
-    //       // plugins: [new LessNodeModules()],
-    //     }
-    //   }
-    // }
+    plugins: [
+      ...initialPlugins,
+      visualizerPlugin({
+        open: true,
+        gzipSize: true,
+        brotliSize: true
+      })
+    ],
+    css: {
+      preprocessorOptions: {
+        less: {
+          javascriptEnabled: true
+          // plugins: [new LessNodeModules()],
+        }
+      }
+    }
   }
   if (!micro) {
     return sharedViteConfig
@@ -51,8 +68,13 @@ const getConfig = ({ type = 'react', micro = false, moduleName = '', dirname = p
   const microViteConfig = mergeConfig(sharedViteConfig, {
     base: `/${moduleName}`,
     plugins: [
-      qiankun('react18', {
+      qiankun(`${moduleName}`, {
         useDevMode: true
+      }),
+      visualizerPlugin({
+        open: true,
+        gzipSize: true,
+        brotliSize: true
       })
     ],
     build: {
