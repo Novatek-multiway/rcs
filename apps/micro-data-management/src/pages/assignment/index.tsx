@@ -1,35 +1,79 @@
 import { useAsyncEffect, useRequest } from "ahooks";
 import { postGTaskList } from "apis";
-import type { FC, ReactNode } from "react";
-import React, { memo, useState } from "react";
+import { useMemo, useState } from "react";
+import { Chip, MuiTable } from "ui";
 
-interface IProps {
-  children?: ReactNode;
-}
-
-// 任务管理
-const Assignment: FC<IProps> = () => {
-  const { runAsync } = useRequest(postGTaskList, {
+const DataTable = () => {
+  const { loading, runAsync } = useRequest(postGTaskList, {
     manual: true,
   });
 
-  // const [page, setPage] = useState({
-  //   pageIndex: 1,
-  //   pageSize: 10,
-  // });
-  const [, setTableData] = useState([]);
+  const [page, setPage] = useState({
+    pageIndex: 0,
+    pageSize: 10,
+  });
+  const [rowCount, setRowCount] = useState(0);
+  const [tableData, setTableData] = useState([]);
 
   useAsyncEffect(async () => {
-    const res = await runAsync({
-      pageNum: 1,
-      pageSize: 10,
-    });
+    const res = await runAsync({ ...page, pageIndex: page.pageIndex + 1 });
     if (res) {
       setTableData(res.data.data);
+      setRowCount(res.data.total);
     }
-  }, []);
+  }, [page.pageIndex]);
 
-  return <div>Assignment</div>;
+  return (
+    <>
+      {tableData.length && (
+        <MuiTable
+          columns={[
+            {
+              accessorKey: "id",
+              id: "id",
+              header: "任务组ID",
+            },
+            {
+              accessorKey: "taskCarrier",
+              id: "taskCarrier",
+              header: "分配小车",
+              Cell: ({ row }) => {
+                const { original } = row;
+
+                const { tasks } = original;
+                const tasksVDom = useMemo(() => {
+                  if (!tasks.length) {
+                    return <>o</>;
+                  }
+                  return tasks[0].actionPoints?.map((item) => (
+                    <Chip key={item.taskCarrier} label={item.taskCarrier} />
+                  ));
+                }, [tasks]);
+                return <>{tasksVDom}</>;
+              },
+            },
+            {
+              accessorKey: "age",
+              id: "age",
+              header: "任务点",
+            },
+            {
+              accessorKey: "taskDirection",
+              id: "taskDirection",
+              header: "描述",
+            },
+          ]}
+          data={tableData}
+          pageChange={setPage}
+          rowCount={rowCount}
+          state={{
+            isLoading: loading,
+            pagination: { ...page },
+          }}
+        ></MuiTable>
+      )}
+    </>
+  );
 };
 
-export default memo(Assignment);
+export default DataTable;

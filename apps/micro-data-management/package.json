@@ -19,6 +19,7 @@
     "react": "latest",
     "apis": "workspace:*",
     "store": "workspace:*",
+    "ui": "workspace:*",
     "react-dom": "latest",
     "react-router-dom": "^6.17.0",
     "theme": "workspace:*",
