@@ -18,20 +18,20 @@ const Aside = forwardRef<
   const { left, right } = props
   const [open, setOpen] = useState(true)
   const [asideLeftSprings, asideLeftApi] = useSpring(() => ({
-    from: { transform: 'translateX(-100%)' },
-    to: { transform: 'translateX(0%)' }
+    from: { transform: 'translateX(-100%)', opacity: 0 },
+    to: { transform: 'translateX(0%)', opacity: 1 }
   }))
   const [asideRightSprings, asideRightApi] = useSpring(() => ({
-    from: { transform: 'translateX(100%)' },
-    to: { transform: 'translateX(0%)' }
+    from: { transform: 'translateX(100%)', opacity: 0 },
+    to: { transform: 'translateX(0%)', opacity: 1 }
   }))
 
   const toggleAside = () => {
     asideLeftApi.start({
-      to: { transform: `translateX(${!open ? 0 : -100}%)` }
+      to: { transform: `translateX(${!open ? 0 : -100}%)`, opacity: open ? 0 : 1 }
     })
     asideRightApi.start({
-      to: { transform: `translateX(${!open ? 0 : 100}%)` }
+      to: { transform: `translateX(${!open ? 0 : 100}%)`, opacity: open ? 0 : 1 }
     })
     setOpen((open) => !open)
   }
