@@ -2,10 +2,13 @@ import react from '@vitejs/plugin-react'
 import path from 'path'
 import { defineConfig } from 'vite'
 import qiankun from 'vite-plugin-qiankun'
+import { qiankunWindow } from 'vite-plugin-qiankun/dist/helper'
+
+console.log(qiankunWindow.__POWERED_BY_QIANKUN__)
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  base: 'micro-dashboard',
+  base: '/micro-dashboard',
   define: {
     qiankunMainAppHost: `'http://localhost:8000'`
   },

@@ -4,8 +4,11 @@ import { animated } from '@react-spring/web'
 const AsideBase = styled(animated.div)`
   position: absolute;
   top: 0;
+  display: flex;
+  flex-direction: column;
   height: 100%;
-  width: 25vw;
+  width: 18.75vw;
+  min-width: 300px;
 `
 
 export const AsideLeftWrapper = styled(AsideBase)`
