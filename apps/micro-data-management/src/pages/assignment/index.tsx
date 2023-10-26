@@ -1,9 +1,10 @@
 import AddIcon from "@mui/icons-material/Add";
-import RefreshIcon from "@mui/icons-material/Refresh";
 import { useAsyncEffect, useRequest } from "ahooks";
 import { postGTaskList } from "apis";
 import { useCallback, useState } from "react";
 import { Box, Button, Grid, MuiTable } from "ui";
+
+import Refresh from "@/component/refreshIcon";
 
 import { ChildTaskColumn, TaskColumn, TaskPointsColumn } from "./columns";
 
@@ -27,7 +28,7 @@ const DataTable = () => {
       setTableData(res.data.data);
       setRowCount(res.data.total);
     }
-  }, [page.pageIndex]);
+  }, [page]);
 
   const actionPoints = useCallback(() => {
     if (!rowData.tasks) {
@@ -36,7 +37,6 @@ const DataTable = () => {
     if (rowTask.actionPoint?.length) {
       return rowTask.actionPoint;
     }
-    console.log(rowData.tasks.length);
 
     if (rowData?.tasks.length) {
       return rowData.tasks[0].actionPoint;
@@ -111,7 +111,7 @@ const DataTable = () => {
                 overflow: "auto",
               },
             }}
-            renderTopToolbarCustomActions={(table) => {
+            renderTopToolbarCustomActions={() => {
               return (
                 <Box
                   sx={{
@@ -121,8 +121,19 @@ const DataTable = () => {
                     p: "4px",
                   }}
                 >
-                  <Button variant="outlined" size="small" color="warning">
-                    <RefreshIcon />
+                  <Button
+                    variant="outlined"
+                    size="small"
+                    color="warning"
+                    onClick={() => {
+                      setPage({
+                        pageIndex: 0,
+                        pageSize: 10,
+                      });
+                      setRowData({});
+                    }}
+                  >
+                    <Refresh loading={loading}></Refresh>
                     刷新
                   </Button>
                   <Button variant="outlined" size="small" color="primary">
@@ -234,7 +245,7 @@ const DataTable = () => {
                   overflow: "auto",
                 },
               }}
-              renderTopToolbarCustomActions={(table) => {
+              renderTopToolbarCustomActions={() => {
                 return (
                   <Box
                     sx={{
