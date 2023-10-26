@@ -3160,8 +3160,8 @@ packages:
     dependencies:
       '@babel/runtime': 7.23.2
       '@floating-ui/react-dom': 2.0.2(react-dom@18.2.0)(react@18.2.0)
-      '@mui/types': 7.2.6(@types/react@18.2.33)
-      '@mui/utils': 5.14.14(@types/react@18.2.33)(react@18.2.0)
+      '@mui/types': 7.2.6(@types/react@18.2.31)
+      '@mui/utils': 5.14.14(@types/react@18.2.31)(react@18.2.0)
       '@popperjs/core': 2.11.8
       '@types/react': 18.2.33
       clsx: 2.0.0
@@ -3694,8 +3694,8 @@ packages:
       '@types/react': 18.2.29
     dev: false
 
-  /@mui/types@7.2.7(@types/react@18.2.31):
-    resolution: {integrity: sha512-sofpWmcBqOlTzRbr1cLQuUDKaUYVZTw8ENQrtL39TECRNENEzwgnNPh6WMfqMZlMvf1Aj9DLg74XPjnLr0izUQ==}
+  /@mui/types@7.2.6(@types/react@18.2.31):
+    resolution: {integrity: sha512-7sjLQrUmBwufm/M7jw/quNiPK/oor2+pGUQP2CULRcFCArYTq78oJ3D5esTaL0UMkXKJvDqXn6Ike69yAOBQng==}
     peerDependencies:
       '@types/react': ^17.0.0 || ^18.0.0
     peerDependenciesMeta:
@@ -3760,8 +3760,8 @@ packages:
       react-is: 18.2.0
     dev: false
 
-  /@mui/utils@5.14.15(@types/react@18.2.31)(react@18.2.0):
-    resolution: {integrity: sha512-QBfHovAvTa0J1jXuYDaXGk+Yyp7+Fm8GSqx6nK2JbezGqzCFfirNdop/+bL9Flh/OQ/64PeXcW4HGDdOge+n3A==}
+  /@mui/utils@5.14.14(@types/react@18.2.31)(react@18.2.0):
+    resolution: {integrity: sha512-3AKp8uksje5sRfVrtgG9Q/2TBsHWVBUtA0NaXliZqGcXo8J+A+Agp0qUW2rJ+ivgPWTCCubz9FZVT2IQZ3bGsw==}
     engines: {node: '>=12.0.0'}
     peerDependencies:
       '@types/react': ^17.0.0 || ^18.0.0

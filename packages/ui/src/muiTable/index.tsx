@@ -3,8 +3,8 @@ import { MRT_Localization_ZH_HANS } from 'material-react-table/locales/zh-Hans'
 import React, { FC } from 'react'
 
 interface TableProps extends MRT_TableOptions<Record<any, any>> {
-  data: any[]
-  columns: MRT_ColumnDef<Record<any, any>>[]
+  data: any[];
+  columns: MRT_ColumnDef<Record<any, any>>[];
   pageChange?: React.Dispatch<
     React.SetStateAction<{
       pageIndex: number
