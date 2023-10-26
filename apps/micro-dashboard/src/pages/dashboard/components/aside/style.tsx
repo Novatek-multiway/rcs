@@ -4,6 +4,7 @@ import { animated } from '@react-spring/web'
 const AsideBase = styled(animated.div)`
   position: absolute;
   top: 0;
+  z-index: 10;
   display: flex;
   flex-direction: column;
   height: 100%;

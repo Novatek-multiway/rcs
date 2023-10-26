@@ -20,16 +20,19 @@
     "@types/react-window": "^1.8.7",
     "ahooks": "^3.7.8",
     "hooks": "workspace:*",
+    "konva": "^9.2.2",
     "material-react-table": "2.0.0-beta.13",
     "react": "latest",
     "react-dom": "latest",
+    "react-konva": "^18.2.10",
     "react-router-dom": "^6.17.0",
     "react-virtualized-auto-sizer": "^1.0.20",
     "react-window": "^1.8.9",
     "store": "workspace:*",
     "theme": "workspace:*",
     "ui": "workspace:*",
-    "vite-plugin-qiankun": "^1.0.15"
+    "vite-plugin-qiankun": "^1.0.15",
+    "zustand": "^4.4.1"
   },
   "devDependencies": {
     "@packages/build": "workspace:^",
