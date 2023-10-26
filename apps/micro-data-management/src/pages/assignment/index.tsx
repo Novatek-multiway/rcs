@@ -1,10 +1,9 @@
-import DeleteIcon from "@mui/icons-material/Delete";
 import { useAsyncEffect, useRequest } from "ahooks";
 import { postGTaskList } from "apis";
-import { useState } from "react";
-import { Button, Grid, MuiTable } from "ui";
+import { useCallback, useState } from "react";
+import { Grid, MuiTable } from "ui";
 
-import { TaskColumn } from "./columns";
+import { ChildTaskColumn, TaskColumn, TaskPointsColumn } from "./columns";
 
 const DataTable = () => {
   const { loading, runAsync } = useRequest(postGTaskList, {
@@ -17,6 +16,8 @@ const DataTable = () => {
   });
   const [rowCount, setRowCount] = useState(0);
   const [tableData, setTableData] = useState([]);
+  const [rowData, setRowData] = useState({}) as any;
+  const [rowTask, setRowTask] = useState([]) as any;
 
   useAsyncEffect(async () => {
     const res = await runAsync({ ...page, pageIndex: page.pageIndex + 1 });
@@ -26,6 +27,21 @@ const DataTable = () => {
     }
   }, [page.pageIndex]);
 
+  const actionPoints = useCallback(() => {
+    if (!rowData.tasks) {
+      return [];
+    }
+    if (rowTask.actionPoint?.length) {
+      return rowTask.actionPoint;
+    }
+    console.log(rowData.tasks.length);
+
+    if (rowData?.tasks.length) {
+      return rowData.tasks[0].actionPoint;
+    }
+    return [];
+  }, [rowData, rowTask]);
+
   return (
     <Grid
       container
@@ -33,12 +49,21 @@ const DataTable = () => {
       columnSpacing={{ xs: 1, sm: 2, md: 2 }}
       sx={{ height: "100%" }}
     >
-      <Grid xs={6} item>
+      <Grid
+        xs={6}
+        item
+        sx={{
+          overflow: "auto",
+        }}
+      >
         {tableData.length && (
           <MuiTable
             columns={TaskColumn}
             data={tableData}
-            pageChange={setPage}
+            pageChange={(pages) => {
+              setPage(pages);
+              setRowData({});
+            }}
             rowCount={rowCount}
             // enableColumnResizing
             defaultColumn={{
@@ -46,52 +71,147 @@ const DataTable = () => {
               size: 100,
               maxSize: 200,
             }}
-            enableRowActions
             enableRowSelection={false}
-            positionActionsColumn="last"
-            muiTableBodyRowProps={(row) => {
+            muiTableBodyRowProps={({ row }) => {
               return {
                 sx: {
                   cursor: "pointer",
                 },
                 onClick: () => {
-                  alert(row);
+                  console.log(row.original);
+                  setRowData(row.original);
                 },
               };
             }}
-            renderRowActions={() => (
-              <div
-                style={{
-                  display: "flex",
-                  flexWrap: "nowrap",
-                  gap: "0.5rem",
-                  width: "100px",
-                }}
-              >
-                <Button
-                  component="label"
-                  size="small"
-                  startIcon={<DeleteIcon />}
-                >
-                  设置取消
-                </Button>
-              </div>
-            )}
+            initialState={{
+              columnPinning: {
+                right: ["actions"],
+              },
+            }}
             state={{
               isLoading: loading,
               showLoadingOverlay: false,
               showProgressBars: loading,
               pagination: { ...page },
             }}
+            muiTablePaperProps={{
+              sx: {
+                height: "100%",
+                padding: 2,
+              },
+            }}
+            muiTableProps={{
+              sx: {},
+            }}
+            muiTableBodyProps={{
+              sx: {
+                overflow: "auto",
+              },
+            }}
           ></MuiTable>
         )}
       </Grid>
       <Grid xs={6} item container rowSpacing={2}>
         <Grid item xs={12}>
-          1212
+          {tableData.length && (
+            <MuiTable
+              columns={ChildTaskColumn}
+              data={rowData?.tasks || []}
+              // enableColumnResizing
+              defaultColumn={{
+                minSize: 100,
+                size: 100,
+                maxSize: 300,
+              }}
+              enableRowSelection={false}
+              enablePagination={false}
+              enableColumnActions={false}
+              enableTopToolbar={false}
+              muiTableBodyRowProps={({ row }) => {
+                return {
+                  sx: {
+                    cursor: "pointer",
+                  },
+                  onClick: () => {
+                    setRowTask(row.original);
+                  },
+                };
+              }}
+              initialState={{
+                columnPinning: {
+                  right: ["actions"],
+                },
+              }}
+              state={{
+                isLoading: loading,
+                showLoadingOverlay: false,
+                showProgressBars: loading,
+              }}
+              muiTablePaperProps={{
+                sx: {
+                  height: "100%",
+                  padding: 2,
+                },
+              }}
+              muiTableProps={{
+                sx: {
+                  height: "100%",
+                },
+              }}
+              muiTableBodyProps={{
+                sx: {
+                  height: "100%",
+                  overflow: "auto",
+                },
+              }}
+            ></MuiTable>
+          )}
         </Grid>
         <Grid item xs={12}>
-          1212
+          {tableData.length && (
+            <MuiTable
+              columns={TaskPointsColumn}
+              data={actionPoints()}
+              // enableColumnResizing
+              // enableColumnResizing
+              defaultColumn={{
+                minSize: 100,
+                size: 100,
+                maxSize: 300,
+              }}
+              enableRowSelection={false}
+              enablePagination={false}
+              enableTopToolbar={false}
+              enableColumnActions={false}
+              initialState={{
+                columnPinning: {
+                  right: ["actions"],
+                },
+              }}
+              state={{
+                isLoading: loading,
+                showLoadingOverlay: false,
+                showProgressBars: loading,
+              }}
+              muiTablePaperProps={{
+                sx: {
+                  height: "100%",
+                  padding: 2,
+                },
+              }}
+              muiTableProps={{
+                sx: {
+                  height: "100%",
+                },
+              }}
+              muiTableBodyProps={{
+                sx: {
+                  height: "100%",
+                  overflow: "auto",
+                },
+              }}
+            ></MuiTable>
+          )}
         </Grid>
       </Grid>
     </Grid>
