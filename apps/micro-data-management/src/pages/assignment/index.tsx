@@ -76,9 +76,10 @@ const DataTable = () => {
               return {
                 sx: {
                   cursor: "pointer",
+                  backgroundColor:
+                    row.getValue("id") === rowData.id ? "#1e4141" : "",
                 },
                 onClick: () => {
-                  console.log(row.original);
                   setRowData(row.original);
                 },
               };
