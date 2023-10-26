@@ -1,7 +1,9 @@
+import AddIcon from "@mui/icons-material/Add";
+import RefreshIcon from "@mui/icons-material/Refresh";
 import { useAsyncEffect, useRequest } from "ahooks";
 import { postGTaskList } from "apis";
 import { useCallback, useState } from "react";
-import { Grid, MuiTable } from "ui";
+import { Box, Button, Grid, MuiTable } from "ui";
 
 import { ChildTaskColumn, TaskColumn, TaskPointsColumn } from "./columns";
 
@@ -109,6 +111,27 @@ const DataTable = () => {
                 overflow: "auto",
               },
             }}
+            renderTopToolbarCustomActions={(table) => {
+              return (
+                <Box
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 1,
+                    p: "4px",
+                  }}
+                >
+                  <Button variant="outlined" size="small" color="warning">
+                    <RefreshIcon />
+                    刷新
+                  </Button>
+                  <Button variant="outlined" size="small" color="primary">
+                    <AddIcon />
+                    新增
+                  </Button>
+                </Box>
+              );
+            }}
           ></MuiTable>
         )}
       </Grid>
@@ -182,7 +205,7 @@ const DataTable = () => {
               }}
               enableRowSelection={false}
               enablePagination={false}
-              enableTopToolbar={false}
+              enableToolbarInternalActions={false}
               enableColumnActions={false}
               initialState={{
                 columnPinning: {
@@ -210,6 +233,23 @@ const DataTable = () => {
                   height: "100%",
                   overflow: "auto",
                 },
+              }}
+              renderTopToolbarCustomActions={(table) => {
+                return (
+                  <Box
+                    sx={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: 1,
+                      p: "4px",
+                    }}
+                  >
+                    <Button variant="outlined" size="small" color="primary">
+                      <AddIcon />
+                      添加任务点
+                    </Button>
+                  </Box>
+                );
               }}
             ></MuiTable>
           )}
