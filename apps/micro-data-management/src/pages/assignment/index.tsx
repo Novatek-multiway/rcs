@@ -7,8 +7,8 @@ import { ChildTaskColumn, TaskColumn, TaskPointsColumn } from "./columns";
 
 const DataTable = () => {
   const { loading, runAsync } = useRequest(postGTaskList, {
-    manual: true,
-  });
+    manual: true
+  })
 
   const [page, setPage] = useState({
     pageIndex: 0,
@@ -20,12 +20,13 @@ const DataTable = () => {
   const [rowTask, setRowTask] = useState([]) as any;
 
   useAsyncEffect(async () => {
-    const res = await runAsync({ ...page, pageIndex: page.pageIndex + 1 });
+    const res = await runAsync({ ...page, pageIndex: page.pageIndex + 1 })
     if (res) {
-      setTableData(res.data.data);
-      setRowCount(res.data.total);
+      setTableData(res.data.data)
+      setRowCount(res.data.total)
     }
-  }, [page.pageIndex]);
+  }, [page.pageIndex])
+
 
   const actionPoints = useCallback(() => {
     if (!rowData.tasks) {
@@ -69,17 +70,17 @@ const DataTable = () => {
             defaultColumn={{
               minSize: 100,
               size: 100,
-              maxSize: 200,
+              maxSize: 200
             }}
             enableRowSelection={false}
             muiTableBodyRowProps={({ row }) => {
               return {
                 sx: {
-                  cursor: "pointer",
-                  backgroundColor:
-                    row.getValue("id") === rowData.id ? "#1e4141" : "",
+                  cursor: 'pointer',
+                  backgroundColor: row.getValue('id') === rowData.id ? '#1e4141' : ''
                 },
                 onClick: () => {
+                  console.log(row.original);
                   setRowData(row.original);
                 },
               };
@@ -93,22 +94,23 @@ const DataTable = () => {
               isLoading: loading,
               showLoadingOverlay: false,
               showProgressBars: loading,
-              pagination: { ...page },
+              pagination: { ...page }
             }}
             muiTablePaperProps={{
               sx: {
-                height: "100%",
-                padding: 2,
-              },
+                height: '100%',
+                padding: 2
+              }
             }}
             muiTableProps={{
-              sx: {},
+              sx: {}
             }}
             muiTableBodyProps={{
               sx: {
-                overflow: "auto",
-              },
+                overflow: 'auto'
+              }
             }}
+
           ></MuiTable>
         )}
       </Grid>
@@ -216,7 +218,7 @@ const DataTable = () => {
         </Grid>
       </Grid>
     </Grid>
-  );
-};
+  )
+}
 
-export default DataTable;
+export default DataTable
