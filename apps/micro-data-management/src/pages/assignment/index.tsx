@@ -27,20 +27,6 @@ const DataTable = () => {
     }
   }, [page.pageIndex])
 
-  const actionPoints = useCallback(() => {
-    if (!rowData.tasks) {
-      return []
-    }
-    if (rowTask.actionPoint?.length) {
-      return rowTask.actionPoint
-    }
-    console.log(rowData.tasks.length)
-
-    if (rowData?.tasks.length) {
-      return rowData.tasks[0].actionPoint
-    }
-    return []
-  }, [rowData, rowTask])
 
   const actionPoints = useCallback(() => {
     if (!rowData.tasks) {
@@ -124,20 +110,7 @@ const DataTable = () => {
                 overflow: 'auto'
               }
             }}
-            muiTablePaperProps={{
-              sx: {
-                height: "100%",
-                padding: 2,
-              },
-            }}
-            muiTableProps={{
-              sx: {},
-            }}
-            muiTableBodyProps={{
-              sx: {
-                overflow: "auto",
-              },
-            }}
+
           ></MuiTable>
         )}
       </Grid>
