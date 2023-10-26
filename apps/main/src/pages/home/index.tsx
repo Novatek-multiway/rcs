@@ -4,7 +4,6 @@ import { updateMicroAppState } from '@/qiankun'
 
 export default function Home() {
   const handleOnLogoTitleClick = () => {
-    console.log('nav logo title click')
     updateMicroAppState(() => ({
       logoTitleClickTime: Date.now()
     }))
