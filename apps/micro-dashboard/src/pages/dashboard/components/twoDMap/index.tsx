@@ -7,6 +7,8 @@ import { Button, createTheme, SvgIcon, ThemeProvider } from 'ui'
 import data from '@/mock/data.json'
 
 import AutoResizerStage from './components/autoResizerStage'
+import Lines from './components/lines'
+import { useLines } from './components/lines/useLines'
 import Points from './components/points'
 import { usePoints } from './components/points/usePoints'
 import { useStore } from './store'
@@ -44,12 +46,14 @@ const TwoDMap: FC<PropsWithChildren<ITwoDMapProps>> = (props) => {
   })
 
   const points = usePoints(mapData.Vertexs)
+  const lines = useLines(mapData.Edges)
 
   return (
     <TwoDMapWrapper>
       <AutoResizerStage>
         {/* 不需要改变的层 */}
         <Layer listening={false}>
+          <Lines lines={lines} />
           <Points points={points} />
         </Layer>
       </AutoResizerStage>
