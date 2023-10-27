@@ -9,7 +9,7 @@ import React, { FC } from "react";
 interface TableProps extends MRT_TableOptions<Record<any, any>> {
   data: any[];
   columns: MRT_ColumnDef<Record<any, any>>[];
-  pageChange: React.Dispatch<
+  pageChange?: React.Dispatch<
     React.SetStateAction<{
       pageIndex: number;
       pageSize: number;
