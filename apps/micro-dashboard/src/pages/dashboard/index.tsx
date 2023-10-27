@@ -1,8 +1,8 @@
 import { useUpdateEffect } from 'ahooks'
-import { ElementRef, useRef } from 'react'
+import { ElementRef, useCallback, useRef, useState } from 'react'
 import { useGlobalStore } from 'store'
 
-import Aside from './components/aside'
+import Aside, { IAsideProps } from './components/aside'
 import TaskStats from './components/taskStats'
 import TimeStats from './components/timeStats'
 import TwoDMap from './components/twoDMap'
@@ -15,8 +15,16 @@ const Dashboard = () => {
   const asideRef = useRef<ElementRef<typeof Aside>>(null)
 
   useUpdateEffect(() => {
-    asideRef.current?.toggleAside()
+    const aside = asideRef.current
+    const asideWidth = aside?.asideWidth || 300
+    aside?.toggleAside()
+    setToolbarRight((p) => (aside?.asideOpen ? p - asideWidth : p + asideWidth))
   }, [globalState.logoTitleClickTime])
+
+  const [toolbarRight, setToolbarRight] = useState(380)
+  const handleSizeChange = useCallback<NonNullable<IAsideProps['onSizeChange']>>((size) => {
+    setToolbarRight((size?.width || 360) + 20)
+  }, [])
   return (
     <DashboardWrapper>
       <div className="content">
@@ -34,8 +42,9 @@ const Dashboard = () => {
               <TaskStats />
             </>
           }
+          onSizeChange={handleSizeChange}
         />
-        <TwoDMap />
+        <TwoDMap toolbarRight={toolbarRight} />
       </div>
     </DashboardWrapper>
   )

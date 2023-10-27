@@ -1,19 +1,34 @@
 import { Add, Remove, Search } from '@mui/icons-material'
+import { useSpring } from '@react-spring/web'
 import React, { FC, memo, PropsWithChildren, useEffect, useMemo } from 'react'
 import { Layer } from 'react-konva'
 import { Button, createTheme, SvgIcon, ThemeProvider } from 'ui'
 
-import AutoResizerStage from './components/autoResizerStage'
-import Points from './components/points'
-import { useStore } from './store'
-import { TwoDMapWrapper } from './style'
+import data from '@/mock/data.json'
 
-interface ITwoDMapProps {}
+import AutoResizerStage from './components/autoResizerStage'
+import Lines from './components/lines'
+import { useLines } from './components/lines/useLines'
+import Points from './components/points'
+import { usePoints } from './components/points/usePoints'
+import { useStore } from './store'
+import { ToolbarWrapper, TwoDMapWrapper } from './style'
+
+const mapData = JSON.parse((data as any).data) as API.RootMapObject
+
+interface ITwoDMapProps {
+  toolbarRight?: number
+}
 
 const MeasuringScaleSize = 50
 // 2D地图
-const TwoDMap: FC<PropsWithChildren<ITwoDMapProps>> = () => {
-  const mapSize = useMemo(() => ({ width: 3840, height: 2160 }), [])
+const TwoDMap: FC<PropsWithChildren<ITwoDMapProps>> = (props) => {
+  const { toolbarRight = 300 } = props
+  const mapSize = useMemo(() => {
+    const { DWGMaxX, DWGMinX, DWGMaxY, DWGMinY } = mapData.MapOption
+    return { width: Math.abs(DWGMaxX - DWGMinX), height: Math.abs(DWGMaxY - DWGMinY) }
+  }, [])
+
   const { cursorPosition, currentScale, stageMapRatio, setCurrentScale, setMapSize } = useStore((state) => ({
     currentScale: state.currentScale,
     cursorPosition: state.cursorPosition,
@@ -21,16 +36,25 @@ const TwoDMap: FC<PropsWithChildren<ITwoDMapProps>> = () => {
     stageMapRatio: state.stageMapRatio,
     setMapSize: state.setMapSize
   }))
+
   useEffect(() => {
     setMapSize(mapSize)
   }, [mapSize, setMapSize])
+
+  const toolbarSprings = useSpring({
+    right: toolbarRight
+  })
+
+  const points = usePoints(mapData.Vertexs)
+  const lines = useLines(mapData.Edges)
 
   return (
     <TwoDMapWrapper>
       <AutoResizerStage>
         {/* 不需要改变的层 */}
         <Layer listening={false}>
-          <Points />
+          <Lines lines={lines} />
+          <Points points={points} />
         </Layer>
       </AutoResizerStage>
       {/* 光标位置 */}
@@ -57,7 +81,7 @@ const TwoDMap: FC<PropsWithChildren<ITwoDMapProps>> = () => {
         </SvgIcon>
         <span>{((MeasuringScaleSize / stageMapRatio) * currentScale).toFixed(2)}</span>
       </div>
-      <div className="zoom-buttons">
+      <ToolbarWrapper style={toolbarSprings}>
         <ThemeProvider
           theme={createTheme({
             palette: {
@@ -77,7 +101,7 @@ const TwoDMap: FC<PropsWithChildren<ITwoDMapProps>> = () => {
             <Search color="info" />
           </Button>
         </ThemeProvider>
-      </div>
+      </ToolbarWrapper>
     </TwoDMapWrapper>
   )
 }
