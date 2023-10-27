@@ -29,8 +29,8 @@ export const useStore = create<StoreState>((set) => ({
   currentScale: 1,
   cursorPosition: { x: 0, y: 0 },
   setStageSize: (stageSize) =>
-    set((state) => ({ stageSize, stageMapRatio: getStageMapRatio(state.stageSize, state.mapSize) })),
-  setMapSize: (mapSize) => set(() => ({ mapSize })),
+    set((state) => ({ stageSize, stageMapRatio: getStageMapRatio(stageSize, state.mapSize) })),
+  setMapSize: (mapSize) => set((state) => ({ mapSize, stageMapRatio: getStageMapRatio(state.stageSize, mapSize) })),
   setCurrentScale: (currentScale) => set(() => ({ currentScale })),
   setCursorPosition: (cursorPosition) => set(() => ({ cursorPosition }))
 }))

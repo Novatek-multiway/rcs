@@ -1,7 +1,7 @@
 import { type ElementRef, useCallback, useEffect, useState } from 'react'
 import { Stage } from 'react-konva'
 
-const scaleBy = 1.01
+const scaleBy = 1.05
 export function useZoom(stageRef: React.RefObject<ElementRef<typeof Stage>>) {
   const [currentScale, setCurrentScale] = useState(1)
   /**

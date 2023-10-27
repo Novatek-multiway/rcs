@@ -23,7 +23,6 @@ const Dashboard = () => {
 
   const [toolbarRight, setToolbarRight] = useState(380)
   const handleSizeChange = useCallback<NonNullable<IAsideProps['onSizeChange']>>((size) => {
-    console.log('🚀 ~ file: index.tsx ~ line 22 ~ handleSizeChange ~ size', size)
     setToolbarRight((size?.width || 360) + 20)
   }, [])
   return (

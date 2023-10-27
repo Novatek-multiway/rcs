@@ -4,10 +4,15 @@ import React, { FC, memo, PropsWithChildren, useEffect, useMemo } from 'react'
 import { Layer } from 'react-konva'
 import { Button, createTheme, SvgIcon, ThemeProvider } from 'ui'
 
+import data from '@/mock/data.json'
+
 import AutoResizerStage from './components/autoResizerStage'
 import Points from './components/points'
+import { usePoints } from './components/points/usePoints'
 import { useStore } from './store'
 import { ToolbarWrapper, TwoDMapWrapper } from './style'
+
+const mapData = JSON.parse((data as any).data) as API.RootMapObject
 
 interface ITwoDMapProps {
   toolbarRight?: number
@@ -17,7 +22,11 @@ const MeasuringScaleSize = 50
 // 2D地图
 const TwoDMap: FC<PropsWithChildren<ITwoDMapProps>> = (props) => {
   const { toolbarRight = 300 } = props
-  const mapSize = useMemo(() => ({ width: 3840, height: 2160 }), [])
+  const mapSize = useMemo(() => {
+    const { DWGMaxX, DWGMinX, DWGMaxY, DWGMinY } = mapData.MapOption
+    return { width: Math.abs(DWGMaxX - DWGMinX), height: Math.abs(DWGMaxY - DWGMinY) }
+  }, [])
+
   const { cursorPosition, currentScale, stageMapRatio, setCurrentScale, setMapSize } = useStore((state) => ({
     currentScale: state.currentScale,
     cursorPosition: state.cursorPosition,
@@ -25,6 +34,7 @@ const TwoDMap: FC<PropsWithChildren<ITwoDMapProps>> = (props) => {
     stageMapRatio: state.stageMapRatio,
     setMapSize: state.setMapSize
   }))
+
   useEffect(() => {
     setMapSize(mapSize)
   }, [mapSize, setMapSize])
@@ -33,12 +43,14 @@ const TwoDMap: FC<PropsWithChildren<ITwoDMapProps>> = (props) => {
     right: toolbarRight
   })
 
+  const points = usePoints(mapData.Vertexs)
+
   return (
     <TwoDMapWrapper>
       <AutoResizerStage>
         {/* 不需要改变的层 */}
         <Layer listening={false}>
-          <Points />
+          <Points points={points} />
         </Layer>
       </AutoResizerStage>
       {/* 光标位置 */}
