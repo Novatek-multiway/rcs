@@ -2,10 +2,10 @@ import { useUpdateEffect } from 'ahooks'
 import { ElementRef, useRef } from 'react'
 import { useGlobalStore } from 'store'
 
-import { TwoDMapWrapper } from './components/2dMap/style'
 import Aside from './components/aside'
 import TaskStats from './components/taskStats'
 import TimeStats from './components/timeStats'
+import TwoDMap from './components/twoDMap'
 import UtilizationRateStats from './components/utilizationRateStats'
 import VehicleStatus from './components/vehicleStatus'
 import { DashboardWrapper } from './style'
@@ -35,7 +35,7 @@ const Dashboard = () => {
             </>
           }
         />
-        <TwoDMapWrapper />
+        <TwoDMap />
       </div>
     </DashboardWrapper>
   )

@@ -3,6 +3,7 @@ import type { FC, PropsWithChildren } from 'react'
 import React, { memo, useMemo, useRef } from 'react'
 import { Panel } from 'ui'
 
+import TaskStatsList from './components/taskStatsList'
 import { TaskStatusWrapper } from './style'
 
 interface ITaskStatsProps {}
@@ -116,6 +117,9 @@ const TaskStats: FC<PropsWithChildren<ITaskStatsProps>> = () => {
           </div>
         </div>
         <div style={{ width: '100%', height: '40%' }} ref={el}></div>
+        <div style={{ width: '100%', flex: 1 }}>
+          <TaskStatsList />
+        </div>
       </TaskStatusWrapper>
     </Panel>
   )
