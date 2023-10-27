@@ -13,7 +13,7 @@ interface IInternalStageProps {
 const InternalStage: FC<PropsWithChildren<IInternalStageProps>> = (props) => {
   const { width, height, children } = props
   const stageRef = useRef<ElementRef<typeof Stage>>(null)
-  const { currentScale } = useZoom(stageRef)
+  const { currentScale, zoom } = useZoom(stageRef)
   const { globalCurrentScale, setCurrentScale, setStageSize, setCursorPosition } = useStore((state) => ({
     globalCurrentScale: state.currentScale,
     setCurrentScale: state.setCurrentScale,
@@ -34,20 +34,16 @@ const InternalStage: FC<PropsWithChildren<IInternalStageProps>> = (props) => {
     })
   }, [width, height])
 
+  useUpdateEffect(() => {
+    zoom(globalCurrentScale)
+  }, [globalCurrentScale])
+
   const handleMouseMove = useCallback<NonNullable<KonvaNodeEvents['onMouseMove']>>(() => {
     const position = stageRef.current?.getRelativePointerPosition()
     setCursorPosition(position!)
   }, [setCursorPosition])
   return (
-    <Stage
-      ref={stageRef}
-      width={width}
-      height={height}
-      draggable
-      onMouseMove={handleMouseMove}
-      scaleX={globalCurrentScale}
-      scaleY={globalCurrentScale}
-    >
+    <Stage ref={stageRef} width={width} height={height} draggable onMouseMove={handleMouseMove}>
       {children}
     </Stage>
   )

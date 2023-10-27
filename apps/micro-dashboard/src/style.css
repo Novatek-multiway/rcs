@@ -3,6 +3,7 @@ body {
 }
 #micro-dashboard-root {
   height: 100%;
+  overflow: hidden;
 }
 
 ::-webkit-scrollbar {
