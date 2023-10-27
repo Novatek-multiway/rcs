@@ -1,4 +1,5 @@
 import { Add, Remove, Search } from '@mui/icons-material'
+import { useSpring } from '@react-spring/web'
 import React, { FC, memo, PropsWithChildren, useEffect, useMemo } from 'react'
 import { Layer } from 'react-konva'
 import { Button, createTheme, SvgIcon, ThemeProvider } from 'ui'
@@ -6,13 +7,16 @@ import { Button, createTheme, SvgIcon, ThemeProvider } from 'ui'
 import AutoResizerStage from './components/autoResizerStage'
 import Points from './components/points'
 import { useStore } from './store'
-import { TwoDMapWrapper } from './style'
+import { ToolbarWrapper, TwoDMapWrapper } from './style'
 
-interface ITwoDMapProps {}
+interface ITwoDMapProps {
+  toolbarRight?: number
+}
 
 const MeasuringScaleSize = 50
 // 2D地图
-const TwoDMap: FC<PropsWithChildren<ITwoDMapProps>> = () => {
+const TwoDMap: FC<PropsWithChildren<ITwoDMapProps>> = (props) => {
+  const { toolbarRight = 300 } = props
   const mapSize = useMemo(() => ({ width: 3840, height: 2160 }), [])
   const { cursorPosition, currentScale, stageMapRatio, setCurrentScale, setMapSize } = useStore((state) => ({
     currentScale: state.currentScale,
@@ -24,6 +28,10 @@ const TwoDMap: FC<PropsWithChildren<ITwoDMapProps>> = () => {
   useEffect(() => {
     setMapSize(mapSize)
   }, [mapSize, setMapSize])
+
+  const toolbarSprings = useSpring({
+    right: toolbarRight
+  })
 
   return (
     <TwoDMapWrapper>
@@ -57,7 +65,7 @@ const TwoDMap: FC<PropsWithChildren<ITwoDMapProps>> = () => {
         </SvgIcon>
         <span>{((MeasuringScaleSize / stageMapRatio) * currentScale).toFixed(2)}</span>
       </div>
-      <div className="zoom-buttons">
+      <ToolbarWrapper style={toolbarSprings}>
         <ThemeProvider
           theme={createTheme({
             palette: {
@@ -77,7 +85,7 @@ const TwoDMap: FC<PropsWithChildren<ITwoDMapProps>> = () => {
             <Search color="info" />
           </Button>
         </ThemeProvider>
-      </div>
+      </ToolbarWrapper>
     </TwoDMapWrapper>
   )
 }

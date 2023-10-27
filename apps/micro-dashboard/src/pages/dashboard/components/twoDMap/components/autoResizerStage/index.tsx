@@ -51,11 +51,13 @@ const InternalStage: FC<PropsWithChildren<IInternalStageProps>> = (props) => {
 
 const AutoResizerStage = (props: PropsWithChildren) => (
   <AutoSizer>
-    {({ height, width }) => (
-      <InternalStage width={width} height={height}>
-        {props.children}
-      </InternalStage>
-    )}
+    {({ height, width }) => {
+      return (
+        <InternalStage width={width || window.innerWidth} height={height || window.innerHeight}>
+          {props.children}
+        </InternalStage>
+      )
+    }}
   </AutoSizer>
 )
 
