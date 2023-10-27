@@ -7,6 +7,7 @@ import { Box, Button, Grid, MuiTable } from "ui";
 import Refresh from "@/component/refreshIcon";
 
 import { ChildTaskColumn, TaskColumn, TaskPointsColumn } from "./columns";
+import AddTaskDialog from "./componen/addTaskDialog";
 
 const DataTable = () => {
   const { loading, runAsync } = useRequest(postGTaskList, {
@@ -21,6 +22,7 @@ const DataTable = () => {
   const [tableData, setTableData] = useState([]);
   const [rowData, setRowData] = useState({}) as any;
   const [rowTask, setRowTask] = useState([]) as any;
+  const [open, setOpen] = useState(false);
 
   useAsyncEffect(async () => {
     const res = await runAsync({ ...page, pageIndex: page.pageIndex + 1 });
@@ -137,7 +139,12 @@ const DataTable = () => {
                     <Refresh loading={loading}></Refresh>
                     刷新
                   </Button>
-                  <Button variant="outlined" size="small" color="primary">
+                  <Button
+                    variant="outlined"
+                    size="small"
+                    color="primary"
+                    onClick={() => setOpen(true)}
+                  >
                     <AddIcon />
                     新增
                   </Button>
@@ -202,6 +209,8 @@ const DataTable = () => {
               }}
             ></MuiTable>
           )}
+          {/* 新增区域 */}
+          <AddTaskDialog open={open} onClose={() => setOpen(false)} />
         </Grid>
         <Grid item xs={12}>
           {tableData.length && (
