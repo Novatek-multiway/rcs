@@ -16,7 +16,7 @@ interface TableProps extends MRT_TableOptions<Record<any, any>> {
     }>
   >;
 }
-const MuiTable: FC<TableProps> = (props) => {
+export const MuiTable: FC<TableProps> = (props) => {
   const { data, columns, pageChange, ...rest } = props;
   console.log(data);
   return (
@@ -42,4 +42,4 @@ const MuiTable: FC<TableProps> = (props) => {
   );
 };
 
-export default MuiTable;
+export * from "material-react-table";
