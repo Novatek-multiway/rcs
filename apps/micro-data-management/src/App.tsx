@@ -1,11 +1,12 @@
-import { CssBaseline } from "@mui/material";
 import * as React from "react";
 import { BrowserRouter, Route, RouteObject, Routes } from "react-router-dom";
 import { theme } from "theme";
-import { ThemeProvider } from "ui";
+import { CssBaseline, ThemeProvider } from "ui";
 import { qiankunWindow } from "vite-plugin-qiankun/dist/helper";
 
 import routerList from "@/router/router";
+
+import GlobalContext from "./global";
 
 const renderRoutes = (routes: RouteObject[]) =>
   routes.map((item) => (
@@ -19,6 +20,7 @@ export default function App() {
     <React.StrictMode>
       <ThemeProvider theme={theme}>
         <CssBaseline />
+        <GlobalContext />
         <BrowserRouter
           basename={
             qiankunWindow.__POWERED_BY_QIANKUN__

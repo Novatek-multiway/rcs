@@ -7,7 +7,8 @@ interface RCSResponse extends Omit<Response, "status"> {
 //全局请求参数设置
 export const request = extend({
   timeout: 10000,
-  baseURL: "http://192.168.1.240:5203",
+  // 记得区分开发环境与生产环境
+  prefix: "/api",
 });
 
 request.interceptors.request.use((url, options) => {

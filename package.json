@@ -38,6 +38,7 @@
     "pnpm": ">=8.6.4"
   },
   "dependencies": {
+    "@faker-js/faker": "^8.2.0",
     "plop": "^4.0.0"
   }
 }
