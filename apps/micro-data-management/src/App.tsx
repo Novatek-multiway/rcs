@@ -1,8 +1,7 @@
-import { CssBaseline } from "@mui/material";
 import * as React from "react";
 import { BrowserRouter, Route, RouteObject, Routes } from "react-router-dom";
 import { theme } from "theme";
-import { ThemeProvider } from "ui";
+import { CssBaseline, ThemeProvider } from "ui";
 import { qiankunWindow } from "vite-plugin-qiankun/dist/helper";
 
 import routerList from "@/router/router";

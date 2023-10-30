@@ -18,6 +18,7 @@ interface TableProps extends MRT_TableOptions<Record<any, any>> {
 }
 const MuiTable: FC<TableProps> = (props) => {
   const { data, columns, pageChange, ...rest } = props;
+  console.log(data);
   return (
     <>
       <MaterialReactTable
