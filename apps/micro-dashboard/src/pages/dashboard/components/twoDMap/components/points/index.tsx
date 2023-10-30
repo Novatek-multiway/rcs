@@ -9,7 +9,7 @@ export interface IPointProps {
   text: string | number
 }
 const PointTextFontSize = 1
-const PointSize = 1
+const PointSize = 0.5
 const Point: FC<IPointProps> = memo((props) => {
   const { x, y, text } = props
   const textRef = useRef<ElementRef<typeof Text>>(null)

@@ -1,6 +1,6 @@
 import { useUpdateEffect } from 'ahooks'
-import React, { type ElementRef, FC, memo, PropsWithChildren, useCallback, useEffect, useRef } from 'react'
-import { Circle, KonvaNodeEvents, Layer, Stage } from 'react-konva'
+import React, { type ElementRef, FC, memo, PropsWithChildren, useCallback, useRef } from 'react'
+import { KonvaNodeEvents, Stage } from 'react-konva'
 import AutoSizer from 'react-virtualized-auto-sizer'
 
 import { useZoom } from '../../hooks/useZoom'
@@ -17,7 +17,6 @@ const InternalStage: FC<PropsWithChildren<IInternalStageProps>> = (props) => {
   const { currentScale, zoom } = useZoom(stageRef)
   const {
     globalCurrentScale,
-    stageLeftTopPosition,
     mapCenterPosition,
     stageMapRatio,
     setCurrentScale,
@@ -26,7 +25,6 @@ const InternalStage: FC<PropsWithChildren<IInternalStageProps>> = (props) => {
     setStageLeftTopPosition
   } = useStore((state) => ({
     globalCurrentScale: state.currentScale,
-    stageLeftTopPosition: state.stageLeftTopPosition,
     mapCenterPosition: state.mapCenterPosition,
     stageMapRatio: state.stageMapRatio,
     setCurrentScale: state.setCurrentScale,
@@ -69,9 +67,12 @@ const InternalStage: FC<PropsWithChildren<IInternalStageProps>> = (props) => {
   )
 
   // 设置初始缩放
-  useEffect(() => {
-    zoom(INIT_SCALE)
-  }, [mapCenterPosition, zoom, stageMapRatio])
+  useUpdateEffect(() => {
+    console.log({ x: mapCenterPosition.x * stageMapRatio, y: mapCenterPosition.y * stageMapRatio })
+    zoom(INIT_SCALE, {
+      targetPosition: { x: mapCenterPosition.x * stageMapRatio, y: mapCenterPosition.y * stageMapRatio }
+    })
+  }, [mapCenterPosition, zoom])
   return (
     <Stage
       ref={stageRef}
@@ -82,9 +83,6 @@ const InternalStage: FC<PropsWithChildren<IInternalStageProps>> = (props) => {
       onDragEnd={handleDragEnd}
     >
       {children}
-      <Layer>
-        <Circle fill="red" width={10} height={10} x={stageLeftTopPosition.x} y={stageLeftTopPosition.y} />
-      </Layer>
     </Stage>
   )
 }

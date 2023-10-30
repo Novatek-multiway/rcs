@@ -8,7 +8,7 @@ export interface ILineProps extends Konva.LineConfig {
   text: string | number
 }
 const LineTextFontSize = 1
-const LineSize = 1
+const LineSize = 0.5
 const Line: FC<ILineProps> = memo((props) => {
   const { text, bezier, points } = props
   const textRef = useRef<ElementRef<typeof Text>>(null)

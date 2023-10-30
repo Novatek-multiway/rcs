@@ -17,12 +17,14 @@ import { useStore } from './store'
 import { ToolbarWrapper, TwoDMapWrapper } from './style'
 
 const mapData = JSON.parse((data as any).data) as API.RootMapObject
+console.log('🚀 ~ file: index.tsx ~ line 20 ~ mapData', mapData)
 
 interface ITwoDMapProps {
   toolbarRight?: number
 }
 
-const MeasuringScaleSize = 50
+const MEASURING_SCALE_SIZE = 50 // 比例尺的尺寸
+const SCALE_BOUNDARY = 8 // 缩放显示边界（低于一定缩放值，部分元素不显示，提升初始化渲染性能）
 // 2D地图
 const TwoDMap: FC<PropsWithChildren<ITwoDMapProps>> = (props) => {
   const { toolbarRight = 300 } = props
@@ -61,8 +63,14 @@ const TwoDMap: FC<PropsWithChildren<ITwoDMapProps>> = (props) => {
         {/* 不需要改变的层 */}
         <Layer listening={false}>
           <Lines lines={insideLines} />
-          <Points points={insidePoints} />
         </Layer>
+
+        {/* 缩放大于一定值才显示的层 */}
+        {currentScale >= SCALE_BOUNDARY && (
+          <Layer listening={false}>
+            <Points points={insidePoints} />
+          </Layer>
+        )}
       </AutoResizerStage>
       {/* 光标位置 */}
       <div className="cursor-position">
@@ -70,7 +78,7 @@ const TwoDMap: FC<PropsWithChildren<ITwoDMapProps>> = (props) => {
       </div>
       {/* 比例尺 */}
       <div className="measuring-scale">
-        <SvgIcon sx={{ width: MeasuringScaleSize + 'px', height: MeasuringScaleSize + 'px' }} color="primary">
+        <SvgIcon sx={{ width: MEASURING_SCALE_SIZE + 'px', height: MEASURING_SCALE_SIZE + 'px' }} color="primary">
           <svg
             viewBox="0 0 3198 1024"
             version="1.1"
@@ -86,7 +94,7 @@ const TwoDMap: FC<PropsWithChildren<ITwoDMapProps>> = (props) => {
             ></path>
           </svg>
         </SvgIcon>
-        <span>{((MeasuringScaleSize / stageMapRatio) * currentScale).toFixed(2)}</span>
+        <span>{(MEASURING_SCALE_SIZE / stageMapRatio / currentScale).toFixed(2)}</span>
       </div>
       <ToolbarWrapper style={toolbarSprings}>
         <ThemeProvider
