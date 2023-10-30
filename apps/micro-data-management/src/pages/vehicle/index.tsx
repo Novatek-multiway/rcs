@@ -1,27 +1,32 @@
 import { useAsyncEffect } from "ahooks";
 import {
+  delCreateCarrier,
   getGetDictInfo,
   getSimulationCarrierLogin,
+  postCreateCarrier,
   postGetControlOptions,
   postGetControlStates,
   postRemoveCarrier,
   postSendRemoteStop,
   postUpdateCarrierState,
 } from "apis";
-import { useState } from "react";
+import React, { useState } from "react";
 import {
   Alert,
+  BaseForm,
   Box,
   Button,
   ButtonGroup,
+  DialogActions,
   DialogContent,
   DialogTitle,
+  FormikContext,
   Grid,
   MuiTable,
   Snackbar,
 } from "ui";
 
-import { TaskColumn } from "./columns";
+import { options, TaskColumn } from "./columns";
 
 const initMessageConfig = {
   visible: false,
@@ -32,31 +37,46 @@ const Vehicle = () => {
   const [loading, setLoading] = useState(false);
   const [tableData, setTableData] = useState<any[]>([]);
   const [messageConfig, setMessageConfig] = useState(initMessageConfig);
+  const formRef = React.useRef<FormikContext>(null);
 
   useAsyncEffect(async () => {
     await getDictInfo();
     await getTableData();
   }, []);
 
+  const getInitTableData = () => {
+    const hash: Record<string, any> = {};
+    TaskColumn.forEach((column) => {
+      hash[column.accessorKey] = "-";
+    });
+    console.log("hash", hash);
+    return hash;
+  };
+
   const getTableData = async () => {
     setLoading(true);
     const fn = [postGetControlOptions({}), postGetControlStates({})];
     const all: any = Promise.all(fn.map((promise) => promise.catch(() => {})));
-    const [options, states] = await all;
+    const [options = { data: [] }, states = { data: [] }] = await all;
     const max = Math.max(...[options?.data.length, states?.data.length]);
     let index = -1;
+    console.log(`options:${options},states:${states}`);
+    const initHash = getInitTableData();
     const hashMap: Record<string, any> = {};
+
     while (index < max - 1) {
       index++;
       const optionsId = options?.data[index]?.id;
       const statesId = states?.data[index]?.id;
 
-      hashMap[optionsId] = hashMap[optionsId]
-        ? { ...hashMap[optionsId], ...options?.data[index] }
-        : options?.data[index];
-      hashMap[statesId] = hashMap[statesId]
-        ? { ...hashMap[statesId], ...states?.data[index] }
-        : states?.data[index];
+      optionsId &&
+        (hashMap[optionsId] = hashMap[optionsId]
+          ? { ...hashMap[optionsId], ...options?.data[index] }
+          : { ...initHash, ...options?.data[index] });
+      statesId &&
+        (hashMap[statesId] = hashMap[statesId]
+          ? { ...hashMap[statesId], ...states?.data[index] }
+          : { ...initHash, ...states?.data[index] });
     }
     console.log("hashMap", hashMap, Object.values(hashMap));
     setTableData(Object.values(hashMap));
@@ -229,21 +249,46 @@ const Vehicle = () => {
                 console.info(event, cell.id);
               },
             })}
-            renderCreateRowDialogContent={() => (
+            renderCreateRowDialogContent={({ table }) => (
               <>
                 <DialogTitle>添加车辆配置信息</DialogTitle>
                 <DialogContent
                   sx={{ display: "flex", flexDirection: "column", gap: "1rem" }}
                 >
-                  <div style={{ display: "flex" }}>
-                    <div style={{ flex: 1 }}>2</div>
-                    <div style={{ flex: 1 }}>333</div>
-                  </div>
+                  <BaseForm ref={formRef} schemaObject={options}></BaseForm>
                 </DialogContent>
+                <DialogActions>
+                  <Button
+                    color="primary"
+                    onClick={async () => {
+                      console.log("formRef", formRef);
+                      if (!formRef.current) return;
+                      const params: Record<string, any> = formRef.current
+                        ?.values as any;
+                      formRef.current?.submitForm();
+                      params.area = ["0"];
+                      await postCreateCarrier(params);
+                      alert("添加成功");
+                      table.setCreatingRow(null);
+                      table.resetRowSelection();
+                      getTableData();
+                    }}
+                  >
+                    保存
+                  </Button>
+                  <Button
+                    color="warning"
+                    onClick={() => {
+                      //
+                    }}
+                  >
+                    关闭
+                  </Button>
+                </DialogActions>
               </>
             )}
             renderTopToolbarCustomActions={renderTopToolbarCustomComponents}
-            renderRowActions={({ row }) => (
+            renderRowActions={({ row, table }) => (
               <div
                 style={{
                   display: "flex",
@@ -274,7 +319,20 @@ const Vehicle = () => {
                 >
                   踢出
                 </span>
-                /<span style={{ color: "red", cursor: "pointer" }}>删除</span>/
+                /
+                <span
+                  style={{ color: "red", cursor: "pointer" }}
+                  onClick={async () => {
+                    const id = row?.original?.id;
+                    await delCreateCarrier(id);
+                    alert("删除成功");
+                    table.resetRowSelection();
+                    getTableData();
+                  }}
+                >
+                  删除
+                </span>
+                /
                 <span
                   style={{
                     color: "#00c6c7",

@@ -57,6 +57,20 @@ export const postSendRemoteStop = (data: Record<string, any>) => {
 };
 
 
+// 创建车辆 /Carrier/CreateCarrier
+export const postCreateCarrier = (data: Record<string, any>) => {
+  return request<IResponse<any>>("/api/Carrier/CreateCarrier", {
+    method: "POST",
+    data,
+  });
+};
+
+export const delCreateCarrier = (key: string) => {
+  return request<IResponse<any>>(`/api/Carrier/DeleteCarrier?id=${key}`, {
+    method: "DELETE",
+  });
+};
+
 
 
 

@@ -99,3 +99,28 @@ export const TaskColumn = [
     },
   },
 ];
+
+export const options = [
+  {
+    name: "ip",
+    label: "车辆IP",
+    // type: "select",
+  },
+  {
+    name: "name",
+    label: "车体名称",
+    // type: "select",
+  },
+  {
+    name: "id",
+    label: "车辆编号",
+  },
+  {
+    name: "type",
+    label: "车辆类型",
+  },
+  {
+    name: "group",
+    label: "车辆分组",
+  },
+];
