@@ -1,6 +1,6 @@
 import { Add, Remove, Search } from '@mui/icons-material'
 import { useSpring } from '@react-spring/web'
-import React, { FC, memo, PropsWithChildren, useEffect } from 'react'
+import React, { FC, memo, PropsWithChildren, useEffect, useMemo } from 'react'
 import { Layer } from 'react-konva'
 import { Button, createTheme, SvgIcon, ThemeProvider } from 'ui'
 
@@ -11,20 +11,21 @@ import Lines from './components/lines'
 import { useLines } from './components/lines/useLines'
 import { useLinesInside } from './components/lines/useLinesInside'
 import Points from './components/points'
+import ImagePoints from './components/points/ImagePoints'
 import { usePoints } from './components/points/usePoints'
+import { POINT_IMAGE_NAME_MAP } from './constants'
 import { useShapesInside } from './hooks/useShapesInside'
 import { useStore } from './store'
 import { ToolbarWrapper, TwoDMapWrapper } from './style'
 
 const mapData = JSON.parse((data as any).data) as API.RootMapObject
-console.log('🚀 ~ file: index.tsx ~ line 20 ~ mapData', mapData)
 
 interface ITwoDMapProps {
   toolbarRight?: number
 }
 
 const MEASURING_SCALE_SIZE = 50 // 比例尺的尺寸
-const SCALE_BOUNDARY = 8 // 缩放显示边界（低于一定缩放值，部分元素不显示，提升初始化渲染性能）
+const SCALE_BOUNDARY = 1 // 缩放显示边界（低于一定缩放值，部分元素不显示，提升初始化渲染性能）
 // 2D地图
 const TwoDMap: FC<PropsWithChildren<ITwoDMapProps>> = (props) => {
   const { toolbarRight = 300 } = props
@@ -56,6 +57,14 @@ const TwoDMap: FC<PropsWithChildren<ITwoDMapProps>> = (props) => {
   const insidePoints = useShapesInside(points)
   const lines = useLines(mapData.Edges)
   const insideLines = useLinesInside(lines)
+  // 停车点、充点电
+  const imagePoints = useMemo(
+    () =>
+      insidePoints
+        .filter((p) => !!POINT_IMAGE_NAME_MAP[p.type])
+        .map((p) => ({ ...p, pointImageName: POINT_IMAGE_NAME_MAP[p.type] })),
+    [insidePoints]
+  )
 
   return (
     <TwoDMapWrapper>
@@ -69,6 +78,7 @@ const TwoDMap: FC<PropsWithChildren<ITwoDMapProps>> = (props) => {
         {currentScale >= SCALE_BOUNDARY && (
           <Layer listening={false}>
             <Points points={insidePoints} />
+            <ImagePoints points={imagePoints} />
           </Layer>
         )}
       </AutoResizerStage>

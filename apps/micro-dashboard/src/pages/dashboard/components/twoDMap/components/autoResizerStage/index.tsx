@@ -68,7 +68,6 @@ const InternalStage: FC<PropsWithChildren<IInternalStageProps>> = (props) => {
 
   // 设置初始缩放
   useUpdateEffect(() => {
-    console.log({ x: mapCenterPosition.x * stageMapRatio, y: mapCenterPosition.y * stageMapRatio })
     zoom(INIT_SCALE, {
       targetPosition: { x: mapCenterPosition.x * stageMapRatio, y: mapCenterPosition.y * stageMapRatio }
     })
