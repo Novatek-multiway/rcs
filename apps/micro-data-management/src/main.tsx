@@ -11,7 +11,8 @@ let root: ReactDOM.Root | null = null;
 
 export default function start(props: any = {}) {
   const { container } = props;
-
+  // 解决：Warning: You are calling ReactDOMClient.createRoot() on a container that has already been passed to
+  if (root) return;
   const isRenderByQiankun = !!container;
   const rootContainer = container
     ? container.querySelector(`#${appName}-root`)
