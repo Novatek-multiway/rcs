@@ -15,7 +15,9 @@ const Point: FC<IPointProps> = memo((props) => {
   const textRef = useRef<ElementRef<typeof Text>>(null)
   const [textWidth, setTextWidth] = useState(0)
   useEffect(() => {
-    setTextWidth(textRef.current?.width() || 0)
+    if (textRef.current) {
+      setTextWidth(textRef.current?.width() || 0)
+    }
   }, [textRef])
 
   return (

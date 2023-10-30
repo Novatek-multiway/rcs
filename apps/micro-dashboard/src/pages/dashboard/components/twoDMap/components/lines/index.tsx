@@ -30,7 +30,14 @@ const Line: FC<ILineProps> = memo((props) => {
         offsetX={textWidth / 2}
       />
 
-      <KonvaLine listening={false} stroke={'#393c44'} strokeWidth={LineSize} bezier={bezier} points={points} />
+      <KonvaLine
+        perfectDrawEnabled={false}
+        listening={false}
+        stroke={'#393c44'}
+        strokeWidth={LineSize}
+        bezier={bezier}
+        points={points}
+      />
     </Group>
   )
 })

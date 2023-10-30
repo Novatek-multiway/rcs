@@ -21,6 +21,7 @@
     "ahooks": "^3.7.8",
     "hooks": "workspace:*",
     "konva": "^9.2.2",
+    "lodash": "^4.17.21",
     "material-react-table": "2.0.0-beta.13",
     "react": "latest",
     "react-dom": "latest",
@@ -36,6 +37,7 @@
   },
   "devDependencies": {
     "@packages/build": "workspace:^",
+    "@types/lodash": "^4.14.200",
     "@types/react": "latest",
     "@types/react-dom": "latest",
     "@vitejs/plugin-react": "^4.0.3",
