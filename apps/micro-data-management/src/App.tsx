@@ -6,6 +6,8 @@ import { qiankunWindow } from "vite-plugin-qiankun/dist/helper";
 
 import routerList from "@/router/router";
 
+import GlobalContext from "./global";
+
 const renderRoutes = (routes: RouteObject[]) =>
   routes.map((item) => (
     <Route key={item.path} path={item.path} element={item.element}>
@@ -18,6 +20,7 @@ export default function App() {
     <React.StrictMode>
       <ThemeProvider theme={theme}>
         <CssBaseline />
+        <GlobalContext />
         <BrowserRouter
           basename={
             qiankunWindow.__POWERED_BY_QIANKUN__

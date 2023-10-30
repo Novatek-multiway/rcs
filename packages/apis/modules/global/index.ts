@@ -10,11 +10,17 @@ interface LoginParams {
   code?: string;
   uuid?: string;
 }
-/**  * Fetches the layout from the server.  *  * @returns Promise of the layout object.  */ export const postLogin =
-  (data: LoginParams) => {
-    return request<IResponse<Login>>("/api/User/Login", {
-      method: "POST",
-      data,
-    });
-  };
+/**  * Fetches the layout from the server.  *  * @returns Promise of the layout object.  */
+export const postLogin = (data: LoginParams) => {
+  return request<IResponse<Login>>("/User/Login", {
+    method: "POST",
+    data,
+  });
+};
+export const getDicts = (data: Record<string, any>) => {
+  return request<IResponse<any>>("/Dict/GetDictInfo", {
+    method: "GET",
+    params: data,
+  });
+};
 export * from "./type.d"; // export type { Layout };

@@ -1,7 +1,10 @@
-import { faker } from "@faker-js/faker";
+import AddIcon from "@mui/icons-material/Add";
+import { useRequest } from "ahooks";
+import { getChassisInfos } from "apis";
 import type { FC, ReactNode } from "react";
 import React, { memo } from "react";
-import { IconButton, MaterialReactTable, MRT_ColumnDef, Tooltip } from "ui";
+import { useDictStore } from "store";
+import { BaseTable, Button } from "ui";
 
 interface IProps {
   children?: ReactNode;
@@ -9,53 +12,73 @@ interface IProps {
 
 // 车型配置
 const VehicleType: FC<IProps> = () => {
-  const columns: MRT_ColumnDef<(typeof data)[0]>[] = [
+  const { dicts } = useDictStore();
+  const { data: chassisData, loading } = useRequest(() =>
+    getChassisInfos({ type: 0 })
+  );
+
+  const columns = [
     {
-      accessorKey: "firstName",
-      header: "First Name",
+      accessorKey: "id",
+      header: "ID",
     },
     {
-      accessorKey: "lastName",
-      header: "Last Name",
+      accessorKey: "type",
+      header: "类型",
+      Cell: ({ row }) => {
+        const { original } = row;
+        const tyles = dicts?.find((item) => item.dictValueI === original.type);
+        return <>{tyles?.dictLabel || ""}</>;
+      },
     },
     {
-      accessorKey: "age",
-      header: "Age",
+      accessorKey: "model",
+      header: "名称",
     },
     {
-      accessorKey: "address",
-      header: "Address",
+      accessorKey: "forcedCharge",
+      header: "强制充电电量",
     },
     {
-      accessorKey: "phoneNumber",
-      header: "Phone Number",
+      accessorKey: "noLoadOffsetX",
+      header: "空载偏移X",
+    },
+    {
+      accessorKey: "noLoadOffsetY",
+      header: "空载偏移Y",
+    },
+    {
+      accessorKey: "noLoadWidth",
+      header: "空载车宽",
+    },
+    {
+      accessorKey: "noLoadLength",
+      header: "空载车长",
+    },
+    {
+      accessorKey: "chassisModel",
+      header: "模型文件",
     },
   ];
 
-  const data = [...Array(5)].map(() => ({
-    address: faker.location.streetAddress(),
-    age: faker.number.int(80),
-    firstName: faker.person.firstName(),
-    lastName: faker.person.lastName(),
-    phoneNumber: faker.phone.number(),
-  }));
   return (
     <>
-      <MaterialReactTable
+      <BaseTable
         columns={columns}
-        data={data}
-        enableRowSelection
+        data={chassisData?.data || []}
+        muiTablePaperProps={{
+          sx: {
+            height: "100%",
+            padding: 2,
+          },
+        }}
+        loading={loading}
         renderTopToolbarCustomActions={() => {
-          const handleCreateNewUser = () => {
-            prompt("Create new user modal");
-          };
-
           return (
-            <div>
-              <Tooltip title="Create New User">
-                <IconButton onClick={handleCreateNewUser}></IconButton>
-              </Tooltip>
-            </div>
+            <Button variant="outlined" size="small" color="primary">
+              <AddIcon />
+              新增
+            </Button>
           );
         }}
       />
