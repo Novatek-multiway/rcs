@@ -12,6 +12,7 @@ import { useLines } from './components/lines/useLines'
 import { useLinesInside } from './components/lines/useLinesInside'
 import Points from './components/points'
 import ImagePoints from './components/points/ImagePoints'
+import LocationPoints from './components/points/LocationPoints'
 import { usePoints } from './components/points/usePoints'
 import { POINT_IMAGE_NAME_MAP } from './constants'
 import { useShapesInside } from './hooks/useShapesInside'
@@ -19,13 +20,14 @@ import { useStore } from './store'
 import { ToolbarWrapper, TwoDMapWrapper } from './style'
 
 const mapData = JSON.parse((data as any).data) as API.RootMapObject
+console.log('🚀 ~ file: index.tsx ~ line 22 ~ mapData', mapData)
 
 interface ITwoDMapProps {
   toolbarRight?: number
 }
 
 const MEASURING_SCALE_SIZE = 50 // 比例尺的尺寸
-const SCALE_BOUNDARY = 1 // 缩放显示边界（低于一定缩放值，部分元素不显示，提升初始化渲染性能）
+const SCALE_BOUNDARY = 6.5 // 缩放显示边界（低于一定缩放值，部分元素不显示，提升初始化渲染性能）
 // 2D地图
 const TwoDMap: FC<PropsWithChildren<ITwoDMapProps>> = (props) => {
   const { toolbarRight = 300 } = props
@@ -65,6 +67,8 @@ const TwoDMap: FC<PropsWithChildren<ITwoDMapProps>> = (props) => {
         .map((p) => ({ ...p, pointImageName: POINT_IMAGE_NAME_MAP[p.type] })),
     [insidePoints]
   )
+  // 库位点
+  const locationPoint = useMemo(() => insidePoints.filter((p) => p.type === 1 || p.type === 4), [insidePoints])
 
   return (
     <TwoDMapWrapper>
@@ -77,6 +81,7 @@ const TwoDMap: FC<PropsWithChildren<ITwoDMapProps>> = (props) => {
         {/* 缩放大于一定值才显示的层 */}
         {currentScale >= SCALE_BOUNDARY && (
           <Layer listening={false}>
+            <LocationPoints points={locationPoint} />
             <Points points={insidePoints} />
             <ImagePoints points={imagePoints} />
           </Layer>

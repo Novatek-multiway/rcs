@@ -7,7 +7,6 @@ const getPointImage = async (imageName: string) => {
   const imageModule = await import(`../../../../../../assets/points/${imageName}.png`)
   return imageModule.default
 }
-console.log('🚀 ~ file: ImagePoints.tsx ~ line 10 ~ POINT_IMAGE_MAP', POINT_IMAGE_MAP)
 
 export interface IImagePointProps {
   id: number
