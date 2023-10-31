@@ -4,7 +4,8 @@ import React, { FC, memo, PropsWithChildren, useEffect, useMemo } from 'react'
 import { Layer } from 'react-konva'
 import { Button, createTheme, SvgIcon, ThemeProvider } from 'ui'
 
-import data from '@/mock/data.json'
+import map from '@/mock/map.json'
+import vehicles from '@/mock/vehicles.json'
 
 import AutoResizerStage from './components/autoResizerStage'
 import Lines, { LineDirections } from './components/lines'
@@ -14,12 +15,15 @@ import Points from './components/points'
 import ImagePoints from './components/points/ImagePoints'
 import LocationPoints from './components/points/LocationPoints'
 import { usePoints } from './components/points/usePoints'
+import Vehicles from './components/vehicles'
+import { useVehicles } from './components/vehicles/useVehicles'
 import { POINT_IMAGE_NAME_MAP } from './constants'
 import { useShapesInside } from './hooks/useShapesInside'
 import { useStore } from './store'
 import { ToolbarWrapper, TwoDMapWrapper } from './style'
 
-const mapData = JSON.parse((data as any).data) as API.RootMapObject
+const mapData = JSON.parse((map as any).data) as MapAPI.RootMapObject
+const vehiclesData = vehicles.data as ReportAPI.OnlineCarrier[]
 
 interface ITwoDMapProps {
   toolbarRight?: number
@@ -54,6 +58,7 @@ const TwoDMap: FC<PropsWithChildren<ITwoDMapProps>> = (props) => {
     right: toolbarRight
   })
 
+  /* ----------------------------------- 点位 ----------------------------------- */
   const points = usePoints(mapData.Vertexs)
   const insidePoints = useShapesInside(points)
   // 停车点、充点电
@@ -66,10 +71,18 @@ const TwoDMap: FC<PropsWithChildren<ITwoDMapProps>> = (props) => {
   )
   // 库位点
   const locationPoint = useMemo(() => insidePoints.filter((p) => p.type === 1 || p.type === 4), [insidePoints])
+  /* ----------------------------------- 点位 ----------------------------------- */
 
+  /* ----------------------------------- 边 ----------------------------------- */
   const lines = useLines(mapData.Edges)
   const insideLines = useLinesInside(lines)
   const lineDirections = insideLines.flatMap((line) => line.directions)
+  /* ----------------------------------- 边 ----------------------------------- */
+
+  /* ----------------------------------- 车辆 ----------------------------------- */
+  const vehicles = useVehicles(vehiclesData)
+  const insideVehicles = useShapesInside(vehicles)
+  /* ----------------------------------- 车辆 ----------------------------------- */
 
   return (
     <TwoDMapWrapper>
@@ -88,6 +101,10 @@ const TwoDMap: FC<PropsWithChildren<ITwoDMapProps>> = (props) => {
             <LineDirections directions={lineDirections} />
           </Layer>
         )}
+        {/* 动态层 */}
+        <Layer>
+          <Vehicles vehicles={insideVehicles} strokeWidth={currentScale >= SCALE_BOUNDARY ? 0.1 : 3 / currentScale} />
+        </Layer>
       </AutoResizerStage>
       {/* 光标位置 */}
       <div className="cursor-position">

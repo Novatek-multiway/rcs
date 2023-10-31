@@ -2,7 +2,8 @@ import type { FC, PropsWithChildren } from 'react'
 import React, { memo, useEffect, useState } from 'react'
 import { Image as KonvaImage } from 'react-konva'
 
-const POINT_IMAGE_MAP: Record<string, HTMLImageElement> = {}
+import { useImage } from '../../hooks/useImage'
+
 const getPointImage = async (imageName: string) => {
   const imageModule = await import(`../../../../../../assets/points/${imageName}.png`)
   return imageModule.default
@@ -18,20 +19,12 @@ export interface IImagePointProps {
 const IMAGE_SIZE = 5
 const ImagePoint: FC<IImagePointProps> = memo((props) => {
   const { x, y, pointImageName } = props
-  const [image, setImage] = useState<HTMLImageElement>()
+  const [pointImagePath, setPointImagePath] = useState<string>('')
+  const image = useImage(pointImagePath)
   useEffect(() => {
     const setImageExternal = async () => {
-      if (POINT_IMAGE_MAP[pointImageName]) {
-        setImage(POINT_IMAGE_MAP[pointImageName])
-      } else {
-        const imagePath = await getPointImage(pointImageName)
-        const image = new Image()
-        POINT_IMAGE_MAP[pointImageName] = image
-        image.src = import.meta.env.VITE_APP_HOST + imagePath
-        image.onload = () => {
-          setImage(image)
-        }
-      }
+      const pointImagePath = await getPointImage(pointImageName)
+      setPointImagePath(pointImagePath)
     }
     setImageExternal()
   }, [pointImageName])

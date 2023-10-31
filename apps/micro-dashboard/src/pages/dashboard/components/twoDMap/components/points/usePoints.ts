@@ -2,7 +2,7 @@ import { useMemo } from 'react'
 
 import { useStore } from '../../store'
 
-export const usePoints = (vertexes: API.Vertex[]) => {
+export const usePoints = (vertexes: MapAPI.Vertex[]) => {
   const { stageMapRatio, setPoint } = useStore((state) => ({
     stageMapRatio: state.stageMapRatio,
     setPoint: state.setPoint

@@ -5,21 +5,25 @@ import { Group, Line as KonvaLine, RegularPolygon, Text } from 'react-konva'
 
 import { getDirectionFromAngle } from '../../utils'
 
-export interface ILineProps extends Konva.LineConfig {
-  text: string | number
+export interface ILineProps {
+  id: number
+  bezier?: boolean
+  points?: Konva.LineConfig['points']
+  strokeWidth?: Konva.LineConfig['strokeWidth']
+  stroke?: Konva.LineConfig['stroke']
 }
 const LINE_TEXT_FONT_SIZE = 0.5 // 边的字体大小
 const LINE_SIZE = 0.1 // 边的尺寸
 const DIRECTION_REGULAR_POLYGON_SIZE = 0.2 // 边方向的尺寸
 // 单个边
 const Line: FC<ILineProps> = memo((props) => {
-  const { bezier, points = [], strokeWidth } = props
+  const { bezier, points = [], strokeWidth, stroke = '#393c44' } = props
 
   return (
     <KonvaLine
       perfectDrawEnabled={false}
       listening={false}
-      stroke={'#393c44'}
+      stroke={stroke}
       strokeWidth={strokeWidth || LINE_SIZE}
       bezier={bezier}
       points={points}
@@ -86,14 +90,15 @@ export const LineDirections: FC<ILineDirectionsProps> = (props) => {
 export interface ILinesProps {
   lines: ILineProps[]
   strokeWidth?: number
+  stroke?: Konva.LineConfig['stroke']
 }
 
 // 所有边
 const Lines: FC<PropsWithChildren<ILinesProps>> = (props) => {
-  const { lines, strokeWidth } = props
+  const { lines, strokeWidth, stroke } = props
   return lines.map((line) => (
-    <Group key={line.text}>
-      <Line {...line} strokeWidth={strokeWidth} />
+    <Group key={line.id}>
+      <Line {...line} strokeWidth={strokeWidth} stroke={stroke} />
     </Group>
   ))
 }

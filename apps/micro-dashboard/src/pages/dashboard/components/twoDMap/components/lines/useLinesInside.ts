@@ -2,14 +2,14 @@ import _ from 'lodash'
 import { useMemo } from 'react'
 
 import { useStore } from '../../store'
-import { ILineProps } from '.'
+import { ILineDirectionsProps, ILineProps } from '.'
 
 /**
  * @description: 过滤在画布外面的line
  * @param {T[]} lines
  * @return {*}
  */
-export function useLinesInside(lines: ILineProps[]) {
+export function useLinesInside(lines: (ILineProps & ILineDirectionsProps)[]) {
   const { stageLeftTopPosition, stageSize, currentScale } = useStore((state) => ({
     stageLeftTopPosition: state.stageLeftTopPosition,
     stageSize: state.stageSize,

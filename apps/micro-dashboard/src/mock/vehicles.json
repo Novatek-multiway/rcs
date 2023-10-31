@@ -1,0 +1,150 @@
+{
+  "code": 0,
+  "msg": "成功",
+  "data": [
+    {
+      "id": 10,
+      "agvNo": 0,
+      "x": 6023,
+      "y": 55812.364,
+      "angle": 90.00662952534756,
+      "isWork": true,
+      "isError": false,
+      "isOnline": false,
+      "type": "X20S",
+      "image": "X20.png",
+      "lkX1": 500,
+      "lkX2": 500,
+      "lkY1": -500,
+      "lkY2": 500,
+      "profileHeightScale": 0,
+      "profileWidthScale": 0,
+      "plannings": [
+        {
+          "planningType": 1,
+          "planningKey": 19,
+          "state1": 5
+        },
+        {
+          "planningType": 2,
+          "planningKey": 23,
+          "state1": 4
+        },
+        {
+          "planningType": 1,
+          "planningKey": 20,
+          "state1": 3
+        },
+        {
+          "planningType": 2,
+          "planningKey": 25,
+          "state1": 3
+        },
+        {
+          "planningType": 1,
+          "planningKey": 17,
+          "state1": 3
+        },
+        {
+          "planningType": 2,
+          "planningKey": 22,
+          "state1": 3
+        },
+        {
+          "planningType": 1,
+          "planningKey": 18,
+          "state1": 3
+        },
+        {
+          "planningType": 2,
+          "planningKey": 28,
+          "state1": 3
+        },
+        {
+          "planningType": 1,
+          "planningKey": 21,
+          "state1": 3
+        },
+        {
+          "planningType": 2,
+          "planningKey": 29,
+          "state1": 3
+        },
+        {
+          "planningType": 1,
+          "planningKey": 22,
+          "state1": 3
+        },
+        {
+          "planningType": 2,
+          "planningKey": 76,
+          "state1": 3
+        },
+        {
+          "planningType": 1,
+          "planningKey": 14,
+          "state1": 3
+        }
+      ],
+      "currentCmd": 149,
+      "availableState": 0,
+      "errorCode": 0,
+      "elecQuantity": 60,
+      "statusName": "在线",
+      "goodsStatus": 0,
+      "controlState": 2
+    },
+    {
+      "id": 11,
+      "agvNo": 0,
+      "x": 2243,
+      "y": 57090,
+      "angle": 90.01988857604272,
+      "isWork": true,
+      "isError": false,
+      "isOnline": false,
+      "type": "SE15",
+      "image": "SE15.png",
+      "lkX1": -500,
+      "lkX2": 500,
+      "lkY1": -500,
+      "lkY2": 500,
+      "profileHeightScale": 0,
+      "profileWidthScale": 0,
+      "plannings": [],
+      "currentCmd": 0,
+      "availableState": 0,
+      "errorCode": 0,
+      "elecQuantity": 60,
+      "statusName": "在线",
+      "goodsStatus": 1,
+      "controlState": 2
+    },
+    {
+      "id": 12,
+      "agvNo": 0,
+      "x": 18673,
+      "y": 55690,
+      "angle": 270,
+      "isWork": false,
+      "isError": false,
+      "isOnline": false,
+      "type": "R16",
+      "image": "R16.png",
+      "lkX1": -500,
+      "lkX2": 500,
+      "lkY1": -500,
+      "lkY2": 500,
+      "profileHeightScale": 0,
+      "profileWidthScale": 0,
+      "plannings": [],
+      "currentCmd": 0,
+      "availableState": 0,
+      "errorCode": 0,
+      "elecQuantity": 60,
+      "statusName": "在线",
+      "goodsStatus": 1,
+      "controlState": 2
+    }
+  ]
+}
