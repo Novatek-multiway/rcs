@@ -23,7 +23,7 @@ export const TwoDMapWrapper = styled.div`
     transform: translateX(-50%);
     span {
       position: absolute;
-      bottom: 50%;
+      bottom: 60%;
       left: 50%;
       transform: translateX(-50%);
       font-size: 12px;

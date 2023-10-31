@@ -9,8 +9,12 @@ import data from '@/mock/data.json'
 import AutoResizerStage from './components/autoResizerStage'
 import Lines from './components/lines'
 import { useLines } from './components/lines/useLines'
+import { useLinesInside } from './components/lines/useLinesInside'
 import Points from './components/points'
+import ImagePoints from './components/points/ImagePoints'
 import { usePoints } from './components/points/usePoints'
+import { POINT_IMAGE_NAME_MAP } from './constants'
+import { useShapesInside } from './hooks/useShapesInside'
 import { useStore } from './store'
 import { ToolbarWrapper, TwoDMapWrapper } from './style'
 
@@ -20,42 +24,63 @@ interface ITwoDMapProps {
   toolbarRight?: number
 }
 
-const MeasuringScaleSize = 50
+const MEASURING_SCALE_SIZE = 50 // 比例尺的尺寸
+const SCALE_BOUNDARY = 1 // 缩放显示边界（低于一定缩放值，部分元素不显示，提升初始化渲染性能）
 // 2D地图
 const TwoDMap: FC<PropsWithChildren<ITwoDMapProps>> = (props) => {
   const { toolbarRight = 300 } = props
-  const mapSize = useMemo(() => {
-    const { DWGMaxX, DWGMinX, DWGMaxY, DWGMinY } = mapData.MapOption
-    return { width: Math.abs(DWGMaxX - DWGMinX), height: Math.abs(DWGMaxY - DWGMinY) }
-  }, [])
 
-  const { cursorPosition, currentScale, stageMapRatio, setCurrentScale, setMapSize } = useStore((state) => ({
-    currentScale: state.currentScale,
-    cursorPosition: state.cursorPosition,
-    setCurrentScale: state.setCurrentScale,
-    stageMapRatio: state.stageMapRatio,
-    setMapSize: state.setMapSize
-  }))
+  const { cursorPosition, currentScale, stageMapRatio, setCurrentScale, setMapSize, setMapCenterPosition } = useStore(
+    (state) => ({
+      currentScale: state.currentScale,
+      cursorPosition: state.cursorPosition,
+      setCurrentScale: state.setCurrentScale,
+      stageMapRatio: state.stageMapRatio,
+      setMapSize: state.setMapSize,
+      setMapCenterPosition: state.setMapCenterPosition
+    })
+  )
 
   useEffect(() => {
+    const { DWGMaxX, DWGMinX, DWGMaxY, DWGMinY } = mapData.MapOption
+    const mapSize = { width: Math.abs(DWGMaxX - DWGMinX), height: Math.abs(DWGMaxY - DWGMinY) }
     setMapSize(mapSize)
-  }, [mapSize, setMapSize])
+    const mapCenterPosition = { x: DWGMinX + mapSize.width / 2, y: DWGMinY + mapSize.height / 2 }
+    setMapCenterPosition(mapCenterPosition)
+  }, [setMapSize, setMapCenterPosition])
 
   const toolbarSprings = useSpring({
     right: toolbarRight
   })
 
   const points = usePoints(mapData.Vertexs)
+  const insidePoints = useShapesInside(points)
   const lines = useLines(mapData.Edges)
+  const insideLines = useLinesInside(lines)
+  // 停车点、充点电
+  const imagePoints = useMemo(
+    () =>
+      insidePoints
+        .filter((p) => !!POINT_IMAGE_NAME_MAP[p.type])
+        .map((p) => ({ ...p, pointImageName: POINT_IMAGE_NAME_MAP[p.type] })),
+    [insidePoints]
+  )
 
   return (
     <TwoDMapWrapper>
       <AutoResizerStage>
         {/* 不需要改变的层 */}
         <Layer listening={false}>
-          <Lines lines={lines} />
-          <Points points={points} />
+          <Lines lines={insideLines} />
         </Layer>
+
+        {/* 缩放大于一定值才显示的层 */}
+        {currentScale >= SCALE_BOUNDARY && (
+          <Layer listening={false}>
+            <Points points={insidePoints} />
+            <ImagePoints points={imagePoints} />
+          </Layer>
+        )}
       </AutoResizerStage>
       {/* 光标位置 */}
       <div className="cursor-position">
@@ -63,7 +88,7 @@ const TwoDMap: FC<PropsWithChildren<ITwoDMapProps>> = (props) => {
       </div>
       {/* 比例尺 */}
       <div className="measuring-scale">
-        <SvgIcon sx={{ width: MeasuringScaleSize + 'px', height: MeasuringScaleSize + 'px' }} color="primary">
+        <SvgIcon sx={{ width: MEASURING_SCALE_SIZE + 'px', height: MEASURING_SCALE_SIZE + 'px' }} color="primary">
           <svg
             viewBox="0 0 3198 1024"
             version="1.1"
@@ -79,7 +104,7 @@ const TwoDMap: FC<PropsWithChildren<ITwoDMapProps>> = (props) => {
             ></path>
           </svg>
         </SvgIcon>
-        <span>{((MeasuringScaleSize / stageMapRatio) * currentScale).toFixed(2)}</span>
+        <span>{(MEASURING_SCALE_SIZE / stageMapRatio / currentScale).toFixed(2)}</span>
       </div>
       <ToolbarWrapper style={toolbarSprings}>
         <ThemeProvider

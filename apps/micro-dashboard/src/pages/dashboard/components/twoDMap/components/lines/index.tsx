@@ -8,7 +8,7 @@ export interface ILineProps extends Konva.LineConfig {
   text: string | number
 }
 const LineTextFontSize = 1
-const LineSize = 1
+const LineSize = 0.5
 const Line: FC<ILineProps> = memo((props) => {
   const { text, bezier, points } = props
   const textRef = useRef<ElementRef<typeof Text>>(null)
@@ -30,7 +30,14 @@ const Line: FC<ILineProps> = memo((props) => {
         offsetX={textWidth / 2}
       />
 
-      <KonvaLine listening={false} stroke={'#393c44'} strokeWidth={LineSize} bezier={bezier} points={points} />
+      <KonvaLine
+        perfectDrawEnabled={false}
+        listening={false}
+        stroke={'#393c44'}
+        strokeWidth={LineSize}
+        bezier={bezier}
+        points={points}
+      />
     </Group>
   )
 })
