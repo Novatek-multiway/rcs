@@ -4,10 +4,12 @@ import {
   getGetDictInfo,
   getSimulationCarrierLogin,
   postCreateCarrier,
+  postGetCarrierInfo,
   postGetControlOptions,
   postGetControlStates,
   postRemoveCarrier,
   postSendRemoteStop,
+  postUpdateCarrier,
   postUpdateCarrierState,
 } from "apis";
 import React, { useState } from "react";
@@ -38,6 +40,7 @@ const Vehicle = () => {
   const [tableData, setTableData] = useState<any[]>([]);
   const [messageConfig, setMessageConfig] = useState(initMessageConfig);
   const formRef = React.useRef<FormikContext>(null);
+  const formEditRef = React.useRef<FormikContext>(null);
 
   useAsyncEffect(async () => {
     await getDictInfo();
@@ -261,10 +264,11 @@ const Vehicle = () => {
                   <Button
                     color="primary"
                     onClick={async () => {
-                      console.log("formRef", formRef);
+                      console.log(formRef.current);
                       if (!formRef.current) return;
                       const params: Record<string, any> = formRef.current
                         ?.values as any;
+                      // formRef.current?.setSubmitting(true);
                       formRef.current?.submitForm();
                       params.area = ["0"];
                       await postCreateCarrier(params);
@@ -279,7 +283,43 @@ const Vehicle = () => {
                   <Button
                     color="warning"
                     onClick={() => {
-                      //
+                      table.setCreatingRow(null);
+                    }}
+                  >
+                    关闭
+                  </Button>
+                </DialogActions>
+              </>
+            )}
+            renderEditRowDialogContent={({ table }) => (
+              <>
+                <DialogTitle>编辑车辆配置信息</DialogTitle>
+                <DialogContent>
+                  <BaseForm ref={formEditRef} schemaObject={options}></BaseForm>
+                </DialogContent>
+                <DialogActions>
+                  <Button
+                    color="primary"
+                    onClick={async () => {
+                      console.log(formEditRef.current);
+                      if (!formEditRef.current) return;
+                      const params: Record<string, any> = formEditRef.current
+                        ?.values as any;
+                      formEditRef.current?.setSubmitting(true);
+                      params.area = ["0"];
+                      await postUpdateCarrier(params);
+                      alert("添加成功");
+                      table.setEditingRow(null);
+                      table.resetRowSelection();
+                      getTableData();
+                    }}
+                  >
+                    保存
+                  </Button>
+                  <Button
+                    color="warning"
+                    onClick={() => {
+                      table.setEditingRow(null);
                     }}
                   >
                     关闭
@@ -297,7 +337,24 @@ const Vehicle = () => {
                   width: "200px",
                 }}
               >
-                <span style={{ color: "#00c6c7", cursor: "pointer" }}>
+                <span
+                  style={{ color: "#00c6c7", cursor: "pointer" }}
+                  onClick={async () => {
+                    table.setEditingRow(row);
+                    console.log("formEditRef?.current", formEditRef?.current);
+                    Promise.resolve(() => {
+                      console.log("1");
+                    });
+                    const id = row?.original?.id;
+                    const { data } = await postGetCarrierInfo(id);
+                    // setTimeout(() => {
+                    data &&
+                      formEditRef?.current &&
+                      formEditRef?.current?.setValues(data);
+                    // }, 1000);
+                    console.log("777");
+                  }}
+                >
                   配置
                 </span>
                 /

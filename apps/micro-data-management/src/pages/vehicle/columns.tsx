@@ -1,3 +1,6 @@
+import { useDictStore } from "store";
+const dicts = useDictStore.getState().dicts;
+console.log("dicts", dicts);
 export const TaskColumn = [
   // {
   //   accessorKey: "id",
@@ -53,6 +56,8 @@ export const TaskColumn = [
     id: "controlState",
     header: "控制状态",
     Cell: ({ cell }: any) => {
+      // const dicts = useDictStore.getState().dicts;
+      // console.log("dicts", dicts);
       // 先放到window,后面再改到store
       return <div>{(window as any).dict["ControlState"][cell.getValue()]}</div>;
     },
