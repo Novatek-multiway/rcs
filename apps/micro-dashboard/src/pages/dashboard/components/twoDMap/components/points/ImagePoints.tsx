@@ -7,6 +7,7 @@ const getPointImage = async (imageName: string) => {
   const imageModule = await import(`../../../../../../assets/points/${imageName}.png`)
   return imageModule.default
 }
+console.log('🚀 ~ file: ImagePoints.tsx ~ line 10 ~ POINT_IMAGE_MAP', POINT_IMAGE_MAP)
 
 export interface IImagePointProps {
   id: number
@@ -27,7 +28,7 @@ const ImagePoint: FC<IImagePointProps> = memo((props) => {
         const imagePath = await getPointImage(pointImageName)
         const image = new Image()
         POINT_IMAGE_MAP[pointImageName] = image
-        image.src = imagePath
+        image.src = import.meta.env.VITE_APP_HOST + imagePath
         image.onload = () => {
           setImage(image)
         }
