@@ -1,17 +1,15 @@
-import { Button, Grid, LinearProgress, Paper } from "@mui/material";
-import {
-  Field,
-  Form,
-  Formik,
-  FormikContextType,
-  TextField,
-  useFormikContext,
-  yup,
-} from "mui-form";
+import { Grid, LinearProgress, Paper } from "@mui/material";
+import { Form, Formik, useFormikContext } from "formik";
+import { yup } from "mui-form";
 import PropTypes from "prop-types";
 import * as React from "react";
 
 import { forwardRef } from "../utils/inex";
+import {
+  FormFieldLabelSelect,
+  FormFieldLabelSwitch,
+  FormFieldLabelText,
+} from "./formField";
 
 interface Props {
   defaultValue?: Record<string, any>;
@@ -23,9 +21,9 @@ interface Props {
   }>;
 }
 
-const BaseForm = forwardRef((props, ref) => {
+const MaterialForm = forwardRef((props, ref) => {
   const { defaultValue = {}, schemaObject } = props;
-  const AutoSubmitToken = () => {
+  const AutoToken = () => {
     const formikbag = useFormikContext();
     React.useImperativeHandle(ref, () => formikbag);
     return null;
@@ -44,7 +42,7 @@ const BaseForm = forwardRef((props, ref) => {
   const schema = yup.object().shape(
     Array.isArray(schemaObject)
       ? schemaObject.reduce((shape, field) => {
-          shape[field.name] = yup.string().required();
+          shape[field.name] = yup.string().required(`${field.label} 字段必填`);
           return shape;
         }, {})
       : {}
@@ -55,18 +53,15 @@ const BaseForm = forwardRef((props, ref) => {
       return schemaObject.map((field) => {
         return (
           <Grid item xs={6} sm={6} md={6} key={field.name}>
-            <Field
-              key={field.name}
-              component={TextField}
-              type={field.type || "text"}
-              label={field.label}
-              variant="outlined"
-              size="small"
-              select={field.type === "select"}
-              formControl={{ sx: { m: 1, minWidth: 140 } }}
-              name={field.name}
-              helperText={field.helperText || ""}
-            />
+            {field.type === "checkbox" && (
+              <FormFieldLabelSwitch label="niyg" name={field.name} />
+            )}
+            {field.type === "select" && (
+              <FormFieldLabelSelect label="niyg1" name={field.name} />
+            )}
+            {field.type === "text" && (
+              <FormFieldLabelText label="niyg2" name={field.name} />
+            )}
           </Grid>
         );
       });
@@ -88,9 +83,8 @@ const BaseForm = forwardRef((props, ref) => {
             <Grid container spacing={2}>
               {fileds}
             </Grid>
-
             {isSubmitting && <LinearProgress />}
-            <AutoSubmitToken />
+            <AutoToken />
           </Form>
         )}
       </Formik>
@@ -98,12 +92,11 @@ const BaseForm = forwardRef((props, ref) => {
   );
 });
 
-BaseForm.propTypes = {
+MaterialForm.propTypes = {
   defaultValue: PropTypes.object,
   schemaObject: PropTypes.array,
 };
 
-BaseForm.displayName = "BaseForm";
+MaterialForm.displayName = "MaterialForm";
 
-export default BaseForm;
-export type FormikContext = FormikContextType<unknown>;
+export default MaterialForm;

@@ -4,7 +4,7 @@ import { useDictStore } from "store";
 
 const GlobalContext = () => {
   const { setDicts } = useDictStore();
-  useRequest(() => getDicts({ DictName: "CarrierType" }), {
+  useRequest(() => getDicts({}), {
     onSuccess: (res) => {
       if (res.data) {
         setDicts(res.data);
