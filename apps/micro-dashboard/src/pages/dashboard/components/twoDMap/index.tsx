@@ -7,7 +7,7 @@ import { Button, createTheme, SvgIcon, ThemeProvider } from 'ui'
 import data from '@/mock/data.json'
 
 import AutoResizerStage from './components/autoResizerStage'
-import Lines from './components/lines'
+import Lines, { LineDirections } from './components/lines'
 import { useLines } from './components/lines/useLines'
 import { useLinesInside } from './components/lines/useLinesInside'
 import Points from './components/points'
@@ -20,7 +20,6 @@ import { useStore } from './store'
 import { ToolbarWrapper, TwoDMapWrapper } from './style'
 
 const mapData = JSON.parse((data as any).data) as API.RootMapObject
-console.log('🚀 ~ file: index.tsx ~ line 22 ~ mapData', mapData)
 
 interface ITwoDMapProps {
   toolbarRight?: number
@@ -57,8 +56,6 @@ const TwoDMap: FC<PropsWithChildren<ITwoDMapProps>> = (props) => {
 
   const points = usePoints(mapData.Vertexs)
   const insidePoints = useShapesInside(points)
-  const lines = useLines(mapData.Edges)
-  const insideLines = useLinesInside(lines)
   // 停车点、充点电
   const imagePoints = useMemo(
     () =>
@@ -70,12 +67,16 @@ const TwoDMap: FC<PropsWithChildren<ITwoDMapProps>> = (props) => {
   // 库位点
   const locationPoint = useMemo(() => insidePoints.filter((p) => p.type === 1 || p.type === 4), [insidePoints])
 
+  const lines = useLines(mapData.Edges)
+  const insideLines = useLinesInside(lines)
+  const lineDirections = insideLines.flatMap((line) => line.directions)
+
   return (
     <TwoDMapWrapper>
       <AutoResizerStage>
         {/* 不需要改变的层 */}
         <Layer listening={false}>
-          <Lines lines={insideLines} />
+          <Lines lines={insideLines} strokeWidth={currentScale >= SCALE_BOUNDARY ? 0.1 : 3 / currentScale} />
         </Layer>
 
         {/* 缩放大于一定值才显示的层 */}
@@ -84,6 +85,7 @@ const TwoDMap: FC<PropsWithChildren<ITwoDMapProps>> = (props) => {
             <LocationPoints points={locationPoint} />
             <Points points={insidePoints} />
             <ImagePoints points={imagePoints} />
+            <LineDirections directions={lineDirections} />
           </Layer>
         )}
       </AutoResizerStage>

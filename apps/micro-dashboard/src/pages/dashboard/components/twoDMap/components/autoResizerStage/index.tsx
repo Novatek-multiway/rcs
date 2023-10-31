@@ -11,7 +11,7 @@ interface IInternalStageProps {
 }
 
 const INIT_SCALE = 6
-const InternalStage: FC<PropsWithChildren<IInternalStageProps>> = (props) => {
+const InternalStage: FC<PropsWithChildren<IInternalStageProps>> = memo((props) => {
   const { width, height, children } = props
   const stageRef = useRef<ElementRef<typeof Stage>>(null)
   const { currentScale, zoom } = useZoom(stageRef)
@@ -74,7 +74,7 @@ const InternalStage: FC<PropsWithChildren<IInternalStageProps>> = (props) => {
       {children}
     </Stage>
   )
-}
+})
 
 const AutoResizerStage = (props: PropsWithChildren) => (
   <AutoSizer defaultWidth={window.innerWidth} defaultHeight={window.innerHeight}>
