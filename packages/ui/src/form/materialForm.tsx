@@ -42,12 +42,13 @@ const MaterialForm = forwardRef((props, ref) => {
   const schema = yup.object().shape(
     Array.isArray(schemaObject)
       ? schemaObject.reduce((shape, field) => {
-          if (field.multiple) {
-            shape[field.name] = yup.array().required(`${field.label} 字段必填`);
-            return shape;
-          }
-          shape[field.name] = yup.string().required(`${field.label} 字段必填`);
-          return shape;
+          const fieldSchema = field.multiple
+            ? yup.array().min(1).required(`${field.label} 字段必填`)
+            : yup.string().required(`${field.label} 字段必填`);
+          return {
+            ...shape,
+            [field.name]: fieldSchema,
+          };
         }, {})
       : {}
   );
