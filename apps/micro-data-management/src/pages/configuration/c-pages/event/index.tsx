@@ -31,6 +31,37 @@ const Event: FC<IProps> = () => {
             ],
           },
           {
+            name: "AreaName12",
+            label: "指定车辆1",
+            type: "select",
+            required: true,
+            items: [
+              {
+                value: "AreaName112",
+                label: "任务点",
+              },
+              {
+                value: "AreaName212",
+                label: "任务点1",
+              },
+            ],
+          },
+          {
+            name: "AreaName122",
+            label: "指定车辆13",
+            type: "select",
+            items: [
+              {
+                value: "AreaName112",
+                label: "任务点",
+              },
+              {
+                value: "AreaName212",
+                label: "任务点1",
+              },
+            ],
+          },
+          {
             name: "AreaName1",
             label: "任务点",
             type: "checkbox",

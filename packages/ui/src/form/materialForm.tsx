@@ -11,7 +11,22 @@ import {
   FormFieldLabelText,
 } from "./formField";
 
-const MaterialForm = forwardRef((props, ref) => {
+interface FieldSchema {
+  name: string;
+  label: string;
+  helperText?: string;
+  type?: string;
+  multiple?: boolean; // 新增了 multiple 属性的类型定义
+  items?: Array<{ value: string; label: string }>; // 新增了 items 属性的类型定义
+  required?: boolean;
+}
+
+interface MaterialFormProps {
+  defaultValue?: Record<string, any>;
+  schemaObject: FieldSchema[];
+}
+
+const MaterialForm = forwardRef<any, MaterialFormProps>((props, ref) => {
   const { defaultValue = {}, schemaObject } = props;
   const AutoToken = () => {
     const formikbag = useFormikContext();
@@ -32,15 +47,22 @@ const MaterialForm = forwardRef((props, ref) => {
   const schema = yup.object().shape(
     Array.isArray(schemaObject)
       ? schemaObject.reduce((shape, field) => {
-          const fieldSchema = field.multiple
-            ? yup.array().test({
-                name: field.name,
-                message: `${field.label} 字段必填`,
-                test: (value) => {
-                  return value!.length > 0;
-                },
-              })
-            : yup.string().required(`${field.label} 字段必填`);
+          const required = field.required ?? false;
+          let fieldSchema = field.multiple ? yup.array() : yup.string();
+          if (field.multiple && field.type === "select") {
+            fieldSchema = fieldSchema.test({
+              name: field.name,
+              message: `${field.label} 字段必填`,
+              test: (value) => {
+                return value && value.length > 0;
+              },
+            });
+          }
+
+          if (required) {
+            fieldSchema = fieldSchema.required(`${field.label} 字段必填`);
+          }
+
           return {
             ...shape,
             [field.name]: fieldSchema,
@@ -100,7 +122,6 @@ const MaterialForm = forwardRef((props, ref) => {
 
 MaterialForm.propTypes = {
   defaultValue: PropTypes.object,
-  schemaObject: PropTypes.array,
 };
 
 MaterialForm.displayName = "MaterialForm";
