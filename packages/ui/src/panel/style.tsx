@@ -39,7 +39,7 @@ export const PanelContentWrapper = styled.div`
   position: relative;
   border: 1px solid #272f3c;
   background-origin: content-box;
-  background-color: rgba(0, 0, 0, 0.2);
+  background-color: rgba(0, 0, 0, 0.8);
   background-image: linear-gradient(
       var(--decoration-color) var(--decoration-width),
       transparent var(--decoration-width),
