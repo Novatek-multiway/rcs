@@ -18,10 +18,15 @@ const Event: FC<IProps> = () => {
             name: "AreaName",
             label: "指定车辆",
             type: "select",
-            children: [
+            multiple: true,
+            items: [
               {
                 value: "AreaName1",
                 label: "任务点",
+              },
+              {
+                value: "AreaName2",
+                label: "任务点1",
               },
             ],
           },

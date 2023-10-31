@@ -31,8 +31,8 @@ const MaterialForm = forwardRef((props, ref) => {
   const initValue = React.useMemo(() => {
     if (Array.isArray(schemaObject)) {
       const schemaKeys = schemaObject.reduce((pre, cur) => {
-        const { name } = cur;
-        pre[name] = "";
+        const { name, multiple } = cur;
+        pre[name] = multiple ? [] : "";
         return pre;
       }, {});
       return { ...defaultValue, ...schemaKeys };
@@ -57,7 +57,12 @@ const MaterialForm = forwardRef((props, ref) => {
               <FormFieldLabelSwitch label="niyg" name={field.name} />
             )}
             {field.type === "select" && (
-              <FormFieldLabelSelect label="niyg1" name={field.name} />
+              <FormFieldLabelSelect
+                label={field.label}
+                name={field.name}
+                items={field.items}
+                multiple={field.multiple}
+              />
             )}
             {field.type === "text" && (
               <FormFieldLabelText label="niyg2" name={field.name} />
