@@ -1,5 +1,5 @@
 import { useUpdateEffect } from 'ahooks'
-import React, { type ElementRef, FC, memo, PropsWithChildren, useCallback, useRef } from 'react'
+import React, { type ElementRef, FC, memo, PropsWithChildren, useCallback, useEffect, useRef } from 'react'
 import { KonvaNodeEvents, Stage } from 'react-konva'
 import AutoSizer from 'react-virtualized-auto-sizer'
 
@@ -15,23 +15,15 @@ const InternalStage: FC<PropsWithChildren<IInternalStageProps>> = (props) => {
   const { width, height, children } = props
   const stageRef = useRef<ElementRef<typeof Stage>>(null)
   const { currentScale, zoom } = useZoom(stageRef)
-  const {
-    globalCurrentScale,
-    mapCenterPosition,
-    stageMapRatio,
-    setCurrentScale,
-    setStageSize,
-    setCursorPosition,
-    setStageLeftTopPosition
-  } = useStore((state) => ({
-    globalCurrentScale: state.currentScale,
-    mapCenterPosition: state.mapCenterPosition,
-    stageMapRatio: state.stageMapRatio,
-    setCurrentScale: state.setCurrentScale,
-    setStageSize: state.setStageSize,
-    setCursorPosition: state.setCursorPosition,
-    setStageLeftTopPosition: state.setStageLeftTopPosition
-  }))
+  const { globalCurrentScale, setCurrentScale, setStageSize, setCursorPosition, setStageLeftTopPosition } = useStore(
+    (state) => ({
+      globalCurrentScale: state.currentScale,
+      setCurrentScale: state.setCurrentScale,
+      setStageSize: state.setStageSize,
+      setCursorPosition: state.setCursorPosition,
+      setStageLeftTopPosition: state.setStageLeftTopPosition
+    })
+  )
 
   useUpdateEffect(() => {
     // 同步scale到全局
@@ -67,11 +59,9 @@ const InternalStage: FC<PropsWithChildren<IInternalStageProps>> = (props) => {
   )
 
   // 设置初始缩放
-  useUpdateEffect(() => {
-    zoom(INIT_SCALE, {
-      targetPosition: { x: mapCenterPosition.x * stageMapRatio, y: mapCenterPosition.y * stageMapRatio }
-    })
-  }, [mapCenterPosition, zoom])
+  useEffect(() => {
+    zoom(INIT_SCALE, { targetPosition: { x: 0, y: 0 } })
+  }, [zoom])
   return (
     <Stage
       ref={stageRef}
