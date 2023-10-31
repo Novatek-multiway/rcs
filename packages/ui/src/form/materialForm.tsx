@@ -11,16 +11,6 @@ import {
   FormFieldLabelText,
 } from "./formField";
 
-interface Props {
-  defaultValue?: Record<string, any>;
-  schemaObject: Array<{
-    name: string;
-    label: string;
-    helperText?: string;
-    type?: string;
-  }>;
-}
-
 const MaterialForm = forwardRef((props, ref) => {
   const { defaultValue = {}, schemaObject } = props;
   const AutoToken = () => {
@@ -43,7 +33,13 @@ const MaterialForm = forwardRef((props, ref) => {
     Array.isArray(schemaObject)
       ? schemaObject.reduce((shape, field) => {
           const fieldSchema = field.multiple
-            ? yup.array().min(1).required(`${field.label} 字段必填`)
+            ? yup.array().test({
+                name: field.name,
+                message: `${field.label} 字段必填`,
+                test: (value) => {
+                  return value!.length > 0;
+                },
+              })
             : yup.string().required(`${field.label} 字段必填`);
           return {
             ...shape,
@@ -88,7 +84,7 @@ const MaterialForm = forwardRef((props, ref) => {
           }, 2000);
         }}
       >
-        {({ submitForm, isSubmitting, values }) => (
+        {({ isSubmitting }) => (
           <Form>
             <Grid container spacing={2}>
               {fileds}
