@@ -32,6 +32,7 @@ export const BaseTable: FC<TableProps> = (props) => {
       state={{
         isLoading: loading,
       }}
+      enableColumnActions={false}
       localization={MRT_Localization_ZH_HANS}
       enableToolbarInternalActions={false}
       {...rest}
