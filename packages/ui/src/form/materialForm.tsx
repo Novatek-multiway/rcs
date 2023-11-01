@@ -73,7 +73,17 @@ export const MaterialForm = forwardRef<any, MaterialFormProps>((props, ref) => {
     if (Array.isArray(schemaObject)) {
       return schemaObject.map((field) => {
         return (
-          <Grid item xs={6} sm={6} md={6} key={field.name}>
+          <Grid
+            item
+            xs={6}
+            sm={6}
+            md={6}
+            key={field.name}
+            sx={{
+              display: "flex",
+              alignItems: "flex-end",
+            }}
+          >
             {field.type === "checkbox" && (
               <FormFieldLabelSwitch label="niyg" name={field.name} />
             )}
@@ -101,7 +111,7 @@ export const MaterialForm = forwardRef<any, MaterialFormProps>((props, ref) => {
     }
   };
   return (
-    <Paper elevation={4}>
+    <Paper elevation={2}>
       <Formik
         initialValues={initValue}
         validationSchema={schema}
@@ -113,7 +123,7 @@ export const MaterialForm = forwardRef<any, MaterialFormProps>((props, ref) => {
       >
         {({ isSubmitting }) => (
           <Form>
-            <Grid container spacing={2}>
+            <Grid container spacing={2} sx={{ p: 2 }}>
               {fileds()}
             </Grid>
             {isSubmitting && <LinearProgress />}
