@@ -17,9 +17,9 @@ export const FormFieldLabelSelect = ({
   multiple = false,
 }: FormFieldLabelSelectProps) => {
   const sxFormControl = {
-    m: 1,
     minWidth: 140,
     width: "100%",
+    margin: "0 !important",
   };
   return (
     <>

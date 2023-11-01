@@ -8,12 +8,14 @@ interface FormFieldLabelTextProps
   label?: string;
   name: string;
   helperText?: string;
+  type?: string;
 }
 
 export const FormFieldLabelText = ({
   label,
   name,
   helperText,
+  type,
 }: FormFieldLabelTextProps) => {
   const sxFormControl = {
     m: 1,
@@ -30,7 +32,7 @@ export const FormFieldLabelText = ({
         name={name}
         native
         labelId="age-native"
-        type="text"
+        type={type || "text"}
         label={label}
         helperText={helperText || ""}
         inputProps={{

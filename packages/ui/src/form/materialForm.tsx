@@ -26,7 +26,7 @@ interface MaterialFormProps {
   schemaObject: FieldSchema[];
 }
 
-const MaterialForm = forwardRef<any, MaterialFormProps>((props, ref) => {
+export const MaterialForm = forwardRef<any, MaterialFormProps>((props, ref) => {
   const { defaultValue = {}, schemaObject } = props;
   const AutoToken = () => {
     const formikbag = useFormikContext();
@@ -40,7 +40,7 @@ const MaterialForm = forwardRef<any, MaterialFormProps>((props, ref) => {
         pre[name] = multiple ? [] : "";
         return pre;
       }, {});
-      return { ...defaultValue, ...schemaKeys };
+      return { ...schemaKeys, ...defaultValue };
     }
     return defaultValue;
   }, [defaultValue, schemaObject]);
@@ -58,11 +58,9 @@ const MaterialForm = forwardRef<any, MaterialFormProps>((props, ref) => {
               },
             });
           }
-
           if (required) {
             fieldSchema = fieldSchema.required(`${field.label} 字段必填`);
           }
-
           return {
             ...shape,
             [field.name]: fieldSchema,
@@ -71,11 +69,21 @@ const MaterialForm = forwardRef<any, MaterialFormProps>((props, ref) => {
       : {}
   );
 
-  const fileds = React.useMemo(() => {
+  const fileds = () => {
     if (Array.isArray(schemaObject)) {
       return schemaObject.map((field) => {
         return (
-          <Grid item xs={6} sm={6} md={6} key={field.name}>
+          <Grid
+            item
+            xs={6}
+            sm={6}
+            md={6}
+            key={field.name}
+            sx={{
+              display: "flex",
+              alignItems: "flex-end",
+            }}
+          >
             {field.type === "checkbox" && (
               <FormFieldLabelSwitch label="niyg" name={field.name} />
             )}
@@ -88,15 +96,22 @@ const MaterialForm = forwardRef<any, MaterialFormProps>((props, ref) => {
               />
             )}
             {field.type === "text" && (
-              <FormFieldLabelText label="niyg2" name={field.name} />
+              <FormFieldLabelText label={field.label} name={field.name} />
+            )}
+            {field.type === "number" && (
+              <FormFieldLabelText
+                label={field.label}
+                name={field.name}
+                type="number"
+              />
             )}
           </Grid>
         );
       });
     }
-  }, [schemaObject]);
+  };
   return (
-    <Paper elevation={4}>
+    <Paper elevation={2}>
       <Formik
         initialValues={initValue}
         validationSchema={schema}
@@ -108,8 +123,8 @@ const MaterialForm = forwardRef<any, MaterialFormProps>((props, ref) => {
       >
         {({ isSubmitting }) => (
           <Form>
-            <Grid container spacing={2}>
-              {fileds}
+            <Grid container spacing={2} sx={{ p: 2 }}>
+              {fileds()}
             </Grid>
             {isSubmitting && <LinearProgress />}
             <AutoToken />
@@ -126,4 +141,4 @@ MaterialForm.propTypes = {
 
 MaterialForm.displayName = "MaterialForm";
 
-export default MaterialForm;
+export type nygFormik = ReturnType<typeof useFormikContext>;
