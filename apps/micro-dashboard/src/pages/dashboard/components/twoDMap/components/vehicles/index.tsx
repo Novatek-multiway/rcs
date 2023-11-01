@@ -28,9 +28,10 @@ export interface IVehicleProps {
 const VEHICLE_IMAGE_SIZE = 4
 const VEHICLE_LIGHT_IMAGE_SIZE = 8
 const LINE_COLORS = ['#55efc4', '#81ecec', '#74b9ff', '#a29bfe', '#ffeaa7', '#fab1a0', '#ff7675', '#fd79a8']
+const vehicleColorMap = new Map()
 
 const Vehicle: FC<IVehicleProps> = memo((props) => {
-  const { x, y, vehicleImageName, vehicleLightImageName = 'circleBlue', lines = [], strokeWidth } = props
+  const { id, x, y, vehicleImageName, vehicleLightImageName = 'circleBlue', lines = [], strokeWidth } = props
   const [vehicleImagePath, setVehicleImagePath] = useState<string>('')
   const [vehicleLightImagePath, setVehicleLightImagePath] = useState<string>('')
   const vehicleImage = useImage(vehicleImagePath)
@@ -78,7 +79,15 @@ const Vehicle: FC<IVehicleProps> = memo((props) => {
   }, [])
   /* -------------------------------- light 旋转 -------------------------------- */
 
-  const lineStroke = useMemo(() => LINE_COLORS[Math.ceil(Math.random() * LINE_COLORS.length - 1)], [])
+  const lineStroke = useMemo(() => {
+    if (vehicleColorMap.has(id)) {
+      return vehicleColorMap.get(id)
+    } else {
+      const color = LINE_COLORS[Math.ceil(Math.random() * LINE_COLORS.length - 1)]
+      vehicleColorMap.set(id, color)
+      return color
+    }
+  }, [id])
 
   return (
     <Group>
