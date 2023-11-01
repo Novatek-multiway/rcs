@@ -5,10 +5,11 @@ import { delChassisInfos, getChassisInfos } from "apis";
 import type { FC, ReactNode } from "react";
 import React, { memo } from "react";
 import { useDictStore } from "store";
-import { BaseTable, Button } from "ui";
+import { BaseTable, Box, Button } from "ui";
 import { getUpperCaseKeyObject } from "utils";
 
 import DelButton from "@/component/delButton";
+import Refresh from "@/component/refreshIcon";
 
 import AddDialog from "./components/add";
 import EditDialog from "./components/edit";
@@ -131,15 +132,35 @@ const VehicleType: FC<IProps> = () => {
         loading={loading}
         renderTopToolbarCustomActions={() => {
           return (
-            <Button
-              variant="outlined"
-              size="small"
-              color="primary"
-              onClick={() => setOpen(true)}
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                gap: 1,
+                p: "4px",
+              }}
             >
-              <AddIcon />
-              新增
-            </Button>
+              <Button
+                variant="outlined"
+                size="small"
+                color="warning"
+                onClick={() => {
+                  getChass();
+                }}
+              >
+                <Refresh loading={loading}></Refresh>
+                刷新
+              </Button>
+              <Button
+                variant="outlined"
+                size="small"
+                color="primary"
+                onClick={() => setOpen(true)}
+              >
+                <AddIcon />
+                新增
+              </Button>
+            </Box>
           );
         }}
         initialState={{
