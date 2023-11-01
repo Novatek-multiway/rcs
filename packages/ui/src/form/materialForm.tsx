@@ -40,7 +40,7 @@ export const MaterialForm = forwardRef<any, MaterialFormProps>((props, ref) => {
         pre[name] = multiple ? [] : "";
         return pre;
       }, {});
-      return { ...defaultValue, ...schemaKeys };
+      return { ...schemaKeys, ...defaultValue };
     }
     return defaultValue;
   }, [defaultValue, schemaObject]);
@@ -69,7 +69,7 @@ export const MaterialForm = forwardRef<any, MaterialFormProps>((props, ref) => {
       : {}
   );
 
-  const fileds = React.useMemo(() => {
+  const fileds = () => {
     if (Array.isArray(schemaObject)) {
       return schemaObject.map((field) => {
         return (
@@ -99,7 +99,7 @@ export const MaterialForm = forwardRef<any, MaterialFormProps>((props, ref) => {
         );
       });
     }
-  }, [schemaObject]);
+  };
   return (
     <Paper elevation={4}>
       <Formik
@@ -114,7 +114,7 @@ export const MaterialForm = forwardRef<any, MaterialFormProps>((props, ref) => {
         {({ isSubmitting }) => (
           <Form>
             <Grid container spacing={2}>
-              {fileds}
+              {fileds()}
             </Grid>
             {isSubmitting && <LinearProgress />}
             <AutoToken />

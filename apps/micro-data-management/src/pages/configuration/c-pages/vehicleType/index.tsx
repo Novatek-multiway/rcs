@@ -6,10 +6,12 @@ import type { FC, ReactNode } from "react";
 import React, { memo } from "react";
 import { useDictStore } from "store";
 import { BaseTable, Button } from "ui";
+import { getUpperCaseKeyObject } from "utils";
 
 import DelButton from "@/component/delButton";
 
 import AddDialog from "./components/add";
+import EditDialog from "./components/edit";
 
 interface IProps {
   children?: ReactNode;
@@ -19,6 +21,8 @@ interface IProps {
 const VehicleType: FC<IProps> = () => {
   const { dicts } = useDictStore();
   const [open, setOpen] = React.useState(false);
+  const [editOpen, setEditOpen] = React.useState(false);
+  const [row, setRow] = React.useState({});
   const {
     data: chassisData,
     loading,
@@ -91,6 +95,10 @@ const VehicleType: FC<IProps> = () => {
               component="label"
               size="small"
               color="warning"
+              onClick={() => {
+                setEditOpen(true);
+                setRow(row.original);
+              }}
               startIcon={<EditNoteIcon />}
             >
               修改
@@ -146,6 +154,12 @@ const VehicleType: FC<IProps> = () => {
         callback={() => {
           getChass();
         }}
+      />
+      <EditDialog
+        open={editOpen}
+        row={getUpperCaseKeyObject(row)}
+        onClose={() => setEditOpen(false)}
+        callback={() => getChass()}
       />
     </>
   );

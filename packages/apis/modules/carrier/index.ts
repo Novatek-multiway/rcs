@@ -26,3 +26,10 @@ export const CreateChassisInfos = (data: Record<string, any>) => {
     data,
   });
 };
+
+export const UpdateChassisInfos = (data: Record<string, any>) => {
+  return request<IResponse<any>>("/Carrier/ModifyChassis", {
+    method: "POST",
+    data,
+  });
+};
