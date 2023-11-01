@@ -12,3 +12,17 @@ export const getChassisInfos = (data: Record<string, any>) => {
     params: data,
   });
 };
+
+export const delChassisInfos = (data: Record<string, any>) => {
+  return request<IResponse<any>>("/Carrier/DelChassisInfo", {
+    method: "POST",
+    params: data,
+  });
+};
+
+export const CreateChassisInfos = (data: Record<string, any>) => {
+  return request<IResponse<any>>("/Carrier/CreateChassis", {
+    method: "POST",
+    data,
+  });
+};

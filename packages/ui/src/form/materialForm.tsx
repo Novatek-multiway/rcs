@@ -88,6 +88,13 @@ export const MaterialForm = forwardRef<any, MaterialFormProps>((props, ref) => {
             {field.type === "text" && (
               <FormFieldLabelText label={field.label} name={field.name} />
             )}
+            {field.type === "number" && (
+              <FormFieldLabelText
+                label={field.label}
+                name={field.name}
+                type="number"
+              />
+            )}
           </Grid>
         );
       });

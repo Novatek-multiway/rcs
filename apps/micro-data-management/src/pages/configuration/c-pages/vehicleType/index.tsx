@@ -1,12 +1,13 @@
 import AddIcon from "@mui/icons-material/Add";
-import DeleteIcon from "@mui/icons-material/Delete";
 import EditNoteIcon from "@mui/icons-material/EditNote";
 import { useRequest } from "ahooks";
-import { getChassisInfos } from "apis";
+import { delChassisInfos, getChassisInfos } from "apis";
 import type { FC, ReactNode } from "react";
 import React, { memo } from "react";
 import { useDictStore } from "store";
 import { BaseTable, Button } from "ui";
+
+import DelButton from "@/component/delButton";
 
 import AddDialog from "./components/add";
 
@@ -18,9 +19,15 @@ interface IProps {
 const VehicleType: FC<IProps> = () => {
   const { dicts } = useDictStore();
   const [open, setOpen] = React.useState(false);
-  const { data: chassisData, loading } = useRequest(() =>
-    getChassisInfos({ type: 0 })
-  );
+  const {
+    data: chassisData,
+    loading,
+    run: getChass,
+  } = useRequest(() => getChassisInfos({ type: 0 }));
+
+  const { runAsync: delFn } = useRequest(delChassisInfos, {
+    manual: true,
+  });
 
   const columns = [
     {
@@ -70,7 +77,7 @@ const VehicleType: FC<IProps> = () => {
       accessorKey: "actions",
       header: "操作",
       enableSorting: false,
-      Cell: () => {
+      Cell: ({ row }) => {
         return (
           <div
             style={{
@@ -88,9 +95,14 @@ const VehicleType: FC<IProps> = () => {
             >
               修改
             </Button>
-            <Button component="label" size="small" startIcon={<DeleteIcon />}>
-              删除
-            </Button>
+            <DelButton
+              delFn={async () => {
+                await delFn({
+                  id: row.original.id,
+                });
+                getChass();
+              }}
+            />
           </div>
         );
       },
@@ -128,7 +140,13 @@ const VehicleType: FC<IProps> = () => {
           },
         }}
       />
-      <AddDialog open={open} onClose={() => setOpen(false)} />
+      <AddDialog
+        open={open}
+        onClose={() => setOpen(false)}
+        callback={() => {
+          getChass();
+        }}
+      />
     </>
   );
 };
