@@ -1,5 +1,6 @@
 import { Add, Remove, Search } from '@mui/icons-material'
 import { useSpring } from '@react-spring/web'
+import _ from 'lodash'
 import React, { FC, memo, PropsWithChildren, useEffect, useMemo } from 'react'
 import { Layer } from 'react-konva'
 import { Button, createTheme, SvgIcon, ThemeProvider } from 'ui'
@@ -81,7 +82,20 @@ const TwoDMap: FC<PropsWithChildren<ITwoDMapProps>> = (props) => {
 
   /* ----------------------------------- 车辆 ----------------------------------- */
   const vehicles = useVehicles(vehiclesData)
-  const insideVehicles = useShapesInside(vehicles)
+  const insideVehicles = useShapesInside(vehicles, (originInsideFilter) => {
+    // 车或车的路径在可见范围，则要显示当前车辆
+    return (shape) => {
+      if (!shape.lines?.length) {
+        return originInsideFilter(shape)
+      }
+      return (
+        originInsideFilter(shape) ||
+        shape.lines
+          .flatMap((line) => _.chunk(line.points, 2).map((point) => ({ x: point[0], y: point[1] })))
+          .some(originInsideFilter)
+      )
+    }
+  })
   /* ----------------------------------- 车辆 ----------------------------------- */
 
   return (
