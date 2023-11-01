@@ -26,7 +26,7 @@ interface MaterialFormProps {
   schemaObject: FieldSchema[];
 }
 
-const MaterialForm = forwardRef<any, MaterialFormProps>((props, ref) => {
+export const MaterialForm = forwardRef<any, MaterialFormProps>((props, ref) => {
   const { defaultValue = {}, schemaObject } = props;
   const AutoToken = () => {
     const formikbag = useFormikContext();
@@ -58,11 +58,9 @@ const MaterialForm = forwardRef<any, MaterialFormProps>((props, ref) => {
               },
             });
           }
-
           if (required) {
             fieldSchema = fieldSchema.required(`${field.label} 字段必填`);
           }
-
           return {
             ...shape,
             [field.name]: fieldSchema,
@@ -88,7 +86,7 @@ const MaterialForm = forwardRef<any, MaterialFormProps>((props, ref) => {
               />
             )}
             {field.type === "text" && (
-              <FormFieldLabelText label="niyg2" name={field.name} />
+              <FormFieldLabelText label={field.label} name={field.name} />
             )}
           </Grid>
         );
@@ -126,4 +124,4 @@ MaterialForm.propTypes = {
 
 MaterialForm.displayName = "MaterialForm";
 
-export default MaterialForm;
+export type nygFormik = ReturnType<typeof useFormikContext>;
