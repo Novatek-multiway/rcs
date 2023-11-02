@@ -33,3 +33,22 @@ export const UpdateStationInfos = (data: Record<string, any>) => {
     data,
   });
 };
+
+export const getVertexs = () => {
+  return request<IResponse<any>>("/Map/GetVertexs", {
+    method: "GET",
+  });
+};
+
+export const GetCarrierOptions = (data = { ID: 0 }) => {
+  return request<IResponse<any>>("/Carrier/GetCarrierOptions", {
+    method: "POST",
+    data,
+  });
+};
+
+export const GetChassisList = () => {
+  return request<IResponse<any>>("/Carrier/GetChassisList", {
+    method: "GET",
+  });
+};

@@ -42,6 +42,7 @@ const Layout: FC<LayoutProps> = (props) => {
           sx={{
             background: "rgb(24, 26, 33)",
             color: theme.palette.text.primary,
+            zIndex: 1000,
           }}
         >
           <Toolbar variant="dense" sx={{ alignItems: "center" }}>

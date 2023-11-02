@@ -1,4 +1,5 @@
 import { extend } from "umi-request";
+import { notification } from "antd";
 
 interface RCSResponse extends Omit<Response, "status"> {
   code: number;
@@ -30,5 +31,11 @@ request.interceptors.response.use(async (response) => {
     const data = await response.clone().json();
     return data;
   }
+  const data = await response.clone().json();
+
+  notification.error({
+    message: `Error ${status}`,
+    description: data.title,
+  });
   return response;
 });

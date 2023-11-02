@@ -6,6 +6,7 @@ import * as React from "react";
 
 import { forwardRef } from "../utils/inex";
 import {
+  FormFieldLabelAutoComplete,
   FormFieldLabelSelect,
   FormFieldLabelSwitch,
   FormFieldLabelText,
@@ -24,10 +25,11 @@ interface FieldSchema {
 interface MaterialFormProps {
   defaultValue?: Record<string, any>;
   schemaObject: FieldSchema[];
+  columns?: number;
 }
 
 export const MaterialForm = forwardRef<any, MaterialFormProps>((props, ref) => {
-  const { defaultValue = {}, schemaObject } = props;
+  const { defaultValue = {}, schemaObject, columns = 2 } = props;
   const AutoToken = () => {
     const formikbag = useFormikContext();
     React.useImperativeHandle(ref, () => formikbag);
@@ -49,6 +51,9 @@ export const MaterialForm = forwardRef<any, MaterialFormProps>((props, ref) => {
       ? schemaObject.reduce((shape, field) => {
           const required = field.required ?? false;
           let fieldSchema = field.multiple ? yup.array() : yup.string();
+          if (field.type === "autoComplete") {
+            fieldSchema = yup.mixed();
+          }
           if (field.multiple && field.type === "select") {
             fieldSchema = fieldSchema.test({
               name: field.name,
@@ -69,15 +74,15 @@ export const MaterialForm = forwardRef<any, MaterialFormProps>((props, ref) => {
       : {}
   );
 
-  const fileds = () => {
+  const fileds = (errors, touched) => {
     if (Array.isArray(schemaObject)) {
       return schemaObject.map((field) => {
         return (
           <Grid
             item
-            xs={6}
-            sm={6}
-            md={6}
+            xs={12 / columns}
+            sm={12 / columns}
+            md={12 / columns}
             key={field.name}
             sx={{
               display: "flex",
@@ -93,6 +98,16 @@ export const MaterialForm = forwardRef<any, MaterialFormProps>((props, ref) => {
                 name={field.name}
                 items={field.items}
                 multiple={field.multiple}
+              />
+            )}
+            {field.type === "autoComplete" && (
+              <FormFieldLabelAutoComplete
+                label={field.label}
+                name={field.name}
+                items={field.items}
+                multiple={field.multiple}
+                error
+                touched
               />
             )}
             {field.type === "text" && (
@@ -121,10 +136,10 @@ export const MaterialForm = forwardRef<any, MaterialFormProps>((props, ref) => {
           }, 2000);
         }}
       >
-        {({ isSubmitting }) => (
+        {({ isSubmitting, errors, touched }) => (
           <Form>
             <Grid container spacing={2} sx={{ p: 2 }}>
-              {fileds()}
+              {fileds(errors, touched)}
             </Grid>
             {isSubmitting && <LinearProgress />}
             <AutoToken />
