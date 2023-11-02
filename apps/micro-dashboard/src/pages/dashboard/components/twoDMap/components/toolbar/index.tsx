@@ -1,8 +1,8 @@
 import { Add, Remove, Search, Settings as SettingsIcon } from '@mui/icons-material'
 import { useSpring } from '@react-spring/web'
 import type { FC, PropsWithChildren } from 'react'
-import React, { memo, useCallback, useState } from 'react'
-import { Button, createTheme, ThemeProvider } from 'ui'
+import React, { memo, useCallback, useMemo, useState } from 'react'
+import { createTheme, SpeedDial, SpeedDialAction, SpeedDialIcon, ThemeProvider } from 'ui'
 
 import { useDashboardStore } from '@/pages/dashboard/store'
 
@@ -43,6 +43,16 @@ const Toolbar: FC<PropsWithChildren<IToolbarProps>> = (props) => {
     setAsideOpen(true)
   }, [setAsideOpen])
 
+  const actions = useMemo(
+    () => [
+      { icon: <SettingsIcon />, name: '设置', onClick: handleSettingsClick },
+      { icon: <Search />, name: '搜索' },
+      { icon: <Remove />, name: '缩小', onClick: () => setCurrentScale(currentScale - 0.1) },
+      { icon: <Add />, name: '放大', onClick: () => setCurrentScale(currentScale + 0.1) }
+    ],
+    [handleSettingsClick, setCurrentScale, currentScale]
+  )
+
   return (
     <ToolbarWrapper style={toolbarSprings}>
       <ThemeProvider
@@ -54,18 +64,21 @@ const Toolbar: FC<PropsWithChildren<IToolbarProps>> = (props) => {
           }
         })}
       >
-        <Button variant="contained" sx={{ minWidth: 'auto' }} onClick={() => setCurrentScale(currentScale + 0.1)}>
-          <Add color="info" />
-        </Button>
-        <Button variant="contained" sx={{ minWidth: 'auto' }} onClick={() => setCurrentScale(currentScale - 0.1)}>
-          <Remove color="info" />
-        </Button>
-        <Button variant="contained" sx={{ minWidth: 'auto' }}>
-          <Search color="info" />
-        </Button>
-        <Button variant="contained" sx={{ minWidth: 'auto' }} onClick={handleSettingsClick}>
-          <SettingsIcon color="info" />
-        </Button>
+        <SpeedDial
+          ariaLabel="SpeedDial basic example"
+          sx={{ position: 'absolute', bottom: 16, right: 16 }}
+          icon={<SpeedDialIcon />}
+        >
+          {actions.map((action) => (
+            <SpeedDialAction
+              key={action.name}
+              icon={action.icon}
+              tooltipTitle={action.name}
+              onClick={action.onClick}
+              color="info"
+            />
+          ))}
+        </SpeedDial>
       </ThemeProvider>
       <Settings open={isSettingsOpen} onClose={handleSettingsClose} />
     </ToolbarWrapper>
