@@ -200,10 +200,7 @@ const AddDialog: React.FC<{
                 AreaID: values.AreaID.map((item) => Number(item.value)),
                 PointKey: Number(values.PointKey.value),
               };
-              const res = await run(sendData);
-              console.log(res);
-
-              debugger;
+              await run(sendData);
               onClose();
               callback && callback();
             }
