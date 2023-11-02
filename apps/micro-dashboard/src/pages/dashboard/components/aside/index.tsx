@@ -1,5 +1,5 @@
 import { useSpring } from '@react-spring/web'
-import { useSize } from 'ahooks'
+import { useSize, useUpdateEffect } from 'ahooks'
 import type { ElementRef, PropsWithChildren, ReactNode } from 'react'
 import React, { forwardRef, memo, useEffect, useImperativeHandle, useRef, useState } from 'react'
 
@@ -16,6 +16,8 @@ const Aside = forwardRef<
     asideWidth?: number
     asideOpen: boolean
     toggleAside: () => void
+    showAside: () => void
+    hideAside: () => void
   },
   PropsWithChildren<IAsideProps>
 >((props, ref) => {
@@ -31,14 +33,23 @@ const Aside = forwardRef<
   }))
 
   const toggleAside = () => {
-    asideLeftApi.start({
-      to: { transform: `translateX(${!open ? 0 : -100}%)`, opacity: open ? 0 : 1 }
-    })
-    asideRightApi.start({
-      to: { transform: `translateX(${!open ? 0 : 100}%)`, opacity: open ? 0 : 1 }
-    })
     setOpen((open) => !open)
   }
+  const showAside = () => {
+    setOpen(true)
+  }
+  const hideAside = () => {
+    setOpen(false)
+  }
+
+  useUpdateEffect(() => {
+    asideLeftApi.start({
+      to: { transform: `translateX(${open ? 0 : -100}%)`, opacity: !open ? 0 : 1 }
+    })
+    asideRightApi.start({
+      to: { transform: `translateX(${open ? 0 : 100}%)`, opacity: !open ? 0 : 1 }
+    })
+  }, [open])
 
   const asideRef = useRef<ElementRef<typeof AsideLeftWrapper>>(null)
   const size = useSize(asideRef)
@@ -50,6 +61,8 @@ const Aside = forwardRef<
 
   useImperativeHandle(ref, () => ({
     toggleAside,
+    showAside,
+    hideAside,
     asideWidth: size?.width,
     asideOpen: open
   }))

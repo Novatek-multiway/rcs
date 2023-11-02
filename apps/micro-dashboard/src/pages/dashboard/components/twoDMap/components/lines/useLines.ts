@@ -13,7 +13,7 @@ const removeDuplicateLine = (edges: MapAPI.Edge[]) => {
     const leftCenterIndex = (line.ControlPoint.length >> 1) - 1
     const { X, Y } = line.ControlPoint[leftCenterIndex]
     const endPoint = line.ControlPoint.at(-1)!
-    const rad = Math.atan2(Y - endPoint?.Y, X - endPoint?.X)
+    const rad = Math.atan2(endPoint?.Y - Y, endPoint?.X - X)
     const deg = (rad * 180) / Math.PI
     const direction: NonNullable<ILineDirectionsProps['directions']>[0] = {
       id: line.ID,
@@ -57,6 +57,8 @@ export const useLines = (edges: MapAPI.Edge[]) => {
       removeDuplicateLine(edges).map((edge) => {
         const startPoint = idPointMap.get(edge.Start)
         const endPoint = idPointMap.get(edge.End)
+        const directions =
+          edge.CustomDirection?.map((d) => ({ ...d, x: d.x * stageMapRatio, y: d.y * stageMapRatio })) || []
         const line = {
           id: edge.ID,
           points:
@@ -70,9 +72,10 @@ export const useLines = (edges: MapAPI.Edge[]) => {
                 ].flat()
               : [],
           bezier: !!edge.ControlPoint.length,
-          directions: edge.CustomDirection?.map((d) => ({ ...d, x: d.x * stageMapRatio, y: d.y * stageMapRatio })) || []
+          directions
         }
-        setLine(line.id, line)
+        // 将重复的两条边都存到映射
+        directions.forEach((d) => setLine(d.id, line))
         return line
       }),
     [idPointMap, stageMapRatio, edges, setLine]

@@ -1,5 +1,5 @@
 import { useUpdateEffect } from 'ahooks'
-import { ElementRef, useCallback, useRef, useState } from 'react'
+import { ElementRef, memo, useCallback, useRef, useState } from 'react'
 import { useGlobalStore } from 'store'
 
 import Aside, { IAsideProps } from './components/aside'
@@ -8,18 +8,28 @@ import TimeStats from './components/timeStats'
 import TwoDMap from './components/twoDMap'
 import UtilizationRateStats from './components/utilizationRateStats'
 import VehicleStatus from './components/vehicleStatus'
+import { useDashboardStore } from './store'
 import { DashboardWrapper } from './style'
 
 const Dashboard = () => {
-  const globalState = useGlobalStore((state) => state.globalState)
+  const logoTitleClickTime = useGlobalStore((state) => state.globalState.logoTitleClickTime)
+  const { asideOpen, setAsideOpen } = useDashboardStore((state) => ({
+    asideOpen: state.asideOpen,
+    setAsideOpen: state.setAsideOpen
+  }))
   const asideRef = useRef<ElementRef<typeof Aside>>(null)
+
+  useUpdateEffect(() => {
+    const asideOpen = asideRef.current?.asideOpen
+    setAsideOpen(!asideOpen)
+  }, [logoTitleClickTime])
 
   useUpdateEffect(() => {
     const aside = asideRef.current
     const asideWidth = aside?.asideWidth || 300
-    aside?.toggleAside()
     setToolbarRight((p) => (aside?.asideOpen ? p - asideWidth : p + asideWidth))
-  }, [globalState.logoTitleClickTime])
+    asideOpen ? aside?.showAside() : aside?.hideAside()
+  }, [asideOpen])
 
   const [toolbarRight, setToolbarRight] = useState(380)
   const handleSizeChange = useCallback<NonNullable<IAsideProps['onSizeChange']>>((size) => {
@@ -50,4 +60,4 @@ const Dashboard = () => {
   )
 }
 
-export default Dashboard
+export default memo(Dashboard)

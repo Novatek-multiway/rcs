@@ -37,7 +37,9 @@ export const useVehicles = (carriers: ReportAPI.OnlineCarrier[]) => {
           y: carrier.y * stageMapRatio,
           vehicleImageName: carrier.image.replace('.png', ''),
           vehicleLightImageName: getVehicleLightImageName(carrier),
-          lines: lines
+          lines: lines,
+          statusName: carrier.statusName,
+          battery: carrier.elecQuantity
         }
         return vehicle
       }),

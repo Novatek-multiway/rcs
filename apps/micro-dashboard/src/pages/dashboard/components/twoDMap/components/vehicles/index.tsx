@@ -2,18 +2,14 @@ import Konva from 'konva'
 import type { FC, PropsWithChildren } from 'react'
 import React, { memo, useEffect, useMemo, useRef, useState } from 'react'
 import { Group, Image as KonvaImage } from 'react-konva'
+import { Html } from 'react-konva-utils'
 
 import { useImage } from '../../hooks/useImage'
+import { useStore } from '../../store'
 import Lines, { ILinesProps } from '../lines'
-
-const getVehicleImage = async (imageName: string) => {
-  const imageModule = await import(`../../../../../../assets/vehicles/${imageName}.png`)
-  return imageModule.default
-}
-const getVehicleLightImage = async (imageName: string) => {
-  const imageModule = await import(`../../../../../../assets/vehicles/lights/${imageName}.png`)
-  return imageModule.default
-}
+import { LINE_COLORS, VEHICLE_IMAGE_SIZE, VEHICLE_LIGHT_IMAGE_SIZE, vehicleColorMap } from './constant'
+import { TooltipWrapper } from './style'
+import { getPowerColor, getVehicleImage, getVehicleLightImage } from './utils'
 
 export interface IVehicleProps {
   id: number
@@ -21,16 +17,25 @@ export interface IVehicleProps {
   y: number
   vehicleImageName: string
   vehicleLightImageName: string
+  statusName?: string
+  battery?: number
   lines?: ILinesProps['lines']
   strokeWidth?: ILinesProps['strokeWidth']
 }
 
-const VEHICLE_IMAGE_SIZE = 4
-const VEHICLE_LIGHT_IMAGE_SIZE = 8
-const LINE_COLORS = ['#55efc4', '#81ecec', '#74b9ff', '#a29bfe', '#ffeaa7', '#fab1a0', '#ff7675', '#fd79a8']
-
 const Vehicle: FC<IVehicleProps> = memo((props) => {
-  const { x, y, vehicleImageName, vehicleLightImageName = 'circleBlue', lines = [], strokeWidth } = props
+  const {
+    id,
+    x,
+    y,
+    vehicleImageName,
+    vehicleLightImageName = 'circleBlue',
+    statusName = '离线',
+    battery = 0,
+    lines = [],
+    strokeWidth
+  } = props
+  const currentScale = useStore((state) => state.currentScale)
   const [vehicleImagePath, setVehicleImagePath] = useState<string>('')
   const [vehicleLightImagePath, setVehicleLightImagePath] = useState<string>('')
   const vehicleImage = useImage(vehicleImagePath)
@@ -78,7 +83,15 @@ const Vehicle: FC<IVehicleProps> = memo((props) => {
   }, [])
   /* -------------------------------- light 旋转 -------------------------------- */
 
-  const lineStroke = useMemo(() => LINE_COLORS[Math.ceil(Math.random() * LINE_COLORS.length - 1)], [])
+  const lineStroke = useMemo(() => {
+    if (vehicleColorMap.has(id)) {
+      return vehicleColorMap.get(id)
+    } else {
+      const color = LINE_COLORS[Math.ceil(Math.random() * LINE_COLORS.length - 1)]
+      vehicleColorMap.set(id, color)
+      return color
+    }
+  }, [id])
 
   return (
     <Group>
@@ -102,6 +115,37 @@ const Vehicle: FC<IVehicleProps> = memo((props) => {
           offsetX={(VEHICLE_IMAGE_SIZE * vehicleImageAspectRatio) / 2}
           offsetY={VEHICLE_IMAGE_SIZE / 2}
         ></KonvaImage>
+        <Html
+          transform
+          transformFunc={(attrs) => {
+            const scale = Math.max(Math.min(50 / currentScale, 3), 2.5)
+            const newAttrs = { ...attrs, scaleX: scale, scaleY: scale }
+            return newAttrs
+          }}
+          divProps={{
+            style: {
+              zIndex: 9,
+              fontSize: '6px',
+              touchAction: 'none',
+              pointerEvents: 'none',
+              userSelect: 'none'
+            }
+          }}
+        >
+          <TooltipWrapper>
+            <div className="tooltip">
+              <div>
+                编号: <span>{id}</span>
+              </div>
+              <div>
+                状态: <span>{statusName}</span>
+              </div>
+              <div className="battery">
+                电量: <span style={{ color: getPowerColor(battery) }}>{battery}%</span>
+              </div>
+            </div>
+          </TooltipWrapper>
+        </Html>
       </Group>
     </Group>
   )
