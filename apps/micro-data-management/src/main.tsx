@@ -52,3 +52,8 @@ renderWithQiankun({
 if (!window.__POWERED_BY_QIANKUN__) {
   start();
 }
+
+// @ts-ignore
+if (process.env.NODE_ENV === "development") {
+  import("@/hmr.fix");
+}
