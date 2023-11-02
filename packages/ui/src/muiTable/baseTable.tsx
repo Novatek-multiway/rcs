@@ -1,41 +1,36 @@
 import {
   MaterialReactTable,
-  MRT_ColumnDef,
-  MRT_TableOptions,
+  type MRT_ColumnDef,
+  type MRT_RowData, //default shape of TData (Record<string, any>)
+  type MRT_TableOptions,
+  useMaterialReactTable,
 } from "material-react-table";
 import { MRT_Localization_ZH_HANS } from "material-react-table/locales/zh-Hans";
-import { FC } from "react";
-
-interface TableProps extends MRT_TableOptions<Record<any, any>> {
-  data: any[];
-  columns: MRT_ColumnDef<Record<any, any>>[];
-  pageChange?: React.Dispatch<
-    React.SetStateAction<{
-      pageIndex: number;
-      pageSize: number;
-    }>
-  >;
+interface Props<TData extends MRT_RowData> extends MRT_TableOptions<TData> {
+  columns: MRT_ColumnDef<TData>[];
+  data: TData[];
   loading?: boolean;
 }
-export const BaseTable: FC<TableProps> = (props) => {
+export const BaseTable = <TData extends MRT_RowData>(props: Props<TData>) => {
   const { data, columns, loading, ...rest } = props;
-  return (
-    <MaterialReactTable
-      columns={columns}
-      data={data || []}
-      muiTablePaperProps={{
-        sx: {
-          height: "100%",
-          padding: 2,
-        },
-      }}
-      state={{
-        isLoading: loading,
-      }}
-      enableColumnActions={false}
-      localization={MRT_Localization_ZH_HANS}
-      enableToolbarInternalActions={false}
-      {...rest}
-    />
-  );
+  const table = useMaterialReactTable({
+    columns,
+    data,
+    state: {
+      isLoading: loading,
+    },
+    muiTablePaperProps: {
+      sx: {
+        height: "100%",
+        padding: 2,
+      },
+    },
+    localization: MRT_Localization_ZH_HANS,
+    enableToolbarInternalActions: false,
+    enableColumnActions: false,
+
+    //your custom table options...
+    ...rest, //accept props to override default table options
+  });
+  return <MaterialReactTable table={table} />;
 };
