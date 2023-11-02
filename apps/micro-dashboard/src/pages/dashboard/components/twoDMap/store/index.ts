@@ -48,14 +48,12 @@ export const useStore = create<StoreState>((set) => ({
   setCurrentScale: (currentScale) => set(() => ({ currentScale })),
   setCursorPosition: (cursorPosition) => set(() => ({ cursorPosition })),
   setPoint: (id, point) =>
-    set((state) => {
-      const idPointMap = new Map(state.idPointMap)
+    set(({ idPointMap }) => {
       idPointMap.set(id, point)
       return { idPointMap }
     }),
-    setLine: (id, line) =>
-    set((state) => {
-      const idLineMap = new Map(state.idLineMap)
+  setLine: (id, line) =>
+    set(({ idLineMap }) => {
       idLineMap.set(id, line)
       return { idLineMap }
     }),

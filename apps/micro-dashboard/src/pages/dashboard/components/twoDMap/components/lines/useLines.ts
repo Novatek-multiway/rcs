@@ -52,34 +52,33 @@ export const useLines = (edges: MapAPI.Edge[]) => {
     idPointMap: state.idPointMap,
     setLine: state.setLine
   }))
-  const lines: (ILineProps & ILineDirectionsProps)[] = useMemo(
-    () =>
-      removeDuplicateLine(edges).map((edge) => {
-        const startPoint = idPointMap.get(edge.Start)
-        const endPoint = idPointMap.get(edge.End)
-        const directions =
-          edge.CustomDirection?.map((d) => ({ ...d, x: d.x * stageMapRatio, y: d.y * stageMapRatio })) || []
-        const line = {
-          id: edge.ID,
-          points:
-            startPoint && endPoint
-              ? [
-                  startPoint?.x,
-                  startPoint?.y,
-                  ...edge.ControlPoint.map((cPoint) => [cPoint.X * stageMapRatio, cPoint.Y * stageMapRatio]),
-                  endPoint?.x,
-                  endPoint?.y
-                ].flat()
-              : [],
-          bezier: !!edge.ControlPoint.length,
-          directions
-        }
-        // 将重复的两条边都存到映射
-        directions.forEach((d) => setLine(d.id, line))
-        return line
-      }),
-    [idPointMap, stageMapRatio, edges, setLine]
-  )
+  const deduplicatedEdges = useMemo(() => removeDuplicateLine(edges), [edges])
+  const lines: (ILineProps & ILineDirectionsProps)[] = useMemo(() => {
+    return deduplicatedEdges.map((edge) => {
+      const startPoint = idPointMap.get(edge.Start)
+      const endPoint = idPointMap.get(edge.End)
+      const directions =
+        edge.CustomDirection?.map((d) => ({ ...d, x: d.x * stageMapRatio, y: d.y * stageMapRatio })) || []
+      const line = {
+        id: edge.ID,
+        points:
+          startPoint && endPoint
+            ? [
+                startPoint?.x,
+                startPoint?.y,
+                ...edge.ControlPoint.map((cPoint) => [cPoint.X * stageMapRatio, cPoint.Y * stageMapRatio]),
+                endPoint?.x,
+                endPoint?.y
+              ].flat()
+            : [],
+        bezier: !!edge.ControlPoint.length,
+        directions
+      }
+      // 将重复的两条边都存到映射
+      directions.forEach((d) => setLine(d.id, line))
+      return line
+    })
+  }, [idPointMap, stageMapRatio, setLine, deduplicatedEdges])
 
   return lines
 }
