@@ -6,24 +6,26 @@ import { Popover } from 'ui'
 interface ILineColorPickerProps {
   label: string
   initialColor: string
-  onConfirm?: () => void
+  onConfirm?: (color: string) => void
+  onChange?: (color: string) => void
 }
 
 const LineColorPicker: FC<PropsWithChildren<ILineColorPickerProps>> = (props) => {
-  const { label, initialColor, onConfirm } = props
+  const { label, initialColor, onConfirm, onChange } = props
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null)
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget)
   }
   const handleClose = () => {
     setAnchorEl(null)
-    onConfirm?.()
+    onConfirm?.(color.css.backgroundColor as string)
   }
   const open = Boolean(anchorEl)
 
   const [color, setColor] = useState(createColor(initialColor, 'hex' as any))
   const handleChange = (newValue: Color) => {
     setColor(newValue)
+    onChange?.(newValue.css.backgroundColor as string)
   }
   return (
     <div className="item">

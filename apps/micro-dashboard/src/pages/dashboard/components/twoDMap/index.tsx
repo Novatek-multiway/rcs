@@ -35,8 +35,9 @@ const SCALE_BOUNDARY = 6.5 // 缩放显示边界（低于一定缩放值，部�
 const TwoDMap: FC<PropsWithChildren<ITwoDMapProps>> = (props) => {
   const { toolbarRight = 300 } = props
 
-  const { currentScale, setMapSize, setMapCenterPosition } = useTwoDMapStore((state) => ({
+  const { currentScale, settings, setMapSize, setMapCenterPosition } = useTwoDMapStore((state) => ({
     currentScale: state.currentScale,
+    settings: state.settings,
     setMapSize: state.setMapSize,
     setMapCenterPosition: state.setMapCenterPosition
   }))
@@ -71,16 +72,26 @@ const TwoDMap: FC<PropsWithChildren<ITwoDMapProps>> = (props) => {
   /* ----------------------------------- 边 ----------------------------------- */
 
   /* ----------------------------------- 车辆 ----------------------------------- */
-  const vehicles = useVehicles(vehiclesData)
+  const vehicles = useVehicles(vehiclesData, {
+    carrierPlanningFilter: (planning) => (settings.isDevMode ? true : planning.state1 === 0)
+  })
   const insideVehicles = useShapesInside(vehicles, (originInsideFilter) => {
     // 车或车的路径在可见范围，则要显示当前车辆
-    return (shape) => {
-      if (!shape.lines?.length) {
-        return originInsideFilter(shape)
+    return (vehicle) => {
+      // 如果 isFaultyVehicleVisible为false, 不显示异常车辆,
+      if (!settings.isFaultyVehicleVisible && vehicle.statusName === '异常') {
+        return false
       }
+      // 没有规划路线的车辆，只需要判断车辆是否在可见范围内，不需要判断线路是否在可见范围内
+      if (!vehicle.lines?.length) {
+        return originInsideFilter(vehicle)
+      }
+      // 如果isVehicleOnWorkVisible为false, 不显示带规划路线的工作车辆, 也可理解成工作车辆不能在可见范围
+      if (!settings.isVehicleOnWorkVisible) return false
+
       return (
-        originInsideFilter(shape) ||
-        shape.lines
+        originInsideFilter(vehicle) ||
+        vehicle.lines
           .flatMap((line) => _.chunk(line.points, 2).map((point) => ({ x: point[0], y: point[1] })))
           .some(originInsideFilter)
       )
@@ -93,21 +104,36 @@ const TwoDMap: FC<PropsWithChildren<ITwoDMapProps>> = (props) => {
       <AutoResizerStage>
         {/* 不需要改变的层 */}
         <Layer listening={false}>
-          <Lines lines={insideLines} strokeWidth={currentScale >= SCALE_BOUNDARY ? 0.1 : 3 / currentScale} />
+          <Lines
+            lines={insideLines}
+            stroke={settings.isVehiclePlanningSingleColor ? settings.lineColor : undefined}
+            strokeWidth={currentScale >= SCALE_BOUNDARY ? 0.1 : 3 / currentScale}
+          />
         </Layer>
 
-        {/* 缩放大于一定值才显示的层 */}
+        {/* 改变频率低的层
+        缩放值小于边界时隐藏， 提升显示元素多时的性能
+        */}
         {currentScale >= SCALE_BOUNDARY && (
           <Layer listening={false}>
-            <LocationPoints points={locationPoint} />
-            <Points points={insidePoints} />
-            <ImagePoints points={imagePoints} />
-            <LineDirections directions={lineDirections} />
+            {settings.isLocationVisible && <LocationPoints points={locationPoint} />}
+            {settings.isPointVisible && <Points points={insidePoints} />}
+            {settings.isStationVisible && <ImagePoints points={imagePoints} />}
+            {settings.isDirectionVisible && <LineDirections directions={lineDirections} />}
           </Layer>
         )}
-        {/* 动态层 */}
+
+        {/* 改变频率高的层 */}
         <Layer>
-          <Vehicles vehicles={insideVehicles} strokeWidth={currentScale >= SCALE_BOUNDARY ? 0.1 : 3 / currentScale} />
+          <Vehicles
+            vehicles={insideVehicles}
+            stroke={settings.isVehiclePlanningSingleColor ? settings.planningLineColor : undefined}
+            strokeWidth={currentScale >= SCALE_BOUNDARY ? 0.1 : 3 / currentScale}
+            showImage={settings.isVehicleImageVisible}
+            showOutline={settings.isVehicleOutlineVisible}
+            showLines={settings.isVehiclePlanningVisible}
+            showTooltip={settings.isVehicleDetailVisible}
+          />
         </Layer>
       </AutoResizerStage>
       {/* 光标位置 */}
