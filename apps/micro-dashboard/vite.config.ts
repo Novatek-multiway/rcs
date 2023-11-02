@@ -19,7 +19,10 @@ export default defineConfig({
     ]
   },
   server: {
-    port: 8001
+    port: 8001,
+    hmr: {
+      port: 8001
+    }
   },
   plugins: [
     react(),
