@@ -1,6 +1,6 @@
 import { useMemo } from 'react'
 
-import { useStore } from '../../store'
+import { useTwoDMapStore } from '../../store'
 import { ILineDirectionsProps, ILineProps } from '.'
 
 // 删除方向相反，但是路径相同的边
@@ -47,7 +47,7 @@ const removeDuplicateLine = (edges: MapAPI.Edge[]) => {
 }
 
 export const useLines = (edges: MapAPI.Edge[]) => {
-  const { idPointMap, setLine, stageMapRatio } = useStore((state) => ({
+  const { idPointMap, setLine, stageMapRatio } = useTwoDMapStore((state) => ({
     stageMapRatio: state.stageMapRatio,
     idPointMap: state.idPointMap,
     setLine: state.setLine

@@ -5,7 +5,7 @@ import { Group, Image as KonvaImage } from 'react-konva'
 import { Html } from 'react-konva-utils'
 
 import { useImage } from '../../hooks/useImage'
-import { useStore } from '../../store'
+import { useTwoDMapStore } from '../../store'
 import Lines, { ILinesProps } from '../lines'
 import { LINE_COLORS, VEHICLE_IMAGE_SIZE, VEHICLE_LIGHT_IMAGE_SIZE, vehicleColorMap } from './constant'
 import { TooltipWrapper } from './style'
@@ -35,7 +35,7 @@ const Vehicle: FC<IVehicleProps> = memo((props) => {
     lines = [],
     strokeWidth
   } = props
-  const currentScale = useStore((state) => state.currentScale)
+  const currentScale = useTwoDMapStore((state) => state.currentScale)
   const [vehicleImagePath, setVehicleImagePath] = useState<string>('')
   const [vehicleLightImagePath, setVehicleLightImagePath] = useState<string>('')
   const vehicleImage = useImage(vehicleImagePath)

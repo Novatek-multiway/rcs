@@ -6,7 +6,7 @@ import { createTheme, SpeedDial, SpeedDialAction, SpeedDialIcon, ThemeProvider }
 
 import { useDashboardStore } from '@/pages/dashboard/store'
 
-import { useStore } from '../../store'
+import { useTwoDMapStore } from '../../store'
 import Settings from './components/settings'
 import { ToolbarWrapper } from './style'
 
@@ -16,7 +16,7 @@ interface IToolbarProps {
 
 const Toolbar: FC<PropsWithChildren<IToolbarProps>> = (props) => {
   const { toolbarRight } = props
-  const { currentScale, setCurrentScale } = useStore((state) => ({
+  const { currentScale, setCurrentScale } = useTwoDMapStore((state) => ({
     currentScale: state.currentScale,
     setCurrentScale: state.setCurrentScale
   }))

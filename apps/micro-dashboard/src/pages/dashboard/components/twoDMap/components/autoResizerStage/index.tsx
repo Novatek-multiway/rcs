@@ -4,7 +4,7 @@ import { KonvaNodeEvents, Stage } from 'react-konva'
 import AutoSizer from 'react-virtualized-auto-sizer'
 
 import { useZoom } from '../../hooks/useZoom'
-import { useStore } from '../../store'
+import { useTwoDMapStore } from '../../store'
 interface IInternalStageProps {
   width: number
   height: number
@@ -15,15 +15,14 @@ const InternalStage: FC<PropsWithChildren<IInternalStageProps>> = memo((props) =
   const { width, height, children } = props
   const stageRef = useRef<ElementRef<typeof Stage>>(null)
   const { currentScale, zoom } = useZoom(stageRef)
-  const { globalCurrentScale, setCurrentScale, setStageSize, setCursorPosition, setStageLeftTopPosition } = useStore(
-    (state) => ({
+  const { globalCurrentScale, setCurrentScale, setStageSize, setCursorPosition, setStageLeftTopPosition } =
+    useTwoDMapStore((state) => ({
       globalCurrentScale: state.currentScale,
       setCurrentScale: state.setCurrentScale,
       setStageSize: state.setStageSize,
       setCursorPosition: state.setCursorPosition,
       setStageLeftTopPosition: state.setStageLeftTopPosition
-    })
-  )
+    }))
 
   useUpdateEffect(() => {
     // 同步scale到全局

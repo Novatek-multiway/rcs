@@ -2,7 +2,7 @@ import type { FC, PropsWithChildren } from 'react'
 import React, { memo } from 'react'
 import { SvgIcon } from 'ui'
 
-import { useStore } from '../../store'
+import { useTwoDMapStore } from '../../store'
 import { MeasuringScaleWrapper } from './style'
 
 interface IMeasuringScaleProps {}
@@ -10,7 +10,7 @@ interface IMeasuringScaleProps {}
 const MEASURING_SCALE_SIZE = 50 // 比例尺的尺寸
 
 const MeasuringScale: FC<PropsWithChildren<IMeasuringScaleProps>> = () => {
-  const { currentScale, stageMapRatio } = useStore((state) => ({
+  const { currentScale, stageMapRatio } = useTwoDMapStore((state) => ({
     currentScale: state.currentScale,
     stageMapRatio: state.stageMapRatio
   }))

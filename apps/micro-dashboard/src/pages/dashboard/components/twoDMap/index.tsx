@@ -20,7 +20,7 @@ import Vehicles from './components/vehicles'
 import { useVehicles } from './components/vehicles/useVehicles'
 import { POINT_IMAGE_NAME_MAP } from './constants'
 import { useShapesInside } from './hooks/useShapesInside'
-import { useStore } from './store'
+import { useTwoDMapStore } from './store'
 import { TwoDMapWrapper } from './style'
 
 const mapData = JSON.parse((map as any).data) as MapAPI.RootMapObject
@@ -35,7 +35,7 @@ const SCALE_BOUNDARY = 6.5 // 缩放显示边界（低于一定缩放值，部�
 const TwoDMap: FC<PropsWithChildren<ITwoDMapProps>> = (props) => {
   const { toolbarRight = 300 } = props
 
-  const { currentScale, setMapSize, setMapCenterPosition } = useStore((state) => ({
+  const { currentScale, setMapSize, setMapCenterPosition } = useTwoDMapStore((state) => ({
     currentScale: state.currentScale,
     setMapSize: state.setMapSize,
     setMapCenterPosition: state.setMapCenterPosition

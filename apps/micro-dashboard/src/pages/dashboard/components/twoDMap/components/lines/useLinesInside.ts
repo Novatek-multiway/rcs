@@ -1,7 +1,7 @@
 import _ from 'lodash'
 import { useMemo } from 'react'
 
-import { useStore } from '../../store'
+import { useTwoDMapStore } from '../../store'
 import { ILineDirectionsProps, ILineProps } from '.'
 
 /**
@@ -10,7 +10,7 @@ import { ILineDirectionsProps, ILineProps } from '.'
  * @return {*}
  */
 export function useLinesInside(lines: (ILineProps & ILineDirectionsProps)[]) {
-  const { stageLeftTopPosition, stageSize, currentScale } = useStore((state) => ({
+  const { stageLeftTopPosition, stageSize, currentScale } = useTwoDMapStore((state) => ({
     stageLeftTopPosition: state.stageLeftTopPosition,
     stageSize: state.stageSize,
     currentScale: state.currentScale

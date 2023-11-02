@@ -1,13 +1,13 @@
 import type { FC, PropsWithChildren } from 'react'
 import React, { memo } from 'react'
 
-import { useStore } from '../../store'
+import { useTwoDMapStore } from '../../store'
 import { CursorPositionWrapper } from './style'
 
 interface ICursorPositionProps {}
 
 const CursorPosition: FC<PropsWithChildren<ICursorPositionProps>> = () => {
-  const { cursorPosition, stageMapRatio } = useStore((state) => ({
+  const { cursorPosition, stageMapRatio } = useTwoDMapStore((state) => ({
     cursorPosition: state.cursorPosition,
     stageMapRatio: state.stageMapRatio
   }))

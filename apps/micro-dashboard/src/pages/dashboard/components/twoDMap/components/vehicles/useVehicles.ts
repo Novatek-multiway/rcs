@@ -1,7 +1,7 @@
 import { useMemo } from 'react'
 
 import { EVehicleLightImageName } from '../../constants'
-import { useStore } from '../../store'
+import { useTwoDMapStore } from '../../store'
 import { IVehiclesProps } from '.'
 
 // 获取当前显示的light的图片名称
@@ -20,7 +20,7 @@ const getVehicleLightImageName = (carrier: ReportAPI.OnlineCarrier) => {
 }
 
 export const useVehicles = (carriers: ReportAPI.OnlineCarrier[]) => {
-  const { stageMapRatio, idLineMap } = useStore((state) => ({
+  const { stageMapRatio, idLineMap } = useTwoDMapStore((state) => ({
     stageMapRatio: state.stageMapRatio,
     idLineMap: state.idLineMap
   }))
