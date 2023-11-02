@@ -7,6 +7,7 @@ import { theme } from 'theme'
 import { Button, Panel, Switch } from 'ui'
 
 import { Lights, Switches } from './constant'
+import LineColorPicker from './LineColorPicker'
 import { SettingsWrapper } from './style'
 
 interface ISettingsProps {
@@ -84,24 +85,8 @@ const Settings: FC<PropsWithChildren<ISettingsProps>> = (props) => {
             ))}
           </div>
           <div className="lines">
-            <div className="item">
-              <span className="label">地图路线</span>
-              <span
-                className="marker"
-                style={{
-                  backgroundColor: '#393c44'
-                }}
-              ></span>
-            </div>
-            <div className="item">
-              <span className="label">规划路线</span>
-              <span
-                className="marker"
-                style={{
-                  backgroundColor: '#00b4ce'
-                }}
-              ></span>
-            </div>
+            <LineColorPicker label="地图路线" initialColor="#393c44" />
+            <LineColorPicker label="规划路线" initialColor="#00b4ce" />
             <div>
               <Button variant="text" size="small">
                 绘制区块
