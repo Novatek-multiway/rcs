@@ -30,3 +30,9 @@ export enum EMapSettingsKeys {
   LINE_COLOR = 'lineColor',
   PLANNING_LINE_COLOR = 'planningLineColor'
 }
+
+// 舞台操作模式
+export enum EStageMode {
+  DRAG = 'drag',
+  DRAW = 'draw'
+}

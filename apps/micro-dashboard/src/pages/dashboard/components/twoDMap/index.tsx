@@ -7,6 +7,7 @@ import vehicles from '@/mock/vehicles.json'
 
 import AutoResizerStage from './components/autoResizerStage'
 import CursorPosition from './components/cursorPosition'
+import DrawingBlockCard from './components/drawingBlockCard'
 import Lines, { LineDirections } from './components/lines'
 import { useLines } from './components/lines/useLines'
 import { useLinesInside } from './components/lines/useLinesInside'
@@ -142,6 +143,8 @@ const TwoDMap: FC<PropsWithChildren<ITwoDMapProps>> = (props) => {
       <MeasuringScale />
       {/* 工具栏 */}
       <Toolbar toolbarRight={toolbarRight} />
+      {/* 绘制区块窗口 */}
+      <DrawingBlockCard />
     </TwoDMapWrapper>
   )
 }

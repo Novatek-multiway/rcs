@@ -12,14 +12,8 @@ import React, {
 } from 'react'
 import { Group, KonvaNodeEvents, Layer, Rect, Stage } from 'react-konva'
 
-import {
-  EDrawingType,
-  TPolygonResult,
-  TRectResult,
-  TResultKey,
-  TResultWrapper,
-  useKonvaDrawing
-} from '../../hooks/useKonvaDrawing'
+import { EStageMode } from '../../constants'
+import { EDrawingType, TPolygonResult, TRectResult, TResultWrapper, useKonvaDrawing } from '../../hooks/useKonvaDrawing'
 import { useZoom } from '../../hooks/useZoom'
 import { useTwoDMapStore } from '../../store'
 interface IInternalStageProps {
@@ -32,14 +26,23 @@ const InternalStage: FC<PropsWithChildren<IInternalStageProps>> = (props) => {
   const { width, height, children } = props
   const stageRef = useRef<ElementRef<typeof Stage>>(null)
   const { currentScale, zoom } = useZoom(stageRef)
-  const { globalCurrentScale, setCurrentScale, setStageSize, setCursorPosition, setStageLeftTopPosition } =
-    useTwoDMapStore((state) => ({
-      globalCurrentScale: state.currentScale,
-      setCurrentScale: state.setCurrentScale,
-      setStageSize: state.setStageSize,
-      setCursorPosition: state.setCursorPosition,
-      setStageLeftTopPosition: state.setStageLeftTopPosition
-    }))
+  const {
+    globalCurrentScale,
+    setCurrentScale,
+    setStageSize,
+    setCursorPosition,
+    setStageLeftTopPosition,
+    stageMode,
+    drawingType
+  } = useTwoDMapStore((state) => ({
+    globalCurrentScale: state.currentScale,
+    setCurrentScale: state.setCurrentScale,
+    setStageSize: state.setStageSize,
+    setCursorPosition: state.setCursorPosition,
+    setStageLeftTopPosition: state.setStageLeftTopPosition,
+    stageMode: state.stageMode,
+    drawingType: state.drawingType
+  }))
 
   useUpdateEffect(() => {
     // 同步scale到全局
@@ -80,10 +83,9 @@ const InternalStage: FC<PropsWithChildren<IInternalStageProps>> = (props) => {
   }, [zoom])
 
   /* ---------------------------------- 绘制区域 ---------------------------------- */
-  const [isDrawingMode] = useState(false)
-  const [drawType] = useState<TResultKey>(EDrawingType.RECT)
+  const isDrawingMode = useMemo(() => stageMode === EStageMode.DRAW, [stageMode])
   const { drawResult, isDrawing } = useKonvaDrawing(stageRef, {
-    type: drawType,
+    type: drawingType,
     disabled: !isDrawingMode,
     onDrawEnd: (drawResult) => {
       const newDrawResultListMap = { ...drawResultListMap }
@@ -121,7 +123,7 @@ const InternalStage: FC<PropsWithChildren<IInternalStageProps>> = (props) => {
       ref={stageRef}
       width={width}
       height={height}
-      // draggable
+      draggable={stageMode === EStageMode.DRAG}
       onMouseMove={handleMouseMove}
       onDragEnd={handleDragEnd}
     >
@@ -131,7 +133,7 @@ const InternalStage: FC<PropsWithChildren<IInternalStageProps>> = (props) => {
         {/* 当前正在绘制的图形 */}
         {isDrawing && (
           <Group>
-            {drawType === EDrawingType.RECT && <Rect {...rectStyle} {...(drawResult?.data as TRectResult)}></Rect>}
+            {drawingType === EDrawingType.RECT && <Rect {...rectStyle} {...(drawResult?.data as TRectResult)}></Rect>}
           </Group>
         )}
         {/* 已经绘制完的图形 */}

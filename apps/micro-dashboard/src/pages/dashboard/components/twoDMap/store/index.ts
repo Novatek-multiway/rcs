@@ -1,7 +1,8 @@
 import { create } from 'zustand'
 
 import { ILineProps } from '../components/lines'
-import { EMapSettingsKeys } from '../constants'
+import { EMapSettingsKeys, EStageMode } from '../constants'
+import { EDrawingType } from '../hooks/useKonvaDrawing'
 
 export type TTwoDMapState = {
   stageSize: { width: number; height: number } // 当前画布宽高
@@ -30,6 +31,9 @@ export type TTwoDMapState = {
     [EMapSettingsKeys.LINE_COLOR]: string // 地图路线颜色
     [EMapSettingsKeys.PLANNING_LINE_COLOR]: string // 规划路线颜色
   }
+  isDrawingBlockCardOpen: boolean // 是否显示绘制区块窗口
+  stageMode: EStageMode
+  drawingType: EDrawingType
 }
 
 type TTwoDMaoActions = {
@@ -42,6 +46,9 @@ type TTwoDMaoActions = {
   setStageLeftTopPosition: (stageLeftTopPosition: { x: number; y: number }) => void
   setMapCenterPosition: (mapCenterPosition: { x: number; y: number }) => void
   setSettings: (settings: Partial<TTwoDMapState['settings']>) => void
+  setIsDrawingBlockCardOpen: (isDrawingBlockCardOpen: boolean) => void
+  setStageMode: (stageMode: EStageMode) => void
+  setDrawingType: (drawingType: EDrawingType) => void
 }
 
 const getStageMapRatio = (stageSize: TTwoDMapState['stageSize'], mapSize: TTwoDMapState['mapSize']) => {
@@ -81,6 +88,9 @@ export const useTwoDMapStore = create<TTwoDMapState & TTwoDMaoActions>((set) => 
     [EMapSettingsKeys.LINE_COLOR]: '#393c44',
     [EMapSettingsKeys.PLANNING_LINE_COLOR]: '#00abc7'
   },
+  isDrawingBlockCardOpen: false,
+  stageMode: EStageMode.DRAG,
+  drawingType: EDrawingType.RECT,
   setStageSize: (stageSize) =>
     set((state) => ({ stageSize, stageMapRatio: getStageMapRatio(stageSize, state.mapSize) })),
   setMapSize: (mapSize) => set((state) => ({ mapSize, stageMapRatio: getStageMapRatio(state.stageSize, mapSize) })),
@@ -98,5 +108,8 @@ export const useTwoDMapStore = create<TTwoDMapState & TTwoDMaoActions>((set) => 
     }),
   setStageLeftTopPosition: (stageLeftTopPosition) => set(() => ({ stageLeftTopPosition })),
   setMapCenterPosition: (mapCenterPosition) => set(() => ({ mapCenterPosition })),
-  setSettings: (settings) => set((state) => ({ settings: { ...state.settings, ...settings } }))
+  setSettings: (settings) => set((state) => ({ settings: { ...state.settings, ...settings } })),
+  setIsDrawingBlockCardOpen: (isDrawingBlockCardOpen) => set(() => ({ isDrawingBlockCardOpen })),
+  setStageMode: (stageMode) => set(() => ({ stageMode })),
+  setDrawingType: (drawingType) => set(() => ({ drawingType }))
 }))

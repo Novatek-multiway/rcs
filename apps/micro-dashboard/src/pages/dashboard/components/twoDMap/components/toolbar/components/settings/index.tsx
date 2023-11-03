@@ -19,17 +19,19 @@ interface ISettingsProps {
 
 const Settings: FC<PropsWithChildren<ISettingsProps>> = (props) => {
   const { open = false, onClose } = props
-  const { settings, setSettings } = useTwoDMapStore((state) => ({
+  const { settings, setSettings, setIsDrawingBlockCardOpen } = useTwoDMapStore((state) => ({
     settings: state.settings,
-    setSettings: state.setSettings
+    setSettings: state.setSettings,
+    setIsDrawingBlockCardOpen: state.setIsDrawingBlockCardOpen
   }))
   const [isSettingsOpen, setIsSettingsOpen] = useState(open)
   const [settingsSpring, settingsApi] = useSpring(() => ({ transform: 'translateY(100%)', opacity: 0 }))
 
   const handleClose = useCallback(() => {
     setIsSettingsOpen(false)
+    setIsDrawingBlockCardOpen(false)
     onClose?.()
-  }, [onClose])
+  }, [onClose, setIsDrawingBlockCardOpen])
 
   useUpdateEffect(() => {
     setIsSettingsOpen(open)
@@ -122,7 +124,7 @@ const Settings: FC<PropsWithChildren<ISettingsProps>> = (props) => {
               onChange={(color) => setSettings({ planningLineColor: color })}
             />
             <div>
-              <Button variant="text" size="small">
+              <Button variant="text" size="small" onClick={() => setIsDrawingBlockCardOpen(true)}>
                 绘制区块
               </Button>
             </div>
