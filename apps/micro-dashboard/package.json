@@ -23,6 +23,7 @@
     "konva": "^9.2.2",
     "lodash": "^4.17.21",
     "material-react-table": "2.0.0-beta.13",
+    "material-ui-color": "^1.2.0",
     "react": "latest",
     "react-dom": "latest",
     "react-konva": "^18.2.10",

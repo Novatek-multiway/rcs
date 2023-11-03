@@ -28,7 +28,7 @@
         {
           "planningType": 2,
           "planningKey": 23,
-          "state1": 4
+          "state1": 1
         },
         {
           "planningType": 1,
@@ -142,7 +142,7 @@
       "availableState": 0,
       "errorCode": 0,
       "elecQuantity": 60,
-      "statusName": "在线",
+      "statusName": "异常",
       "goodsStatus": 1,
       "controlState": 2
     }

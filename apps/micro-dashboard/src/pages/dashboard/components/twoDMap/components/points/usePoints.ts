@@ -1,9 +1,9 @@
 import { useMemo } from 'react'
 
-import { useStore } from '../../store'
+import { useTwoDMapStore } from '../../store'
 
 export const usePoints = (vertexes: MapAPI.Vertex[]) => {
-  const { stageMapRatio, setPoint } = useStore((state) => ({
+  const { stageMapRatio, setPoint } = useTwoDMapStore((state) => ({
     stageMapRatio: state.stageMapRatio,
     setPoint: state.setPoint
   }))

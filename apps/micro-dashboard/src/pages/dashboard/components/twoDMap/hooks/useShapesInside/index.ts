@@ -1,6 +1,6 @@
 import { useCallback, useMemo } from 'react'
 
-import { useStore } from '../../store'
+import { useTwoDMapStore } from '../../store'
 
 type TFilter = (shape: { x: number; y: number }) => boolean
 
@@ -14,7 +14,7 @@ export function useShapesInside<T extends { x: number; y: number }>(
   shapes: T[],
   generateCustomInsideFilter?: (originInsideFilter: TFilter) => (shape: T) => boolean
 ) {
-  const { stageLeftTopPosition, stageSize, currentScale } = useStore((state) => ({
+  const { stageLeftTopPosition, stageSize, currentScale } = useTwoDMapStore((state) => ({
     stageLeftTopPosition: state.stageLeftTopPosition,
     stageSize: state.stageSize,
     currentScale: state.currentScale

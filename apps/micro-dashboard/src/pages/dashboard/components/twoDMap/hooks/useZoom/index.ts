@@ -72,7 +72,7 @@ export function useZoom(stageRef: React.RefObject<ElementRef<typeof Stage>>) {
     stage.on('wheel', handleWheel)
 
     return () => {
-      stage.off('wheel')
+      stage.off('wheel', handleWheel)
     }
   }, [stageRef, handleZoom])
   return {

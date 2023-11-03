@@ -1,7 +1,7 @@
 import { useMemo } from 'react'
 
 import { EVehicleLightImageName } from '../../constants'
-import { useStore } from '../../store'
+import { useTwoDMapStore } from '../../store'
 import { IVehiclesProps } from '.'
 
 // 获取当前显示的light的图片名称
@@ -19,17 +19,27 @@ const getVehicleLightImageName = (carrier: ReportAPI.OnlineCarrier) => {
   return EVehicleLightImageName.BLUE
 }
 
-export const useVehicles = (carriers: ReportAPI.OnlineCarrier[]) => {
-  const { stageMapRatio, idLineMap } = useStore((state) => ({
+export const useVehicles = (
+  carriers: ReportAPI.OnlineCarrier[],
+  options?: {
+    carrierPlanningFilter: (planning: ReportAPI.Planning) => boolean
+  }
+) => {
+  const { stageMapRatio, idLineMap } = useTwoDMapStore((state) => ({
     stageMapRatio: state.stageMapRatio,
     idLineMap: state.idLineMap
   }))
+  const { carrierPlanningFilter } = options ?? {}
   const vehicles = useMemo<IVehiclesProps['vehicles']>(
     () =>
       carriers.map((carrier) => {
         const lines = carrier.plannings
-          .filter((planning) => planning.planningType === 2)
-          .filter((p) => idLineMap.has(p.planningKey))
+          .filter((planning) => {
+            const planningTypeCondition = planning.planningType === 2 // 只需要渲染计划类型为2的路线
+            const lineExistCondition = idLineMap.has(planning.planningKey) // 当前路线存在
+            const customCondition = carrierPlanningFilter ? carrierPlanningFilter(planning) : true // 自定义过滤
+            return planningTypeCondition && lineExistCondition && customCondition
+          })
           .map((p) => idLineMap.get(p.planningKey)!)
         const vehicle = {
           id: carrier.id,
@@ -43,7 +53,7 @@ export const useVehicles = (carriers: ReportAPI.OnlineCarrier[]) => {
         }
         return vehicle
       }),
-    [stageMapRatio, carriers, idLineMap]
+    [stageMapRatio, carriers, idLineMap, carrierPlanningFilter]
   )
 
   return vehicles
