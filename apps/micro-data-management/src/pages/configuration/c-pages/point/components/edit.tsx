@@ -1,5 +1,5 @@
 import { useRequest } from "ahooks";
-import { UpdateChassisInfos } from "apis";
+import { UpdateStationInfos } from "apis";
 import * as React from "react";
 import { useDictStore } from "store";
 import {
@@ -13,21 +13,33 @@ import {
   nygFormik,
   useTheme,
 } from "ui";
-const EditDialog: React.FC<{
+const AddDialog: React.FC<{
   open: boolean;
+  vertexData?: any;
+  carrierData?: any;
+  chassisList?: any;
   onClose?: () => void;
   callback?: () => void;
   row?: Record<string, any>;
-}> = ({ open, onClose = () => {}, callback, row }) => {
-  const { runAsync: run } = useRequest(UpdateChassisInfos, {
+}> = ({
+  open,
+  onClose = () => {},
+  callback,
+  vertexData = [],
+  carrierData = [],
+  chassisList = [],
+  row = {},
+}) => {
+  const { runAsync: run } = useRequest(UpdateStationInfos, {
     manual: true,
   });
+
   const theme = useTheme();
   const formRef = React.useRef<nygFormik>(null);
   const { dicts } = useDictStore();
 
   return (
-    <Dialog open={open} onClose={onClose}>
+    <Dialog maxWidth="md" open={open} onClose={onClose}>
       <DialogTitle>修改车型</DialogTitle>
       <DialogContent
         sx={{
@@ -35,57 +47,125 @@ const EditDialog: React.FC<{
         }}
       >
         <MaterialForm
+          columns={3}
           ref={formRef}
-          defaultValue={row}
+          defaultValue={{
+            ...row,
+            PointKey: {
+              label: String(row.PointKey),
+              value: String(row.PointKey),
+            },
+          }}
           schemaObject={[
             {
-              name: "Type",
-              label: "类型",
-              type: "select",
+              name: "PointKey",
+              label: "路径编号",
+              type: "autoComplete",
               required: true,
-              items: dicts["CarrierType"],
+              items: vertexData,
               // type: "select",
             },
             {
-              name: "Model",
+              name: "Carrier",
+              label: "车号",
+              type: "select",
+              items: carrierData,
+              // type: "select",
+            },
+            {
+              name: "CarrierType",
+              label: "车型",
+              type: "select",
+              items: chassisList,
+            },
+            {
+              name: "Number",
+              label: "车数",
+              type: "number",
+            },
+            {
+              name: "Priority",
+              label: "优先级",
+              type: "number",
+            },
+            {
+              name: "Type",
+              label: "站点类型",
+              type: "select",
+              items: dicts["StationType"],
+            },
+            {
+              name: "State",
+              label: "状态",
+              type: "select",
+              items: dicts["LocationState"],
+            },
+            {
+              name: "Name",
               label: "名称",
               type: "text",
-              required: true,
-              // type: "select",
             },
             {
-              name: "X1",
-              label: "X1",
-              type: "number",
-              required: true,
-            },
-            {
-              name: "X2",
-              label: "X2",
-              type: "number",
-              required: true,
-            },
-            {
-              name: "Y1",
-              label: "Y1",
-              type: "number",
-              required: true,
-            },
-            {
-              name: "Y2",
-              label: "Y2",
-              type: "number",
-              required: true,
-            },
-            {
-              name: "ForcedCharge",
-              label: "强制充电电量",
-              type: "number",
-            },
-            {
-              name: "ChassisModel",
-              label: "模型文件",
+              name: "DisplayName",
+              label: "显示名称",
               type: "text",
+            },
+            {
+              name: "DisplayFontColor",
+              label: "显示颜色",
+              type: "text",
+            },
+            {
+              name: "DisPlayWidth",
+              label: "宽度",
+              type: "number",
+            },
+            {
+              name: "DisPlayLength",
+              label: "长度",
+              type: "number",
+            },
+            {
+              name: "Angle",
+              label: "角度",
+              type: "number",
+            },
+            {
+              name: "HomeGroup",
+              label: "待命点分组",
+              type: "number",
+            },
+            {
+              name: "HomeGroupType",
+              label: "待命点类型",
+              type: "number",
+            },
+            {
+              name: "HomeGroupPriority",
+              label: "待命点优先级",
+              type: "number",
+            },
+            {
+              name: "BackGroundColor",
+              label: "背景颜色",
+              type: "text",
+            },
+            {
+              name: "WorkAreaTypeStr",
+              label: "标注",
+              type: "text",
+            },
+            {
+              name: "DisPlayModel",
+              label: "模型",
+              type: "text",
+            },
+            {
+              name: "AreaID",
+              label: "区域ID",
+              type: "autoComplete",
+              multiple: true,
+              items: vertexData,
             },
           ]}
         ></MaterialForm>
@@ -96,39 +176,18 @@ const EditDialog: React.FC<{
           onClick={async () => {
             await formRef.current?.submitForm();
             const { isValid, values } = formRef.current || {};
+            console.log("values", values);
+
             if (isValid) {
-              const baseData = {
-                BrakingAcceleration: 300,
-                FreeSecond: 0,
-                FullChargeDay: 7,
-                ID: 0,
-                IsControlFront: false,
-                Length: 100,
-                MaxAcc: 300,
-                MaxDec: 300,
-                NoLoadLength: 100,
-                NoLoadOffsetX: 0,
-                NoLoadOffsetY: 0,
-                NoLoadRadius: 0,
-                NoLoadSpeed: 3000,
-                NoLoadWidth: 100,
-                SafeX: 10,
-                SafeY: 10,
-                Shutdown: 100,
-                SpeedMax: 3000,
-                TimeOut: 10,
-                Type: 1,
-                Width: 100,
-                noLoadLength: 0,
-                noLoadOffsetX: 0,
-                noLoadOffsetY: 0,
-                noLoadWidth: 0,
-              };
               const sendData = {
-                ...baseData,
-                ...(typeof values === "object" ? values : {}),
+                ...values,
+                UsageCount: 0,
+                AreaID: values.AreaID.map((item) => Number(item.value)),
+                PointKey: Number(values.PointKey.value),
+
                 Type: Number(values.Type),
-                ForcedCharge: Number(values.ForcedCharge),
+                Carrier: Number(values.Carrier),
+                CarrierType: Number(values.CarrierType),
               };
               await run(sendData);
               onClose();
@@ -145,4 +204,4 @@ const EditDialog: React.FC<{
     </Dialog>
   );
 };
-export default EditDialog;
+export default AddDialog;

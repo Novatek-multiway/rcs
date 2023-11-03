@@ -44,7 +44,9 @@ const VehicleType: FC<IProps> = () => {
     data: chassisData,
     loading,
     run: getChass,
-  } = useRequest(() => getStationInfos({ type: 0, pageNum: 1, pageSize: 100 }));
+  } = useRequest(() =>
+    getStationInfos({ type: 0, pageNum: 1, pageSize: 10000 })
+  );
 
   const { runAsync: delFn } = useRequest(delStationInfos, {
     manual: true,
@@ -254,6 +256,9 @@ const VehicleType: FC<IProps> = () => {
         open={editOpen}
         row={getUpperCaseKeyObject(row)}
         onClose={() => setEditOpen(false)}
+        vertexData={dictsTransform(vertexData?.data, "id", "id")}
+        carrierData={dictsTransform(carrierData?.data, "name", "id")}
+        chassisList={dictsTransform(chassisList?.data, "model", "id")}
         callback={() => getChass()}
       />
     </>

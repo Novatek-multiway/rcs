@@ -57,7 +57,6 @@ const AddDialog: React.FC<{
             DisPlayWidth: 0,
             DisplayFontColor: "",
             DisplayName: "",
-            Genus: 3,
             HomeGroup: 0,
             HomeGroupPriority: 0,
             HomeGroupType: 0,
@@ -191,14 +190,15 @@ const AddDialog: React.FC<{
           onClick={async () => {
             await formRef.current?.submitForm();
             const { isValid, values } = formRef.current || {};
+            console.log(values);
+
             if (isValid) {
               const sendData = {
                 ...values,
-                Genus: 3,
-                UsageCount: 0,
-                ID: 0,
+                // Genus: 3,
                 AreaID: values.AreaID.map((item) => Number(item.value)),
                 PointKey: Number(values.PointKey.value),
+                Type: Number(values.Type),
               };
               await run(sendData);
               onClose();

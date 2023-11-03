@@ -38,7 +38,11 @@ export const FormFieldLabelSelect = ({
         label={label}
       >
         {items?.map((item) => {
-          return <MenuItem value={item.value}>{item.label}</MenuItem>;
+          return (
+            <MenuItem key={item.value} value={item.value}>
+              {item.label}
+            </MenuItem>
+          );
         })}
       </Field>
     </>
