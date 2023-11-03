@@ -1,6 +1,6 @@
 import _ from 'lodash'
-import React, { ElementRef, FC, memo, PropsWithChildren, useEffect, useMemo, useRef } from 'react'
-import { Layer, Rect } from 'react-konva'
+import React, { FC, memo, PropsWithChildren, useEffect, useMemo } from 'react'
+import { Layer } from 'react-konva'
 
 import map from '@/mock/map.json'
 import vehicles from '@/mock/vehicles.json'
@@ -19,7 +19,6 @@ import Toolbar from './components/toolbar'
 import Vehicles from './components/vehicles'
 import { useVehicles } from './components/vehicles/useVehicles'
 import { POINT_IMAGE_NAME_MAP } from './constants'
-import { useKonvaDrawing } from './hooks/useKonvaDrawing'
 import { useShapesInside } from './hooks/useShapesInside'
 import { useTwoDMapStore } from './store'
 import { TwoDMapWrapper } from './style'
@@ -100,12 +99,6 @@ const TwoDMap: FC<PropsWithChildren<ITwoDMapProps>> = (props) => {
   })
   /* ----------------------------------- 车辆 ----------------------------------- */
 
-  /* ---------------------------------- 绘制区域 ---------------------------------- */
-  const drawLayerRef = useRef<ElementRef<typeof Layer>>(null)
-  const result = useKonvaDrawing(drawLayerRef, { type: 'rect' })
-  console.log('🚀 ~ file: index.tsx ~ line 106 ~ result', result)
-  /* ---------------------------------- 绘制区域 ---------------------------------- */
-
   return (
     <TwoDMapWrapper>
       <AutoResizerStage>
@@ -131,7 +124,7 @@ const TwoDMap: FC<PropsWithChildren<ITwoDMapProps>> = (props) => {
         )}
 
         {/* 改变频率高的层 */}
-        <Layer ref={drawLayerRef}>
+        <Layer>
           <Vehicles
             vehicles={insideVehicles}
             stroke={settings.isVehiclePlanningSingleColor ? settings.planningLineColor : undefined}
@@ -141,10 +134,6 @@ const TwoDMap: FC<PropsWithChildren<ITwoDMapProps>> = (props) => {
             showLines={settings.isVehiclePlanningVisible}
             showTooltip={settings.isVehicleDetailVisible}
           />
-        </Layer>
-        {/* 绘制层 */}
-        <Layer>
-          <Rect fill="red" width={2} height={2} x={10} y={10}></Rect>
         </Layer>
       </AutoResizerStage>
       {/* 光标位置 */}
