@@ -13,7 +13,7 @@ import {
   nygFormik,
   useTheme,
 } from "ui";
-const AddDialog: React.FC<{
+const EditDialog: React.FC<{
   open: boolean;
   vertexData?: any;
   carrierData?: any;
@@ -204,4 +204,4 @@ const AddDialog: React.FC<{
     </Dialog>
   );
 };
-export default AddDialog;
+export default EditDialog;
