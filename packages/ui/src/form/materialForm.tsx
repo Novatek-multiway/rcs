@@ -122,7 +122,11 @@ export const MaterialForm = forwardRef<any, MaterialFormProps>((props, ref) => {
               />
             )}
             {field.type === "radioGroup" && (
-              <FormFieldLabelRadioGroup label={field.label} name={field.name} />
+              <FormFieldLabelRadioGroup
+                label={field.label}
+                name={field.name}
+                items={field.items}
+              />
             )}
           </Grid>
         );

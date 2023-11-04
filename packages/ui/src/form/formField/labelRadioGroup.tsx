@@ -12,10 +12,7 @@ interface FormFieldLabelSelectProps extends RadioGroupProps {
 export const FormFieldLabelRadioGroup = ({
   label,
   name,
-  items = [
-    { label: "12", value: "12" },
-    { label: "12", value: "12" },
-  ],
+  items = [],
   ...props
 }: FormFieldLabelSelectProps) => {
   const sxFormControl = {
@@ -37,9 +34,9 @@ export const FormFieldLabelRadioGroup = ({
         {items?.map((item) => {
           return (
             <FormControlLabel
-              value="painting"
+              value={item.value}
               control={<Radio />}
-              label="Painting"
+              label={item.label}
             />
           );
         })}

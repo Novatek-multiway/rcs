@@ -124,6 +124,16 @@ const AddDialog: React.FC<{
               name: "completeType",
               label: "充电类型",
               type: "radioGroup",
+              items: [
+                {
+                  value: 3,
+                  label: "时间",
+                },
+                {
+                  value: 1,
+                  label: "百分比",
+                },
+              ],
             },
             {
               name: "completeTime",
