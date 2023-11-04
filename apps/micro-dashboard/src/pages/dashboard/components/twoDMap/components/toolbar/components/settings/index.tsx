@@ -97,9 +97,8 @@ const Settings: FC<PropsWithChildren<ISettingsProps>> = (props) => {
         <div className="settings-content">
           <div className="switches">
             {Switches.map((switchItem) => (
-              <div>
+              <div key={switchItem.label}>
                 <Switch
-                  key={switchItem.label}
                   inputProps={{ 'aria-label': switchItem.label }}
                   sx={switchStyle}
                   checked={

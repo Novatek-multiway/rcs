@@ -68,7 +68,12 @@ const DrawingBlockCard: FC<PropsWithChildren<IDrawingBlockCardProps>> = () => {
 
   const handleClose = useCallback(() => {
     setIsDrawingBlockCardOpen(false)
-  }, [setIsDrawingBlockCardOpen])
+    setDrawingResultListMap({
+      rect: [],
+      polygon: []
+    })
+    setStageMode(EStageMode.DRAG)
+  }, [setIsDrawingBlockCardOpen, setDrawingResultListMap, setStageMode])
 
   /* -------------------------------- 舞台操作模式选择 -------------------------------- */
   const handleStageModeChange = useCallback(

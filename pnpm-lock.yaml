@@ -181,6 +181,9 @@ importers:
       ahooks:
         specifier: ^3.7.8
         version: 3.7.8(react@18.2.0)
+      apis:
+        specifier: workspace:^
+        version: link:../../packages/apis
       hooks:
         specifier: workspace:*
         version: link:../../packages/hooks
@@ -3725,7 +3728,7 @@ packages:
         optional: true
     dependencies:
       '@babel/runtime': 7.23.2
-      '@mui/utils': 5.14.16(@types/react@18.2.34)(react@18.2.0)
+      '@mui/utils': 5.14.16(@types/react@18.2.33)(react@18.2.0)
       prop-types: 15.8.1
       react: 18.2.0
     dev: false

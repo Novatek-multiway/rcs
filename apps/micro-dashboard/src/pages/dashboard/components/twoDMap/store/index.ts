@@ -47,8 +47,8 @@ type TTwoDMaoActions = {
   setMapSize: (mapSize: TTwoDMapState['mapSize']) => void
   setCurrentScale: (currentScale: number) => void
   setCursorPosition: (cursorPosition: TTwoDMapState['cursorPosition']) => void
-  setPoint: (id: number, point: { x: number; y: number }) => void
-  setLine: (id: number, line: ILineProps) => void
+  setIdPointMap: (idPointMap: TTwoDMapState['idPointMap']) => void
+  setIdLineMap: (idLineMap: TTwoDMapState['idLineMap']) => void
   setStageLeftTopPosition: (stageLeftTopPosition: { x: number; y: number }) => void
   setMapCenterPosition: (mapCenterPosition: { x: number; y: number }) => void
   setSettings: (settings: Partial<TTwoDMapState['settings']>) => void
@@ -111,16 +111,8 @@ export const useTwoDMapStore = createWithEqualityFn<TTwoDMapState & TTwoDMaoActi
   setMapSize: (mapSize) => set((state) => ({ mapSize, stageMapRatio: getStageMapRatio(state.stageSize, mapSize) })),
   setCurrentScale: (currentScale) => set(() => ({ currentScale })),
   setCursorPosition: (cursorPosition) => set(() => ({ cursorPosition })),
-  setPoint: (id, point) =>
-    set(({ idPointMap }) => {
-      idPointMap.set(id, point)
-      return { idPointMap }
-    }),
-  setLine: (id, line) =>
-    set(({ idLineMap }) => {
-      idLineMap.set(id, line)
-      return { idLineMap }
-    }),
+  setIdPointMap: (idPointMap) => set(() => ({ idPointMap })),
+  setIdLineMap: (idLineMap) => set(() => ({ idLineMap })),
   setStageLeftTopPosition: (stageLeftTopPosition) => set(() => ({ stageLeftTopPosition })),
   setMapCenterPosition: (mapCenterPosition) => set(() => ({ mapCenterPosition })),
   setSettings: (settings) => set((state) => ({ settings: { ...state.settings, ...settings } })),

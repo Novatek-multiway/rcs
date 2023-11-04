@@ -1,11 +1,11 @@
-import { useUpdateEffect } from 'ahooks'
+import { useAsyncEffect, useUpdateEffect } from 'ahooks'
+import { getInitStates, getOnLineCarriers } from 'apis'
 import _ from 'lodash'
-import React, { FC, memo, PropsWithChildren, useEffect, useMemo } from 'react'
+import React, { FC, memo, PropsWithChildren, useMemo, useState } from 'react'
 import { Layer } from 'react-konva'
 
-import map from '@/mock/map.json'
-import vehicles from '@/mock/vehicles.json'
-
+// import map from '@/mock/map.json'
+// import vehicles from '@/mock/vehicles.json'
 import AutoResizerStage from './components/autoResizerStage'
 import CursorPosition from './components/cursorPosition'
 import DrawingBlockCard from './components/drawingBlockCard'
@@ -25,8 +25,8 @@ import { useShapesInside } from './hooks/useShapesInside'
 import { useTwoDMapStore } from './store'
 import { TwoDMapWrapper } from './style'
 
-const mapData = JSON.parse((map as any).data) as MapAPI.RootMapObject
-const vehiclesData = vehicles.data as ReportAPI.OnlineCarrier[]
+// const mapData = JSON.parse((map as any).data) as MapAPI.RootMapObject
+// const vehiclesData = vehicles.data as ReportAPI.OnlineCarrier[]
 
 interface ITwoDMapProps {
   toolbarRight?: number
@@ -34,6 +34,7 @@ interface ITwoDMapProps {
 
 const SCALE_BOUNDARY = 6.5 // 缩放显示边界（低于一定缩放值，部分元素不显示，提升初始化渲染性能）
 // 2D地图
+// TODO 排查鼠标移动TwoDMap组件re-render
 const TwoDMap: FC<PropsWithChildren<ITwoDMapProps>> = (props) => {
   const { toolbarRight = 300 } = props
 
@@ -44,20 +45,38 @@ const TwoDMap: FC<PropsWithChildren<ITwoDMapProps>> = (props) => {
     setMapCenterPosition: state.setMapCenterPosition,
     setInsidePoints: state.setInsidePoints
   }))
+  /* ---------------------------------- 地图数据 ---------------------------------- */
+  const [mapData, setMapData] = useState<MapAPI.RootMapObject | null>(null)
+  const vertexes = useMemo(() => mapData?.Vertexs || [], [mapData])
+  const edges = useMemo(() => mapData?.Edges || [], [mapData])
 
-  useEffect(() => {
+  /* ---------------------------------- 地图信息 ---------------------------------- */
+  /* ---------------------------------- 车辆数据 ---------------------------------- */
+  const [vehiclesData, setVehiclesData] = useState<ReportAPI.OnlineCarrier[]>([])
+  /* ---------------------------------- 车辆数据 ---------------------------------- */
+  useAsyncEffect(async () => {
+    const mapRes = await getInitStates()
+    const vehiclesRes = await getOnLineCarriers()
+    const mapData: MapAPI.RootMapObject = JSON.parse(mapRes.data)
+    const vehiclesData: ReportAPI.OnlineCarrier[] = vehiclesRes.data
+    setMapData(mapData)
+    setVehiclesData(vehiclesData)
+  }, [])
+
+  useUpdateEffect(() => {
+    if (!mapData) return
     const { DWGMaxX, DWGMinX, DWGMaxY, DWGMinY } = mapData.MapOption
     const mapSize = { width: Math.abs(DWGMaxX - DWGMinX), height: Math.abs(DWGMaxY - DWGMinY) }
     setMapSize(mapSize)
     const mapCenterPosition = { x: DWGMinX + mapSize.width / 2, y: DWGMinY + mapSize.height / 2 }
     setMapCenterPosition(mapCenterPosition)
-  }, [setMapSize, setMapCenterPosition])
+  }, [setMapSize, setMapCenterPosition, mapData])
 
   /* ----------------------------------- 点位 ----------------------------------- */
-  const points = usePoints(mapData.Vertexs)
+  const points = usePoints(vertexes)
   const insidePoints = useShapesInside(points)
   useUpdateEffect(() => {
-    setInsidePoints(insidePoints)
+    setInsidePoints([...insidePoints])
   }, [insidePoints])
   // 停车点、充点电
   const imagePoints = useMemo(
@@ -72,7 +91,7 @@ const TwoDMap: FC<PropsWithChildren<ITwoDMapProps>> = (props) => {
   /* ----------------------------------- 点位 ----------------------------------- */
 
   /* ----------------------------------- 边 ----------------------------------- */
-  const lines = useLines(mapData.Edges)
+  const lines = useLines(edges)
   const insideLines = useLinesInside(lines)
   const lineDirections = insideLines.flatMap((line) => line.directions)
   /* ----------------------------------- 边 ----------------------------------- */
