@@ -1,19 +1,9 @@
 import { useUpdateEffect } from 'ahooks'
-import React, {
-  type ElementRef,
-  FC,
-  memo,
-  PropsWithChildren,
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState
-} from 'react'
+import React, { type ElementRef, FC, memo, PropsWithChildren, useCallback, useEffect, useMemo, useRef } from 'react'
 import { Group, KonvaNodeEvents, Layer, Rect, Stage } from 'react-konva'
 
 import { EStageMode } from '../../constants'
-import { EDrawingType, TPolygonResult, TRectResult, TResultWrapper, useKonvaDrawing } from '../../hooks/useKonvaDrawing'
+import { EDrawingType, TRectResult, TResultWrapper, useKonvaDrawing } from '../../hooks/useKonvaDrawing'
 import { useZoom } from '../../hooks/useZoom'
 import { useTwoDMapStore } from '../../store'
 interface IInternalStageProps {
@@ -22,6 +12,7 @@ interface IInternalStageProps {
 }
 
 const INIT_SCALE = 6
+const SELECTED_FILL_COLOR = 'rgba(0, 203, 202, 0.2)'
 const InternalStage: FC<PropsWithChildren<IInternalStageProps>> = (props) => {
   const { width, height, children } = props
   const stageRef = useRef<ElementRef<typeof Stage>>(null)
@@ -33,7 +24,11 @@ const InternalStage: FC<PropsWithChildren<IInternalStageProps>> = (props) => {
     setCursorPosition,
     setStageLeftTopPosition,
     stageMode,
-    drawingType
+    drawingType,
+    drawingResultListMap,
+    setDrawingResultListMap,
+    drawingSelectedId,
+    setDrawingSelectedId
   } = useTwoDMapStore((state) => ({
     globalCurrentScale: state.currentScale,
     setCurrentScale: state.setCurrentScale,
@@ -41,7 +36,11 @@ const InternalStage: FC<PropsWithChildren<IInternalStageProps>> = (props) => {
     setCursorPosition: state.setCursorPosition,
     setStageLeftTopPosition: state.setStageLeftTopPosition,
     stageMode: state.stageMode,
-    drawingType: state.drawingType
+    drawingType: state.drawingType,
+    drawingResultListMap: state.drawingResultListMap,
+    setDrawingResultListMap: state.setDrawingResultListMap,
+    drawingSelectedId: state.drawingSelectedId,
+    setDrawingSelectedId: state.setDrawingSelectedId
   }))
 
   useUpdateEffect(() => {
@@ -88,26 +87,19 @@ const InternalStage: FC<PropsWithChildren<IInternalStageProps>> = (props) => {
     type: drawingType,
     disabled: !isDrawingMode,
     onDrawEnd: (drawResult) => {
-      const newDrawResultListMap = { ...drawResultListMap }
+      const newDrawingResultListMap = { ...drawingResultListMap }
       if (drawResult.type === EDrawingType.RECT) {
-        const drawResultList = drawResultListMap[drawResult.type] || []
+        const drawResultList = newDrawingResultListMap[drawResult.type] || []
         drawResultList.push(drawResult as TResultWrapper<TRectResult>)
       }
-      setDrawResultListMap(newDrawResultListMap)
+      setDrawingResultListMap(newDrawingResultListMap)
     }
-  })
-  const [drawResultListMap, setDrawResultListMap] = useState<{
-    rect: TResultWrapper<TRectResult>[]
-    polygon: TResultWrapper<TPolygonResult>[]
-  }>({
-    rect: [],
-    polygon: []
   })
 
   const rectStyle = useMemo(
     () => ({
       fill: 'transparent',
-      stroke: '#00cbca',
+      stroke: 'rgb(0, 203, 202)',
       strokeWidth: 0.3,
       shadowColor: '#00cbca',
       shadowBlur: 10,
@@ -116,7 +108,10 @@ const InternalStage: FC<PropsWithChildren<IInternalStageProps>> = (props) => {
     }),
     []
   )
-
+  const getFill = useCallback(
+    (id: string) => (drawingSelectedId === id ? SELECTED_FILL_COLOR : 'transparent'),
+    [drawingSelectedId]
+  )
   /* ---------------------------------- 绘制区域 ---------------------------------- */
   return (
     <Stage
@@ -138,8 +133,15 @@ const InternalStage: FC<PropsWithChildren<IInternalStageProps>> = (props) => {
         )}
         {/* 已经绘制完的图形 */}
         <Group>
-          {drawResultListMap[EDrawingType.RECT].map((rectDrawResult) => (
-            <Rect key={rectDrawResult?.id} {...rectStyle} {...rectDrawResult?.data}></Rect>
+          {drawingResultListMap[EDrawingType.RECT].map((rectDrawResult) => (
+            <Rect
+              key={rectDrawResult?.id}
+              {...rectStyle}
+              {...rectDrawResult?.data}
+              fill={getFill(rectDrawResult.id)}
+              onMouseEnter={() => setDrawingSelectedId(rectDrawResult.id)}
+              onMouseLeave={() => setDrawingSelectedId('')}
+            ></Rect>
           ))}
         </Group>
       </Layer>

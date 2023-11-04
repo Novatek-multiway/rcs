@@ -6,7 +6,7 @@ import React, { memo, useCallback, useMemo, useState } from 'react'
 import { theme } from 'theme'
 import { Button, Panel, Switch } from 'ui'
 
-import { EMapSettingsKeys } from '../../../../constants'
+import { EMapSettingsKeys, EStageMode } from '../../../../constants'
 import { TTwoDMapState, useTwoDMapStore } from '../../../../store'
 import { Lights, Switches } from './constant'
 import LineColorPicker from './LineColorPicker'
@@ -19,10 +19,11 @@ interface ISettingsProps {
 
 const Settings: FC<PropsWithChildren<ISettingsProps>> = (props) => {
   const { open = false, onClose } = props
-  const { settings, setSettings, setIsDrawingBlockCardOpen } = useTwoDMapStore((state) => ({
+  const { settings, setSettings, setIsDrawingBlockCardOpen, setStageMode } = useTwoDMapStore((state) => ({
     settings: state.settings,
     setSettings: state.setSettings,
-    setIsDrawingBlockCardOpen: state.setIsDrawingBlockCardOpen
+    setIsDrawingBlockCardOpen: state.setIsDrawingBlockCardOpen,
+    setStageMode: state.setStageMode
   }))
   const [isSettingsOpen, setIsSettingsOpen] = useState(open)
   const [settingsSpring, settingsApi] = useSpring(() => ({ transform: 'translateY(100%)', opacity: 0 }))
@@ -124,7 +125,14 @@ const Settings: FC<PropsWithChildren<ISettingsProps>> = (props) => {
               onChange={(color) => setSettings({ planningLineColor: color })}
             />
             <div>
-              <Button variant="text" size="small" onClick={() => setIsDrawingBlockCardOpen(true)}>
+              <Button
+                variant="text"
+                size="small"
+                onClick={() => {
+                  setIsDrawingBlockCardOpen(true)
+                  setStageMode(EStageMode.DRAW)
+                }}
+              >
                 绘制区块
               </Button>
             </div>

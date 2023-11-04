@@ -1,6 +1,6 @@
 import Konva from 'konva'
 
-export type TRectResult = Pick<Konva.RectConfig, 'x' | 'y' | 'width' | 'height'>
+export type TRectResult = Required<Pick<Konva.RectConfig, 'x' | 'y' | 'width' | 'height'>>
 
 export type TPolygonResult = number[]
 

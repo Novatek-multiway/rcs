@@ -1,8 +1,8 @@
-import { create } from 'zustand'
+import { createWithEqualityFn } from 'zustand/traditional'
 
 import { ILineProps } from '../components/lines'
 import { EMapSettingsKeys, EStageMode } from '../constants'
-import { EDrawingType } from '../hooks/useKonvaDrawing'
+import { EDrawingType, TPolygonResult, TRectResult, TResultWrapper } from '../hooks/useKonvaDrawing'
 
 export type TTwoDMapState = {
   stageSize: { width: number; height: number } // 当前画布宽高
@@ -32,8 +32,14 @@ export type TTwoDMapState = {
     [EMapSettingsKeys.PLANNING_LINE_COLOR]: string // 规划路线颜色
   }
   isDrawingBlockCardOpen: boolean // 是否显示绘制区块窗口
-  stageMode: EStageMode
-  drawingType: EDrawingType
+  stageMode: EStageMode // 舞台操作模式
+  drawingType: EDrawingType // 绘制模式下的绘图类型
+  drawingResultListMap: {
+    rect: TResultWrapper<TRectResult>[]
+    polygon: TResultWrapper<TPolygonResult>[]
+  }
+  drawingSelectedId: string // 当前绘制的区块选中id
+  insidePoints: { id: number; x: number; y: number }[] // 在可视区域的点位
 }
 
 type TTwoDMaoActions = {
@@ -49,6 +55,9 @@ type TTwoDMaoActions = {
   setIsDrawingBlockCardOpen: (isDrawingBlockCardOpen: boolean) => void
   setStageMode: (stageMode: EStageMode) => void
   setDrawingType: (drawingType: EDrawingType) => void
+  setDrawingResultListMap: (drawingResultListMap: TTwoDMapState['drawingResultListMap']) => void
+  setDrawingSelectedId: (drawingSelectedId: TTwoDMapState['drawingSelectedId']) => void
+  setInsidePoints: (insidePoints: TTwoDMapState['insidePoints']) => void
 }
 
 const getStageMapRatio = (stageSize: TTwoDMapState['stageSize'], mapSize: TTwoDMapState['mapSize']) => {
@@ -61,7 +70,7 @@ const getStageMapRatio = (stageSize: TTwoDMapState['stageSize'], mapSize: TTwoDM
   }
 }
 
-export const useTwoDMapStore = create<TTwoDMapState & TTwoDMaoActions>((set) => ({
+export const useTwoDMapStore = createWithEqualityFn<TTwoDMapState & TTwoDMaoActions>((set) => ({
   stageSize: { width: 1920, height: 1080 },
   mapSize: { width: 1920, height: 1080 },
   stageMapRatio: 1,
@@ -91,6 +100,12 @@ export const useTwoDMapStore = create<TTwoDMapState & TTwoDMaoActions>((set) => 
   isDrawingBlockCardOpen: false,
   stageMode: EStageMode.DRAG,
   drawingType: EDrawingType.RECT,
+  drawingResultListMap: {
+    rect: [],
+    polygon: []
+  },
+  drawingSelectedId: '',
+  insidePoints: [],
   setStageSize: (stageSize) =>
     set((state) => ({ stageSize, stageMapRatio: getStageMapRatio(stageSize, state.mapSize) })),
   setMapSize: (mapSize) => set((state) => ({ mapSize, stageMapRatio: getStageMapRatio(state.stageSize, mapSize) })),
@@ -111,5 +126,8 @@ export const useTwoDMapStore = create<TTwoDMapState & TTwoDMaoActions>((set) => 
   setSettings: (settings) => set((state) => ({ settings: { ...state.settings, ...settings } })),
   setIsDrawingBlockCardOpen: (isDrawingBlockCardOpen) => set(() => ({ isDrawingBlockCardOpen })),
   setStageMode: (stageMode) => set(() => ({ stageMode })),
-  setDrawingType: (drawingType) => set(() => ({ drawingType }))
+  setDrawingType: (drawingType) => set(() => ({ drawingType })),
+  setDrawingResultListMap: (drawingResultListMap) => set(() => ({ drawingResultListMap })),
+  setDrawingSelectedId: (drawingSelectedId) => set(() => ({ drawingSelectedId })),
+  setInsidePoints: (insidePoints) => set(() => ({ insidePoints }))
 }))

@@ -1,3 +1,4 @@
+import { useUpdateEffect } from 'ahooks'
 import _ from 'lodash'
 import React, { FC, memo, PropsWithChildren, useEffect, useMemo } from 'react'
 import { Layer } from 'react-konva'
@@ -36,11 +37,12 @@ const SCALE_BOUNDARY = 6.5 // 缩放显示边界（低于一定缩放值，部�
 const TwoDMap: FC<PropsWithChildren<ITwoDMapProps>> = (props) => {
   const { toolbarRight = 300 } = props
 
-  const { currentScale, settings, setMapSize, setMapCenterPosition } = useTwoDMapStore((state) => ({
+  const { currentScale, settings, setMapSize, setMapCenterPosition, setInsidePoints } = useTwoDMapStore((state) => ({
     currentScale: state.currentScale,
     settings: state.settings,
     setMapSize: state.setMapSize,
-    setMapCenterPosition: state.setMapCenterPosition
+    setMapCenterPosition: state.setMapCenterPosition,
+    setInsidePoints: state.setInsidePoints
   }))
 
   useEffect(() => {
@@ -54,6 +56,9 @@ const TwoDMap: FC<PropsWithChildren<ITwoDMapProps>> = (props) => {
   /* ----------------------------------- 点位 ----------------------------------- */
   const points = usePoints(mapData.Vertexs)
   const insidePoints = useShapesInside(points)
+  useUpdateEffect(() => {
+    setInsidePoints(insidePoints)
+  }, [insidePoints])
   // 停车点、充点电
   const imagePoints = useMemo(
     () =>

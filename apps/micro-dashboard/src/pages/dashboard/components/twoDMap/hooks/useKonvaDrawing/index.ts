@@ -87,7 +87,7 @@ export function useKonvaDrawing<T extends TResultKey>(
           if (type === EDrawingType.RECT) {
             const [mouseDownX, mouseDownY] = drawPoints
             const rectData = getDrawRectData(mouseDownX, mouseDownY, mouseUpX, mouseUpY)
-            const rectResult = { id: _.uniqueId(type), type, data: rectData } as TResult[T]
+            const rectResult = { id: _.uniqueId(type + '-'), type, data: rectData } as TResult[T]
             onDrawEnd?.(rectResult)
           }
           setDrawPoints([])
