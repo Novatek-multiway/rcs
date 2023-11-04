@@ -1,12 +1,19 @@
 import AddIcon from "@mui/icons-material/Add";
 import EditNoteIcon from "@mui/icons-material/EditNote";
+import EuroIcon from "@mui/icons-material/Euro";
 import { useRequest } from "ahooks";
-import { delStationInfos, getStationInfos } from "apis";
+import {
+  delStationInfos,
+  GetRuleChargingPiles,
+  GetRuleChassisInfos,
+  GetRuleControlStates,
+  GetRules,
+} from "apis";
 import type { FC, ReactNode } from "react";
 import React, { memo } from "react";
-import { useDictStore } from "store";
-import { BaseTable, Box, Button, MenuItem, TextField } from "ui";
-import { getUpperCaseKeyObject } from "utils";
+// import { useDictStore } from "store";
+import { BaseTable, Box, Button, Chip } from "ui";
+import { dictsTransform, getUpperCaseKeyObject } from "utils";
 
 import DelButton from "@/component/delButton";
 import Refresh from "@/component/refreshIcon";
@@ -20,7 +27,6 @@ interface IProps {
 
 // 车型配置
 const VehicleType: FC<IProps> = () => {
-  const { dicts } = useDictStore();
   const [open, setOpen] = React.useState(false);
   const [editOpen, setEditOpen] = React.useState(false);
   const [row, setRow] = React.useState({});
@@ -28,99 +34,103 @@ const VehicleType: FC<IProps> = () => {
     data: chassisData,
     loading,
     run: getChass,
-  } = useRequest(() => getStationInfos({ type: 0, pageNum: 1, pageSize: 100 }));
+  } = useRequest(() => GetRules({ type: 0 }));
 
   const { runAsync: delFn } = useRequest(delStationInfos, {
     manual: true,
   });
 
+  const { data: ruleCarrierData } = useRequest(GetRuleChassisInfos);
+  const { data: controlStates } = useRequest(GetRuleControlStates);
+  const { data: chargingPiles } = useRequest(GetRuleChargingPiles);
+
   const columns = [
     {
       accessorKey: "id",
-      header: "ID",
+      header: "编号",
     },
     {
-      accessorKey: "type",
-      header: "类型",
-      Filter: ({ header }) => {
-        return (
-          <TextField
-            fullWidth
-            margin="none"
-            onChange={(e) =>
-              header.column.setFilterValue(e.target.value || undefined)
-            }
-            placeholder="Filter"
-            select
-            value={header.column.getFilterValue() ?? ""}
-            variant="standard"
-          >
-            {/*@ts-ignore*/}
-            <MenuItem value={null}>All</MenuItem>
-            <MenuItem value="Male">Male</MenuItem>
-            <MenuItem value="Female">Female</MenuItem>
-            <MenuItem value="Other">Other</MenuItem>
-            {dicts.StationType?.map((item) => {
-              return <MenuItem value={item.value}>{item.label}</MenuItem>;
-            })}
-          </TextField>
-        );
-      },
-      filterFn: (row, _columnIds, filterValue) => {
-        return row.getValue<string>("type") === filterValue;
-      },
-      Cell: ({ row }) => {
-        const { original } = row;
-        const tyles = dicts.StationType?.find(
-          (item) => item.value === original.type
-        );
-        return <>{tyles?.label || ""}</>;
-      },
+      accessorKey: "name",
+      header: "策略名称",
     },
     {
-      accessorKey: "pointKey",
-      header: "路径编号",
-    },
-    {
-      accessorKey: "displayName",
-      header: "名称",
-    },
-    {
-      accessorKey: "disPlayModel",
+      accessorKey: "planName",
       enableFilters: true,
-      header: "站点类型",
+      header: "计划名称",
     },
     {
-      accessorKey: "priority",
-      header: "优先级",
-    },
-    {
-      accessorKey: "state",
-      header: "状态",
-      Cell: ({ row }) => {
-        const { original } = row;
-        const tyles = dicts.LocationState?.find(
-          (item) => item.value === original.state
-        );
-        return <>{tyles?.label || ""}</>;
-      },
+      accessorKey: "carrierKeys",
+      header: "小车编号",
     },
     {
       accessorKey: "carrierType",
-      header: "车辆类型",
+      header: "车型",
+      Cell: ({ row }) => {
+        const { original } = row;
+        const tyles = dictsTransform(
+          ruleCarrierData?.data,
+          "model",
+          "id"
+        )?.find((item) => item.value === original.carrierType);
+        return (
+          <>
+            {tyles?.label ? (
+              <Chip
+                size="small"
+                // avatar={<Avatar></Avatar>}
+                color="primary"
+                variant="outlined"
+                icon={<EuroIcon />}
+                label={tyles?.label}
+              />
+            ) : (
+              ""
+            )}
+          </>
+        );
+      },
     },
     {
-      accessorKey: "homeGroup",
-      header: "待命点分组",
+      accessorKey: "minLimitBattery",
+      header: "电量区间",
     },
     {
-      accessorKey: "homeGroupPriority",
+      accessorKey: "endHour",
+      header: "策略时间",
+    },
+    {
+      accessorKey: "completeType",
       enableColumnFilter: false,
-      header: "待命点优先级",
+      Cell: ({ row }) => {
+        const { original } = row;
+        const flat = original.completeType === 1;
+        return (
+          <Chip
+            size="small"
+            // avatar={<Avatar></Avatar>}
+            color={flat ? "success" : "warning"}
+            variant="outlined"
+            label={flat ? "百分比" : "时间"}
+          ></Chip>
+        );
+      },
+      header: "充电类型",
     },
     {
-      accessorKey: "homeGroupType",
-      header: "待命点类型",
+      accessorKey: "completeTime",
+      header: "充电时间",
+    },
+    {
+      accessorKey: "timeLimit",
+      header: "空闲时间",
+    },
+    {
+      accessorKey: "completePercent",
+      header: "完成占比",
+    },
+    {
+      accessorKey: "PileKeys",
+      header: "充电桩",
     },
     {
       accessorKey: "actions",
@@ -222,6 +232,10 @@ const VehicleType: FC<IProps> = () => {
       <AddDialog
         open={open}
         onClose={() => setOpen(false)}
+        ruleCarrierData={dictsTransform(ruleCarrierData?.data, "model", "id")}
+        // vertexData={vertexData?.data}
+        controlStates={dictsTransform(controlStates?.data)}
+        chargingPiles={dictsTransform(chargingPiles?.data, "displayName", "id")}
         callback={() => {
           getChass();
         }}

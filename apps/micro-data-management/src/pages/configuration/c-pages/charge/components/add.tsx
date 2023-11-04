@@ -1,7 +1,7 @@
 import { useRequest } from "ahooks";
-import { CreateChassisInfos } from "apis";
+import { CreateStationInfos } from "apis";
 import * as React from "react";
-import { useDictStore } from "store";
+// import { useDictStore } from "store";
 import {
   Button,
   Dialog,
@@ -15,18 +15,31 @@ import {
 } from "ui";
 const AddDialog: React.FC<{
   open: boolean;
+  vertexData?: any;
+  carrierData?: any;
+  chassisList?: any;
   onClose?: () => void;
   callback?: () => void;
-}> = ({ open, onClose = () => {}, callback }) => {
-  const { runAsync: run } = useRequest(CreateChassisInfos, {
+  ruleCarrierData?: any;
+  carrierOptionsData?: any;
+  controlStates?: any;
+  chargingPiles?: any;
+}> = ({
+  open,
+  onClose = () => {},
+  callback,
+  ruleCarrierData = [],
+  controlStates = [],
+  chargingPiles = [],
+}) => {
+  const { runAsync: run } = useRequest(CreateStationInfos, {
     manual: true,
   });
   const theme = useTheme();
   const formRef = React.useRef<nygFormik>(null);
-  const { dicts } = useDictStore();
 
   return (
-    <Dialog open={open} onClose={onClose}>
+    <Dialog maxWidth="md" open={open} onClose={onClose}>
       <DialogTitle>添加车型</DialogTitle>
       <DialogContent
         sx={{
@@ -34,56 +47,100 @@ const AddDialog: React.FC<{
         }}
       >
         <MaterialForm
+          columns={3}
           ref={formRef}
+          defaultValue={{}}
           schemaObject={[
             {
-              name: "Type",
-              label: "类型",
+              name: "name",
+              label: "策略名称",
+              type: "text",
+            },
+            {
+              name: "planName",
+              label: "计划名称",
+              type: "text",
+              // type: "select",
+            },
+            {
+              name: "CarrierKeys",
+              label: "小车编号",
+              type: "autoComplete",
+              multiple: true,
+              items: controlStates,
+            },
+            {
+              name: "carrierType",
+              label: "车型",
               type: "select",
-              required: true,
-              items: dicts["CarrierType"],
-              // type: "select",
+              items: ruleCarrierData,
             },
             {
-              name: "Model",
-              label: "名称",
-              type: "text",
-              required: true,
-              // type: "select",
-            },
-            {
-              name: "X1",
-              label: "X1",
-              type: "number",
-              required: true,
-            },
-            {
-              name: "X2",
-              label: "X2",
-              type: "number",
-              required: true,
-            },
-            {
-              name: "Y1",
-              label: "Y1",
-              type: "number",
-              required: true,
-            },
-            {
-              name: "Y2",
-              label: "Y2",
-              type: "number",
-              required: true,
-            },
-            {
-              name: "ForcedCharge",
-              label: "强制充电电量",
+              name: "minLimitBattery",
+              label: "低电量百分比",
               type: "number",
             },
             {
-              name: "ChassisModel",
-              label: "模型文件",
-              type: "text",
+              name: "maxLimitBattery",
+              label: "高电量百分比",
+              type: "number",
+            },
+            {
+              name: "startHour",
+              label: "起始小时",
+              type: "number",
+            },
+            {
+              name: "endHour",
+              label: "结束小时",
+              type: "number",
+            },
+            {
+              name: "startMinute",
+              label: "起始分钟",
+              type: "number",
+            },
+            {
+              name: "endMinute",
+              label: "结束分钟",
+              type: "number",
+            },
+            {
+              name: "priority",
+              label: "任务优先级",
+              type: "number",
+            },
+            {
+              name: "level",
+              label: "规则优先级",
+              type: "number",
+            },
+            {
+              name: "timeLimit",
+              label: "空闲时间",
+              type: "number",
+            },
+            {
+              name: "completeType",
+              label: "充电类型",
+              type: "radioGroup",
+            },
+            {
+              name: "completeTime",
+              label: "充电时间",
+              type: "number",
+            },
+            {
+              name: "completePercent",
+              label: "充电百分比",
+              type: "number",
+            },
+            {
+              name: "pileKeys",
+              label: "充电桩",
+              type: "autoComplete",
+              multiple: true,
+              items: chargingPiles,
             },
           ]}
         ></MaterialForm>
@@ -92,42 +149,17 @@ const AddDialog: React.FC<{
         <Button
           color="primary"
           onClick={async () => {
-            const a = await formRef.current?.submitForm();
-            console.log(a);
+            await formRef.current?.submitForm();
             const { isValid, values } = formRef.current || {};
+            console.log(values);
+
             if (isValid) {
-              const baseData = {
-                BrakingAcceleration: 300,
-                FreeSecond: 0,
-                FullChargeDay: 7,
-                ID: 0,
-                IsControlFront: false,
-                Length: 100,
-                MaxAcc: 300,
-                MaxDec: 300,
-                NoLoadLength: 100,
-                NoLoadOffsetX: 0,
-                NoLoadOffsetY: 0,
-                NoLoadRadius: 0,
-                NoLoadSpeed: 3000,
-                NoLoadWidth: 100,
-                SafeX: 10,
-                SafeY: 10,
-                Shutdown: 100,
-                SpeedMax: 3000,
-                TimeOut: 10,
-                Type: 1,
-                Width: 100,
-                noLoadLength: 0,
-                noLoadOffsetX: 0,
-                noLoadOffsetY: 0,
-                noLoadWidth: 0,
-              };
               const sendData = {
-                ...baseData,
                 ...values,
+                // Genus: 3,
+                AreaID: values.AreaID.map((item) => Number(item.value)),
+                PointKey: Number(values.PointKey.value),
                 Type: Number(values.Type),
-                ForcedCharge: Number(values.ForcedCharge),
               };
               await run(sendData);
               onClose();

@@ -44,9 +44,7 @@ const VehicleType: FC<IProps> = () => {
     data: chassisData,
     loading,
     run: getChass,
-  } = useRequest(() =>
-    getStationInfos({ type: 0, pageNum: 1, pageSize: 10000 })
-  );
+  } = useRequest(() => getStationInfos({ type: 0 }));
 
   const { runAsync: delFn } = useRequest(delStationInfos, {
     manual: true,
@@ -190,7 +188,7 @@ const VehicleType: FC<IProps> = () => {
     <>
       <BaseTable
         columns={columns}
-        data={chassisData?.data || []}
+        data={chassisData?.data.data || []}
         muiTablePaperProps={{
           sx: {
             height: "100%",

@@ -1,3 +1,4 @@
+import { FormControl, FormLabel } from "@mui/material";
 import MuiRadioGroup, {
   RadioGroupProps as MuiRadioGroupProps,
 } from "@mui/material/RadioGroup";
@@ -26,7 +27,15 @@ export function fieldToRadioGroup({
 }
 
 export function RadioGroup(props: RadioGroupProps) {
-  return <MuiRadioGroup {...fieldToRadioGroup(props)} />;
+  console.log(props);
+  return (
+    <FormControl {...props.formControl}>
+      <FormLabel id="demo-controlled-radio-buttons-group">
+        {props.label}
+      </FormLabel>
+      <MuiRadioGroup {...fieldToRadioGroup(props)} />
+    </FormControl>
+  );
 }
 
 RadioGroup.displayName = "FormikMaterialUIRadioGroup";

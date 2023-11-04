@@ -7,9 +7,9 @@ import { IResponse } from "../../type";
  * @returns Promise of the layout object.
  */
 export const getStationInfos = (data: Record<string, any>) => {
-  return request<IResponse<any>>("/Map/GetStationInfos", {
-    method: "GET",
-    params: data,
+  return request<IResponse<any>>("/Map/GetStationInfoPageList", {
+    method: "POST",
+    data,
   });
 };
 
