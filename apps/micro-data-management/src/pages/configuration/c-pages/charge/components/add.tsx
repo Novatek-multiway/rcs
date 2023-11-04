@@ -1,5 +1,5 @@
 import { useRequest } from "ahooks";
-import { CreateStationInfos } from "apis";
+import { AddRule } from "apis";
 import * as React from "react";
 // import { useDictStore } from "store";
 import {
@@ -32,7 +32,7 @@ const AddDialog: React.FC<{
   controlStates = [],
   chargingPiles = [],
 }) => {
-  const { runAsync: run } = useRequest(CreateStationInfos, {
+  const { runAsync: run } = useRequest(AddRule, {
     manual: true,
   });
   const theme = useTheme();
@@ -49,7 +49,21 @@ const AddDialog: React.FC<{
         <MaterialForm
           columns={3}
           ref={formRef}
-          defaultValue={{}}
+          defaultValue={{
+            completePercent: 0,
+            completeTime: 0,
+            endHour: 0,
+            endMinute: 0,
+            level: 0,
+            maxLimitBattery: 0,
+            minLimitBattery: 0,
+            name: "0",
+            planName: "0",
+            priority: 0,
+            startHour: 0,
+            startMinute: 0,
+            timeLimit: 0,
+          }}
           schemaObject={[
             {
               name: "name",
@@ -63,7 +77,7 @@ const AddDialog: React.FC<{
               // type: "select",
             },
             {
-              name: "CarrierKeys",
+              name: "carrierKeys",
               label: "小车编号",
               type: "autoComplete",
               multiple: true,
@@ -167,10 +181,10 @@ const AddDialog: React.FC<{
               const sendData = {
                 ...values,
                 // Genus: 3,
-                AreaID: values.AreaID.map((item) => Number(item.value)),
-                PointKey: Number(values.PointKey.value),
-                Type: Number(values.Type),
+                carrierKeys: values.carrierKeys.join(","),
+                pileKeys: values.pileKeys.map((item) => item.value).join(","),
               };
+              console.log(sendData);
               await run(sendData);
               onClose();
               callback && callback();
