@@ -3,7 +3,7 @@ import EditNoteIcon from "@mui/icons-material/EditNote";
 import EuroIcon from "@mui/icons-material/Euro";
 import { useRequest } from "ahooks";
 import {
-  delStationInfos,
+  DelRule,
   GetRuleChargingPiles,
   GetRuleChassisInfos,
   GetRuleControlStates,
@@ -13,7 +13,7 @@ import type { FC, ReactNode } from "react";
 import React, { memo } from "react";
 // import { useDictStore } from "store";
 import { BaseTable, Box, Button, Chip } from "ui";
-import { dictsTransform, getUpperCaseKeyObject } from "utils";
+import { dictsTransform } from "utils";
 
 import DelButton from "@/component/delButton";
 import Refresh from "@/component/refreshIcon";
@@ -36,13 +36,19 @@ const VehicleType: FC<IProps> = () => {
     run: getChass,
   } = useRequest(() => GetRules({ type: 0 }));
 
-  const { runAsync: delFn } = useRequest(delStationInfos, {
+  const { runAsync: delFn } = useRequest(DelRule, {
     manual: true,
   });
 
   const { data: ruleCarrierData } = useRequest(GetRuleChassisInfos);
   const { data: controlStates } = useRequest(GetRuleControlStates);
   const { data: chargingPiles } = useRequest(GetRuleChargingPiles);
+
+  const ConvertChargingPiles = dictsTransform(
+    chargingPiles?.data,
+    "displayName",
+    "id"
+  );
 
   const columns = [
     {
@@ -129,8 +135,18 @@ const VehicleType: FC<IProps> = () => {
       header: "完成占比",
     },
     {
-      accessorKey: "PileKeys",
+      accessorKey: "pileKeys",
       header: "充电桩",
+      Cell: ({ row }) => {
+        const { original } = row;
+        const pileKeys = original.pileKeys.split(",");
+        if (!pileKeys.length) return null;
+        return chargingPiles?.data.map((item) => {
+          if (pileKeys.includes(String(item.id))) {
+            return <Chip size="small" label={item.displayName} />;
+          }
+        });
+      },
     },
     {
       accessorKey: "actions",
@@ -228,6 +244,7 @@ const VehicleType: FC<IProps> = () => {
         enableHiding={false}
         enableDensityToggle={false}
         enableColumnActions={false}
+        enableColumnFilters={false}
       />
       <AddDialog
         open={open}
@@ -235,14 +252,18 @@ const VehicleType: FC<IProps> = () => {
         ruleCarrierData={dictsTransform(ruleCarrierData?.data, "model", "id")}
         // vertexData={vertexData?.data}
         controlStates={dictsTransform(controlStates?.data)}
-        chargingPiles={dictsTransform(chargingPiles?.data, "displayName", "id")}
+        chargingPiles={ConvertChargingPiles}
         callback={() => {
           getChass();
         }}
       />
       <EditDialog
         open={editOpen}
-        row={getUpperCaseKeyObject(row)}
+        row={row}
+        ruleCarrierData={dictsTransform(ruleCarrierData?.data, "model", "id")}
+        // vertexData={vertexData?.data}
+        controlStates={dictsTransform(controlStates?.data)}
+        chargingPiles={ConvertChargingPiles}
         onClose={() => setEditOpen(false)}
         callback={() => getChass()}
       />

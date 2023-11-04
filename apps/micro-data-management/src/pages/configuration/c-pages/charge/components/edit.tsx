@@ -1,7 +1,7 @@
 import { useRequest } from "ahooks";
-import { UpdateStationInfos } from "apis";
+import { UpdateRule } from "apis";
 import * as React from "react";
-import { useDictStore } from "store";
+// import { useDictStore } from "store";
 import {
   Button,
   Dialog,
@@ -20,27 +20,29 @@ const EditDialog: React.FC<{
   chassisList?: any;
   onClose?: () => void;
   callback?: () => void;
+  ruleCarrierData?: any;
+  carrierOptionsData?: any;
+  controlStates?: any;
+  chargingPiles?: any;
   row?: Record<string, any>;
 }> = ({
   open,
   onClose = () => {},
   callback,
-  vertexData = [],
-  carrierData = [],
-  chassisList = [],
+  ruleCarrierData = [],
+  controlStates = [],
+  chargingPiles = [],
   row = {},
 }) => {
-  const { runAsync: run } = useRequest(UpdateStationInfos, {
+  const { runAsync: run } = useRequest(UpdateRule, {
     manual: true,
   });
-
   const theme = useTheme();
   const formRef = React.useRef<nygFormik>(null);
-  const { dicts } = useDictStore();
 
   return (
     <Dialog maxWidth="md" open={open} onClose={onClose}>
-      <DialogTitle>修改车型</DialogTitle>
+      <DialogTitle>添加车型</DialogTitle>
       <DialogContent
         sx={{
           py: `${theme.spacing(3.25)} !important`,
@@ -51,121 +53,110 @@ const EditDialog: React.FC<{
           ref={formRef}
           defaultValue={{
             ...row,
-            PointKey: {
-              label: String(row.PointKey),
-              value: String(row.PointKey),
-            },
+            carrierKeys: row?.carrierKeys?.split(","),
+            pileKeys: row?.pileKeys?.split(","),
           }}
           schemaObject={[
             {
-              name: "PointKey",
-              label: "路径编号",
-              type: "autoComplete",
-              required: true,
-              items: vertexData,
+              name: "name",
+              label: "策略名称",
+              type: "text",
+            },
+            {
+              name: "planName",
+              label: "计划名称",
+              type: "text",
               // type: "select",
             },
             {
-              name: "Carrier",
-              label: "车号",
-              type: "select",
-              items: carrierData,
-              // type: "select",
-            },
-            {
-              name: "CarrierType",
-              label: "车型",
-              type: "select",
-              items: chassisList,
-            },
-            {
-              name: "Number",
-              label: "车数",
-              type: "number",
-            },
-            {
-              name: "Priority",
-              label: "优先级",
-              type: "number",
-            },
-            {
-              name: "Type",
-              label: "站点类型",
-              type: "select",
-              items: dicts["StationType"],
-            },
-            {
-              name: "State",
-              label: "状态",
-              type: "select",
-              items: dicts["LocationState"],
-            },
-            {
-              name: "Name",
-              label: "名称",
-              type: "text",
-            },
-            {
-              name: "DisplayName",
-              label: "显示名称",
-              type: "text",
-            },
-            {
-              name: "DisplayFontColor",
-              label: "显示颜色",
-              type: "text",
-            },
-            {
-              name: "DisPlayWidth",
-              label: "宽度",
-              type: "number",
-            },
-            {
-              name: "DisPlayLength",
-              label: "长度",
-              type: "number",
-            },
-            {
-              name: "Angle",
-              label: "角度",
-              type: "number",
-            },
-            {
-              name: "HomeGroup",
-              label: "待命点分组",
-              type: "number",
-            },
-            {
-              name: "HomeGroupType",
-              label: "待命点类型",
-              type: "number",
-            },
-            {
-              name: "HomeGroupPriority",
-              label: "待命点优先级",
-              type: "number",
-            },
-            {
-              name: "BackGroundColor",
-              label: "背景颜色",
-              type: "text",
-            },
-            {
-              name: "WorkAreaTypeStr",
-              label: "标注",
-              type: "text",
-            },
-            {
-              name: "DisPlayModel",
-              label: "模型",
-              type: "text",
-            },
-            {
-              name: "AreaID",
-              label: "区域ID",
+              name: "carrierKeys",
+              label: "小车编号",
               type: "autoComplete",
               multiple: true,
-              items: vertexData,
+              items: controlStates,
+            },
+            {
+              name: "carrierType",
+              label: "车型",
+              type: "select",
+              items: ruleCarrierData,
+            },
+            {
+              name: "minLimitBattery",
+              label: "低电量百分比",
+              type: "number",
+            },
+            {
+              name: "maxLimitBattery",
+              label: "高电量百分比",
+              type: "number",
+            },
+            {
+              name: "startHour",
+              label: "起始小时",
+              type: "number",
+            },
+            {
+              name: "endHour",
+              label: "结束小时",
+              type: "number",
+            },
+            {
+              name: "startMinute",
+              label: "起始分钟",
+              type: "number",
+            },
+            {
+              name: "endMinute",
+              label: "结束分钟",
+              type: "number",
+            },
+            {
+              name: "priority",
+              label: "任务优先级",
+              type: "number",
+            },
+            {
+              name: "level",
+              label: "规则优先级",
+              type: "number",
+            },
+            {
+              name: "timeLimit",
+              label: "空闲时间",
+              type: "number",
+            },
+            {
+              name: "completeType",
+              label: "充电类型",
+              type: "radioGroup",
+              items: [
+                {
+                  value: 3,
+                  label: "时间",
+                },
+                {
+                  value: 1,
+                  label: "百分比",
+                },
+              ],
+            },
+            {
+              name: "completeTime",
+              label: "充电时间",
+              type: "number",
+            },
+            {
+              name: "completePercent",
+              label: "充电百分比",
+              type: "number",
+            },
+            {
+              name: "pileKeys",
+              label: "充电桩",
+              type: "autoComplete",
+              multiple: true,
+              items: chargingPiles,
             },
           ]}
         ></MaterialForm>
@@ -176,18 +167,12 @@ const EditDialog: React.FC<{
           onClick={async () => {
             await formRef.current?.submitForm();
             const { isValid, values } = formRef.current || {};
-            console.log("values", values);
-
             if (isValid) {
               const sendData = {
                 ...values,
-                UsageCount: 0,
-                AreaID: values.AreaID.map((item) => Number(item.value)),
-                PointKey: Number(values.PointKey.value),
-
-                Type: Number(values.Type),
-                Carrier: Number(values.Carrier),
-                CarrierType: Number(values.CarrierType),
+                // Genus: 3,
+                carrierKeys: values.carrierKeys.join(","),
+                pileKeys: values.pileKeys.map((item) => item.value).join(","),
               };
               await run(sendData);
               onClose();
