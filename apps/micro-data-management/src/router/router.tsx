@@ -1,4 +1,4 @@
-import { lazy } from "react";
+import { lazy, Suspense } from "react";
 import { Navigate, RouteObject } from "react-router-dom";
 
 const Assignment = lazy(() => import("@/pages/assignment"));
@@ -24,7 +24,11 @@ const VehicleType = lazy(
 const router: RouteObject[] = [
   {
     path: "/",
-    element: <Navigate to={"/assignment"} />,
+    element: (
+      <Suspense>
+        <Navigate to={"/assignment"} />
+      </Suspense>
+    ),
   },
   {
     path: "/assignment",
@@ -50,31 +54,59 @@ const router: RouteObject[] = [
     children: [
       {
         path: "charge",
-        element: <Charge />,
+        element: (
+          <Suspense>
+            <Charge />
+          </Suspense>
+        ),
       },
       {
         path: "event",
-        element: <Event />,
+        element: (
+          <Suspense>
+            <Event />
+          </Suspense>
+        ),
       },
       {
         path: "map",
-        element: <Map />,
+        element: (
+          <Suspense>
+            <Map />
+          </Suspense>
+        ),
       },
       {
         path: "point",
-        element: <Point />,
+        element: (
+          <Suspense>
+            <Point />
+          </Suspense>
+        ),
       },
       {
         path: "stand-by-point",
-        element: <StandByPoint />,
+        element: (
+          <Suspense>
+            <StandByPoint />
+          </Suspense>
+        ),
       },
       {
         path: "user",
-        element: <User />,
+        element: (
+          <Suspense>
+            <User />
+          </Suspense>
+        ),
       },
       {
         path: "vehicle-type",
-        element: <VehicleType />,
+        element: (
+          <Suspense>
+            <VehicleType />
+          </Suspense>
+        ),
       },
     ],
   },

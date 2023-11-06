@@ -1,33 +1,18 @@
-import createCache from "@emotion/cache";
-import { CacheProvider } from "@emotion/react";
-import * as ReactDOM from "react-dom/client";
+import ReactDOM from "react-dom";
+// import * as ReactDOM from "react-dom/client";
 import { renderWithQiankun } from "vite-plugin-qiankun/dist/helper";
 
 import App from "./App";
 
 const appName = import.meta.env.VITE_APP_NAME;
 
-let root: ReactDOM.Root | null = null;
-
 export default function start(props: any = {}) {
   const { container } = props;
-  // 解决：Warning: You are calling ReactDOMClient.createRoot() on a container that has already been passed to
-  if (root) return;
-  const isRenderByQiankun = !!container;
-  const rootContainer = container
-    ? container.querySelector(`#${appName}-root`)
-    : document.getElementById(`${appName}-root`);
-  const myCache = createCache({
-    key: appName,
-    container: isRenderByQiankun
-      ? container.querySelector("qiankun-head")
-      : rootContainer,
-  });
-  root = ReactDOM.createRoot(rootContainer);
-  root.render(
-    <CacheProvider value={myCache}>
-      <App />
-    </CacheProvider>
+  ReactDOM.render(
+    <App />,
+    container
+      ? container.querySelector(`#${appName}-root`)
+      : document.querySelector(`#${appName}-root`)
   );
 }
 
@@ -44,11 +29,21 @@ renderWithQiankun({
   },
   unmount(props: any) {
     console.log(`[${appName}] unmount`, props);
-    root?.unmount?.();
+    const { container } = props;
+    ReactDOM.unmountComponentAtNode(
+      container
+        ? container.querySelector(`#${appName}-root`)
+        : document.querySelector(`#${appName}-root`)
+    );
   },
 });
 
 // @ts-ignore
 if (!window.__POWERED_BY_QIANKUN__) {
   start();
+}
+
+// @ts-ignore
+if (process.env.NODE_ENV === "development") {
+  import("@/hmr.fix");
 }

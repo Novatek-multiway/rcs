@@ -1,4 +1,4 @@
-declare namespace API {
+declare namespace MapAPI {
   export interface RootMapObject {
     MapOption: MapOption
     Vertexs: Vertex[]
@@ -301,5 +301,41 @@ declare namespace API {
     IsLoad: boolean
     VariableBits: number
     Floor: number
+  }
+}
+
+declare namespace ReportAPI {
+  // 在线车辆
+  interface OnlineCarrier {
+    id: number
+    agvNo: number
+    x: number
+    y: number
+    angle: number
+    isWork: boolean
+    isError: boolean
+    isOnline: boolean
+    type: string
+    image: string
+    lkX1: number
+    lkX2: number
+    lkY1: number
+    lkY2: number
+    profileHeightScale: number
+    profileWidthScale: number
+    plannings: Planning[]
+    currentCmd: number
+    availableState: number
+    errorCode: number
+    elecQuantity: number
+    statusName: string
+    goodsStatus: number
+    controlState: number
+  }
+
+  interface Planning {
+    planningType: number //
+    planningKey: number
+    state1: number // 0-已规划  6-已分配 7-交管确认 3-已下发  4-行驶中 1-事件失败  2-被交管  5-已路过
   }
 }

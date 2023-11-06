@@ -8,14 +8,16 @@ export interface IPointProps {
   y: number
   text: string | number
 }
-const PointTextFontSize = 1
-const PointSize = 1
+const POINT_TEXT_FONT_SIZE = 0.5 // 点文字大小
+const POINT_SIZE = 0.2 // 点尺寸
 const Point: FC<IPointProps> = memo((props) => {
   const { x, y, text } = props
   const textRef = useRef<ElementRef<typeof Text>>(null)
   const [textWidth, setTextWidth] = useState(0)
   useEffect(() => {
-    setTextWidth(textRef.current?.width() || 0)
+    if (textRef.current) {
+      setTextWidth(textRef.current?.width() || 0)
+    }
   }, [textRef])
 
   return (
@@ -25,13 +27,14 @@ const Point: FC<IPointProps> = memo((props) => {
         perfectDrawEnabled={false}
         listening={false}
         text={text + ''}
-        fontSize={PointTextFontSize}
+        fontSize={POINT_TEXT_FONT_SIZE}
         fill={theme.palette.primary.main}
-        offsetY={(PointTextFontSize * 3) / 2}
+        offsetY={(POINT_TEXT_FONT_SIZE * 3) / 2}
         offsetX={textWidth / 2}
+        letterSpacing={0.01}
       />
 
-      <Circle perfectDrawEnabled={false} listening={false} width={PointSize} height={PointSize} fill="white" />
+      <Circle perfectDrawEnabled={false} listening={false} width={POINT_SIZE} height={POINT_SIZE} fill="white" />
     </Group>
   )
 })

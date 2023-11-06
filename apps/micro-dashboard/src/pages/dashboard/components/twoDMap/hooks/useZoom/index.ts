@@ -3,7 +3,7 @@ import { Stage } from 'react-konva'
 
 const scaleBy = 1.05
 export function useZoom(stageRef: React.RefObject<ElementRef<typeof Stage>>) {
-  const [currentScale, setCurrentScale] = useState(1)
+  const [currentScale, setCurrentScale] = useState(2)
   /**
    * @description: 根据target的位置进行缩放
    * @param {*} useCallback
@@ -48,7 +48,7 @@ export function useZoom(stageRef: React.RefObject<ElementRef<typeof Stage>>) {
   useEffect(() => {
     const stage = stageRef.current
     if (!stage) return
-    stage.on('wheel', (e) => {
+    const handleWheel = (e: any) => {
       // stop default scrolling
       e.evt.preventDefault()
 
@@ -68,7 +68,12 @@ export function useZoom(stageRef: React.RefObject<ElementRef<typeof Stage>>) {
       handleZoom(newScale, {
         targetPosition: pointer
       })
-    })
+    }
+    stage.on('wheel', handleWheel)
+
+    return () => {
+      stage.off('wheel', handleWheel)
+    }
   }, [stageRef, handleZoom])
   return {
     currentScale,
