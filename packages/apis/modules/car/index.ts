@@ -1,4 +1,4 @@
-import { request } from "../../request";
+import { request,notification } from "../../request";
 import { IResponse } from "../../type";
 
 /**
@@ -6,6 +6,7 @@ import { IResponse } from "../../type";
  *
  * @returns Promise of the layout object.
  */
+export {notification}
 export const postGetControlStates = (data: Record<string, any>) => {
   return request<IResponse<any>>("/Carrier/GetControlStates", {
     method: "GET",
@@ -83,6 +84,13 @@ export const postUpdateCarrier = (data: Record<string, any>) => {
 export const delCreateCarrier = (key: string) => {
   return request<IResponse<any>>(`/Carrier/DeleteCarrier?id=${key}`, {
     method: "DELETE",
+  });
+};
+
+// 获取车辆路线 GetControlState
+export const getGetCarrierTrack = (id: string) => {
+  return request<IResponse<any>>(`/Carrier/GetCarrierTrack?id=${id}`, {
+    method: "GET",
   });
 };
 
