@@ -1,4 +1,4 @@
-import { FormControlLabel, SwitchProps } from "@mui/material";
+import { FormControlLabel, styled, SwitchProps } from "@mui/material";
 import { Field } from "formik";
 
 import { Switch } from "../components";
@@ -8,21 +8,19 @@ interface FormFieldLabelSwitchProps extends SwitchProps {
   name: string;
 }
 
+const StyledLabel = styled(FormControlLabel)(({ theme }) => ({
+  marginLeft: theme.spacing(0),
+}));
+
 export const FormFieldLabelSwitch = ({
   label,
   name,
 }: FormFieldLabelSwitchProps) => {
   return (
-    <FormControlLabel
+    <StyledLabel
       label={label}
-      control={
-        <Field
-          component={Switch}
-          name={name}
-          value="designer"
-          type="checkbox"
-        />
-      }
+      labelPlacement="start"
+      control={<Field component={Switch} name={name} type="checkbox" />}
     />
   );
 };

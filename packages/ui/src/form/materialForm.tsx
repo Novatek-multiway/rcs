@@ -91,7 +91,7 @@ export const MaterialForm = forwardRef<any, MaterialFormProps>((props, ref) => {
             }}
           >
             {field.type === "checkbox" && (
-              <FormFieldLabelSwitch label="niyg" name={field.name} />
+              <FormFieldLabelSwitch label={field.label} name={field.name} />
             )}
             {field.type === "select" && (
               <FormFieldLabelSelect

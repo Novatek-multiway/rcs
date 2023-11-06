@@ -33,3 +33,18 @@ export const UpdateChassisInfos = (data: Record<string, any>) => {
     data,
   });
 };
+
+// 待命点配置
+export const postCarrierInfoPageList = (data: Record<string, any>) => {
+  return request<IResponse<any>>("/Carrier/GetCarrierInfoPageList", {
+    method: "POST",
+    data,
+  });
+};
+
+export const updateCarrier = (data: Record<string, any>) => {
+  return request<IResponse<any>>("/Carrier/UpdateCarrier", {
+    method: "POST",
+    data,
+  });
+};
