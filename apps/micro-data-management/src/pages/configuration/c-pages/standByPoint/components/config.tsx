@@ -49,6 +49,7 @@ const ConfigDialog: React.FC<{
             {
               name: "reHomeWaitTime",
               label: "空闲间隔",
+              endAdornment: "s",
               type: "number",
             },
             {

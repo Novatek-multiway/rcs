@@ -26,6 +26,7 @@ export const FormFieldLabelText = ({
   const sxFormControl = {
     m: 1,
     minWidth: 140,
+    width: "100%",
   };
   return (
     <>

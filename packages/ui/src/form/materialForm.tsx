@@ -28,6 +28,7 @@ interface FieldSchema
   items?: Array<{ value: string; label: string }>; // 新增了 items 属性的类型定义
   required?: boolean;
   disabled?: boolean;
+  endAdornment?: React.ReactNode | string;
 }
 
 interface MaterialFormProps {
