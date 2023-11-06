@@ -50,6 +50,7 @@ export type TTwoDMapState = {
     rect: TResultWrapper<TRectResult>[]
     polygon: TResultWrapper<TPolygonResult>[]
   }
+  newDrawingResult: TResultWrapper<TRectResult | TPolygonResult> | null
   drawingSelectedId: string // 当前绘制的区块选中id
   insidePoints: { id: number; x: number; y: number }[] // 在可视区域的点位
   isLoading: boolean
@@ -72,6 +73,7 @@ type TTwoDMaoActions = {
   setStageMode: (stageMode: EStageMode) => void
   setDrawingType: (drawingType: EDrawingType) => void
   setDrawingResultListMap: (drawingResultListMap: TTwoDMapState['drawingResultListMap']) => void
+  setNewDrawingResult: (newDrawingResult: TTwoDMapState['newDrawingResult']) => void
   setDrawingSelectedId: (drawingSelectedId: TTwoDMapState['drawingSelectedId']) => void
   setInsidePoints: (insidePoints: TTwoDMapState['insidePoints']) => void
   setIsLoading: (isLoading: TTwoDMapState['isLoading']) => void
@@ -125,6 +127,7 @@ export const useTwoDMapStore = createWithEqualityFn<TTwoDMapState & TTwoDMaoActi
       rect: [],
       polygon: []
     },
+    newDrawingResult: null,
     drawingSelectedId: '',
     insidePoints: [],
     isLoading: false,
@@ -145,6 +148,7 @@ export const useTwoDMapStore = createWithEqualityFn<TTwoDMapState & TTwoDMaoActi
     setStageMode: (stageMode) => set(() => ({ stageMode })),
     setDrawingType: (drawingType) => set(() => ({ drawingType })),
     setDrawingResultListMap: (drawingResultListMap) => set(() => ({ drawingResultListMap })),
+    setNewDrawingResult: (newDrawingResult) => set(() => ({ newDrawingResult })),
     setDrawingSelectedId: (drawingSelectedId) => set(() => ({ drawingSelectedId })),
     setInsidePoints: (insidePoints) => set(() => ({ insidePoints })),
     setIsLoading: (isLoading) => set(() => ({ isLoading }))

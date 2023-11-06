@@ -1,8 +1,9 @@
 import { Close, Delete, Draw, OpenWith, PentagonOutlined, RectangleOutlined } from '@mui/icons-material'
 import { useSpring } from '@react-spring/web'
+import { useUpdateEffect } from 'ahooks'
 import Konva from 'konva'
 import type { FC, PropsWithChildren } from 'react'
-import React, { memo, useCallback, useMemo } from 'react'
+import React, { memo, useCallback, useMemo, useState } from 'react'
 import {
   Box,
   Button,
@@ -21,9 +22,10 @@ import {
 } from 'ui'
 
 import { EStageMode } from '../../constants'
-import { EDrawingType } from '../../hooks/useKonvaDrawing'
+import { EDrawingType, TRectResult, TResultWrapper } from '../../hooks/useKonvaDrawing'
 import { useTwoDMapStore } from '../../store'
 import { POINT_SIZE } from '../points/constant'
+import AddBlockDialog from './AddBlockDialog'
 import { DrawingBlockCardWrapper } from './style'
 
 interface IDrawingBlockCardProps {}
@@ -45,7 +47,8 @@ const DrawingBlockCard: FC<PropsWithChildren<IDrawingBlockCardProps>> = () => {
     setDrawingResultListMap,
     drawingSelectedId,
     setDrawingSelectedId,
-    insidePoints
+    insidePoints,
+    newDrawingResult
   } = useTwoDMapStore((state) => ({
     isDrawingBlockCardOpen: state.isDrawingBlockCardOpen,
     setIsDrawingBlockCardOpen: state.setIsDrawingBlockCardOpen,
@@ -57,7 +60,8 @@ const DrawingBlockCard: FC<PropsWithChildren<IDrawingBlockCardProps>> = () => {
     setDrawingResultListMap: state.setDrawingResultListMap,
     drawingSelectedId: state.drawingSelectedId,
     setDrawingSelectedId: state.setDrawingSelectedId,
-    insidePoints: state.insidePoints
+    insidePoints: state.insidePoints,
+    newDrawingResult: state.newDrawingResult
   }))
 
   const drawResultList = useMemo(() => Object.values(drawingResultListMap).flat(), [drawingResultListMap])
@@ -109,7 +113,7 @@ const DrawingBlockCard: FC<PropsWithChildren<IDrawingBlockCardProps>> = () => {
   const renderDrawingType = () => (
     <>
       <Typography sx={{ fontSize: 14 }} color="text.secondary">
-        绘图类型
+        区块类型
       </Typography>
       <ToggleButtonGroup sx={{ mb: 2 }} value={drawingType} exclusive size="small" onChange={handleDrawingTypeChange}>
         <ToggleButton value={EDrawingType.RECT} aria-label="rect">
@@ -134,15 +138,15 @@ const DrawingBlockCard: FC<PropsWithChildren<IDrawingBlockCardProps>> = () => {
   const handleDeleteClick = (drawResult: (typeof drawingResultListMap)[keyof typeof drawingResultListMap][0]) => {
     const newDrawingResultListMap = { ...drawingResultListMap }
     if (drawResult.type === EDrawingType.RECT) {
-      const newDrawResultList = newDrawingResultListMap[drawResult.type].filter((i) => i.id !== drawResult.id)
-      newDrawingResultListMap[drawResult.type] = newDrawResultList
+      const newDrawingResultList = newDrawingResultListMap[drawResult.type].filter((i) => i.id !== drawResult.id)
+      newDrawingResultListMap[drawResult.type] = newDrawingResultList
     }
     setDrawingResultListMap(newDrawingResultListMap)
   }
   const renderDrawResult = () => (
     <>
       <Typography sx={{ fontSize: 14 }} color="text.secondary">
-        绘图结果
+        区块信息
       </Typography>
       <Box sx={{ bgcolor: 'background.paper', position: 'relative' }}>
         <List
@@ -200,31 +204,60 @@ const DrawingBlockCard: FC<PropsWithChildren<IDrawingBlockCardProps>> = () => {
     })
   }, [insidePoints, drawingResultListMap])
 
+  /* ---------------------------------- 新增区块 ---------------------------------- */
+  const [addBlockDialogOpen, setAddBlockDialogOpen] = useState(false)
+  const drawingResultSelectedPoints = useMemo(() => {
+    if (newDrawingResult?.type === 'rect') {
+      const selected = insidePoints.filter((pointPosition) =>
+        Konva.Util.haveIntersection((newDrawingResult as TResultWrapper<TRectResult>).data, {
+          ...pointPosition,
+          width: POINT_SIZE,
+          height: POINT_SIZE
+        })
+      )
+      return selected
+    }
+    return []
+  }, [newDrawingResult, insidePoints])
+  useUpdateEffect(() => {
+    setAddBlockDialogOpen(true)
+  }, [newDrawingResult])
+  /* ---------------------------------- 新增区块 ---------------------------------- */
+
   return (
-    <DrawingBlockCardWrapper style={drawingBlockCardSprings}>
-      <Card>
-        <CardContent sx={{ gap: 10 }}>
-          <Button disableRipple sx={{ position: 'absolute', right: 6, top: 6 }} onClick={handleClose}>
-            <Close />
-          </Button>
-          {renderStageMode()}
-          {renderDrawingType()}
-          {renderDrawResult()}
-        </CardContent>
-        <CardActions
-          sx={{
-            justifyContent: 'flex-end'
-          }}
-        >
-          <Button size="small" onClick={handleSubmit}>
-            提交
-          </Button>
-          <Button size="small" color="inherit" onClick={handleClose}>
-            取消
-          </Button>
-        </CardActions>
-      </Card>
-    </DrawingBlockCardWrapper>
+    <>
+      <DrawingBlockCardWrapper style={drawingBlockCardSprings}>
+        <Card>
+          <CardContent sx={{ gap: 10 }}>
+            <Button disableRipple sx={{ position: 'absolute', right: 6, top: 6 }} onClick={handleClose}>
+              <Close />
+            </Button>
+            {renderStageMode()}
+            {renderDrawingType()}
+            {renderDrawResult()}
+          </CardContent>
+          <CardActions
+            sx={{
+              justifyContent: 'flex-end'
+            }}
+          >
+            <Button size="small" onClick={handleSubmit}>
+              提交
+            </Button>
+            <Button size="small" color="inherit" onClick={handleClose}>
+              取消
+            </Button>
+          </CardActions>
+        </Card>
+      </DrawingBlockCardWrapper>
+      <AddBlockDialog
+        open={addBlockDialogOpen}
+        points={drawingResultSelectedPoints}
+        onClose={() => {
+          setAddBlockDialogOpen(false)
+        }}
+      />
+    </>
   )
 }
 

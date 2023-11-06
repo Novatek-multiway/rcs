@@ -49,6 +49,7 @@ const InternalStage: FC<PropsWithChildren<IInternalStageProps>> = (props) => {
     drawingType,
     drawingResultListMap,
     setDrawingResultListMap,
+    setNewDrawingResult,
     drawingSelectedId,
     setDrawingSelectedId
   } = useTwoDMapStore((state) => ({
@@ -64,6 +65,7 @@ const InternalStage: FC<PropsWithChildren<IInternalStageProps>> = (props) => {
     drawingType: state.drawingType,
     drawingResultListMap: state.drawingResultListMap,
     setDrawingResultListMap: state.setDrawingResultListMap,
+    setNewDrawingResult: state.setNewDrawingResult,
     drawingSelectedId: state.drawingSelectedId,
     setDrawingSelectedId: state.setDrawingSelectedId
   }))
@@ -173,6 +175,7 @@ const InternalStage: FC<PropsWithChildren<IInternalStageProps>> = (props) => {
       if (drawResult.type === EDrawingType.RECT) {
         const drawResultList = newDrawingResultListMap[drawResult.type] || []
         drawResultList.push(drawResult as TResultWrapper<TRectResult>)
+        setNewDrawingResult(drawResult)
       }
       setDrawingResultListMap(newDrawingResultListMap)
     }
