@@ -383,7 +383,6 @@ const Vehicle = () => {
             right: ["actions"],
           },
         }}
-        enableToolbarInternalActions={true}
         enableFullScreenToggle={false}
         enableHiding={false}
         enableDensityToggle={false}
