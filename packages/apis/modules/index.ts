@@ -3,3 +3,4 @@ export * from "./carrier";
 export * from "./job";
 export * from "./station";
 export * from "./rule";
+export * from "./event";

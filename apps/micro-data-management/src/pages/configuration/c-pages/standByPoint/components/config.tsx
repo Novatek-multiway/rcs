@@ -29,7 +29,7 @@ const ConfigDialog: React.FC<{
 
   return (
     <Dialog maxWidth="md" open={open} onClose={onClose}>
-      <DialogTitle>添加车型</DialogTitle>
+      <DialogTitle>待命点配置</DialogTitle>
       <DialogContent
         sx={{
           py: `${theme.spacing(3.25)} !important`,
@@ -43,12 +43,13 @@ const ConfigDialog: React.FC<{
             {
               name: "id",
               label: "车辆编号",
-              type: "text",
+              disabled: true,
+              type: "number",
             },
             {
               name: "reHomeWaitTime",
               label: "空闲间隔",
-              type: "text",
+              type: "number",
             },
             {
               name: "homePoint",

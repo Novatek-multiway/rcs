@@ -43,7 +43,7 @@ export const postCarrierInfoPageList = (data: Record<string, any>) => {
 };
 
 export const updateCarrier = (data: Record<string, any>) => {
-  return request<IResponse<any>>("/Carrier/UpdateCarrier", {
+  return request<IResponse<any>>("/Carrier/UpdateCarrierHomeOption", {
     method: "POST",
     data,
   });

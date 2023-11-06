@@ -162,6 +162,9 @@ const StandByPoint: FC<IProps> = () => {
         open={editOpen}
         onClose={() => setEditOpen(false)}
         rows={row}
+        callback={() => {
+          getChass();
+        }}
       />
     </>
   );
