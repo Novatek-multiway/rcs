@@ -36,7 +36,7 @@
     "theme": "workspace:*",
     "ui": "workspace:*",
     "vite-plugin-qiankun": "^1.0.15",
-    "zustand": "^4.4.1"
+    "zustand": "^4.4.6"
   },
   "devDependencies": {
     "@packages/build": "workspace:^",

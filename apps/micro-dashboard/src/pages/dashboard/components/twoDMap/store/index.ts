@@ -1,3 +1,4 @@
+import { shallow } from 'zustand/shallow'
 import { createWithEqualityFn } from 'zustand/traditional'
 
 import { ILineProps } from '../components/lines'
@@ -70,56 +71,59 @@ const getStageMapRatio = (stageSize: TTwoDMapState['stageSize'], mapSize: TTwoDM
   }
 }
 
-export const useTwoDMapStore = createWithEqualityFn<TTwoDMapState & TTwoDMaoActions>((set) => ({
-  stageSize: { width: 1920, height: 1080 },
-  mapSize: { width: 1920, height: 1080 },
-  stageMapRatio: 1,
-  currentScale: 1,
-  cursorPosition: { x: 0, y: 0 },
-  idPointMap: new Map(),
-  idLineMap: new Map(),
-  stageLeftTopPosition: { x: 0, y: 0 },
-  mapCenterPosition: { x: 0, y: 0 },
-  settings: {
-    [EMapSettingsKeys.IS_LOCATION_VISIBLE]: true,
-    [EMapSettingsKeys.IS_POINT_VISIBLE]: false,
-    [EMapSettingsKeys.IS_DIRECTION_VISIBLE]: false,
-    [EMapSettingsKeys.IS_VEHICLE_OUTLINE_VISIBLE]: false,
-    [EMapSettingsKeys.IS_VEHICLE_IMAGE_VISIBLE]: true,
-    [EMapSettingsKeys.IS_VEHICLE_BENCHMARK_VISIBLE]: false,
-    [EMapSettingsKeys.IS_VEHICLE_ON_WORK_VISIBLE]: true,
-    [EMapSettingsKeys.IS_VEHICLE_PLANNING_VISIBLE]: true,
-    [EMapSettingsKeys.IS_FAULTY_VEHICLE_VISIBLE]: true,
-    [EMapSettingsKeys.IS_VEHICLE_DETAIL_VISIBLE]: true,
-    [EMapSettingsKeys.IS_VEHICLE_PLANNING_SINGLE_COLOR]: false,
-    [EMapSettingsKeys.IS_DEV_MODE]: false,
-    [EMapSettingsKeys.IS_STATION_VISIBLE]: true,
-    [EMapSettingsKeys.LINE_COLOR]: '#393c44',
-    [EMapSettingsKeys.PLANNING_LINE_COLOR]: '#00abc7'
-  },
-  isDrawingBlockCardOpen: false,
-  stageMode: EStageMode.DRAG,
-  drawingType: EDrawingType.RECT,
-  drawingResultListMap: {
-    rect: [],
-    polygon: []
-  },
-  drawingSelectedId: '',
-  insidePoints: [],
-  setStageSize: (stageSize) =>
-    set((state) => ({ stageSize, stageMapRatio: getStageMapRatio(stageSize, state.mapSize) })),
-  setMapSize: (mapSize) => set((state) => ({ mapSize, stageMapRatio: getStageMapRatio(state.stageSize, mapSize) })),
-  setCurrentScale: (currentScale) => set(() => ({ currentScale })),
-  setCursorPosition: (cursorPosition) => set(() => ({ cursorPosition })),
-  setIdPointMap: (idPointMap) => set(() => ({ idPointMap })),
-  setIdLineMap: (idLineMap) => set(() => ({ idLineMap })),
-  setStageLeftTopPosition: (stageLeftTopPosition) => set(() => ({ stageLeftTopPosition })),
-  setMapCenterPosition: (mapCenterPosition) => set(() => ({ mapCenterPosition })),
-  setSettings: (settings) => set((state) => ({ settings: { ...state.settings, ...settings } })),
-  setIsDrawingBlockCardOpen: (isDrawingBlockCardOpen) => set(() => ({ isDrawingBlockCardOpen })),
-  setStageMode: (stageMode) => set(() => ({ stageMode })),
-  setDrawingType: (drawingType) => set(() => ({ drawingType })),
-  setDrawingResultListMap: (drawingResultListMap) => set(() => ({ drawingResultListMap })),
-  setDrawingSelectedId: (drawingSelectedId) => set(() => ({ drawingSelectedId })),
-  setInsidePoints: (insidePoints) => set(() => ({ insidePoints }))
-}))
+export const useTwoDMapStore = createWithEqualityFn<TTwoDMapState & TTwoDMaoActions>(
+  (set) => ({
+    stageSize: { width: 1920, height: 1080 },
+    mapSize: { width: 1920, height: 1080 },
+    stageMapRatio: 1,
+    currentScale: 1,
+    cursorPosition: { x: 0, y: 0 },
+    idPointMap: new Map(),
+    idLineMap: new Map(),
+    stageLeftTopPosition: { x: 0, y: 0 },
+    mapCenterPosition: { x: 0, y: 0 },
+    settings: {
+      [EMapSettingsKeys.IS_LOCATION_VISIBLE]: true,
+      [EMapSettingsKeys.IS_POINT_VISIBLE]: false,
+      [EMapSettingsKeys.IS_DIRECTION_VISIBLE]: false,
+      [EMapSettingsKeys.IS_VEHICLE_OUTLINE_VISIBLE]: false,
+      [EMapSettingsKeys.IS_VEHICLE_IMAGE_VISIBLE]: true,
+      [EMapSettingsKeys.IS_VEHICLE_BENCHMARK_VISIBLE]: false,
+      [EMapSettingsKeys.IS_VEHICLE_ON_WORK_VISIBLE]: true,
+      [EMapSettingsKeys.IS_VEHICLE_PLANNING_VISIBLE]: true,
+      [EMapSettingsKeys.IS_FAULTY_VEHICLE_VISIBLE]: true,
+      [EMapSettingsKeys.IS_VEHICLE_DETAIL_VISIBLE]: true,
+      [EMapSettingsKeys.IS_VEHICLE_PLANNING_SINGLE_COLOR]: false,
+      [EMapSettingsKeys.IS_DEV_MODE]: false,
+      [EMapSettingsKeys.IS_STATION_VISIBLE]: true,
+      [EMapSettingsKeys.LINE_COLOR]: '#393c44',
+      [EMapSettingsKeys.PLANNING_LINE_COLOR]: '#00abc7'
+    },
+    isDrawingBlockCardOpen: false,
+    stageMode: EStageMode.DRAG,
+    drawingType: EDrawingType.RECT,
+    drawingResultListMap: {
+      rect: [],
+      polygon: []
+    },
+    drawingSelectedId: '',
+    insidePoints: [],
+    setStageSize: (stageSize) =>
+      set((state) => ({ stageSize, stageMapRatio: getStageMapRatio(stageSize, state.mapSize) })),
+    setMapSize: (mapSize) => set((state) => ({ mapSize, stageMapRatio: getStageMapRatio(state.stageSize, mapSize) })),
+    setCurrentScale: (currentScale) => set(() => ({ currentScale })),
+    setCursorPosition: (cursorPosition) => set(() => ({ cursorPosition })),
+    setIdPointMap: (idPointMap) => set(() => ({ idPointMap })),
+    setIdLineMap: (idLineMap) => set(() => ({ idLineMap })),
+    setStageLeftTopPosition: (stageLeftTopPosition) => set(() => ({ stageLeftTopPosition })),
+    setMapCenterPosition: (mapCenterPosition) => set(() => ({ mapCenterPosition })),
+    setSettings: (settings) => set((state) => ({ settings: { ...state.settings, ...settings } })),
+    setIsDrawingBlockCardOpen: (isDrawingBlockCardOpen) => set(() => ({ isDrawingBlockCardOpen })),
+    setStageMode: (stageMode) => set(() => ({ stageMode })),
+    setDrawingType: (drawingType) => set(() => ({ drawingType })),
+    setDrawingResultListMap: (drawingResultListMap) => set(() => ({ drawingResultListMap })),
+    setDrawingSelectedId: (drawingSelectedId) => set(() => ({ drawingSelectedId })),
+    setInsidePoints: (insidePoints) => set(() => ({ insidePoints }))
+  }),
+  shallow
+)
