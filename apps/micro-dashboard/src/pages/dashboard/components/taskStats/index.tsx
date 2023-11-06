@@ -1,6 +1,8 @@
+import { useAsyncEffect, useUpdateEffect } from 'ahooks'
+import { getTaskReport } from 'apis'
 import { echarts, useEcharts } from 'hooks'
 import type { FC, PropsWithChildren } from 'react'
-import React, { memo, useMemo, useRef } from 'react'
+import React, { memo, useMemo, useRef, useState } from 'react'
 import { Panel } from 'ui'
 
 import TaskStatsList from './components/taskStatsList'
@@ -8,49 +10,10 @@ import { TaskStatusWrapper } from './style'
 
 interface ITaskStatsProps {}
 
-const total = 4
-const data = [
-  {
-    id: 10,
-    finished: 1,
-    time: 0.32
-  },
-  {
-    id: 11,
-    finished: 1,
-    time: 0.32
-  },
-  {
-    id: 12,
-    finished: 1,
-    time: 0.32
-  },
-  {
-    id: 14,
-    finished: 0,
-    time: 0
-  },
-  {
-    id: 15,
-    finished: 0,
-    time: 0
-  },
-  {
-    id: 16,
-    finished: 0,
-    time: 0
-  },
-  {
-    id: 17,
-    finished: 0,
-    time: 0
-  }
-]
-
 const option: echarts.EChartsOption = {
   backgroundColor: 'transparent',
   title: {
-    text: `任务量：${total}个`,
+    text: `任务量：0个`,
     left: 'center',
     top: 'center',
     textStyle: {
@@ -72,18 +35,17 @@ const option: echarts.EChartsOption = {
     {
       name: '已完成',
       type: 'pie',
-      radius: ['65%', '80%'],
+      radius: ['55%', '70%'],
       avoidLabelOverlap: false,
       label: {
-        show: true
+        show: true,
+        padding: -20,
+        fontSize: 10
       },
       labelLine: {
         show: false
       },
-      data: data.map((d) => ({
-        name: '编号：' + d.id,
-        value: d.finished
-      })),
+      data: [],
       tooltip: {
         valueFormatter: (v) => v + ' 个'
       }
@@ -94,9 +56,39 @@ const option: echarts.EChartsOption = {
 // 车辆任务统计
 const TaskStats: FC<PropsWithChildren<ITaskStatsProps>> = () => {
   const el = useRef<HTMLDivElement | null>(null)
-  const totalFinished = useMemo(() => data.reduce((total, item) => total + item.finished, 0), [])
   // 传递元素给useEcharts
-  useEcharts(el, { echartsOption: option, theme: 'dark' })
+  const { updateOption } = useEcharts(el, { echartsOption: option, theme: 'dark' })
+
+  const [taskStatsData, setTaskStatsData] = useState<ReportAPI.AgvTaskRoot>()
+  const taskStatsList = useMemo(
+    () =>
+      taskStatsData?.AgvList?.map((item) => ({ id: item.Id, finishedCount: item.TaskQty, time: item.ConsumeTime })) ||
+      [],
+    [taskStatsData]
+  )
+
+  useAsyncEffect(async () => {
+    const res = await getTaskReport()
+    const taskStatsData = res.data as ReportAPI.AgvTaskRoot
+    setTaskStatsData(taskStatsData)
+  }, [])
+
+  useUpdateEffect(() => {
+    if (!taskStatsData) return
+    updateOption({
+      title: {
+        text: `任务量：${taskStatsData?.Finished + taskStatsData?.NotFinished}个`
+      },
+      series: [
+        {
+          data: taskStatsData.AgvList.map((d) => ({
+            name: '编号-' + d.Id,
+            value: d.TaskQty
+          }))
+        }
+      ]
+    })
+  }, [taskStatsData])
   return (
     <Panel
       title="车辆任务统计"
@@ -110,15 +102,15 @@ const TaskStats: FC<PropsWithChildren<ITaskStatsProps>> = () => {
       <TaskStatusWrapper>
         <div className="header">
           <div className="finished">
-            已完成<span>{totalFinished}</span>个
+            已完成<span>{Number(taskStatsData?.Finished) + Number(taskStatsData?.NotFinished)}</span>个
           </div>
           <div className="unfinished">
-            未完成<span>{total - totalFinished}</span>个
+            未完成<span>{taskStatsData?.NotFinished}</span>个
           </div>
         </div>
         <div style={{ width: '100%', height: '40%' }} ref={el}></div>
         <div style={{ width: '100%', flex: 1 }}>
-          <TaskStatsList />
+          <TaskStatsList data={taskStatsList} />
         </div>
       </TaskStatusWrapper>
     </Panel>

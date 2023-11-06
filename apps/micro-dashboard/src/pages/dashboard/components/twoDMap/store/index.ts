@@ -42,6 +42,7 @@ export type TTwoDMapState = {
     showed: boolean
     key: EMapSettingsKeys
   }[]
+  currentChangedSwitch: TTwoDMapState['settingSwitches'][0] | null
   isDrawingBlockCardOpen: boolean // 是否显示绘制区块窗口
   stageMode: EStageMode // 舞台操作模式
   drawingType: EDrawingType // 绘制模式下的绘图类型
@@ -66,6 +67,7 @@ type TTwoDMaoActions = {
   setMapCenterPosition: (mapCenterPosition: { x: number; y: number }) => void
   setSettings: (settings: Partial<TTwoDMapState['settings']>) => void
   setSettingSwitches: (settingSwitches: TTwoDMapState['settingSwitches']) => void
+  setCurrentChangedSwitch: (currentChangedSwitch: TTwoDMapState['currentChangedSwitch']) => void
   setIsDrawingBlockCardOpen: (isDrawingBlockCardOpen: boolean) => void
   setStageMode: (stageMode: EStageMode) => void
   setDrawingType: (drawingType: EDrawingType) => void
@@ -115,6 +117,7 @@ export const useTwoDMapStore = createWithEqualityFn<TTwoDMapState & TTwoDMaoActi
       [EMapSettingsKeys.PLANNING_LINE_COLOR]: '#00abc7'
     },
     settingSwitches: [],
+    currentChangedSwitch: null,
     isDrawingBlockCardOpen: false,
     stageMode: EStageMode.DRAG,
     drawingType: EDrawingType.RECT,
@@ -137,6 +140,7 @@ export const useTwoDMapStore = createWithEqualityFn<TTwoDMapState & TTwoDMaoActi
     setMapCenterPosition: (mapCenterPosition) => set(() => ({ mapCenterPosition })),
     setSettings: (settings) => set((state) => ({ settings: { ...state.settings, ...settings } })),
     setSettingSwitches: (settingSwitches) => set(() => ({ settingSwitches })),
+    setCurrentChangedSwitch: (currentChangedSwitch) => set(() => ({ currentChangedSwitch })),
     setIsDrawingBlockCardOpen: (isDrawingBlockCardOpen) => set(() => ({ isDrawingBlockCardOpen })),
     setStageMode: (stageMode) => set(() => ({ stageMode })),
     setDrawingType: (drawingType) => set(() => ({ drawingType })),

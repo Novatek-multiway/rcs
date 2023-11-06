@@ -1,5 +1,5 @@
 declare namespace MapAPI {
-  export interface RootMapObject {
+  interface RootMapObject {
     MapOption: MapOption
     Vertexs: Vertex[]
     Edges: Edge[]
@@ -11,7 +11,7 @@ declare namespace MapAPI {
     TrafficBlocks: any[]
   }
 
-  export interface MapOption {
+  interface MapOption {
     ID: number
     ProjectName: string
     RouteName: string
@@ -37,7 +37,7 @@ declare namespace MapAPI {
     RouteMaxY: number
   }
 
-  export interface Vertex {
+  interface Vertex {
     ID: number
     Genus: number
     Type: number
@@ -60,7 +60,7 @@ declare namespace MapAPI {
     AssistPoint: number
   }
 
-  export interface Edge {
+  interface Edge {
     ID: number
     DirectionType: number
     Genus: number
@@ -88,7 +88,7 @@ declare namespace MapAPI {
     IsCloseObstacle: boolean
   }
 
-  export interface ControlPoint {
+  interface ControlPoint {
     ID: number
     EdgeID: number
     Order: number
@@ -96,7 +96,7 @@ declare namespace MapAPI {
     Y: number
   }
 
-  export interface Carrier {
+  interface Carrier {
     ID: number
     Heart: number
     X: number
@@ -139,7 +139,7 @@ declare namespace MapAPI {
     Free: boolean
   }
 
-  export interface CarrierOption {
+  interface CarrierOption {
     ID: number
     Name: string
     Type: number
@@ -160,7 +160,7 @@ declare namespace MapAPI {
     HomePoint: number
   }
 
-  export interface Station {
+  interface Station {
     ID: number
     Genus: number
     PointKey: number
@@ -190,7 +190,7 @@ declare namespace MapAPI {
     HomeGroupPriority: number
   }
 
-  export interface Chassi {
+  interface Chassi {
     ID: number
     Type: number
     Model: string
@@ -217,7 +217,7 @@ declare namespace MapAPI {
     ChassisModel: string
   }
 
-  export interface TrafficCarrier {
+  interface TrafficCarrier {
     Locker: Locker
     AvoidPath: AvoidPath
     ID: number
@@ -260,7 +260,7 @@ declare namespace MapAPI {
     IsCrossAtEnd: boolean
   }
 
-  export interface Locker {
+  interface Locker {
     IsReadLockHeld: boolean
     IsUpgradeableReadLockHeld: boolean
     IsWriteLockHeld: boolean
@@ -274,21 +274,21 @@ declare namespace MapAPI {
     WaitingWriteCount: number
   }
 
-  export interface AvoidPath {
+  interface AvoidPath {
     ThisGuid: string
     BlockCarrier: number
     AvoidCarrier: number
     Steps: Steps
   }
 
-  export interface Steps {
+  interface Steps {
     VertexID: number
     Cost: number
     PathIn: any
     PathOut: any
   }
 
-  export interface Graph {
+  interface Graph {
     ID: number
     Genus: number
     Direction: number
@@ -301,6 +301,22 @@ declare namespace MapAPI {
     IsLoad: boolean
     VariableBits: number
     Floor: number
+  }
+
+  interface MapFunction {
+    functionValue: string
+    id: number
+    remark: string
+    userId: number
+    userName: string
+  }
+
+  interface MapFunctionItem {
+    Enabled: boolean
+    FunctionName: string
+    FunctionSort: number
+    Id: number
+    Showed: true
   }
 }
 
@@ -333,9 +349,56 @@ declare namespace ReportAPI {
     controlState: number
   }
 
+  // 路线
   interface Planning {
     planningType: number //
     planningKey: number
     state1: number // 0-已规划  6-已分配 7-交管确认 3-已下发  4-行驶中 1-事件失败  2-被交管  5-已路过
+  }
+
+  // 时间统计
+  interface TimeSumDatum {
+    average: number
+    averageTask: number
+    chargeTime: number
+    consumeTime: number
+    errorTime: number
+    freeTime: number
+    id: number
+    taskQty: number
+    trafficTime: number
+    workTime: number
+  }
+
+  // 稼动率
+  interface Through {
+    labels: string[]
+    values: Value[]
+  }
+  interface ThroughValue {
+    list: number[]
+    title: string
+  }
+
+  // 车辆状态
+  interface CarrierStatus {
+    onlineCount: number
+    offlineCount: number
+    freeCount: number
+    abnormalCount: number
+  }
+
+  // 车辆任务
+  interface AgvTaskRoot {
+    AgvList: AgvTaskItem[]
+    Finished: number
+    NotFinished: number
+  }
+
+  interface AgvTaskItem {
+    Average: number
+    ConsumeTime: number
+    Id: number
+    TaskQty: number
   }
 }

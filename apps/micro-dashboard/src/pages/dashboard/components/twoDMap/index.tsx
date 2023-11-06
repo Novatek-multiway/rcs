@@ -1,5 +1,5 @@
 import { useAsyncEffect, useUpdateEffect } from 'ahooks'
-import { getInitStates, getOnLineCarriers } from 'apis'
+import { getInitStates, getMapFunction, getOnLineCarriers, updateMapFunction } from 'apis'
 import React, { FC, memo, PropsWithChildren, useState } from 'react'
 import { CircularProgress } from 'ui'
 
@@ -8,6 +8,8 @@ import CursorPosition from './components/cursorPosition'
 import DrawingBlockCard from './components/drawingBlockCard'
 import MeasuringScale from './components/measuringScale'
 import Toolbar from './components/toolbar'
+import { Switches } from './components/toolbar/components/settings/constant'
+import { EMapSettingsKeys } from './constants'
 import { useTwoDMapStore } from './store'
 import { TwoDMapWrapper } from './style'
 
@@ -18,11 +20,22 @@ interface ITwoDMapProps {
 // 2D地图
 const TwoDMap: FC<PropsWithChildren<ITwoDMapProps>> = (props) => {
   const { toolbarRight = 300 } = props
-  const { isLoading, setIsLoading, setMapSize, setMapCenterPosition } = useTwoDMapStore((state) => ({
+  const {
+    isLoading,
+    setIsLoading,
+    setMapSize,
+    setMapCenterPosition,
+    setSettingSwitches,
+    setSettings,
+    currentChangedSwitch
+  } = useTwoDMapStore((state) => ({
     isLoading: state.isLoading,
     setIsLoading: state.setIsLoading,
     setMapSize: state.setMapSize,
-    setMapCenterPosition: state.setMapCenterPosition
+    setMapCenterPosition: state.setMapCenterPosition,
+    setSettingSwitches: state.setSettingSwitches,
+    setSettings: state.setSettings,
+    currentChangedSwitch: state.currentChangedSwitch
   }))
 
   const [mapData, setMapData] = useState<MapAPI.RootMapObject | null>(null)
@@ -32,13 +45,39 @@ const TwoDMap: FC<PropsWithChildren<ITwoDMapProps>> = (props) => {
 
   useAsyncEffect(async () => {
     setIsLoading(true)
+
+    /* ---------------------------------- 地图数据 ---------------------------------- */
     const mapRes = await getInitStates()
-    const vehiclesRes = await getOnLineCarriers()
-    setIsLoading(false)
     const mapData: MapAPI.RootMapObject = JSON.parse(mapRes.data)
-    const vehiclesData: ReportAPI.OnlineCarrier[] = vehiclesRes.data
     setMapData(mapData)
+    /* ---------------------------------- 地图数据 ---------------------------------- */
+
+    /* ---------------------------------- 车辆数据 ---------------------------------- */
+    const vehiclesRes = await getOnLineCarriers()
+    const vehiclesData: ReportAPI.OnlineCarrier[] = vehiclesRes.data
     setVehiclesData(vehiclesData)
+    /* ---------------------------------- 车辆数据 ---------------------------------- */
+
+    /* ---------------------------------- 开关设置 ---------------------------------- */
+    const settingSwitchesRes = await getMapFunction()
+    const mapFunctionData: MapAPI.MapFunction = settingSwitchesRes.data
+    const settingSwitchesData = JSON.parse(mapFunctionData.functionValue) as MapAPI.MapFunctionItem[]
+    const settingSwitches = settingSwitchesData
+      .map((item) => ({
+        id: item.Id,
+        label: item.FunctionName,
+        sort: item.FunctionSort,
+        showed: item.Showed,
+        enabled: item.Enabled,
+        key: Switches.find((s) => s.label === item.FunctionName)?.key as EMapSettingsKeys
+      }))
+      .filter((item) => item.key)
+    setSettingSwitches(settingSwitches) // 存储后端开关数据
+    const settings = Object.fromEntries(settingSwitches.map((switchItem) => [switchItem.key, switchItem.enabled]))
+    setSettings(settings)
+    /* ---------------------------------- 开关设置 ---------------------------------- */
+
+    setIsLoading(false)
   }, [])
 
   useUpdateEffect(() => {
@@ -49,6 +88,21 @@ const TwoDMap: FC<PropsWithChildren<ITwoDMapProps>> = (props) => {
     const mapCenterPosition = { x: DWGMinX + mapSize.width / 2, y: DWGMinY + mapSize.height / 2 }
     setMapCenterPosition(mapCenterPosition)
   }, [setMapSize, setMapCenterPosition, mapData])
+
+  useUpdateEffect(() => {
+    if (!currentChangedSwitch) return
+    const _updateMapFunction = async () => {
+      const { id, label, showed, enabled, sort } = currentChangedSwitch
+      await updateMapFunction({
+        id: id,
+        functionName: label,
+        enabled,
+        showed,
+        functionSort: sort
+      })
+    }
+    _updateMapFunction()
+  }, [currentChangedSwitch])
 
   return (
     <TwoDMapWrapper>
