@@ -81,19 +81,19 @@ const Event: FC<IProps> = () => {
             <MenuItem value="Male">Male</MenuItem>
             <MenuItem value="Female">Female</MenuItem>
             <MenuItem value="Other">Other</MenuItem>
-            {dicts.StationType?.map((item) => {
+            {dicts.GraphGenus?.map((item) => {
               return <MenuItem value={item.value}>{item.label}</MenuItem>;
             })}
           </TextField>
         );
       },
       filterFn: (row, _columnIds, filterValue) => {
-        return row.getValue<string>("type") === filterValue;
+        return row.getValue<string>("genus") === filterValue;
       },
       Cell: ({ row }) => {
         const { original } = row;
-        const tyles = dicts.StationType?.find(
-          (item) => item.value === original.type
+        const tyles = dicts.GraphGenus?.find(
+          (item) => item.value === original.genus
         );
         return <>{tyles?.label || ""}</>;
       },
@@ -105,6 +105,13 @@ const Event: FC<IProps> = () => {
     {
       accessorKey: "carrierType",
       header: "车辆类型",
+      Cell: ({ row }) => {
+        const { original } = row;
+        const tyles = dicts.CarrierType?.find(
+          (item) => item.value === original.carrierType
+        );
+        return <>{tyles?.label || ""}</>;
+      },
     },
     {
       accessorKey: "doTime",
@@ -120,8 +127,8 @@ const Event: FC<IProps> = () => {
       header: "事件类型",
       Cell: ({ row }) => {
         const { original } = row;
-        const tyles = dicts.LocationState?.find(
-          (item) => item.value === original.state
+        const tyles = dicts.EventType?.find(
+          (item) => item.value === original.eventType
         );
         return <>{tyles?.label || ""}</>;
       },
@@ -142,6 +149,15 @@ const Event: FC<IProps> = () => {
     {
       accessorKey: "checkHasGoods",
       header: "载货判断",
+      Cell: ({ row }) => {
+        const { original } = row;
+        console.log(dicts);
+
+        const tyles = dicts.CheckGoods?.find(
+          (item) => item.value === original.checkHasGoods
+        );
+        return <>{tyles?.label || ""}</>;
+      },
     },
     {
       accessorKey: "description",
