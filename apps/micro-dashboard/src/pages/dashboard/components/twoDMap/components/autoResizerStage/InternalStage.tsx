@@ -14,6 +14,8 @@ import React, {
 } from 'react'
 import { Group, KonvaNodeEvents, Layer, Rect, Stage } from 'react-konva'
 
+// import map from '@/mock/map.json'
+// import vehicles from '@/mock/vehicles.json'
 import { EStageMode, POINT_IMAGE_NAME_MAP } from '../../constants'
 import { EDrawingType, TRectResult, TResultWrapper, useKonvaDrawing } from '../../hooks/useKonvaDrawing'
 import { useShapesInside } from '../../hooks/useShapesInside'
@@ -32,6 +34,9 @@ interface IInternalStageProps {
   width: number
   height: number
 }
+
+// const mapData = JSON.parse((map as any).data) as MapAPI.RootMapObject
+// const vehiclesData = vehicles.data as ReportAPI.OnlineCarrier[]
 
 const INIT_SCALE = 6
 const SCALE_BOUNDARY = 6.5 // 缩放显示边界（低于一定缩放值，部分元素不显示，提升初始化渲染性能）
@@ -55,7 +60,8 @@ const InternalStage: FC<PropsWithChildren<IInternalStageProps>> = (props) => {
     drawingResultListMap,
     setDrawingResultListMap,
     drawingSelectedId,
-    setDrawingSelectedId
+    setDrawingSelectedId,
+    setIsLoading
   } = useTwoDMapStore((state) => ({
     settings: state.settings,
     setMapSize: state.setMapSize,
@@ -71,7 +77,8 @@ const InternalStage: FC<PropsWithChildren<IInternalStageProps>> = (props) => {
     drawingResultListMap: state.drawingResultListMap,
     setDrawingResultListMap: state.setDrawingResultListMap,
     drawingSelectedId: state.drawingSelectedId,
-    setDrawingSelectedId: state.setDrawingSelectedId
+    setDrawingSelectedId: state.setDrawingSelectedId,
+    setIsLoading: state.setIsLoading
   }))
 
   useUpdateEffect(() => {
@@ -116,14 +123,17 @@ const InternalStage: FC<PropsWithChildren<IInternalStageProps>> = (props) => {
   const [mapData, setMapData] = useState<MapAPI.RootMapObject | null>(null)
   const vertexes = useMemo(() => mapData?.Vertexs || [], [mapData])
   const edges = useMemo(() => mapData?.Edges || [], [mapData])
-
   /* ---------------------------------- 地图信息 ---------------------------------- */
+
   /* ---------------------------------- 车辆数据 ---------------------------------- */
   const [vehiclesData, setVehiclesData] = useState<ReportAPI.OnlineCarrier[]>([])
   /* ---------------------------------- 车辆数据 ---------------------------------- */
+
   useAsyncEffect(async () => {
+    setIsLoading(true)
     const mapRes = await getInitStates()
     const vehiclesRes = await getOnLineCarriers()
+    setIsLoading(false)
     const mapData: MapAPI.RootMapObject = JSON.parse(mapRes.data)
     const vehiclesData: ReportAPI.OnlineCarrier[] = vehiclesRes.data
     setMapData(mapData)

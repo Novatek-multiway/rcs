@@ -1,3 +1,4 @@
+import { shallow } from 'zustand/shallow'
 import { createWithEqualityFn } from 'zustand/traditional'
 
 type TDashboardState = {
@@ -11,4 +12,4 @@ type TDashboardActions = {
 export const useDashboardStore = createWithEqualityFn<TDashboardState & TDashboardActions>((set) => ({
   asideOpen: true,
   setAsideOpen: (open: boolean) => set({ asideOpen: open })
-}))
+}), shallow)

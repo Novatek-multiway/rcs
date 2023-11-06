@@ -1,16 +1,13 @@
 import React, { FC, memo, PropsWithChildren } from 'react'
+import { CircularProgress } from 'ui'
 
-// import map from '@/mock/map.json'
-// import vehicles from '@/mock/vehicles.json'
 import AutoResizerStage from './components/autoResizerStage'
 import CursorPosition from './components/cursorPosition'
 import DrawingBlockCard from './components/drawingBlockCard'
 import MeasuringScale from './components/measuringScale'
 import Toolbar from './components/toolbar'
+import { useTwoDMapStore } from './store'
 import { TwoDMapWrapper } from './style'
-
-// const mapData = JSON.parse((map as any).data) as MapAPI.RootMapObject
-// const vehiclesData = vehicles.data as ReportAPI.OnlineCarrier[]
 
 interface ITwoDMapProps {
   toolbarRight?: number
@@ -19,6 +16,7 @@ interface ITwoDMapProps {
 // 2D地图
 const TwoDMap: FC<PropsWithChildren<ITwoDMapProps>> = (props) => {
   const { toolbarRight = 300 } = props
+  const isLoading = useTwoDMapStore((state) => state.isLoading)
 
   return (
     <TwoDMapWrapper>
@@ -31,6 +29,18 @@ const TwoDMap: FC<PropsWithChildren<ITwoDMapProps>> = (props) => {
       <Toolbar toolbarRight={toolbarRight} />
       {/* 绘制区块窗口 */}
       <DrawingBlockCard />
+      {/* loading */}
+      {isLoading && (
+        <CircularProgress
+          color="inherit"
+          sx={{
+            position: 'fixed',
+            left: '50%',
+            top: '50%',
+            transform: 'translate(-50%, -50%)'
+          }}
+        />
+      )}
     </TwoDMapWrapper>
   )
 }
