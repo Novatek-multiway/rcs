@@ -55,6 +55,8 @@ const Event: FC<IProps> = () => {
   const { data: carrierData } = useRequest(GetCarrierOptions);
   const { data: chassisList } = useRequest(GetChassisList);
 
+  const convertChassisList = dictsTransform(chassisList?.data, "model", "id");
+
   const columns = [
     {
       accessorKey: "id",
@@ -107,7 +109,7 @@ const Event: FC<IProps> = () => {
       header: "车辆类型",
       Cell: ({ row }) => {
         const { original } = row;
-        const tyles = dicts.CarrierType?.find(
+        const tyles = convertChassisList?.find(
           (item) => item.value === original.carrierType
         );
         return <>{tyles?.label || ""}</>;
@@ -117,10 +119,16 @@ const Event: FC<IProps> = () => {
       accessorKey: "doTime",
       enableFilters: true,
       header: "执行阶段",
+      Cell: ({ row }) => {
+        return <>{dicts.EventTime[row.getValue("doTime")].label}</>;
+      },
     },
     {
       accessorKey: "waitTime",
       header: "等待阶段",
+      Cell: ({ row }) => {
+        return <>{dicts.EventTime[row.getValue("waitTime")].label}</>;
+      },
     },
     {
       accessorKey: "eventType",
@@ -151,7 +159,6 @@ const Event: FC<IProps> = () => {
       header: "载货判断",
       Cell: ({ row }) => {
         const { original } = row;
-        console.log(dicts);
 
         const tyles = dicts.CheckGoods?.find(
           (item) => item.value === original.checkHasGoods
@@ -265,7 +272,7 @@ const Event: FC<IProps> = () => {
         onClose={() => setOpen(false)}
         vertexData={dictsTransform(vertexData?.data, "id", "id")}
         carrierData={dictsTransform(carrierData?.data, "name", "id")}
-        chassisList={dictsTransform(chassisList?.data, "model", "id")}
+        chassisList={dictsTransform(convertChassisList)}
         callback={() => {
           getChass();
         }}

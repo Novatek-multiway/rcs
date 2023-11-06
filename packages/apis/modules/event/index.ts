@@ -7,3 +7,9 @@ export const GetEventsPageList = (data = { ID: 0 }) => {
     data,
   });
 };
+export const AddEvent = (data: Record<string, any>) => {
+  return request<IResponse<any>>("/Event/AddEvent", {
+    method: "POST",
+    data,
+  });
+};

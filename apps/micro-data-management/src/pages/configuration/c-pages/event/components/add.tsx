@@ -1,5 +1,5 @@
 import { useRequest } from "ahooks";
-import { CreateStationInfos } from "apis";
+import { AddEvent } from "apis";
 import * as React from "react";
 import { useDictStore } from "store";
 import {
@@ -24,20 +24,88 @@ const AddDialog: React.FC<{
   open,
   onClose = () => {},
   callback,
-  vertexData = [],
-  carrierData = [],
   chassisList = [],
+  vertexData = [],
 }) => {
-  const { runAsync: run } = useRequest(CreateStationInfos, {
+  const { runAsync: run } = useRequest(AddEvent, {
     manual: true,
   });
   const theme = useTheme();
   const formRef = React.useRef<nygFormik>(null);
   const { dicts } = useDictStore();
+  const schemaObject = [
+    {
+      name: "description",
+      label: "事件描述",
+      type: "text",
+      required: true,
+      // type: "select",
+    },
+    {
+      name: "genus",
+      label: "元素类型",
+      type: "select",
+      items: dicts["GraphGenus"],
+      // type: "select",
+    },
+    {
+      name: "routeKey",
+      label: "路径ID",
+      type: "autoComplete",
+      items: vertexData,
+      // type: "select",
+    },
+    {
+      name: "carrierType",
+      label: "车辆类型",
+      type: "select",
+      items: chassisList,
+    },
+    {
+      name: "doTime",
+      label: "执行阶段",
+      type: "select",
+      items: dicts["EventTime"],
+    },
+    {
+      name: "waitTime",
+      label: "等待阶段",
+      type: "select",
+      items: dicts["EventTime"],
+    },
+
+    {
+      name: "eventType",
+      label: "事件类型",
+      type: "select",
+      items: dicts["EventType"],
+    },
+    {
+      name: "timeOut",
+      label: "超时",
+      type: "number",
+    },
+    {
+      name: "delay",
+      label: "延时",
+      type: "number",
+    },
+    {
+      name: "priority",
+      label: "优先级",
+      type: "number",
+    },
+    {
+      name: "checkHasGoods",
+      label: "载货判断",
+      type: "select",
+      items: dicts["CheckGoods"],
+    },
+  ];
 
   return (
     <Dialog maxWidth="md" open={open} onClose={onClose}>
-      <DialogTitle>添加车型</DialogTitle>
+      <DialogTitle>添加事件</DialogTitle>
       <DialogContent
         sx={{
           py: `${theme.spacing(3.25)} !important`,
@@ -46,142 +114,8 @@ const AddDialog: React.FC<{
         <MaterialForm
           columns={3}
           ref={formRef}
-          defaultValue={{
-            Angle: 0,
-            AreaID: [],
-            BackGroundColor: "",
-            Carrier: 0,
-            CarrierType: 0,
-            DisPlayLength: 0,
-            DisPlayModel: "",
-            DisPlayWidth: 0,
-            DisplayFontColor: "",
-            DisplayName: "",
-            HomeGroup: 0,
-            HomeGroupPriority: 0,
-            HomeGroupType: 0,
-            ID: 0,
-            Name: "",
-            Number: 0,
-            PointKey: 0,
-            Priority: 0,
-            State: 0,
-            Type: 0,
-            UsageCount: 0,
-            WorkAreaTypeStr: "",
-          }}
-          schemaObject={[
-            {
-              name: "PointKey",
-              label: "路径编号",
-              type: "autoComplete",
-              required: true,
-              items: vertexData,
-              // type: "select",
-            },
-            {
-              name: "Carrier",
-              label: "车号",
-              type: "select",
-              items: carrierData,
-              // type: "select",
-            },
-            {
-              name: "CarrierType",
-              label: "车型",
-              type: "select",
-              items: chassisList,
-            },
-            {
-              name: "Number",
-              label: "车数",
-              type: "number",
-            },
-            {
-              name: "Priority",
-              label: "优先级",
-              type: "number",
-            },
-            {
-              name: "Type",
-              label: "站点类型",
-              type: "select",
-              items: dicts["StationType"],
-            },
-            {
-              name: "State",
-              label: "状态",
-              type: "select",
-              items: dicts["LocationState"],
-            },
-            {
-              name: "Name",
-              label: "名称",
-              type: "text",
-            },
-            {
-              name: "DisplayName",
-              label: "显示名称",
-              type: "text",
-            },
-            {
-              name: "DisplayFontColor",
-              label: "显示颜色",
-              type: "text",
-            },
-            {
-              name: "DisPlayWidth",
-              label: "宽度",
-              type: "number",
-            },
-            {
-              name: "DisPlayLength",
-              label: "长度",
-              type: "number",
-            },
-            {
-              name: "Angle",
-              label: "角度",
-              type: "number",
-            },
-            {
-              name: "HomeGroup",
-              label: "待命点分组",
-              type: "number",
-            },
-            {
-              name: "HomeGroupType",
-              label: "待命点类型",
-              type: "number",
-            },
-            {
-              name: "HomeGroupPriority",
-              label: "待命点优先级",
-              type: "number",
-            },
-            {
-              name: "BackGroundColor",
-              label: "背景颜色",
-              type: "text",
-            },
-            {
-              name: "WorkAreaTypeStr",
-              label: "标注",
-              type: "text",
-            },
-            {
-              name: "DisPlayModel",
-              label: "模型",
-              type: "text",
-            },
-            {
-              name: "AreaID",
-              label: "区域ID",
-              type: "autoComplete",
-              multiple: true,
-              items: vertexData,
-            },
-          ]}
+          defaultValue={{}}
+          schemaObject={schemaObject}
         ></MaterialForm>
       </DialogContent>
       <DialogActions>
@@ -189,16 +123,16 @@ const AddDialog: React.FC<{
           color="primary"
           onClick={async () => {
             await formRef.current?.submitForm();
-            const { isValid, values } = formRef.current || {};
-            console.log(values);
-
+            const { isValid, values } = formRef.current;
+            schemaObject.map((item) => {
+              if (item.type === "select") {
+                values[item.name] = Number(values[item.name]);
+              }
+            });
             if (isValid) {
               const sendData = {
                 ...values,
-                // Genus: 3,
-                AreaID: values.AreaID.map((item) => Number(item.value)),
-                PointKey: Number(values.PointKey.value),
-                Type: Number(values.Type),
+                routeKey: values.routeKey.value,
               };
               await run(sendData);
               onClose();
