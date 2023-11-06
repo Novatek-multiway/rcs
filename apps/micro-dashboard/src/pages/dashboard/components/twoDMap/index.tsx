@@ -1,4 +1,6 @@
-import React, { FC, memo, PropsWithChildren } from 'react'
+import { useAsyncEffect, useUpdateEffect } from 'ahooks'
+import { getInitStates, getOnLineCarriers } from 'apis'
+import React, { FC, memo, PropsWithChildren, useState } from 'react'
 import { CircularProgress } from 'ui'
 
 import AutoResizerStage from './components/autoResizerStage'
@@ -16,11 +18,41 @@ interface ITwoDMapProps {
 // 2D地图
 const TwoDMap: FC<PropsWithChildren<ITwoDMapProps>> = (props) => {
   const { toolbarRight = 300 } = props
-  const isLoading = useTwoDMapStore((state) => state.isLoading)
+  const { isLoading, setIsLoading, setMapSize, setMapCenterPosition } = useTwoDMapStore((state) => ({
+    isLoading: state.isLoading,
+    setIsLoading: state.setIsLoading,
+    setMapSize: state.setMapSize,
+    setMapCenterPosition: state.setMapCenterPosition
+  }))
+
+  const [mapData, setMapData] = useState<MapAPI.RootMapObject | null>(null)
+  /* ---------------------------------- 车辆数据 ---------------------------------- */
+  const [vehiclesData, setVehiclesData] = useState<ReportAPI.OnlineCarrier[]>([])
+  /* ---------------------------------- 车辆数据 ---------------------------------- */
+
+  useAsyncEffect(async () => {
+    setIsLoading(true)
+    const mapRes = await getInitStates()
+    const vehiclesRes = await getOnLineCarriers()
+    setIsLoading(false)
+    const mapData: MapAPI.RootMapObject = JSON.parse(mapRes.data)
+    const vehiclesData: ReportAPI.OnlineCarrier[] = vehiclesRes.data
+    setMapData(mapData)
+    setVehiclesData(vehiclesData)
+  }, [])
+
+  useUpdateEffect(() => {
+    if (!mapData) return
+    const { DWGMaxX, DWGMinX, DWGMaxY, DWGMinY } = mapData.MapOption
+    const mapSize = { width: Math.abs(DWGMaxX - DWGMinX), height: Math.abs(DWGMaxY - DWGMinY) }
+    setMapSize(mapSize)
+    const mapCenterPosition = { x: DWGMinX + mapSize.width / 2, y: DWGMinY + mapSize.height / 2 }
+    setMapCenterPosition(mapCenterPosition)
+  }, [setMapSize, setMapCenterPosition, mapData])
 
   return (
     <TwoDMapWrapper>
-      <AutoResizerStage></AutoResizerStage>
+      <AutoResizerStage mapData={mapData} vehiclesData={vehiclesData}></AutoResizerStage>
       {/* 光标位置 */}
       <CursorPosition />
       {/* 比例尺 */}

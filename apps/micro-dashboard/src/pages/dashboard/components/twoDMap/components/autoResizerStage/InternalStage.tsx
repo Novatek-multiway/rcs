@@ -1,17 +1,6 @@
-import { useAsyncEffect, useUpdateEffect } from 'ahooks'
-import { getInitStates, getOnLineCarriers } from 'apis'
+import { useUpdateEffect } from 'ahooks'
 import _ from 'lodash'
-import React, {
-  type ElementRef,
-  FC,
-  memo,
-  PropsWithChildren,
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState
-} from 'react'
+import React, { type ElementRef, FC, memo, PropsWithChildren, useCallback, useEffect, useMemo, useRef } from 'react'
 import { Group, KonvaNodeEvents, Layer, Rect, Stage } from 'react-konva'
 
 // import map from '@/mock/map.json'
@@ -30,7 +19,9 @@ import LocationPoints from '../points/LocationPoints'
 import { usePoints } from '../points/usePoints'
 import Vehicles from '../vehicles'
 import { useVehicles } from '../vehicles/useVehicles'
-interface IInternalStageProps {
+export interface IInternalStageProps {
+  mapData: MapAPI.RootMapObject | null
+  vehiclesData: ReportAPI.OnlineCarrier[]
   width: number
   height: number
 }
@@ -42,13 +33,12 @@ const INIT_SCALE = 6
 const SCALE_BOUNDARY = 6.5 // 缩放显示边界（低于一定缩放值，部分元素不显示，提升初始化渲染性能）
 const SELECTED_FILL_COLOR = 'rgba(0, 203, 202, 0.2)'
 const InternalStage: FC<PropsWithChildren<IInternalStageProps>> = (props) => {
-  const { width, height } = props
+  const { width, height, mapData, vehiclesData = [] } = props
   const stageRef = useRef<ElementRef<typeof Stage>>(null)
   const { currentScale, zoom } = useZoom(stageRef)
   const {
     settings,
-    setMapSize,
-    setMapCenterPosition,
+
     setInsidePoints,
     globalCurrentScale,
     setCurrentScale,
@@ -60,12 +50,10 @@ const InternalStage: FC<PropsWithChildren<IInternalStageProps>> = (props) => {
     drawingResultListMap,
     setDrawingResultListMap,
     drawingSelectedId,
-    setDrawingSelectedId,
-    setIsLoading
+    setDrawingSelectedId
   } = useTwoDMapStore((state) => ({
     settings: state.settings,
-    setMapSize: state.setMapSize,
-    setMapCenterPosition: state.setMapCenterPosition,
+
     setInsidePoints: state.setInsidePoints,
     globalCurrentScale: state.currentScale,
     setCurrentScale: state.setCurrentScale,
@@ -77,8 +65,7 @@ const InternalStage: FC<PropsWithChildren<IInternalStageProps>> = (props) => {
     drawingResultListMap: state.drawingResultListMap,
     setDrawingResultListMap: state.setDrawingResultListMap,
     drawingSelectedId: state.drawingSelectedId,
-    setDrawingSelectedId: state.setDrawingSelectedId,
-    setIsLoading: state.setIsLoading
+    setDrawingSelectedId: state.setDrawingSelectedId
   }))
 
   useUpdateEffect(() => {
@@ -120,34 +107,9 @@ const InternalStage: FC<PropsWithChildren<IInternalStageProps>> = (props) => {
   }, [zoom])
 
   /* ---------------------------------- 地图数据 ---------------------------------- */
-  const [mapData, setMapData] = useState<MapAPI.RootMapObject | null>(null)
   const vertexes = useMemo(() => mapData?.Vertexs || [], [mapData])
   const edges = useMemo(() => mapData?.Edges || [], [mapData])
   /* ---------------------------------- 地图信息 ---------------------------------- */
-
-  /* ---------------------------------- 车辆数据 ---------------------------------- */
-  const [vehiclesData, setVehiclesData] = useState<ReportAPI.OnlineCarrier[]>([])
-  /* ---------------------------------- 车辆数据 ---------------------------------- */
-
-  useAsyncEffect(async () => {
-    setIsLoading(true)
-    const mapRes = await getInitStates()
-    const vehiclesRes = await getOnLineCarriers()
-    setIsLoading(false)
-    const mapData: MapAPI.RootMapObject = JSON.parse(mapRes.data)
-    const vehiclesData: ReportAPI.OnlineCarrier[] = vehiclesRes.data
-    setMapData(mapData)
-    setVehiclesData(vehiclesData)
-  }, [])
-
-  useUpdateEffect(() => {
-    if (!mapData) return
-    const { DWGMaxX, DWGMinX, DWGMaxY, DWGMinY } = mapData.MapOption
-    const mapSize = { width: Math.abs(DWGMaxX - DWGMinX), height: Math.abs(DWGMaxY - DWGMinY) }
-    setMapSize(mapSize)
-    const mapCenterPosition = { x: DWGMinX + mapSize.width / 2, y: DWGMinY + mapSize.height / 2 }
-    setMapCenterPosition(mapCenterPosition)
-  }, [setMapSize, setMapCenterPosition, mapData])
 
   /* ----------------------------------- 点位 ----------------------------------- */
   const points = usePoints(vertexes)
