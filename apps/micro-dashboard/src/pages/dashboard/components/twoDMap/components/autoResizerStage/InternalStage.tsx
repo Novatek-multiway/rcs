@@ -38,10 +38,10 @@ const InternalStage: FC<PropsWithChildren<IInternalStageProps>> = (props) => {
   const { currentScale, zoom } = useZoom(stageRef)
   const {
     settings,
-
     setInsidePoints,
     globalCurrentScale,
     setCurrentScale,
+    setZoom,
     setStageSize,
     setCursorPosition,
     setStageLeftTopPosition,
@@ -53,10 +53,10 @@ const InternalStage: FC<PropsWithChildren<IInternalStageProps>> = (props) => {
     setDrawingSelectedId
   } = useTwoDMapStore((state) => ({
     settings: state.settings,
-
     setInsidePoints: state.setInsidePoints,
     globalCurrentScale: state.currentScale,
     setCurrentScale: state.setCurrentScale,
+    setZoom: state.setZoom,
     setStageSize: state.setStageSize,
     setCursorPosition: state.setCursorPosition,
     setStageLeftTopPosition: state.setStageLeftTopPosition,
@@ -69,9 +69,10 @@ const InternalStage: FC<PropsWithChildren<IInternalStageProps>> = (props) => {
   }))
 
   useUpdateEffect(() => {
-    // 同步scale到全局
+    // 同步scale\zoom方法到全局
     setCurrentScale(currentScale)
-  }, [currentScale, setCurrentScale])
+    setZoom(zoom)
+  }, [currentScale, setCurrentScale, zoom, setZoom])
 
   useUpdateEffect(() => {
     // 同步stage到全局
@@ -82,7 +83,6 @@ const InternalStage: FC<PropsWithChildren<IInternalStageProps>> = (props) => {
   }, [width, height])
 
   useUpdateEffect(() => {
-    zoom(globalCurrentScale)
     // eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
     const { x, y } = stageRef.current?.absolutePosition()!
     setStageLeftTopPosition({ x: -x / globalCurrentScale, y: -y / globalCurrentScale })
