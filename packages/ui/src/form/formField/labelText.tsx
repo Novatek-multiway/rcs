@@ -1,4 +1,7 @@
-import { TextFieldProps as MuiTextFieldProps } from "@mui/material";
+import {
+  InputAdornment,
+  TextFieldProps as MuiTextFieldProps,
+} from "@mui/material";
 import { Field } from "formik";
 
 import { TextField } from "../components";
@@ -9,6 +12,7 @@ interface FormFieldLabelTextProps
   name: string;
   helperText?: string;
   type?: string;
+  disabled?: boolean;
 }
 
 export const FormFieldLabelText = ({
@@ -16,10 +20,13 @@ export const FormFieldLabelText = ({
   name,
   helperText,
   type,
+  disabled,
+  ...props
 }: FormFieldLabelTextProps) => {
   const sxFormControl = {
     m: 1,
     minWidth: 140,
+    width: "100%",
   };
   return (
     <>
@@ -31,14 +38,15 @@ export const FormFieldLabelText = ({
         size="small"
         name={name}
         native
-        labelId="age-native"
         type={type || "text"}
         label={label}
+        disabled={disabled}
         helperText={helperText || ""}
         inputProps={{
           name,
           id: "age-native",
         }}
+        {...props}
       ></Field>
     </>
   );

@@ -1,3 +1,4 @@
+import { FormControl, Input, InputLabel } from "@mui/material";
 import MuiTextField, {
   TextFieldProps as MuiTextFieldProps,
 } from "@mui/material/TextField";
@@ -6,7 +7,9 @@ import * as React from "react";
 
 export interface TextFieldProps
   extends FieldProps,
-    Omit<MuiTextFieldProps, "name" | "value" | "error"> {}
+    Omit<MuiTextFieldProps, "name" | "value" | "error"> {
+  formControl?: any;
+}
 
 export function fieldToTextField({
   disabled,
@@ -33,15 +36,26 @@ export function fieldToTextField({
   };
 }
 
-export function TextField({ children, ...props }: TextFieldProps) {
+export function TextField({ formControl, ...props }: TextFieldProps) {
   return (
-    <MuiTextField
-      sx={{ width: "100%" }}
-      {...fieldToTextField(props)}
-      variant="standard"
-    >
-      {children}
-    </MuiTextField>
+    // <MuiTextField
+    //   sx={{ width: "100%" }}
+    //   {...fieldToTextField(props)}
+    //   variant="standard"
+    // >
+    //   {children}
+    // </MuiTextField>
+    <FormControl {...formControl}>
+      <InputLabel htmlFor="standard-adornment-password">
+        {props.label}
+      </InputLabel>
+      <Input
+        id="standard-adornment-password"
+        {...fieldToTextField(props)}
+        type={props.type || "text"}
+        endAdornment={props.endAdornment || null}
+      />
+    </FormControl>
   );
 }
 

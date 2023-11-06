@@ -192,11 +192,6 @@ const navItems: NavItem[] = [
         link: "/micro-data-management/configuration/stand-by-point",
         icon: <ModeStandby fontSize="small" />,
       },
-      {
-        name: "用户配置",
-        link: "/micro-data-management/configuration/user",
-        icon: <People fontSize="small" />,
-      },
     ],
   },
 ];

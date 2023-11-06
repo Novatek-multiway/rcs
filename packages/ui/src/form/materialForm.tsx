@@ -1,4 +1,9 @@
-import { Grid, LinearProgress, Paper } from "@mui/material";
+import {
+  Grid,
+  LinearProgress,
+  Paper,
+  TextFieldProps as MuiTextFieldProps,
+} from "@mui/material";
 import { Form, Formik, useFormikContext } from "formik";
 import { yup } from "mui-form";
 import PropTypes from "prop-types";
@@ -13,7 +18,8 @@ import {
   FormFieldLabelText,
 } from "./formField";
 
-interface FieldSchema {
+interface FieldSchema
+  extends Omit<MuiTextFieldProps, "name" | "value" | "error"> {
   name: string;
   label: string;
   helperText?: string;
@@ -21,6 +27,8 @@ interface FieldSchema {
   multiple?: boolean; // 新增了 multiple 属性的类型定义
   items?: Array<{ value: string; label: string }>; // 新增了 items 属性的类型定义
   required?: boolean;
+  disabled?: boolean;
+  endAdornment?: React.ReactNode | string;
 }
 
 interface MaterialFormProps {
@@ -91,7 +99,7 @@ export const MaterialForm = forwardRef<any, MaterialFormProps>((props, ref) => {
             }}
           >
             {field.type === "checkbox" && (
-              <FormFieldLabelSwitch label="niyg" name={field.name} />
+              <FormFieldLabelSwitch label={field.label} name={field.name} />
             )}
             {field.type === "select" && (
               <FormFieldLabelSelect
@@ -116,9 +124,9 @@ export const MaterialForm = forwardRef<any, MaterialFormProps>((props, ref) => {
             )}
             {field.type === "number" && (
               <FormFieldLabelText
-                label={field.label}
-                name={field.name}
                 type="number"
+                disabled={field.disabled || false}
+                {...field}
               />
             )}
             {field.type === "radioGroup" && (
