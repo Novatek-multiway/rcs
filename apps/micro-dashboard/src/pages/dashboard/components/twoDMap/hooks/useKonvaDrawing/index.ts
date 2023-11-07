@@ -46,7 +46,7 @@ export function useKonvaDrawing<T extends TResultKey>(
             setDrawResult(rectResult)
             setDrawPoints([mouseDownX, mouseDownY])
           } else if (type === EDrawingType.POLYGON) {
-            const newDrawPoints = [...drawPoints.slice(0, -2), mouseDownX, mouseDownY]
+            const newDrawPoints = [...drawPoints.slice(0, -2), mouseDownX, mouseDownY, mouseDownX, mouseDownY]
             const polygonResult = {
               id: drawResult?.id || _.uniqueId(type + '-'),
               type,
@@ -112,10 +112,7 @@ export function useKonvaDrawing<T extends TResultKey>(
             setIsDrawing(false)
             onDrawEnd?.(rectResult)
           } else if (type === EDrawingType.POLYGON) {
-            const newDrawPoints = [...drawPoints, mouseUpX, mouseUpY]
-            const polygonResult = { id: drawResult?.id, type, data: newDrawPoints } as TResult[T]
-            setDrawResult(polygonResult)
-            setDrawPoints(newDrawPoints)
+            return
           }
         }
       }
@@ -130,7 +127,7 @@ export function useKonvaDrawing<T extends TResultKey>(
       if (stageRef.current) {
         const stage = stageRef.current
         if (!isDrawing) return
-        if (drawPoints.length < 3 * 2) return // 绘制多边形点的个数需要大于3
+        if (drawPoints.length < 4 * 2) return // 绘制多边形点的个数需要大于3个， 因为双击两次需要减掉一个点， 所以这里的长度是8
 
         const pointerPosition = stage.getPointerPosition()
         if (pointerPosition) {
@@ -139,7 +136,7 @@ export function useKonvaDrawing<T extends TResultKey>(
           if (type === EDrawingType.RECT) {
             return
           } else if (type === EDrawingType.POLYGON) {
-            const polygonResult = { id: drawResult?.id, type, data: drawPoints.slice(0, -2) } as TResult[T]
+            const polygonResult = { id: drawResult?.id, type, data: drawPoints.slice(0, -4) } as TResult[T]
             setDrawPoints([])
             setDrawResult(undefined)
             setIsDrawing(false)

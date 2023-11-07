@@ -243,7 +243,7 @@ const DrawingBlockCard: FC<PropsWithChildren<IDrawingBlockCardProps>> = () => {
     return []
   }, [newDrawingResult, stageMapRatio])
   useUpdateEffect(() => {
-    setAddBlockDialogOpen(true)
+    newDrawingResult && setAddBlockDialogOpen(true)
   }, [newDrawingResult])
   const handleAddSubmit = useCallback<NonNullable<IAddBlockDialogProps['onSubmit']>>(
     async (values) => {
