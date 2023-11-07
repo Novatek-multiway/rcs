@@ -58,6 +58,7 @@ declare namespace MapAPI {
     Col: number
     Layer: number
     AssistPoint: number
+    LocationState?: 0 | 1 | 2 | 4 // 0: 无货 1: 完整满货 2: 有缺陷 4: 货物偏移
   }
 
   interface Edge {
@@ -400,6 +401,37 @@ declare namespace ReportAPI {
     ConsumeTime: number
     Id: number
     TaskQty: number
+  }
+
+  interface ChargeGoodsStations {
+    angle: number
+    backGroundColor: string
+    carrier: number
+    carrierType: number
+    displayFontColor: string
+    disPlayHeight: number
+    disPlayLength: number
+    disPlayModel: string
+    displayName: string
+    disPlayWidth: number
+    forkHight: number
+    forkLow: number
+    genus: number
+    group: number
+    homeGroup: number
+    homeGroupPriority: number
+    homeGroupType: number
+    id: number
+    layer: number
+    name: string
+    number: number
+    pointKey: number
+    priority: number
+    state: number
+    type: number
+    usageCount: number
+    workAreaTypeStr: string
+    LocationState?: 0 | 1 | 2 | 4 // 0: 无货 1: 完整满货 2: 有缺陷 4: 货物偏移
   }
 }
 
