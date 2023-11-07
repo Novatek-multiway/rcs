@@ -124,6 +124,7 @@ const AddDialog: React.FC<{
           onClick={async () => {
             await formRef.current?.submitForm();
             const { isValid, values } = formRef.current;
+
             schemaObject.map((item) => {
               if (item.type === "select") {
                 values[item.name] = Number(values[item.name]);

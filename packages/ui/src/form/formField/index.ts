@@ -3,3 +3,4 @@ export * from "./labelRadioGroup";
 export * from "./labelSelect";
 export * from "./labelSwitch";
 export * from "./labelText";
+export * from "./labelUpload";
