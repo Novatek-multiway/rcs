@@ -1,3 +1,4 @@
+import { useUpdateEffect } from 'ahooks'
 import { KonvaEventListener } from 'konva/lib/Node'
 import { Stage } from 'konva/lib/Stage'
 import _ from 'lodash'
@@ -37,14 +38,27 @@ export function useKonvaDrawing<T extends TResultKey>(
 
           if (type === EDrawingType.RECT) {
             const rectData = getDrawRectData(mouseDownX, mouseDownY, mouseDownX, mouseDownY)
-            const rectResult = { id: _.uniqueId(type), type, data: rectData } as TResult[T]
+            const rectResult = {
+              id: drawResult?.id || _.uniqueId(type + '-'),
+              type,
+              data: rectData
+            } as TResult[T]
             setDrawResult(rectResult)
             setDrawPoints([mouseDownX, mouseDownY])
+          } else if (type === EDrawingType.POLYGON) {
+            const newDrawPoints = [...drawPoints.slice(0, -2), mouseDownX, mouseDownY]
+            const polygonResult = {
+              id: drawResult?.id || _.uniqueId(type + '-'),
+              type,
+              data: newDrawPoints
+            } as TResult[T]
+            setDrawResult(polygonResult)
+            setDrawPoints(newDrawPoints)
           }
         }
       }
     },
-    [stageRef, type, disabled]
+    [stageRef, type, disabled, drawPoints, drawResult]
   )
   const handleMouseMove = useCallback<KonvaEventListener<Stage, any>>(
     (e) => {
@@ -62,13 +76,18 @@ export function useKonvaDrawing<T extends TResultKey>(
           if (type === EDrawingType.RECT) {
             const [mouseDownX, mouseDownY] = drawPoints
             const rectData = getDrawRectData(mouseDownX, mouseDownY, mouseMoveX, mouseMoveY)
-            const rectResult = { id: _.uniqueId(type), type, data: rectData } as TResult[T]
+            const rectResult = { id: drawResult?.id, type, data: rectData } as TResult[T]
             setDrawResult(rectResult)
+          } else if (type === EDrawingType.POLYGON) {
+            const newDrawPoints = [...drawPoints.slice(0, -2), mouseMoveX, mouseMoveY]
+            const polygonResult = { id: drawResult?.id, type, data: newDrawPoints } as TResult[T]
+            setDrawResult(polygonResult)
+            setDrawPoints(newDrawPoints)
           }
         }
       }
     },
-    [stageRef, type, drawPoints, isDrawing, disabled]
+    [stageRef, type, drawPoints, isDrawing, disabled, drawResult]
   )
   const handleMouseUp = useCallback<KonvaEventListener<Stage, any>>(
     (e) => {
@@ -87,15 +106,49 @@ export function useKonvaDrawing<T extends TResultKey>(
           if (type === EDrawingType.RECT) {
             const [mouseDownX, mouseDownY] = drawPoints
             const rectData = getDrawRectData(mouseDownX, mouseDownY, mouseUpX, mouseUpY)
-            const rectResult = { id: _.uniqueId(type + '-'), type, data: rectData } as TResult[T]
+            const rectResult = { id: drawResult?.id, type, data: rectData } as TResult[T]
+            setDrawPoints([])
+            setDrawResult(undefined)
+            setIsDrawing(false)
             onDrawEnd?.(rectResult)
+          } else if (type === EDrawingType.POLYGON) {
+            const newDrawPoints = [...drawPoints, mouseUpX, mouseUpY]
+            const polygonResult = { id: drawResult?.id, type, data: newDrawPoints } as TResult[T]
+            setDrawResult(polygonResult)
+            setDrawPoints(newDrawPoints)
           }
-          setDrawPoints([])
-          setIsDrawing(false)
         }
       }
     },
-    [stageRef, type, drawPoints, onDrawEnd, isDrawing, disabled]
+    [stageRef, type, drawPoints, onDrawEnd, isDrawing, disabled, drawResult]
+  )
+
+  const handleDblclick = useCallback<KonvaEventListener<Stage, any>>(
+    (e) => {
+      e.evt.preventDefault()
+      if (disabled) return
+      if (stageRef.current) {
+        const stage = stageRef.current
+        if (!isDrawing) return
+        if (drawPoints.length < 3 * 2) return // 绘制多边形点的个数需要大于3
+
+        const pointerPosition = stage.getPointerPosition()
+        if (pointerPosition) {
+          e.evt.preventDefault()
+
+          if (type === EDrawingType.RECT) {
+            return
+          } else if (type === EDrawingType.POLYGON) {
+            const polygonResult = { id: drawResult?.id, type, data: drawPoints.slice(0, -2) } as TResult[T]
+            setDrawPoints([])
+            setDrawResult(undefined)
+            setIsDrawing(false)
+            onDrawEnd?.(polygonResult)
+          }
+        }
+      }
+    },
+    [stageRef, type, drawPoints, onDrawEnd, isDrawing, disabled, drawResult]
   )
   useEffect(() => {
     if (stageRef.current) {
@@ -106,15 +159,27 @@ export function useKonvaDrawing<T extends TResultKey>(
 
       stage.on('mouseup touchend', handleMouseUp)
 
+      stage.on('dblclick', handleDblclick)
+
       return () => {
         stage.off('mousedown touchstart', handleMouseDown)
 
         stage.off('mousemove touchmove', handleMouseMove)
 
         stage.off('mouseup touchend', handleMouseUp)
+
+        stage.off('dblclick', handleDblclick)
       }
     }
-  }, [handleMouseDown, handleMouseMove, handleMouseUp, stageRef])
+  }, [handleMouseDown, handleMouseMove, handleMouseUp, handleDblclick, stageRef])
+
+  useUpdateEffect(() => {
+    if (disabled) {
+      setIsDrawing(false)
+      setDrawPoints([])
+      setDrawResult(undefined)
+    }
+  }, [disabled])
 
   return { drawResult, isDrawing }
 }

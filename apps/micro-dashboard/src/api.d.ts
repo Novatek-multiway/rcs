@@ -402,3 +402,25 @@ declare namespace ReportAPI {
     TaskQty: number
   }
 }
+
+declare namespace TrafficAPI {
+  interface Block {
+    border?: BlockBorder[]
+    edges?: number[]
+    floor?: number
+    groupId?: number
+    id?: number
+    maxNumber?: number
+    maxRoadUsage?: number
+    opposite?: string[]
+    oppositeVertexs?: string[]
+    positive?: string[]
+    positiveVertexs?: string[]
+    type?: number
+    vertexs?: number[]
+  }
+  interface BlockBorder {
+    x: number
+    y: number
+  }
+}

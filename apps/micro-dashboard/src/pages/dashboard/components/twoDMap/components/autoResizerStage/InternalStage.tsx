@@ -1,12 +1,12 @@
 import { useUpdateEffect } from 'ahooks'
 import _ from 'lodash'
 import React, { type ElementRef, FC, memo, PropsWithChildren, useCallback, useEffect, useMemo, useRef } from 'react'
-import { Group, KonvaNodeEvents, Layer, Rect, Stage } from 'react-konva'
+import { Group, KonvaNodeEvents, Layer, Line, Rect, Stage } from 'react-konva'
 
 // import map from '@/mock/map.json'
 // import vehicles from '@/mock/vehicles.json'
 import { EStageMode, POINT_IMAGE_NAME_MAP } from '../../constants'
-import { EDrawingType, TRectResult, TResultWrapper, useKonvaDrawing } from '../../hooks/useKonvaDrawing'
+import { EDrawingType, TPolygonResult, TRectResult, TResultWrapper, useKonvaDrawing } from '../../hooks/useKonvaDrawing'
 import { useShapesInside } from '../../hooks/useShapesInside'
 import { useZoom } from '../../hooks/useZoom'
 import { useTwoDMapStore } from '../../store'
@@ -176,6 +176,10 @@ const InternalStage: FC<PropsWithChildren<IInternalStageProps>> = (props) => {
         const drawResultList = newDrawingResultListMap[drawResult.type] || []
         drawResultList.push(drawResult as TResultWrapper<TRectResult>)
         setNewDrawingResult(drawResult)
+      } else if (drawResult.type === EDrawingType.POLYGON) {
+        const drawResultList = newDrawingResultListMap[drawResult.type] || []
+        drawResultList.push(drawResult as TResultWrapper<TPolygonResult>)
+        setNewDrawingResult(drawResult)
       }
       setDrawingResultListMap(newDrawingResultListMap)
     }
@@ -184,6 +188,17 @@ const InternalStage: FC<PropsWithChildren<IInternalStageProps>> = (props) => {
   const rectStyle = useMemo(
     () => ({
       fill: 'transparent',
+      stroke: 'rgb(0, 203, 202)',
+      strokeWidth: 0.3,
+      shadowColor: '#00cbca',
+      shadowBlur: 10,
+      shadowOffset: { x: 0, y: 0 },
+      shadowOpacity: 0.5
+    }),
+    []
+  )
+  const lineStyle = useMemo(
+    () => ({
       stroke: 'rgb(0, 203, 202)',
       strokeWidth: 0.3,
       shadowColor: '#00cbca',
@@ -246,6 +261,9 @@ const InternalStage: FC<PropsWithChildren<IInternalStageProps>> = (props) => {
         {isDrawing && (
           <Group>
             {drawingType === EDrawingType.RECT && <Rect {...rectStyle} {...(drawResult?.data as TRectResult)}></Rect>}
+            {drawingType === EDrawingType.POLYGON && (
+              <Line points={drawResult?.data as TPolygonResult} {...lineStyle} closed />
+            )}
           </Group>
         )}
         {/* 已经绘制完的图形 */}
@@ -259,6 +277,17 @@ const InternalStage: FC<PropsWithChildren<IInternalStageProps>> = (props) => {
               onMouseEnter={() => setDrawingSelectedId(rectDrawResult.id)}
               onMouseLeave={() => setDrawingSelectedId('')}
             ></Rect>
+          ))}
+          {drawingResultListMap[EDrawingType.POLYGON].map((polygonDrawResult) => (
+            <Line
+              closed
+              key={polygonDrawResult?.id}
+              {...lineStyle}
+              points={polygonDrawResult?.data || []}
+              fill={getFill(polygonDrawResult.id)}
+              onMouseEnter={() => setDrawingSelectedId(polygonDrawResult.id)}
+              onMouseLeave={() => setDrawingSelectedId('')}
+            />
           ))}
         </Group>
       </Layer>

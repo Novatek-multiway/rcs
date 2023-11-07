@@ -39,9 +39,7 @@ const TwoDMap: FC<PropsWithChildren<ITwoDMapProps>> = (props) => {
   }))
 
   const [mapData, setMapData] = useState<MapAPI.RootMapObject | null>(null)
-  /* ---------------------------------- 车辆数据 ---------------------------------- */
   const [vehiclesData, setVehiclesData] = useState<ReportAPI.OnlineCarrier[]>([])
-  /* ---------------------------------- 车辆数据 ---------------------------------- */
 
   useAsyncEffect(async () => {
     setIsLoading(true)

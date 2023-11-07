@@ -122,7 +122,7 @@ export const useTwoDMapStore = createWithEqualityFn<TTwoDMapState & TTwoDMaoActi
     currentChangedSwitch: null,
     isDrawingBlockCardOpen: false,
     stageMode: EStageMode.DRAG,
-    drawingType: EDrawingType.RECT,
+    drawingType: EDrawingType.POLYGON,
     drawingResultListMap: {
       rect: [],
       polygon: []
@@ -131,6 +131,7 @@ export const useTwoDMapStore = createWithEqualityFn<TTwoDMapState & TTwoDMaoActi
     drawingSelectedId: '',
     insidePoints: [],
     isLoading: false,
+
     setStageSize: (stageSize) =>
       set((state) => ({ stageSize, stageMapRatio: getStageMapRatio(stageSize, state.mapSize) })),
     setMapSize: (mapSize) => set((state) => ({ mapSize, stageMapRatio: getStageMapRatio(state.stageSize, mapSize) })),
