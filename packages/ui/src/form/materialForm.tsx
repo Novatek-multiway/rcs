@@ -12,6 +12,7 @@ import * as React from "react";
 import { forwardRef } from "../utils/inex";
 import {
   FormFieldLabelAutoComplete,
+  FormFieldLabelFile,
   FormFieldLabelRadioGroup,
   FormFieldLabelSelect,
   FormFieldLabelSwitch,
@@ -120,7 +121,10 @@ export const MaterialForm = forwardRef<any, MaterialFormProps>((props, ref) => {
               />
             )}
             {field.type === "text" && (
-              <FormFieldLabelText label={field.label} name={field.name} />
+              <FormFieldLabelText
+                disabled={field.disabled || false}
+                {...field}
+              />
             )}
             {field.type === "number" && (
               <FormFieldLabelText
@@ -134,6 +138,13 @@ export const MaterialForm = forwardRef<any, MaterialFormProps>((props, ref) => {
                 label={field.label}
                 name={field.name}
                 items={field.items}
+              />
+            )}
+            {field.type === "file" && (
+              <FormFieldLabelFile
+                label={field.label}
+                name={field.name}
+                onChange={field.onChange}
               />
             )}
           </Grid>

@@ -6,7 +6,7 @@ import React, { memo, useCallback, useMemo, useState } from 'react'
 import { theme } from 'theme'
 import { Button, Panel, Switch } from 'ui'
 
-import { EMapSettingsKeys } from '../../../../constants'
+import { EMapSettingsKeys, EStageMode } from '../../../../constants'
 import { TTwoDMapState, useTwoDMapStore } from '../../../../store'
 import { Lights, Switches } from './constant'
 import LineColorPicker from './LineColorPicker'
@@ -19,17 +19,32 @@ interface ISettingsProps {
 
 const Settings: FC<PropsWithChildren<ISettingsProps>> = (props) => {
   const { open = false, onClose } = props
-  const { settings, setSettings } = useTwoDMapStore((state) => ({
+  const {
+    settings,
+    setSettings,
+    setIsDrawingBlockCardOpen,
+    setStageMode,
+    settingSwitches,
+    setSettingSwitches,
+    setCurrentChangedSwitch
+  } = useTwoDMapStore((state) => ({
     settings: state.settings,
-    setSettings: state.setSettings
+    setSettings: state.setSettings,
+    setIsDrawingBlockCardOpen: state.setIsDrawingBlockCardOpen,
+    setStageMode: state.setStageMode,
+    settingSwitches: state.settingSwitches,
+    setSettingSwitches: state.setSettingSwitches,
+    setCurrentChangedSwitch: state.setCurrentChangedSwitch
   }))
+
   const [isSettingsOpen, setIsSettingsOpen] = useState(open)
   const [settingsSpring, settingsApi] = useSpring(() => ({ transform: 'translateY(100%)', opacity: 0 }))
 
   const handleClose = useCallback(() => {
     setIsSettingsOpen(false)
+    setIsDrawingBlockCardOpen(false)
     onClose?.()
-  }, [onClose])
+  }, [onClose, setIsDrawingBlockCardOpen])
 
   useUpdateEffect(() => {
     setIsSettingsOpen(open)
@@ -80,8 +95,15 @@ const Settings: FC<PropsWithChildren<ISettingsProps>> = (props) => {
       setSettings({
         [switchKey]: checked
       })
+      const newSettingSwitches = [...settingSwitches]
+      const findSwitch = settingSwitches.find((switchItem) => switchItem.key === switchKey) || null
+      if (findSwitch) {
+        findSwitch.enabled = checked
+        setSettingSwitches(newSettingSwitches)
+      }
+      setCurrentChangedSwitch(findSwitch)
     },
-    [setSettings]
+    [setSettings, settingSwitches, setSettingSwitches, setCurrentChangedSwitch]
   )
   return (
     <SettingsWrapper style={settingsSpring}>
@@ -93,22 +115,24 @@ const Settings: FC<PropsWithChildren<ISettingsProps>> = (props) => {
         </div>
         <div className="settings-content">
           <div className="switches">
-            {Switches.map((switchItem) => (
-              <div>
-                <Switch
-                  key={switchItem.label}
-                  inputProps={{ 'aria-label': switchItem.label }}
-                  sx={switchStyle}
-                  checked={
-                    (settings as Omit<TTwoDMapState['settings'], 'lineColor' | 'planningLineColor'>)[
-                      switchItem.key as Exclude<EMapSettingsKeys, 'lineColor' | 'planningLineColor'>
-                    ]
-                  }
-                  onChange={(_, checked) => handleSwitchValueChange(checked, switchItem.key)}
-                />
-                <span>{switchItem.label}</span>
-              </div>
-            ))}
+            {settingSwitches
+              .sort((a, b) => a.sort - b.sort)
+              .filter((d) => d.showed)
+              .map((switchItem) => (
+                <div key={switchItem.label}>
+                  <Switch
+                    inputProps={{ 'aria-label': switchItem.label }}
+                    sx={switchStyle}
+                    checked={
+                      (settings as Omit<TTwoDMapState['settings'], 'lineColor' | 'planningLineColor'>)[
+                        switchItem.key as Exclude<EMapSettingsKeys, 'lineColor' | 'planningLineColor'>
+                      ]
+                    }
+                    onChange={(_, checked) => handleSwitchValueChange(checked, switchItem.key)}
+                  />
+                  <span>{switchItem.label}</span>
+                </div>
+              ))}
           </div>
           <div className="lines">
             <LineColorPicker
@@ -122,7 +146,14 @@ const Settings: FC<PropsWithChildren<ISettingsProps>> = (props) => {
               onChange={(color) => setSettings({ planningLineColor: color })}
             />
             <div>
-              <Button variant="text" size="small">
+              <Button
+                variant="text"
+                size="small"
+                onClick={() => {
+                  setIsDrawingBlockCardOpen(true)
+                  setStageMode(EStageMode.DRAW)
+                }}
+              >
                 绘制区块
               </Button>
             </div>

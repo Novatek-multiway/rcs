@@ -2,7 +2,7 @@ import AddIcon from "@mui/icons-material/Add";
 import EditNoteIcon from "@mui/icons-material/EditNote";
 import { useRequest } from "ahooks";
 import {
-  delStationInfos,
+  DelEvent,
   GetCarrierOptions,
   GetChassisList,
   GetEventsPageList,
@@ -12,7 +12,6 @@ import type { FC, ReactNode } from "react";
 import React, { memo } from "react";
 import { useDictStore } from "store";
 import { BaseTable, Box, Button, MenuItem, TextField } from "ui";
-import { getUpperCaseKeyObject } from "utils";
 
 import DelButton from "@/component/delButton";
 import Refresh from "@/component/refreshIcon";
@@ -46,7 +45,7 @@ const Event: FC<IProps> = () => {
     run: getChass,
   } = useRequest(() => GetEventsPageList({ id: 0 }));
 
-  const { runAsync: delFn } = useRequest(delStationInfos, {
+  const { runAsync: delFn } = useRequest(DelEvent, {
     manual: true,
   });
 
@@ -210,7 +209,6 @@ const Event: FC<IProps> = () => {
       },
     },
   ];
-
   return (
     <>
       <BaseTable
@@ -272,14 +270,14 @@ const Event: FC<IProps> = () => {
         onClose={() => setOpen(false)}
         vertexData={dictsTransform(vertexData?.data, "id", "id")}
         carrierData={dictsTransform(carrierData?.data, "name", "id")}
-        chassisList={dictsTransform(convertChassisList)}
+        chassisList={convertChassisList}
         callback={() => {
           getChass();
         }}
       />
       <EditDialog
         open={editOpen}
-        row={getUpperCaseKeyObject(row)}
+        row={row}
         onClose={() => setEditOpen(false)}
         vertexData={dictsTransform(vertexData?.data, "id", "id")}
         carrierData={dictsTransform(carrierData?.data, "name", "id")}

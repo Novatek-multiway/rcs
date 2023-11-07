@@ -47,14 +47,15 @@ const removeDuplicateLine = (edges: MapAPI.Edge[]) => {
 }
 
 export const useLines = (edges: MapAPI.Edge[]) => {
-  const { idPointMap, setLine, stageMapRatio } = useTwoDMapStore((state) => ({
+  const { idPointMap, setIdLineMap, stageMapRatio } = useTwoDMapStore((state) => ({
     stageMapRatio: state.stageMapRatio,
     idPointMap: state.idPointMap,
-    setLine: state.setLine
+    setIdLineMap: state.setIdLineMap
   }))
   const deduplicatedEdges = useMemo(() => removeDuplicateLine(edges), [edges])
   const lines: (ILineProps & ILineDirectionsProps)[] = useMemo(() => {
-    return deduplicatedEdges.map((edge) => {
+    const idLineMap = new Map()
+    const line = deduplicatedEdges.map((edge) => {
       const startPoint = idPointMap.get(edge.Start)
       const endPoint = idPointMap.get(edge.End)
       const directions =
@@ -75,10 +76,12 @@ export const useLines = (edges: MapAPI.Edge[]) => {
         directions
       }
       // 将重复的两条边都存到映射
-      directions.forEach((d) => setLine(d.id, line))
+      directions.forEach((d) => idLineMap.set(d.id, line))
       return line
     })
-  }, [idPointMap, stageMapRatio, setLine, deduplicatedEdges])
+    setIdLineMap(idLineMap)
+    return line
+  }, [idPointMap, stageMapRatio, setIdLineMap, deduplicatedEdges])
 
   return lines
 }

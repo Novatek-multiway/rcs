@@ -1,4 +1,5 @@
-import { create } from 'zustand'
+import { shallow } from 'zustand/shallow'
+import { createWithEqualityFn } from 'zustand/traditional'
 
 type TDashboardState = {
   asideOpen: boolean
@@ -8,7 +9,7 @@ type TDashboardActions = {
   setAsideOpen: (open: boolean) => void
 }
 
-export const useDashboardStore = create<TDashboardState & TDashboardActions>((set) => ({
+export const useDashboardStore = createWithEqualityFn<TDashboardState & TDashboardActions>((set) => ({
   asideOpen: true,
   setAsideOpen: (open: boolean) => set({ asideOpen: open })
-}))
+}), shallow)
