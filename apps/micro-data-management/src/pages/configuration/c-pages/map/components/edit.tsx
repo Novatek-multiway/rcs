@@ -1,6 +1,7 @@
 import { useRequest } from "ahooks";
-import { AddEvent } from "apis";
+import { UpdateEvent } from "apis";
 import * as React from "react";
+import { memo } from "react";
 import { useDictStore } from "store";
 import {
   Button,
@@ -13,21 +14,23 @@ import {
   nygFormik,
   useTheme,
 } from "ui";
-const AddDialog: React.FC<{
+const EditDialog: React.FC<{
   open: boolean;
   vertexData?: any;
   carrierData?: any;
   chassisList?: any;
   onClose?: () => void;
   callback?: () => void;
+  row?: Record<string, any>;
 }> = ({
   open,
   onClose = () => {},
   callback,
   chassisList = [],
   vertexData = [],
+  row = {},
 }) => {
-  const { runAsync: run } = useRequest(AddEvent, {
+  const { runAsync: run } = useRequest(UpdateEvent, {
     manual: true,
   });
   const theme = useTheme();
@@ -105,7 +108,7 @@ const AddDialog: React.FC<{
 
   return (
     <Dialog maxWidth="md" open={open} onClose={onClose}>
-      <DialogTitle>添加事件</DialogTitle>
+      <DialogTitle>修改事件</DialogTitle>
       <DialogContent
         sx={{
           py: `${theme.spacing(3.25)} !important`,
@@ -114,7 +117,10 @@ const AddDialog: React.FC<{
         <MaterialForm
           columns={3}
           ref={formRef}
-          defaultValue={{}}
+          defaultValue={{
+            ...row,
+            routeKey: { value: Number(row.routeKey), label: row.routeKey },
+          }}
           schemaObject={schemaObject}
         ></MaterialForm>
       </DialogContent>
@@ -124,12 +130,13 @@ const AddDialog: React.FC<{
           onClick={async () => {
             await formRef.current?.submitForm();
             const { isValid, values } = formRef.current;
-
             schemaObject.map((item) => {
               if (item.type === "select") {
                 values[item.name] = Number(values[item.name]);
               }
             });
+            console.log(values);
+
             if (isValid) {
               const sendData = {
                 ...values,
@@ -150,4 +157,4 @@ const AddDialog: React.FC<{
     </Dialog>
   );
 };
-export default AddDialog;
+export default memo(EditDialog);

@@ -19,7 +19,8 @@ export const FormFieldLabelSelect = ({
   const sxFormControl = {
     minWidth: 140,
     width: "100%",
-    margin: "0 !important",
+    m: 1,
+    // margin: "0 !important",
   };
   return (
     <>
