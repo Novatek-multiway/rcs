@@ -10,6 +10,7 @@
     "build-storybook": "storybook build"
   },
   "devDependencies": {
+    "@packages/build": "workspace:^",
     "@storybook/addon-essentials": "^7.4.2",
     "@storybook/addon-interactions": "^7.4.2",
     "@storybook/addon-links": "^7.4.2",
@@ -29,14 +30,14 @@
     "typescript": "^4.9.4"
   },
   "dependencies": {
+    "@emotion/react": "latest",
+    "@emotion/styled": "latest",
     "@mui/icons-material": "^5.13.7",
     "@mui/lab": "5.0.0-alpha.142",
     "@mui/material": "^5.14.8",
-    "@mui/styled-engine": "npm:@mui/styled-engine-sc@latest",
-    "@mui/styled-engine-sc": "^5.14.8",
     "@mui/styles": "^5.14.5",
     "@mui/x-data-grid": "^6.14.0",
-    "@mui/x-date-pickers": "^6.14.0",
+    "@mui/x-date-pickers": "^6.16.2",
     "@mui/x-date-pickers-pro": "^6.14.0",
     "@react-spring/web": "^9.7.3",
     "@types/node": "^20.3.1",
@@ -45,13 +46,17 @@
     "classnames": "^2.3.2",
     "date-fns": "^2.30.0",
     "dayjs": "^1.11.9",
+    "formik": "^2.4.5",
+    "formik-mui": "5.0.0-alpha.0",
     "hooks": "workspace:*",
+    "material-react-table": "2.0.0-beta.10",
     "mui-daterange-picker": "^1.0.5",
     "mui-form": "workspace:*",
     "react": "^18.2.0",
     "react-router-dom": "^6.15.0",
     "store": "workspace:*",
     "theme": "workspace:*",
+    "tiny-warning": "^1.0.3",
     "utils": "workspace:*"
   }
 }

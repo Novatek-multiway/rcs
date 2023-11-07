@@ -1,12 +1,12 @@
-import * as React from 'react';
+import * as React from "react";
 import MuiTextField, {
   TextFieldProps as MuiTextFieldProps,
-} from '@mui/material/TextField';
-import { FieldProps, getIn } from 'formik';
+} from "@mui/material/TextField";
+import { FieldProps, getIn } from "formik";
 
 export interface TextFieldProps
   extends FieldProps,
-    Omit<MuiTextFieldProps, 'name' | 'value' | 'error'> {}
+    Omit<MuiTextFieldProps, "name" | "value" | "error"> {}
 
 export function fieldToTextField({
   disabled,
@@ -34,7 +34,11 @@ export function fieldToTextField({
 }
 
 export function TextField({ children, ...props }: TextFieldProps) {
-  return <MuiTextField {...fieldToTextField(props)}>{children}</MuiTextField>;
+  return (
+    <MuiTextField sx={{ width: "100%" }} {...fieldToTextField(props)}>
+      {children}
+    </MuiTextField>
+  );
 }
 
-TextField.displayName = 'FormikMaterialUITextField';
+TextField.displayName = "FormikMaterialUITextField";

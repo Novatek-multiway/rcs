@@ -10,7 +10,9 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "antd": "^5.10.3",
     "qs": "^6.11.2",
+    "store": "workspace:*",
     "tsconfig": "workspace:*",
     "umi-request": "^1.4.0"
   }

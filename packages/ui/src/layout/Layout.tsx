@@ -1,24 +1,91 @@
-import { ThemeProvider } from '@mui/material/styles'
-import type { FC } from 'react'
-import React, { memo } from 'react'
-import { theme } from 'theme'
+import MenuIcon from "@mui/icons-material/Menu";
+import {
+  AppBar,
+  Box,
+  Collapse,
+  CssBaseline,
+  Toolbar,
+  Typography,
+} from "@mui/material";
+import { ThemeProvider } from "@mui/material/styles";
+import type { FC } from "react";
+import React, { memo, useState } from "react";
+import { theme } from "theme";
 
-import backgroundImage from './assets/background-mask.png'
-import { Content } from './components/content'
-import { Header } from './components/header'
-import { LayoutWrapper } from './style'
-import { ILayoutProps } from './types'
+import logo from "./assets/logo.png";
+import Nav from "./Nav";
+import Time from "./Time";
 
-const Layout: FC<ILayoutProps> = (props) => {
-  const { customBackgroundImage, routes } = props
-  return (
-    <ThemeProvider theme={theme}>
-      <LayoutWrapper backgroundImage={customBackgroundImage || backgroundImage}>
-        <Header />
-        <Content routes={routes} />
-      </LayoutWrapper>
-    </ThemeProvider>
-  )
+interface LayoutProps {
+  children: React.ReactNode;
+  onLogoTitleClick?: () => void;
 }
 
-export default memo(Layout)
+const Layout: FC<LayoutProps> = (props) => {
+  const { onLogoTitleClick } = props;
+  const [collapsed, setCollapsed] = useState(false);
+
+  return (
+    <ThemeProvider theme={theme}>
+      <Box
+        sx={{
+          display: "flex",
+          height: "100%",
+          overflow: "auto",
+          flexDirection: "column",
+          userSelect: "none",
+        }}
+      >
+        <CssBaseline />
+        <AppBar
+          component="nav"
+          sx={{
+            background: "rgb(24, 26, 33)",
+            color: theme.palette.text.primary,
+            zIndex: 1000,
+          }}
+        >
+          <Toolbar variant="dense" sx={{ alignItems: "center" }}>
+            <img src={logo} alt="logo" height={28} onClick={onLogoTitleClick} />
+            <Typography
+              variant="h6"
+              component="div"
+              sx={{
+                flexGrow: 1,
+                display: { xs: "none", sm: "block" },
+                marginLeft: "6px",
+                transform: "translateY(2px)",
+              }}
+              onClick={onLogoTitleClick}
+            >
+              调度监控系统
+            </Typography>
+            <MenuIcon
+              fontSize="medium"
+              onClick={() => setCollapsed((collapsed) => !collapsed)}
+              sx={{ cursor: "pointer", marginLeft: "auto" }}
+            />
+            <Collapse in={!collapsed} orientation="horizontal">
+              <Box
+                sx={{
+                  "&.MuiBox-root": {
+                    display: "flex",
+                    flexWrap: "nowrap",
+                    whiteSpace: "nowrap",
+                  },
+                }}
+              >
+                <Nav />
+              </Box>
+            </Collapse>
+            <Time />
+          </Toolbar>
+        </AppBar>
+        <Box component="main" sx={{ p: 0, mt: theme.spacing(6), flex: 1 }}>
+          {props?.children}
+        </Box>
+      </Box>
+    </ThemeProvider>
+  );
+};
+export default memo(Layout);

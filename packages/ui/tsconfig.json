@@ -3,8 +3,7 @@
   "include": ["."],
   "exclude": ["node_modules"],
   "compilerOptions": {
-    "paths": {
-      "@mui/styled-engine": ["./node_modules/@mui/styled-engine-sc"]
-    }
+    "baseUrl": ".",
+    "jsx": "react-jsx"
   }
 }

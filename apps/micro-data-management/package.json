@@ -1,0 +1,39 @@
+{
+  "name": "micro-data-management",
+  "description": "RCS调度监控系统-数据管理（任务、车辆、配置等界面）",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0"
+  },
+  "dependencies": {
+    "@emotion/cache": "latest",
+    "@emotion/react": "latest",
+    "@emotion/styled": "latest",
+    "@mui/icons-material": "latest",
+    "@mui/lab": "5.0.0-alpha.142",
+    "ahooks": "^3.7.8",
+    "apis": "workspace:*",
+    "utils": "workspace:*",
+    "material-ui-popup-state": "^5.0.10",
+    "react": "latest",
+    "react-dom": "latest",
+    "react-router-dom": "^6.17.0",
+    "store": "workspace:*",
+    "theme": "workspace:*",
+    "ui": "workspace:*",
+    "vite-plugin-qiankun": "^1.0.15"
+  },
+  "devDependencies": {
+    "@packages/build": "workspace:^",
+    "@types/react": "latest",
+    "@types/react-dom": "latest",
+    "eslint-config-custom": "workspace:*",
+    "typescript": "latest",
+    "vite": "^4.4.5"
+  }
+}

@@ -1,28 +1,44 @@
-import { extend } from 'umi-request'
+import { extend } from "umi-request";
+import { notification } from "antd";
+
+interface RCSResponse extends Omit<Response, "status"> {
+  code: number;
+}
+
+
+export { notification }
 
 //全局请求参数设置
 export const request = extend({
   timeout: 10000,
-  baseURL: 'http://120.79.8.215:5200'
-})
+  // 记得区分开发环境与生产环境
+  prefix: "/api",
+});
 
 request.interceptors.request.use((url, options) => {
-  const headers: any = options.headers
-  headers['__tenant'] = '446a5211-3d72-4339-9adc-845151f8ada0'
+  const userInfo = localStorage.getItem("userInfo");
+  const headers: any = options.headers;
+  headers["Authorization"] = JSON.parse(userInfo || "{}").jwtToken;
   return {
     url,
     options: {
       ...options,
-      headers
-    }
-  }
-})
+      headers,
+    },
+  };
+});
 
 request.interceptors.response.use(async (response) => {
-  const { status } = response
+  const { status } = response;
   if (status === 200) {
-    const data = await response.clone().json()
-    return data
+    const data = await response.clone().json();
+    return data;
   }
-  return response
-})
+  const data = await response.clone().json();
+
+  notification.error({
+    message: `Error ${status}`,
+    description: data.title,
+  });
+  return response;
+});

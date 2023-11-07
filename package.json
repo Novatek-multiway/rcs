@@ -3,13 +3,17 @@
   "scripts": {
     "bootstrap": "pnpm install",
     "build": "turbo run build",
-    "dev": "turbo run dev",
+    "dev": "pnpm run --parallel dev",
+    "dev:apps": "turbo run dev --filter='./apps/*'",
     "lint": "turbo run lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "prepare": "husky install",
     "commit": "cz",
-    "clean": "turbo run clean",
-    "reinstall": "pnpm run clean && rm -rf node_modules && rm -rf pnpm-lock.yaml && pnpm run bootstrap"
+    "clean": "pnpm clean:node-modules & pnpm clean:turbo-cache",
+    "clean:node-modules": "find . -name 'node_modules' -type d -prune -exec rm -rf '{}' +",
+    "clean:turbo-cache": "rm -rf ./node_modules/.cache",
+    "reinstall": "pnpm run clean && rm -rf node_modules && rm -rf pnpm-lock.yaml && pnpm run bootstrap",
+    "create:app": "plop app"
   },
   "devDependencies": {
     "@commitlint/cli": "^17.7.1",
@@ -20,6 +24,7 @@
     "eslint-config-custom": "workspace:*",
     "husky": "^8.0.0",
     "prettier": "^2.5.1",
+    "rollup-plugin-visualizer": "^5.9.2",
     "turbo": "latest"
   },
   "packageManager": "pnpm@8.6.4",
@@ -28,11 +33,12 @@
       "path": "./node_modules/cz-conventional-changelog"
     }
   },
-  "resolutions": {
-    "@mui/styled-engine": "npm:@mui/styled-engine-sc@latest"
-  },
   "engines": {
     "node": ">=16.20.0",
     "pnpm": ">=8.6.4"
+  },
+  "dependencies": {
+    "@faker-js/faker": "^8.2.0",
+    "plop": "^4.0.0"
   }
 }
