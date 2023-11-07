@@ -16,9 +16,9 @@ interface IToolbarProps {
 
 const Toolbar: FC<PropsWithChildren<IToolbarProps>> = (props) => {
   const { toolbarRight } = props
-  const { currentScale, setCurrentScale } = useTwoDMapStore((state) => ({
+  const { currentScale, zoom } = useTwoDMapStore((state) => ({
     currentScale: state.currentScale,
-    setCurrentScale: state.setCurrentScale
+    zoom: state.zoom
   }))
   const { setAsideOpen } = useDashboardStore((state) => ({
     setAsideOpen: state.setAsideOpen
@@ -47,10 +47,10 @@ const Toolbar: FC<PropsWithChildren<IToolbarProps>> = (props) => {
     () => [
       { icon: <SettingsIcon />, name: '设置', onClick: handleSettingsClick },
       { icon: <Search />, name: '搜索' },
-      { icon: <Remove />, name: '缩小', onClick: () => setCurrentScale(currentScale - 0.1) },
-      { icon: <Add />, name: '放大', onClick: () => setCurrentScale(currentScale + 0.1) }
+      { icon: <Remove />, name: '缩小', onClick: () => zoom?.(currentScale - 1) },
+      { icon: <Add />, name: '放大', onClick: () => zoom?.(currentScale + 1) }
     ],
-    [handleSettingsClick, setCurrentScale, currentScale]
+    [handleSettingsClick, zoom, currentScale]
   )
 
   return (

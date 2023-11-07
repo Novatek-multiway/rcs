@@ -1,7 +1,9 @@
+import { useAsyncEffect, useUpdateEffect } from 'ahooks'
+import { getTimeSum } from 'apis'
 import { echarts, useEcharts } from 'hooks'
 import { MaterialReactTable, type MRT_ColumnDef, useMaterialReactTable } from 'material-react-table'
 import type { FC, PropsWithChildren } from 'react'
-import React, { memo, useMemo, useRef } from 'react'
+import React, { memo, useMemo, useRef, useState } from 'react'
 import { Panel } from 'ui'
 
 interface ITimeStatsProps {}
@@ -11,47 +13,8 @@ type TimeStatsItem = {
   workTime: number
   freeTime: number
   errorTime: number
-  averageTaskByTime: number
+  average: number
 }
-
-//nested data is ok, see accessorKeys in ColumnDef below
-const data: TimeStatsItem[] = [
-  {
-    id: 10,
-    workTime: 3,
-    freeTime: 21,
-    errorTime: 0,
-    averageTaskByTime: 12
-  },
-  {
-    id: 11,
-    workTime: 12,
-    freeTime: 11,
-    errorTime: 1,
-    averageTaskByTime: 12.2
-  },
-  {
-    id: 12,
-    workTime: 5,
-    freeTime: 16,
-    errorTime: 3,
-    averageTaskByTime: 13.3
-  },
-  {
-    id: 13,
-    workTime: 12,
-    freeTime: 12,
-    errorTime: 0,
-    averageTaskByTime: 12
-  },
-  {
-    id: 14,
-    workTime: 4,
-    freeTime: 18,
-    errorTime: 2,
-    averageTaskByTime: 12.3
-  }
-]
 
 const WORK_COLOR = 'rgba(64, 211, 124, 0.7)'
 const FREE_COLOR = 'rgba(65, 67, 68, 0.7)'
@@ -90,7 +53,7 @@ const option: echarts.EChartsOption = {
   xAxis: [
     {
       type: 'category',
-      data: data.map((d) => d.id),
+      data: [],
       axisPointer: {
         type: 'shadow'
       },
@@ -143,7 +106,7 @@ const option: echarts.EChartsOption = {
           return value + 'h'
         }
       },
-      data: data.map((d) => d.workTime),
+      data: [],
       itemStyle: {
         color: WORK_COLOR,
         borderRadius: [0, 0, 5, 5]
@@ -158,7 +121,7 @@ const option: echarts.EChartsOption = {
           return value + 'h'
         }
       },
-      data: data.map((d) => d.freeTime),
+      data: [],
 
       itemStyle: {
         color: FREE_COLOR,
@@ -174,7 +137,7 @@ const option: echarts.EChartsOption = {
           return value + 'h'
         }
       },
-      data: data.map((d) => d.errorTime),
+      data: [],
 
       itemStyle: {
         color: ERROR_COLOR,
@@ -190,7 +153,7 @@ const option: echarts.EChartsOption = {
           return value + '个'
         }
       },
-      data: data.map((d) => d.averageTaskByTime),
+      data: [],
 
       itemStyle: {
         color: AVERAGE_COLOR
@@ -203,7 +166,7 @@ const option: echarts.EChartsOption = {
 const TimeStats: FC<PropsWithChildren<ITimeStatsProps>> = () => {
   const el = useRef<HTMLDivElement | null>(null)
   // 传递元素给useEcharts
-  useEcharts(el, { echartsOption: option, theme: 'dark' })
+  const { updateOption } = useEcharts(el, { echartsOption: option, theme: 'dark' })
 
   //should be memoized or stable
   const columns = useMemo<MRT_ColumnDef<TimeStatsItem>[]>(
@@ -214,7 +177,7 @@ const TimeStats: FC<PropsWithChildren<ITimeStatsProps>> = () => {
         size: 50
       },
       {
-        accessorKey: 'id',
+        accessorKey: 'workTime',
         header: '有效时间',
         size: 50,
         Cell: ({ cell }) => cell.getValue() + ' h'
@@ -232,7 +195,7 @@ const TimeStats: FC<PropsWithChildren<ITimeStatsProps>> = () => {
         Cell: ({ cell }) => cell.getValue() + ' h'
       },
       {
-        accessorKey: 'averageTaskByTime',
+        accessorKey: 'average',
         header: '时均任务',
         size: 50,
         Cell: ({ cell }) => cell.getValue() + ' 个'
@@ -241,9 +204,10 @@ const TimeStats: FC<PropsWithChildren<ITimeStatsProps>> = () => {
     []
   )
 
+  const [taskStatsData, setTaskStatsData] = useState<ReportAPI.TimeSumDatum[]>([])
   const table = useMaterialReactTable({
     columns,
-    data,
+    data: taskStatsData,
     enableColumnActions: false,
     enableColumnFilters: false,
     enablePagination: false,
@@ -259,7 +223,7 @@ const TimeStats: FC<PropsWithChildren<ITimeStatsProps>> = () => {
     },
     muiTableContainerProps: {
       sx: {
-        maxHeight: '235px',
+        maxHeight: '218px',
         height: '100%'
       }
     },
@@ -306,6 +270,34 @@ const TimeStats: FC<PropsWithChildren<ITimeStatsProps>> = () => {
       }
     }
   })
+
+  useAsyncEffect(async () => {
+    const res = await getTimeSum()
+    const newTaskStatsData = res.data as ReportAPI.TimeSumDatum[]
+    setTaskStatsData(newTaskStatsData)
+  }, [])
+
+  useUpdateEffect(() => {
+    updateOption({
+      xAxis: {
+        data: taskStatsData.map((item) => item.id)
+      },
+      series: [
+        {
+          data: taskStatsData.map((item) => item.workTime)
+        },
+        {
+          data: taskStatsData.map((item) => item.freeTime)
+        },
+        {
+          data: taskStatsData.map((item) => item.errorTime)
+        },
+        {
+          data: taskStatsData.map((item) => item.average)
+        }
+      ]
+    })
+  }, [taskStatsData, updateOption])
 
   return (
     <Panel

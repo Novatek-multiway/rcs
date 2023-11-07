@@ -32,9 +32,12 @@ const Dashboard = () => {
   }, [asideOpen])
 
   const [toolbarRight, setToolbarRight] = useState(380)
-  const handleSizeChange = useCallback<NonNullable<IAsideProps['onSizeChange']>>((size) => {
-    setToolbarRight((size?.width || 360) + 20)
-  }, [])
+  const handleSizeChange = useCallback<NonNullable<IAsideProps['onSizeChange']>>(
+    (size) => {
+      setToolbarRight(asideOpen ? (size?.width || 360) + 20 : 20)
+    },
+    [asideOpen]
+  )
   return (
     <DashboardWrapper>
       <div className="content">

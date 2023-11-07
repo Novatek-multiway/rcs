@@ -3,13 +3,14 @@ import React, { memo, useEffect, useRef, useState } from 'react'
 import { Circle, Group, Text } from 'react-konva'
 import { theme } from 'theme'
 
+import { POINT_SIZE, POINT_TEXT_FONT_SIZE } from './constant'
+
 export interface IPointProps {
   x: number
   y: number
   text: string | number
 }
-const POINT_TEXT_FONT_SIZE = 0.5 // 点文字大小
-const POINT_SIZE = 0.2 // 点尺寸
+
 const Point: FC<IPointProps> = memo((props) => {
   const { x, y, text } = props
   const textRef = useRef<ElementRef<typeof Text>>(null)
