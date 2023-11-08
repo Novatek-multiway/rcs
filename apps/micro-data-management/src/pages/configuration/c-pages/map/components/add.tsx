@@ -122,13 +122,13 @@ const AddDialog: React.FC<{
       disabled: true,
     },
     {
-      name: "checkHasGoods",
+      name: "dwgFile",
       label: "地图Dxf文件名",
       type: "select",
       items: dxfList,
     },
     {
-      name: "SVGFile",
+      name: "svgFile",
       label: "地图Svg文件名",
       type: "select",
       items: svgList,

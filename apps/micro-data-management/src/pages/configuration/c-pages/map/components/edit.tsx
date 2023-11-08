@@ -88,7 +88,7 @@ const EditDialog: React.FC<{
       disabled: true,
     },
     {
-      name: "dxfFile",
+      name: "dwgFile",
       label: "地图Dxf文件名",
       type: "select",
       items: dxfList,
