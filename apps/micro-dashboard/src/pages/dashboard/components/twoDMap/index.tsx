@@ -3,6 +3,7 @@ import { getInitStates, getMapFunction, getOnLineCarriers, updateMapFunction } f
 import React, { FC, memo, PropsWithChildren, useState } from 'react'
 import { CircularProgress } from 'ui'
 
+import { useWebsocketStore } from '../../store/websocket'
 import AutoResizerStage from './components/autoResizerStage'
 import CursorPosition from './components/cursorPosition'
 import DrawingBlockCard from './components/drawingBlockCard'
@@ -27,7 +28,8 @@ const TwoDMap: FC<PropsWithChildren<ITwoDMapProps>> = (props) => {
     setMapCenterPosition,
     setSettingSwitches,
     setSettings,
-    currentChangedSwitch
+    currentChangedSwitch,
+    isDrawingBlockCardOpen
   } = useTwoDMapStore((state) => ({
     isLoading: state.isLoading,
     setIsLoading: state.setIsLoading,
@@ -35,13 +37,16 @@ const TwoDMap: FC<PropsWithChildren<ITwoDMapProps>> = (props) => {
     setMapCenterPosition: state.setMapCenterPosition,
     setSettingSwitches: state.setSettingSwitches,
     setSettings: state.setSettings,
-    currentChangedSwitch: state.currentChangedSwitch
+    currentChangedSwitch: state.currentChangedSwitch,
+    isDrawingBlockCardOpen: state.isDrawingBlockCardOpen
+  }))
+  const { onlineCarriers, homeChargeGoodsStations } = useWebsocketStore((state) => ({
+    onlineCarriers: state['Report/GetOnLineCarriers'],
+    homeChargeGoodsStations: state['Report/GetHomeChargeGoodsStations']
   }))
 
   const [mapData, setMapData] = useState<MapAPI.RootMapObject | null>(null)
-  /* ---------------------------------- 车辆数据 ---------------------------------- */
   const [vehiclesData, setVehiclesData] = useState<ReportAPI.OnlineCarrier[]>([])
-  /* ---------------------------------- 车辆数据 ---------------------------------- */
 
   useAsyncEffect(async () => {
     setIsLoading(true)
@@ -89,6 +94,7 @@ const TwoDMap: FC<PropsWithChildren<ITwoDMapProps>> = (props) => {
     setMapCenterPosition(mapCenterPosition)
   }, [setMapSize, setMapCenterPosition, mapData])
 
+  /* ---------------------------------- 更新开关 ---------------------------------- */
   useUpdateEffect(() => {
     if (!currentChangedSwitch) return
     const _updateMapFunction = async () => {
@@ -103,6 +109,31 @@ const TwoDMap: FC<PropsWithChildren<ITwoDMapProps>> = (props) => {
     }
     _updateMapFunction()
   }, [currentChangedSwitch])
+  /* ---------------------------------- 更新开关 ---------------------------------- */
+
+  /* ---------------------------------- 实时推送 ---------------------------------- */
+  // 车辆状态更新
+  useUpdateEffect(() => {
+    console.log('🚀 ~ file: index.tsx ~ line 118 ~ onlineCarriers', onlineCarriers)
+    // setVehiclesData(onlineCarriers)
+  }, [onlineCarriers])
+  // 库位点状态更新
+  useUpdateEffect(() => {
+    if (!mapData) return
+    const newMapData = { ...mapData }
+    const vertexes = newMapData.Vertexs
+    const locations = homeChargeGoodsStations.filter((d) => d.type === 1 || d.type === 4)
+    console.log('🚀 ~ file: index.tsx ~ line 124 ~ useUpdateEffect ~ locations', locations)
+    locations.forEach((l) => {
+      const vertex = vertexes?.find((v) => v.ID === l.id)
+      // 修改对应点的库位状态
+      if (vertex) {
+        vertex.LocationState = l.LocationState
+      }
+    })
+    setMapData(newMapData)
+  }, [homeChargeGoodsStations])
+  /* ---------------------------------- 实时推送 ---------------------------------- */
 
   return (
     <TwoDMapWrapper>
@@ -114,7 +145,7 @@ const TwoDMap: FC<PropsWithChildren<ITwoDMapProps>> = (props) => {
       {/* 工具栏 */}
       <Toolbar toolbarRight={toolbarRight} />
       {/* 绘制区块窗口 */}
-      <DrawingBlockCard />
+      {isDrawingBlockCardOpen && <DrawingBlockCard />}
       {/* loading */}
       {isLoading && (
         <CircularProgress

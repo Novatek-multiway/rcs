@@ -2,7 +2,7 @@ import { ITrafficBlock } from 'apis'
 import { Field, Form, Formik } from 'formik'
 import { Select, TextField } from 'formik-mui'
 import type { FC, PropsWithChildren } from 'react'
-import React, { memo, useEffect, useMemo, useState } from 'react'
+import React, { memo, useMemo } from 'react'
 import { useDictStore } from 'store'
 import {
   Box,
@@ -23,13 +23,12 @@ import {
   Typography
 } from 'ui'
 
-interface IAddBlockDialogProps {
+export interface IAddBlockDialogProps {
   initialValue?: Omit<ITrafficBlock, 'points'>
   open?: boolean
   onClose?: () => void
   onSubmit?: (values: Omit<ITrafficBlock, 'points'>) => Promise<void>
   points?: {
-    id: number
     x: number
     y: number
   }[]
@@ -50,49 +49,39 @@ const AddBlockDialogContent = styled(DialogContent)(() => ({
 // 添加区块弹窗
 const AddBlockDialog: FC<PropsWithChildren<IAddBlockDialogProps>> = (props) => {
   const { initialValue, open = false, points = [], onClose, onSubmit } = props
-  const [internalOpen, setInternalOpen] = useState(open)
   const dicts = useDictStore((state) => state.dicts)
   const trafficBlockTypes = useMemo(() => dicts.TrafficBlockType, [dicts])
 
-  useEffect(() => {
-    setInternalOpen(open)
-  }, [open])
-
   const handleClose: DialogProps['onClose'] = (e, reason) => {
     if (reason !== 'backdropClick' && reason !== 'escapeKeyDown') {
-      closeInternal()
+      onClose?.()
     }
   }
 
-  const closeInternal = () => {
-    setInternalOpen(false)
-    onClose?.()
-  }
-
   return (
-    <Dialog open={internalOpen} onClose={handleClose} maxWidth={'xs'}>
+    <Dialog open={open} onClose={handleClose} maxWidth={'xs'} sx={{}}>
       <DialogTitle>添加区块</DialogTitle>
 
       <Formik<NonNullable<IAddBlockDialogProps['initialValue']>>
         initialValues={initialValue || { type: 1, floor: 1, maxNumber: 1 }}
         onSubmit={async (values) => {
           await onSubmit?.(values)
-          closeInternal()
+          onClose?.()
         }}
       >
         {({ submitForm, isSubmitting }) => (
           <>
             <AddBlockDialogContent>
               <Form>
-                <Field component={Select} name="type" label="区块类型" variant="outlined">
+                <Field component={Select} name="type" label="区块类型" variant="filled">
                   {trafficBlockTypes?.map((type: any) => (
                     <MenuItem value={type.value} key={type.label}>
                       {type.label}
                     </MenuItem>
                   ))}
                 </Field>
-                <Field component={TextField} name="floor" type="number" label="楼层" variant="outlined" />
-                <Field component={TextField} name="maxNumber" type="number" label="限制数量" variant="outlined" />
+                <Field component={TextField} name="floor" type="number" label="楼层" variant="filled" />
+                <Field component={TextField} name="maxNumber" type="number" label="限制数量" variant="filled" />
               </Form>
 
               <Card sx={{ background: 'transparent', boxShadow: 'none' }}>
@@ -119,15 +108,15 @@ const AddBlockDialog: FC<PropsWithChildren<IAddBlockDialogProps>> = (props) => {
                         secondaryAction={<span>操作</span>}
                       >
                         <ListItemIcon>
-                          <span>ID</span>
+                          <span style={{ textAlign: 'center', flex: 1 }}>Index</span>
                         </ListItemIcon>
                         <ListItemText sx={{ textAlign: 'center' }} primary="X" />
                         <ListItemText sx={{ textAlign: 'center' }} primary="Y" />
                       </ListItem>
-                      {points?.map((point) => (
-                        <ListItem key={point.id} secondaryAction={<span></span>}>
-                          <ListItemIcon>
-                            <span>{point.id}</span>
+                      {points?.map((point, index) => (
+                        <ListItem key={index} secondaryAction={<span></span>}>
+                          <ListItemIcon sx={{ textAlign: 'center' }}>
+                            <span style={{ textAlign: 'center', flex: 1 }}>{index}</span>
                           </ListItemIcon>
                           <ListItemText sx={{ textAlign: 'center' }} primary={point.x.toFixed(2)} />
                           <ListItemText sx={{ textAlign: 'center' }} primary={point.y.toFixed(2)} />
@@ -140,7 +129,7 @@ const AddBlockDialog: FC<PropsWithChildren<IAddBlockDialogProps>> = (props) => {
             </AddBlockDialogContent>
 
             <DialogActions>
-              <Button onClick={() => closeInternal()}>取消</Button>
+              <Button onClick={() => onClose?.()}>取消</Button>
               <Button variant="contained" color="primary" disabled={isSubmitting} onClick={submitForm}>
                 确定
               </Button>
