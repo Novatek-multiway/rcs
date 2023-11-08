@@ -1,30 +1,55 @@
-import type { FC, ReactNode } from "react";
-import React, { memo } from "react";
-import { BaseForm } from "ui";
+import type { FC, ReactNode } from 'react'
+import React, { memo } from 'react'
+
+import Efficiency from './components/efficiency'
+import ElapsedTimeRatio from './components/elapsedTimeRatio'
+import Electricity from './components/electricity'
+import FinishedTasks from './components/finishedTasks'
+import Mileage from './components/mileage'
+import NoFaultTime from './components/noFaultTime'
+import SearchArea from './components/searchArea'
+import UtilizationRate from './components/utilizationRate'
+import { VehicleOperationWrapper } from './style'
 
 interface IProps {
-  children?: ReactNode;
+  children?: ReactNode
 }
 
 const VehicleOperation: FC<IProps> = () => {
   return (
-    <>
-      <BaseForm
-        schemaObject={[
-          {
-            name: "AreaName",
-            label: "区域名称",
-            helperText: "区域名称",
-          },
-          {
-            name: "AreaName1",
-            label: "区域名称",
-            helperText: "区域名称",
-          },
-        ]}
-      ></BaseForm>
-    </>
-  );
-};
+    <VehicleOperationWrapper>
+      <SearchArea />
+      <div className="content">
+        <div className="header">
+          <div style={{ width: '25%' }}>
+            <Electricity />
+          </div>
 
-export default memo(VehicleOperation);
+          <div style={{ flex: 1 }}>
+            <Efficiency />
+          </div>
+
+          <div style={{ width: '25%' }}>
+            <ElapsedTimeRatio />
+          </div>
+        </div>
+        <div className="footer">
+          <div style={{ width: '25%' }}>
+            <UtilizationRate />
+          </div>
+          <div style={{ width: '25%' }}>
+            <NoFaultTime />
+          </div>
+          <div style={{ width: '25%' }}>
+            <FinishedTasks />
+          </div>
+          <div style={{ width: '25%' }}>
+            <Mileage />
+          </div>
+        </div>
+      </div>
+    </VehicleOperationWrapper>
+  )
+}
+
+export default memo(VehicleOperation)

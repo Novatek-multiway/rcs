@@ -18,7 +18,7 @@ export const PanelBackdrop = styled.div`
   --inset: ${inset};
   position: absolute;
   inset: 0;
-  z-index: -1;
+  /* z-index: -1; */
   transform: translate(var(--inset), var(--inset));
   border: 1px solid #272f3c;
   background: transparent;
