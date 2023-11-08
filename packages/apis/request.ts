@@ -5,6 +5,9 @@ interface RCSResponse extends Omit<Response, "status"> {
   code: number;
 }
 
+
+export { notification }
+
 //全局请求参数设置
 export const request = extend({
   timeout: 10000,
