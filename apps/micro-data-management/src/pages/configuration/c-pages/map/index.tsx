@@ -17,6 +17,7 @@ import Refresh from "@/component/refreshIcon";
 
 import AddDialog from "./components/add";
 import EditDialog from "./components/edit";
+import ImportDialog from "./components/import";
 
 interface IProps {
   children?: ReactNode;
@@ -36,6 +37,7 @@ const dictsTransform = (arr: [], label: string, value: string) => {
 const MapPage: FC<IProps> = () => {
   const [open, setOpen] = React.useState(false);
   const [editOpen, setEditOpen] = React.useState(false);
+  const [openImport, setOpenImport] = React.useState(false);
   const [row, setRow] = React.useState({});
   const {
     data: chassisData,
@@ -229,7 +231,7 @@ const MapPage: FC<IProps> = () => {
                 variant="outlined"
                 size="small"
                 color="success"
-                onClick={() => setOpen(true)}
+                onClick={() => setOpenImport(true)}
               >
                 <AddIcon />
                 上传底图文件
@@ -268,6 +270,7 @@ const MapPage: FC<IProps> = () => {
           getChass();
         }}
       />
+      <ImportDialog open={openImport} onClose={() => setOpenImport(false)} />
     </>
   );
 };

@@ -35,8 +35,6 @@ const EditDialog: React.FC<{
   });
   const { svgList, dxfList } = useMapHooks();
 
-  console.log(svgList);
-
   const theme = useTheme();
   const formRef = React.useRef<nygFormik>(null);
   const schemaObject = [

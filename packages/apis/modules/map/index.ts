@@ -53,3 +53,9 @@ export const GetDxfMapNameList = () =>
   request<IResponse<any>>("/Map/GetDxfMapNameList", {
     method: "get",
   });
+
+export const UpLoadDxfMap = (data: Record<string, any>) =>
+  request<IResponse<any>>("/Map/UpLoadDxfMap", {
+    method: "POST",
+    data,
+  });
