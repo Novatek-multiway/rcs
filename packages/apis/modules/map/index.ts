@@ -35,3 +35,21 @@ export const WriteRouteFileInfo = (data: Record<string, any>) => {
     data,
   });
 };
+
+export const UpdateRouteFileInfo = (data: Record<string, any>) => {
+  return request<IResponse<any>>("/Map/UpdateRouteFileInfo", {
+    method: "POST",
+    data,
+  });
+};
+
+export const GetSvgMapNameList = () => {
+  return request<IResponse<any>>("/Map/GetSvgMapNameList", {
+    method: "get",
+  });
+};
+
+export const GetDxfMapNameList = () =>
+  request<IResponse<any>>("/Map/GetDxfMapNameList", {
+    method: "get",
+  });
