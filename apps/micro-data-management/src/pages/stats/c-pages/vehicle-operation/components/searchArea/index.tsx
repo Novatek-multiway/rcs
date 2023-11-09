@@ -1,25 +1,38 @@
+import { useAsyncEffect } from 'ahooks'
+import { postGetControlOptions } from 'apis'
 import dayjs from 'dayjs'
 import type { FC, PropsWithChildren } from 'react'
-import React, { memo, useCallback, useState } from 'react'
+import React, { memo, useState } from 'react'
 import { AdapterDayjs, Button, DatePicker, LocalizationProvider, MenuItem, TextField, zhCN } from 'ui'
 
 import { SearchAreaWrapper } from './style'
 
-interface ISearchAreaProps {}
-
-const SearchArea: FC<PropsWithChildren<ISearchAreaProps>> = () => {
-  const [searchFormData, setSearchFormData] = useState<{
+export interface ISearchAreaProps {
+  formData: {
     startDate: dayjs.Dayjs | null
     endDate: dayjs.Dayjs | null
-    vehicleId: any
-  }>({
-    startDate: dayjs().startOf('month'),
-    endDate: dayjs().endOf('month'),
-    vehicleId: '全部'
-  })
-  const handleSearchClick = useCallback(() => {
-    console.log(searchFormData)
-  }, [searchFormData])
+    carrierID: any
+  }
+  onChange?: (newFormData: ISearchAreaProps['formData']) => void
+  onSearch?: () => void
+}
+
+const SearchArea: FC<PropsWithChildren<ISearchAreaProps>> = (props) => {
+  const { formData, onChange, onSearch } = props
+
+  const [carrierOptions, setCarrierOptions] = useState<{ label: string; value: number | string }[]>([])
+
+  useAsyncEffect(async () => {
+    const res = await postGetControlOptions({})
+    const carrierOptions = [{ label: '全部', value: '全部' }].concat(
+      res.data.map((item: any) => ({
+        label: item.id + '',
+        value: item.id
+      }))
+    )
+    setCarrierOptions(carrierOptions)
+  }, [])
+
   return (
     <SearchAreaWrapper>
       <LocalizationProvider
@@ -28,7 +41,7 @@ const SearchArea: FC<PropsWithChildren<ISearchAreaProps>> = () => {
       >
         <DatePicker
           views={['year', 'month', 'day']}
-          format="YYYY/MM/DD HH:mm:ss"
+          format="YYYY/MM/DD"
           slotProps={{
             field: {
               clearable: true
@@ -38,17 +51,17 @@ const SearchArea: FC<PropsWithChildren<ISearchAreaProps>> = () => {
               label: '开始时间'
             }
           }}
-          value={searchFormData.startDate}
+          value={formData.startDate}
           onChange={(date) => {
-            setSearchFormData({
-              ...searchFormData,
+            onChange?.({
+              ...formData,
               startDate: date
             })
           }}
         />
         <DatePicker
           views={['year', 'month', 'day']}
-          format="YYYY/MM/DD HH:mm:ss"
+          format="YYYY/MM/DD"
           slotProps={{
             field: {
               clearable: true
@@ -58,10 +71,10 @@ const SearchArea: FC<PropsWithChildren<ISearchAreaProps>> = () => {
               label: '结束时间'
             }
           }}
-          value={searchFormData.endDate}
+          value={formData.endDate}
           onChange={(date) => {
-            setSearchFormData({
-              ...searchFormData,
+            onChange?.({
+              ...formData,
               endDate: date
             })
           }}
@@ -74,18 +87,20 @@ const SearchArea: FC<PropsWithChildren<ISearchAreaProps>> = () => {
         sx={{ minWidth: 120 }}
         value={'10'}
         SelectProps={{
-          value: searchFormData.vehicleId,
+          value: formData.carrierID,
           onChange: (e) => {
-            setSearchFormData({
-              ...searchFormData,
-              vehicleId: e.target.value
+            onChange?.({
+              ...formData,
+              carrierID: e.target.value
             })
           }
         }}
       >
-        <MenuItem value={'全部'}>全部</MenuItem>
-        <MenuItem value={10}>10</MenuItem>
-        <MenuItem value={11}>11</MenuItem>
+        {carrierOptions.map((option) => (
+          <MenuItem key={option.value} value={option.value}>
+            {option.label}
+          </MenuItem>
+        ))}
       </TextField>
       <Button
         variant="outlined"
@@ -93,7 +108,7 @@ const SearchArea: FC<PropsWithChildren<ISearchAreaProps>> = () => {
           marginLeft: 'auto'
         }}
         size="small"
-        onClick={handleSearchClick}
+        onClick={onSearch}
       >
         搜索
       </Button>

@@ -1,9 +1,15 @@
+import { useUpdateEffect } from 'ahooks'
 import { useEcharts } from 'hooks'
 import type { FC, PropsWithChildren } from 'react'
 import React, { memo, useRef } from 'react'
 import { Panel } from 'ui'
 
-interface IElapsedTimeRatioProps {}
+interface IElapsedTimeRatioProps {
+  workTime?: number
+  chargeTime?: number
+  trafficTime?: number
+  freeTime?: number
+}
 
 const option: echarts.EChartsOption = {
   backgroundColor: 'transparent',
@@ -70,10 +76,39 @@ const option: echarts.EChartsOption = {
 }
 
 // 车辆运行时间占比
-const ElapsedTimeRatio: FC<PropsWithChildren<IElapsedTimeRatioProps>> = () => {
+const ElapsedTimeRatio: FC<PropsWithChildren<IElapsedTimeRatioProps>> = (props) => {
+  const { freeTime = 0, workTime = 0, trafficTime = 0, chargeTime = 0 } = props
   const el = useRef<HTMLDivElement | null>(null)
   // 传递元素给useEcharts
-  useEcharts(el, { echartsOption: option, theme: 'dark' })
+  const { updateOption } = useEcharts(el, { echartsOption: option, theme: 'dark' })
+
+  useUpdateEffect(() => {
+    const total = workTime + chargeTime + trafficTime + freeTime
+    updateOption({
+      series: [
+        {
+          data: [
+            {
+              name: '运行',
+              value: ((workTime / total) * 100).toFixed(4)
+            },
+            {
+              name: '充电',
+              value: ((chargeTime / total) * 100).toFixed(4)
+            },
+            {
+              name: '堵车',
+              value: ((trafficTime / total) * 100).toFixed(4)
+            },
+            {
+              name: '待命',
+              value: ((freeTime / total) * 100).toFixed(4)
+            }
+          ]
+        }
+      ]
+    })
+  }, [freeTime, workTime, trafficTime, chargeTime])
   return (
     <Panel
       title="车辆运行时间占比"

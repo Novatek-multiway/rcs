@@ -11,6 +11,9 @@ export interface UseEchartsOption {
   width?: number | 'auto'
   height?: number | 'auto'
   echartsOption?: EChartsOption
+  updateOptionConfig?: {
+    notMerge?: boolean
+  }
 }
 
 const defaultResizeOpt = {
@@ -28,7 +31,7 @@ export default function useEcharts(el: MutableRefObject<HTMLElement | null>, opt
   const updateOption = useCallback(
     (option: EChartsOption) => {
       hideLoading()
-      instance?.setOption(option)
+      instance?.setOption(option, opt.updateOptionConfig?.notMerge)
     },
     [instance]
   )

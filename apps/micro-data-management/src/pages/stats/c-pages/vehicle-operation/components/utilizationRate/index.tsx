@@ -1,16 +1,13 @@
+import { useUpdateEffect } from 'ahooks'
 import { useEcharts } from 'hooks'
 import type { FC, PropsWithChildren } from 'react'
-import React, { memo, useEffect, useRef } from 'react'
+import React, { memo, useRef } from 'react'
 import { Panel } from 'ui'
 
-interface IUtilizationRateProps {}
-
-const mockXData = ['11-01', '11-02', '11-03', '11-04', '11-05', '11-06', '11-07']
-const mockYData = [
-  { id: 10, data: [80, 22, 52, 12, 77, 33, 75] },
-  { id: 11, data: [13, 71, 55, 51, 27, 81, 25] },
-  { id: 12, data: [41, 23, 85, 43, 23, 81, 95] }
-]
+interface IUtilizationRateProps {
+  labels?: string[]
+  values?: { title: string; list: number[] }[]
+}
 
 const option: echarts.EChartsOption = {
   backgroundColor: 'transparent',
@@ -72,14 +69,19 @@ const option: echarts.EChartsOption = {
 }
 
 // 稼动率统计
-const UtilizationRate: FC<PropsWithChildren<IUtilizationRateProps>> = () => {
+const UtilizationRate: FC<PropsWithChildren<IUtilizationRateProps>> = (props) => {
+  const { labels = [], values = [] } = props
   const el = useRef<HTMLDivElement | null>(null)
   // 传递元素给useEcharts
-  const { updateOption } = useEcharts(el, { echartsOption: option, theme: 'dark' })
+  const { updateOption } = useEcharts(el, {
+    echartsOption: option,
+    theme: 'dark',
+    updateOptionConfig: { notMerge: true }
+  })
 
-  useEffect(() => {
-    const series: echarts.EChartsOption['series'] = mockYData.map((item) => ({
-      name: item.id,
+  useUpdateEffect(() => {
+    const series: echarts.EChartsOption['series'] = values.map((item) => ({
+      name: item.title,
       type: 'line',
       smooth: true,
       lineStyle: {
@@ -94,7 +96,7 @@ const UtilizationRate: FC<PropsWithChildren<IUtilizationRateProps>> = () => {
       emphasis: {
         focus: 'series'
       },
-      data: item.data,
+      data: item.list,
       label: {
         show: true,
         color: '#fff'
@@ -103,13 +105,11 @@ const UtilizationRate: FC<PropsWithChildren<IUtilizationRateProps>> = () => {
         valueFormatter: (v) => v + '%'
       }
     }))
-    updateOption({
-      xAxis: {
-        data: mockXData
-      },
-      series
-    })
-  }, [updateOption])
+    const newOption: any = { ...option }
+    newOption.xAxis[0].data = labels
+    newOption.series = series
+    updateOption(newOption)
+  }, [updateOption, labels, values])
   return (
     <Panel
       title="稼动率统计"
