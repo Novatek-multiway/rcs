@@ -50,7 +50,7 @@ export type TTwoDMapState = {
     rect: TResultWrapper<TRectResult>[]
     polygon: TResultWrapper<TPolygonResult>[]
   }
-  newDrawingResult: TResultWrapper<TRectResult | TPolygonResult> | null
+  newDrawingResult: TResultWrapper<TRectResult> | TResultWrapper<TPolygonResult> | null
   drawingSelectedId: string // 当前绘制的区块选中id
   insidePoints: { id: number; x: number; y: number }[] // 在可视区域的点位
   isLoading: boolean

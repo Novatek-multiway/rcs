@@ -1,4 +1,4 @@
-import { Close, Delete, Draw, OpenWith, PentagonOutlined, RectangleOutlined } from '@mui/icons-material'
+import { Close, Delete, Draw, Edit, OpenWith, PentagonOutlined, RectangleOutlined } from '@mui/icons-material'
 import { useSpring } from '@react-spring/web'
 import { useUpdateEffect } from 'ahooks'
 import { createTrafficBlock, delTrafficBlock, getTrafficBlock } from 'apis'
@@ -6,7 +6,6 @@ import _ from 'lodash'
 import type { FC, PropsWithChildren } from 'react'
 import React, { memo, useCallback, useEffect, useMemo, useState } from 'react'
 import {
-  Box,
   Button,
   Card,
   CardContent,
@@ -24,7 +23,7 @@ import {
 import { EStageMode } from '../../constants'
 import { EDrawingType, TPolygonResult, TRectResult } from '../../hooks/useKonvaDrawing'
 import { useTwoDMapStore } from '../../store'
-import AddBlockDialog, { IAddBlockDialogProps } from './AddBlockDialog'
+import BlockDialog, { IBlockDialogProps } from './BlockDialog'
 import { DrawingBlockCardWrapper } from './style'
 
 interface IDrawingBlockCardProps {}
@@ -81,6 +80,7 @@ const DrawingBlockCard: FC<PropsWithChildren<IDrawingBlockCardProps>> = () => {
   }, [setIsDrawingBlockCardOpen, setDrawingResultListMap, setStageMode])
 
   /* -------------------------------- 获取初始化区块信息 ------------------------------- */
+  const [trafficBlocksData, setTrafficBlocksData] = useState<TrafficAPI.Block[]>([])
   const fetchTrafficBlock = useCallback(async () => {
     const trafficBlockRes = await getTrafficBlock()
     const trafficBlocks = trafficBlockRes.data as TrafficAPI.Block[]
@@ -91,6 +91,7 @@ const DrawingBlockCard: FC<PropsWithChildren<IDrawingBlockCardProps>> = () => {
       data: block.border?.flatMap((border) => [border.x * stageMapRatio, border.y * stageMapRatio]) || []
     }))
     setDrawingResultListMap(newDrawingResultListMap)
+    setTrafficBlocksData(trafficBlocks)
   }, [setDrawingResultListMap, drawingResultListMap, stageMapRatio])
   useEffect(() => {
     fetchTrafficBlock()
@@ -101,6 +102,82 @@ const DrawingBlockCard: FC<PropsWithChildren<IDrawingBlockCardProps>> = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
   /* -------------------------------- 获取初始化区块信息 ------------------------------- */
+
+  /* ---------------------------------- 新增、编辑区块 ---------------------------------- */
+  const [addBlockDialogOpen, setBlockDialogOpen] = useState(false)
+  const [mode, setMode] = useState<'add' | 'edit'>('add')
+  const [blockInitialValue, setBlockInitialValue] = useState<Partial<IBlockDialogProps['initialValue']>>({})
+  const [blockPoints, setBlockPoints] = useState<{ x: number; y: number }[]>([])
+  // 当前绘制的坐标点
+
+  const getBlockPoints = useCallback(
+    (drawResult: (typeof drawResultList)[0]) => {
+      if (drawResult?.type === EDrawingType.RECT) {
+        const rectData = drawResult.data as TRectResult
+        const { x, y, width, height } = {
+          x: rectData.x / stageMapRatio,
+          y: rectData.y / stageMapRatio,
+          width: rectData.width / stageMapRatio,
+          height: rectData.height / stageMapRatio
+        }
+        return [
+          { x, y },
+          {
+            x: x + width,
+            y
+          },
+          { x: x + width, y: y + height },
+          { x, y: y + height }
+        ]
+      } else if (drawResult?.type === EDrawingType.POLYGON) {
+        return _.chunk(drawResult.data as TPolygonResult, 2).map((p) => ({
+          x: p[0] / stageMapRatio,
+          y: p[1] / stageMapRatio
+        }))
+      }
+      return []
+    },
+    [stageMapRatio]
+  )
+  useUpdateEffect(() => {
+    // 绘制图形后打开添加弹窗
+    if (newDrawingResult) {
+      setMode('add')
+      setBlockInitialValue({})
+      setBlockPoints(getBlockPoints(newDrawingResult))
+      setBlockDialogOpen(true)
+    }
+  }, [newDrawingResult])
+  const handleSubmit = useCallback<NonNullable<IBlockDialogProps['onSubmit']>>(
+    async (values) => {
+      const data = {
+        ...values,
+        points: blockPoints
+      }
+
+      if (mode === 'add') {
+        await createTrafficBlock(data)
+      }
+      {
+        // TODO 调用更新区块接口
+        console.log('🚀 ~ file: index.tsx ~ line 154 ~ data', data)
+      }
+      fetchTrafficBlock()
+    },
+    [blockPoints, fetchTrafficBlock, mode]
+  )
+  const handleBlockDialogClose = useCallback<NonNullable<IBlockDialogProps['onClose']>>(() => {
+    setBlockDialogOpen(false)
+    // 点击取消需要清空已经绘制的图形
+    if (!newDrawingResult) return
+    const newDrawingResultListMap = { ...drawingResultListMap }
+    const drawingRectResultList = newDrawingResultListMap[newDrawingResult!.type]
+    const index = drawingRectResultList.findIndex((d) => d.id === newDrawingResult!.id)
+    drawingRectResultList.splice(index, 1)
+    setDrawingResultListMap(newDrawingResultListMap)
+    setNewDrawingResult(null)
+  }, [newDrawingResult, drawingResultListMap, setDrawingResultListMap, setNewDrawingResult])
+  /* ---------------------------------- 新增区块 ---------------------------------- */
 
   /* -------------------------------- 舞台操作模式选择 -------------------------------- */
   const handleStageModeChange = useCallback(
@@ -165,12 +242,26 @@ const DrawingBlockCard: FC<PropsWithChildren<IDrawingBlockCardProps>> = () => {
     },
     [fetchTrafficBlock]
   )
+  const handleEditClick = useCallback(
+    (drawResult: (typeof drawResultList)[0]) => {
+      setMode('edit')
+      const findTrafficBlock = trafficBlocksData.find((d) => d.id + '' === drawResult.id)
+      setBlockInitialValue({
+        type: findTrafficBlock?.type,
+        floor: findTrafficBlock?.floor,
+        maxNumber: findTrafficBlock?.maxNumber
+      })
+      setBlockPoints(getBlockPoints(drawResult))
+      setBlockDialogOpen(true)
+    },
+    [trafficBlocksData, getBlockPoints]
+  )
   const renderDrawResult = () => (
     <>
       <Typography sx={{ fontSize: 14 }} color="text.secondary">
         区块信息
       </Typography>
-      <Box sx={{ bgcolor: 'background.paper', position: 'relative' }}>
+      <Card sx={{ bgcolor: 'transparent', position: 'relative' }}>
         <List
           sx={{
             position: 'static',
@@ -183,10 +274,10 @@ const DrawingBlockCard: FC<PropsWithChildren<IDrawingBlockCardProps>> = () => {
             sx={{
               position: 'absolute',
               top: 0,
-              bgcolor: 'background.paper',
+              // bgcolor: 'background.paper',
               zIndex: 1
             }}
-            secondaryAction={<span>操作</span>}
+            secondaryAction={<div style={{ width: '80px', textAlign: 'center' }}>操作</div>}
           >
             <ListItemIcon>
               <span>类型</span>
@@ -197,9 +288,14 @@ const DrawingBlockCard: FC<PropsWithChildren<IDrawingBlockCardProps>> = () => {
             <ListItem
               key={drawResult.id}
               secondaryAction={
-                <IconButton edge="end" aria-label="delete" onClick={() => handleDeleteClick(drawResult)}>
-                  <Delete />
-                </IconButton>
+                <>
+                  <IconButton aria-label="delete" onClick={() => handleDeleteClick(drawResult)}>
+                    <Delete />
+                  </IconButton>
+                  <IconButton style={{ display: 'none' }} aria-label="edit" onClick={() => handleEditClick(drawResult)}>
+                    <Edit />
+                  </IconButton>
+                </>
               }
               sx={{
                 bgcolor: drawingSelectedId === drawResult.id ? 'gray' : 'transparent'
@@ -212,67 +308,10 @@ const DrawingBlockCard: FC<PropsWithChildren<IDrawingBlockCardProps>> = () => {
             </ListItem>
           ))}
         </List>
-      </Box>
+      </Card>
     </>
   )
   /* ---------------------------------- 绘制结果 ---------------------------------- */
-
-  /* ---------------------------------- 新增区块 ---------------------------------- */
-  const [addBlockDialogOpen, setAddBlockDialogOpen] = useState(false)
-  // 当前绘制的坐标点
-  const drawingResultSelectedPoints = useMemo(() => {
-    if (newDrawingResult?.type === EDrawingType.RECT) {
-      const rectData = newDrawingResult.data as TRectResult
-      const { x, y, width, height } = {
-        x: rectData.x / stageMapRatio,
-        y: rectData.y / stageMapRatio,
-        width: rectData.width / stageMapRatio,
-        height: rectData.height / stageMapRatio
-      }
-      return [
-        { x, y },
-        {
-          x: x + width,
-          y
-        },
-        { x: x + width, y: y + height },
-        { x, y: y + height }
-      ]
-    } else if (newDrawingResult?.type === EDrawingType.POLYGON) {
-      return _.chunk(newDrawingResult.data as TPolygonResult, 2).map((p) => ({
-        x: p[0] / stageMapRatio,
-        y: p[1] / stageMapRatio
-      }))
-    }
-    return []
-  }, [newDrawingResult, stageMapRatio])
-  useUpdateEffect(() => {
-    newDrawingResult && setAddBlockDialogOpen(true)
-  }, [newDrawingResult])
-  const handleAddSubmit = useCallback<NonNullable<IAddBlockDialogProps['onSubmit']>>(
-    async (values) => {
-      const data = {
-        ...values,
-        points: drawingResultSelectedPoints
-      }
-
-      await createTrafficBlock(data)
-      fetchTrafficBlock()
-    },
-    [drawingResultSelectedPoints, fetchTrafficBlock]
-  )
-  const handleAddBlockDialogClose = useCallback<NonNullable<IAddBlockDialogProps['onClose']>>(() => {
-    setAddBlockDialogOpen(false)
-    // 点击取消需要清空已经绘制的图形
-    if (!newDrawingResult) return
-    const newDrawingResultListMap = { ...drawingResultListMap }
-    const drawingRectResultList = newDrawingResultListMap[newDrawingResult!.type]
-    const index = drawingRectResultList.findIndex((d) => d.id === newDrawingResult!.id)
-    drawingRectResultList.splice(index, 1)
-    setDrawingResultListMap(newDrawingResultListMap)
-    setNewDrawingResult(null)
-  }, [newDrawingResult, drawingResultListMap, setDrawingResultListMap, setNewDrawingResult])
-  /* ---------------------------------- 新增区块 ---------------------------------- */
 
   return (
     <>
@@ -288,11 +327,13 @@ const DrawingBlockCard: FC<PropsWithChildren<IDrawingBlockCardProps>> = () => {
           </CardContent>
         </Card>
       </DrawingBlockCardWrapper>
-      <AddBlockDialog
+      <BlockDialog
+        title={mode === 'add' ? '新增区块信息' : '编辑区块信息'}
+        initialValue={blockInitialValue}
         open={addBlockDialogOpen}
-        points={drawingResultSelectedPoints}
-        onClose={handleAddBlockDialogClose}
-        onSubmit={handleAddSubmit}
+        points={blockPoints}
+        onClose={handleBlockDialogClose}
+        onSubmit={handleSubmit}
       />
     </>
   )

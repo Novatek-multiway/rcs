@@ -46,7 +46,7 @@ const Toolbar: FC<PropsWithChildren<IToolbarProps>> = (props) => {
   const actions = useMemo(
     () => [
       { icon: <SettingsIcon />, name: '设置', onClick: handleSettingsClick },
-      { icon: <Search />, name: '搜索' },
+      { icon: <Search />, name: '搜索' }, // TODO 搜索功能实现
       { icon: <Remove />, name: '缩小', onClick: () => zoom?.(currentScale - 1) },
       { icon: <Add />, name: '放大', onClick: () => zoom?.(currentScale + 1) }
     ],
