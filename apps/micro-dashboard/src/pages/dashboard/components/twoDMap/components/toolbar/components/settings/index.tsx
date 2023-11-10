@@ -141,6 +141,7 @@ const Settings: FC<PropsWithChildren<ISettingsProps>> = (props) => {
               ))}
           </div>
           <div className="lines">
+            {/* TODO 颜色更新本地缓存 */}
             <LineColorPicker
               label="地图路线"
               initialColor={settings.lineColor}

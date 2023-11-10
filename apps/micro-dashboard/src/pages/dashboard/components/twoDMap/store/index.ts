@@ -54,6 +54,8 @@ export type TTwoDMapState = {
   drawingSelectedId: string // 当前绘制的区块选中id
   insidePoints: { id: number; x: number; y: number }[] // 在可视区域的点位
   isLoading: boolean
+  lastCenter: { x: number; y: number } | null // 上一次搜索居中的坐标
+  searchAreaVisible: boolean // 是否显示点、线搜索区域
 }
 
 type TTwoDMaoActions = {
@@ -77,6 +79,8 @@ type TTwoDMaoActions = {
   setDrawingSelectedId: (drawingSelectedId: TTwoDMapState['drawingSelectedId']) => void
   setInsidePoints: (insidePoints: TTwoDMapState['insidePoints']) => void
   setIsLoading: (isLoading: TTwoDMapState['isLoading']) => void
+  setLastCenter: (lastCenter: TTwoDMapState['lastCenter']) => void
+  setSearchAreaVisible: (searchAreaVisible: TTwoDMapState['searchAreaVisible']) => void
 }
 
 const getStageMapRatio = (stageSize: TTwoDMapState['stageSize'], mapSize: TTwoDMapState['mapSize']) => {
@@ -131,7 +135,8 @@ export const useTwoDMapStore = createWithEqualityFn<TTwoDMapState & TTwoDMaoActi
     drawingSelectedId: '',
     insidePoints: [],
     isLoading: false,
-
+    lastCenter: null,
+    searchAreaVisible: false,
     setStageSize: (stageSize) =>
       set((state) => ({ stageSize, stageMapRatio: getStageMapRatio(stageSize, state.mapSize) })),
     setMapSize: (mapSize) => set((state) => ({ mapSize, stageMapRatio: getStageMapRatio(state.stageSize, mapSize) })),
@@ -152,7 +157,9 @@ export const useTwoDMapStore = createWithEqualityFn<TTwoDMapState & TTwoDMaoActi
     setNewDrawingResult: (newDrawingResult) => set(() => ({ newDrawingResult })),
     setDrawingSelectedId: (drawingSelectedId) => set(() => ({ drawingSelectedId })),
     setInsidePoints: (insidePoints) => set(() => ({ insidePoints })),
-    setIsLoading: (isLoading) => set(() => ({ isLoading }))
+    setIsLoading: (isLoading) => set(() => ({ isLoading })),
+    setLastCenter: (lastCenter) => set(() => ({ lastCenter })),
+    setSearchAreaVisible: (searchAreaVisible) => set(() => ({ searchAreaVisible }))
   }),
   shallow
 )
