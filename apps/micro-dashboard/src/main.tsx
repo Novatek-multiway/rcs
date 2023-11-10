@@ -23,7 +23,8 @@ export default function start(props: any = {}) {
     key: appName,
     container: isRenderByQiankun ? container.querySelector('qiankun-head') : rootContainer
   })
-  root = ReactDOM.createRoot(rootContainer)
+
+  if (!root) root = ReactDOM.createRoot(rootContainer)
   root.render(
     <CacheProvider value={myCache}>
       <App />
@@ -48,11 +49,13 @@ renderWithQiankun({
   unmount(props: any) {
     console.log(`[${appName}] unmount`, props)
     root?.unmount?.()
+    root = null
   }
 })
 
 // @ts-ignore
 if (!window.__POWERED_BY_QIANKUN__) {
+  console.log('Not __POWERED_BY_QIANKUN__ start')
   start()
 }
 
