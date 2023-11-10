@@ -94,6 +94,10 @@ const DrawingBlockCard: FC<PropsWithChildren<IDrawingBlockCardProps>> = () => {
   }, [setDrawingResultListMap, drawingResultListMap, stageMapRatio])
   useEffect(() => {
     fetchTrafficBlock()
+
+    return () => {
+      handleClose()
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
   /* -------------------------------- 获取初始化区块信息 ------------------------------- */
