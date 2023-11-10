@@ -14,6 +14,7 @@ import { EWebsocketMessagePath, useWebsocketStore } from './store/websocket'
 import { DashboardWrapper } from './style'
 
 const WS_URL = 'ws://192.168.1.240:10019'
+const DEFAULT_TOOLBAR_RIGHT = 380
 
 const Dashboard = () => {
   const logoTitleClickTime = useGlobalStore((state) => state.globalState.logoTitleClickTime)
@@ -68,13 +69,20 @@ const Dashboard = () => {
     asideOpen ? aside?.showAside() : aside?.hideAside()
   }, [asideOpen])
 
-  const [toolbarRight, setToolbarRight] = useState(380)
+  const [toolbarRight, setToolbarRight] = useState(DEFAULT_TOOLBAR_RIGHT)
   const handleSizeChange = useCallback<NonNullable<IAsideProps['onSizeChange']>>(
     (size) => {
       setToolbarRight(asideOpen ? (size?.width || 360) + 20 : 20)
     },
     [asideOpen]
   )
+
+  useEffect(() => {
+    return () => {
+      setAsideOpen(true)
+      setToolbarRight(DEFAULT_TOOLBAR_RIGHT)
+    }
+  }, [setAsideOpen])
   return (
     <DashboardWrapper>
       <div className="content">

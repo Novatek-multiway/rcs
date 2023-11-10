@@ -2,7 +2,7 @@ import { Close } from '@mui/icons-material'
 import { useSpring } from '@react-spring/web'
 import { useUpdateEffect } from 'ahooks'
 import type { FC, PropsWithChildren } from 'react'
-import React, { memo, useCallback, useMemo, useState } from 'react'
+import React, { memo, useCallback, useEffect, useMemo, useState } from 'react'
 import { theme } from 'theme'
 import { Button, Panel, Switch } from 'ui'
 
@@ -105,6 +105,12 @@ const Settings: FC<PropsWithChildren<ISettingsProps>> = (props) => {
     },
     [setSettings, settingSwitches, setSettingSwitches, setCurrentChangedSwitch]
   )
+
+  useEffect(() => {
+    return () => {
+      handleClose()
+    }
+  }, [handleClose])
   return (
     <SettingsWrapper style={settingsSpring}>
       <Panel title="">
