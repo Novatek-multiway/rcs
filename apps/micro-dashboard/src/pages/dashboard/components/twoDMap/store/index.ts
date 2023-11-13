@@ -1,3 +1,4 @@
+import { useStorage } from 'hooks'
 import { shallow } from 'zustand/shallow'
 import { createWithEqualityFn } from 'zustand/traditional'
 
@@ -93,8 +94,9 @@ const getStageMapRatio = (stageSize: TTwoDMapState['stageSize'], mapSize: TTwoDM
   }
 }
 
-export const useTwoDMapStore = createWithEqualityFn<TTwoDMapState & TTwoDMaoActions>(
-  (set) => ({
+export const useTwoDMapStore = createWithEqualityFn<TTwoDMapState & TTwoDMaoActions>((set) => {
+  const { getItem } = useStorage()
+  return {
     stageSize: { width: 1920, height: 1080 },
     mapSize: { width: 1920, height: 1080 },
     stageMapRatio: 1,
@@ -119,8 +121,8 @@ export const useTwoDMapStore = createWithEqualityFn<TTwoDMapState & TTwoDMaoActi
       [EMapSettingsKeys.IS_VEHICLE_PLANNING_SINGLE_COLOR]: false,
       [EMapSettingsKeys.IS_DEV_MODE]: false,
       [EMapSettingsKeys.IS_STATION_VISIBLE]: true,
-      [EMapSettingsKeys.LINE_COLOR]: '#393c44',
-      [EMapSettingsKeys.PLANNING_LINE_COLOR]: '#00abc7'
+      [EMapSettingsKeys.LINE_COLOR]: getItem('LINE_COLOR') ?? '#393c44',
+      [EMapSettingsKeys.PLANNING_LINE_COLOR]: getItem('PLANNING_LINE_COLOR') ?? '#00abc7'
     },
     settingSwitches: [],
     currentChangedSwitch: null,
@@ -160,6 +162,5 @@ export const useTwoDMapStore = createWithEqualityFn<TTwoDMapState & TTwoDMaoActi
     setIsLoading: (isLoading) => set(() => ({ isLoading })),
     setLastCenter: (lastCenter) => set(() => ({ lastCenter })),
     setSearchAreaVisible: (searchAreaVisible) => set(() => ({ searchAreaVisible }))
-  }),
-  shallow
-)
+  }
+}, shallow)
