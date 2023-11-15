@@ -11,12 +11,8 @@ export interface ITaskFormData {
   id: number
 }
 
-export interface ITaskItem {
-  taskPoint: number
-  action: number
+export interface ITaskItem extends Pick<ITaskFormData, 'taskPoint' | 'id' | 'action' | 'isAutoCompleted'> {
   params: string
-  id: number
-  isAutoCompleted: boolean
   handler?: any
 }
 

@@ -3,7 +3,7 @@ import { useDictStore } from 'store'
 import { Box, Chip, Divider, Grid, MRT_ColumnDef, Switch, Tooltip } from 'ui'
 
 import DelButton, { IDelButtonProps } from '@/component/delButton'
-export const TaskColumn: MRT_ColumnDef<any>[] = [
+export const TaskColumn: (props: { refreshTable: () => void }) => MRT_ColumnDef<any>[] = ({ refreshTable }) => [
   {
     accessorKey: 'id',
     id: 'id',
@@ -109,6 +109,7 @@ export const TaskColumn: MRT_ColumnDef<any>[] = [
     Cell: ({ row }) => {
       const handleCancel: IDelButtonProps['delFn'] = async () => {
         await cancelTask(row.original.orderCode)
+        refreshTable()
       }
       return (
         <div
@@ -131,7 +132,7 @@ export const TaskColumn: MRT_ColumnDef<any>[] = [
   }
 ]
 
-export const ChildTaskColumn: MRT_ColumnDef<any>[] = [
+export const ChildTaskColumn: (props: { refreshTable: () => void }) => MRT_ColumnDef<any>[] = ({ refreshTable }) => [
   {
     accessorKey: 'id',
     header: '任务ID'
@@ -142,7 +143,12 @@ export const ChildTaskColumn: MRT_ColumnDef<any>[] = [
   },
   {
     accessorKey: 'taskCarrier',
-    header: '分配小车'
+    header: '分配小车',
+    Cell: ({ row }) => {
+      const { original } = row
+      const { taskCarrier } = original
+      return <Chip label={taskCarrier} color="primary" size="small"></Chip>
+    }
   },
   {
     accessorKey: 'priority',
@@ -180,7 +186,13 @@ export const ChildTaskColumn: MRT_ColumnDef<any>[] = [
   },
   {
     accessorKey: 'state',
-    header: '状态'
+    header: '状态',
+    Cell: ({ row }) => {
+      const taskStateOptions = useDictStore((state) => state.dicts.TaskState)
+      const currentState = row.original.state
+      const label = taskStateOptions.find((item: any) => item.value === currentState)?.label
+      return <span>{label}</span>
+    }
   },
   {
     accessorKey: 'actions',
@@ -189,6 +201,7 @@ export const ChildTaskColumn: MRT_ColumnDef<any>[] = [
     Cell: ({ row }) => {
       const handleComplete = async () => {
         await completeTask(row.original.taskCode)
+        refreshTable()
       }
       return (
         <div
@@ -208,7 +221,7 @@ export const ChildTaskColumn: MRT_ColumnDef<any>[] = [
   }
 ]
 
-export const TaskPointsColumn = [
+export const TaskPointsColumn: MRT_ColumnDef<any>[] = [
   {
     accessorKey: 'vertexID',
     header: '路径点'
@@ -219,18 +232,28 @@ export const TaskPointsColumn = [
   },
   {
     accessorKey: 'action',
-    header: '动作类型'
+    header: '动作类型',
+    Cell: ({ row }) => {
+      const orderActionOptions = useDictStore((state) => state.dicts.OrderActionType)
+      const currentAction = row.original.action
+      const label = orderActionOptions.find((item: any) => item.value === currentAction)?.label
+      return <span>{label}</span>
+    }
   },
   {
     accessorKey: 'state',
-    header: '状态'
+    header: '状态',
+    Cell: ({ row }) => {
+      const taskStateOptions = useDictStore((state) => state.dicts.TaskState)
+      const currentState = row.original.state
+      const label = taskStateOptions.find((item: any) => item.value === currentState)?.label
+      return <span>{label}</span>
+    }
   },
   {
     accessorKey: 'param',
-    header: '参考信息',
-    Set: () => {
-      return <div>123</div>
-    }
+    header: '参数信息',
+    Cell: ({ row }) => row.original.param.join('-')
   },
   {
     accessorKey: 'actionDelay',

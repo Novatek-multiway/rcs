@@ -1,8 +1,7 @@
 import AddIcon from '@mui/icons-material/Add'
-import { useAsyncEffect, useRequest } from 'ahooks'
-import { createTask, postGTaskList } from 'apis'
-import { useCallback, useState } from 'react'
-import * as React from 'react'
+import { useRequest, useUpdateEffect } from 'ahooks'
+import { createTask, getTaskByGuid, postGTaskList } from 'apis'
+import { useCallback, useEffect, useState } from 'react'
 import { Box, Button, Grid, MuiTable } from 'ui'
 
 import Refresh from '@/component/refreshIcon'
@@ -20,37 +19,57 @@ const DataTable = () => {
     pageSize: 10
   })
   const [rowCount, setRowCount] = useState(0)
-  const [tableData, setTableData] = useState([])
-  const [rowData, setRowData] = useState({}) as any
-  const [rowTask, setRowTask] = useState([]) as any
+  const [taskGroupsData, setTaskGroupsData] = useState([])
+  const [selectedTaskGroupData, setSelectedTaskGroupData] = useState({}) as any
+  const [selectedTaskData, setSelectedTaskData] = useState([]) as any
+
   const [open, setOpen] = useState(false)
 
-  useAsyncEffect(async () => {
+  const fetchTaskGroups = useCallback(async () => {
     const res = await runAsync({ ...page, pageIndex: page.pageIndex + 1, sortBy: 'CreateTime', order: 'desc' })
     if (res) {
-      setTableData(res.data.data)
+      setTaskGroupsData(res.data.data)
       setRowCount(res.data.total)
     }
-  }, [page])
+  }, [page, runAsync])
+
+  useEffect(() => {
+    fetchTaskGroups()
+  }, [fetchTaskGroups])
+
+  const [tasks, setTasks] = useState([])
+  const fetchTasks = useCallback(async (taskGroupId: string) => {
+    const res = await getTaskByGuid(taskGroupId)
+    const tasks = res.data || []
+    setTasks(tasks)
+  }, [])
+
+  useUpdateEffect(() => {
+    fetchTasks(selectedTaskGroupData.orderCode)
+  }, [fetchTasks, selectedTaskGroupData])
 
   const actionPoints = useCallback(() => {
-    if (!rowData.tasks) {
+    if (!selectedTaskGroupData.tasks) {
       return []
     }
-    if (rowTask.actionPoint?.length) {
-      return rowTask.actionPoint
+    if (selectedTaskData.actionPoint?.length) {
+      return selectedTaskData.actionPoint
     }
 
-    if (rowData?.tasks.length) {
-      return rowData.tasks[0].actionPoint
+    if (selectedTaskGroupData?.tasks.length) {
+      return selectedTaskGroupData.tasks[0].actionPoint
     }
     return []
-  }, [rowData, rowTask])
+  }, [selectedTaskGroupData, selectedTaskData])
 
-  const handleSave = useCallback(async (data: any) => {
-    await createTask(data)
-    setOpen(false)
-  }, [])
+  const handleSave = useCallback(
+    async (data: any) => {
+      await createTask(data)
+      fetchTaskGroups()
+      setOpen(false)
+    },
+    [fetchTaskGroups]
+  )
 
   return (
     <Grid container rowSpacing={2} columnSpacing={{ xs: 1, sm: 2, md: 2 }} sx={{ height: '100%' }}>
@@ -61,13 +80,18 @@ const DataTable = () => {
           overflow: 'auto'
         }}
       >
-        {/* {tableData.length && ( */}
+        {/* {taskGroupsData.length && ( */}
         <MuiTable
-          columns={TaskColumn}
-          data={tableData}
+          columns={TaskColumn({
+            refreshTable: () => {
+              fetchTaskGroups()
+              fetchTasks(selectedTaskGroupData.orderCode)
+            }
+          })}
+          data={taskGroupsData}
           pageChange={(pages) => {
             setPage(pages)
-            setRowData({})
+            setSelectedTaskGroupData({})
           }}
           rowCount={rowCount}
           // enableColumnResizing
@@ -83,11 +107,11 @@ const DataTable = () => {
             return {
               sx: {
                 cursor: 'pointer',
-                backgroundColor: row.getValue('id') === rowData.id ? '#1e4141' : '',
+                backgroundColor: row.getValue('id') === selectedTaskGroupData.id ? '#1e4141' : '',
                 opacity: row.original.isCancel ? 0.3 : 1
               },
               onClick: () => {
-                setRowData(row.original)
+                setSelectedTaskGroupData(row.original)
               }
             }
           }}
@@ -145,7 +169,7 @@ const DataTable = () => {
                       pageIndex: 0,
                       pageSize: 10
                     })
-                    setRowData({})
+                    setSelectedTaskGroupData({})
                   }}
                 >
                   <Refresh loading={loading}></Refresh>
@@ -163,10 +187,10 @@ const DataTable = () => {
       </Grid>
       <Grid xs={6} item container rowSpacing={2}>
         <Grid item xs={12}>
-          {/* {tableData.length && ( */}
+          {/* {taskGroupsData.length && ( */}
           <MuiTable
-            columns={ChildTaskColumn}
-            data={rowData?.tasks || []}
+            columns={ChildTaskColumn({ refreshTable: () => fetchTasks(selectedTaskGroupData.orderCode) })}
+            data={tasks || []}
             // enableColumnResizing
             defaultColumn={{
               minSize: 100,
@@ -183,7 +207,7 @@ const DataTable = () => {
                   cursor: 'pointer'
                 },
                 onClick: () => {
-                  setRowTask(row.original)
+                  setSelectedTaskData(row.original)
                 }
               }
             }}
@@ -220,7 +244,7 @@ const DataTable = () => {
           {/* 新增区域 */}
         </Grid>
         <Grid item xs={12}>
-          {/* {tableData.length && ( */}
+          {/* {taskGroupsData.length && ( */}
           <MuiTable
             columns={TaskPointsColumn}
             data={actionPoints()}

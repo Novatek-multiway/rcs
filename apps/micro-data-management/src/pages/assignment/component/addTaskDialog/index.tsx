@@ -14,9 +14,10 @@ import {
 } from 'ui'
 import { generateUUID } from 'utils'
 
-import AddTaskForm, { IAddTaskFormProps } from './AddTaskForm'
+import ActionPointList, { IActionPointListProps } from './ActionPointList'
+import AddTaskForm, { IActionPointParamsProps } from './ActionPointParams'
 import { AddTaskDialogContentWrapper } from './style'
-import TaskList, { ITaskListProps } from './TaskList'
+import TaskParams from './TaskParams'
 import { ITaskFormData, ITaskItem } from './type'
 
 const AddTaskDialog: FC<{
@@ -24,7 +25,14 @@ const AddTaskDialog: FC<{
   onClose?: () => void
   onSave?: (data: any) => void
 }> = ({ open, onClose = () => {}, onSave }) => {
-  const [taskList, setTaskList] = useState<(ITaskItem & Pick<ITaskFormData, 'vehicleId' | 'priority' | 'action'>)[]>([])
+  const [taskParams, setTaskParams] = useState<Pick<ITaskFormData, 'vehicleId' | 'priority' | 'isAutoCompleted'>>({
+    vehicleId: null,
+    priority: 1,
+    isAutoCompleted: true
+  })
+  const [actionPointList, setActionPointList] = useState<
+    (ITaskItem & Pick<ITaskFormData, 'vehicleId' | 'priority' | 'action'>)[]
+  >([])
   const [loopCount, setLoopCount] = useState(0)
   const handleClose = useCallback<NonNullable<DialogProps['onClose']>>(
     (e, reason) => {
@@ -34,9 +42,10 @@ const AddTaskDialog: FC<{
     },
     [onClose]
   )
-  const handleSubmit = useCallback<NonNullable<IAddTaskFormProps['onSubmit']>>(
-    (formData) => {
-      const { taskPoint, param1, param2, param3, param4, id, isAutoCompleted, vehicleId, priority, action } = formData
+  const handleSubmit = useCallback<NonNullable<IActionPointParamsProps['onSubmit']>>(
+    (actionPointParams) => {
+      const { isAutoCompleted, vehicleId, priority } = taskParams
+      const { taskPoint, param1, param2, param3, param4, id, action } = actionPointParams
       const newTask = {
         taskPoint,
         action,
@@ -46,64 +55,64 @@ const AddTaskDialog: FC<{
         vehicleId,
         priority
       }
-      setTaskList([...taskList, newTask])
+      setActionPointList([...actionPointList, newTask])
     },
-    [taskList]
+    [actionPointList, taskParams]
   )
 
-  const handleMoveUp = useCallback<NonNullable<ITaskListProps['onMoveUp']>>(
+  const handleMoveUp = useCallback<NonNullable<IActionPointListProps['onMoveUp']>>(
     (index) => {
-      const newTaskList = [...taskList]
-      const movingTask = newTaskList[index]
-      newTaskList.splice(index, 1)
-      newTaskList.splice(index - 1, 0, movingTask)
+      const newActionPointList = [...actionPointList]
+      const movingTask = newActionPointList[index]
+      newActionPointList.splice(index, 1)
+      newActionPointList.splice(index - 1, 0, movingTask)
 
-      setTaskList(newTaskList)
+      setActionPointList(newActionPointList)
     },
-    [taskList]
+    [actionPointList]
   )
 
   const handleSave = useCallback(async () => {
-    console.log(taskList)
+    const { isAutoCompleted, vehicleId, priority } = taskParams
     const taskGroupID = generateUUID()
     const taskID = generateUUID()
-    const tasks = taskList.map((task) => ({
-      id: 0,
-      taskCode: taskID,
-      taskDirection: '',
-      groupCode: taskGroupID,
-      groupSeq: 1,
-      areaID: 1,
-      start: 0,
-      goal: task.taskPoint,
-      type: 0,
-      isAutoCompleted: task.isAutoCompleted,
-      taskCarrier: task.vehicleId,
-      taskChassis: 0,
-      taskCarGroup: 0,
-      priority: task.priority,
-      actionPoint: [
-        {
+    const tasks = [
+      {
+        id: 0,
+        taskCode: taskID,
+        taskDirection: '',
+        groupCode: taskGroupID,
+        groupSeq: 1,
+        areaID: 1,
+        start: 0,
+        goal: actionPointList.at(-1)?.taskPoint,
+        type: 0,
+        isAutoCompleted: isAutoCompleted,
+        taskCarrier: vehicleId,
+        taskChassis: 0,
+        taskCarGroup: 0,
+        priority: priority,
+        actionPoint: actionPointList.map(({ taskPoint, id, action, params }) => ({
           wcsCode: null,
-          vertexID: task.taskPoint,
+          vertexID: taskPoint,
           goodsID: '',
-          axisID: task.id,
-          action: task.action,
-          param: task.params.split('>').map(Number),
+          axisID: id,
+          action: action,
+          param: params.split('>').map(Number),
           headingAngle: -1,
           actionDelay: 0,
           relevant: '',
           state: 1,
           taskCarrier: 0,
           taskChassis: 0
-        }
-      ],
-      description: '',
-      createTime: dayjs().format(),
-      state: 1,
-      remark: '',
-      completeTime: null
-    }))
+        })),
+        description: '',
+        createTime: dayjs().format(),
+        state: 1,
+        remark: '',
+        completeTime: null
+      }
+    ]
     const createTaskData = {
       createTime: dayjs().format(),
       description: taskGroupID,
@@ -119,9 +128,8 @@ const AddTaskDialog: FC<{
       vehicleTypes: null,
       tasks
     }
-    console.log('🚀 ~ file: index.tsx ~ line 120 ~ handleSave ~ createTaskData', createTaskData)
     onSave?.(createTaskData)
-  }, [taskList, loopCount, onSave])
+  }, [actionPointList, loopCount, onSave, taskParams])
 
   return (
     <Dialog open={open} onClose={handleClose} maxWidth={'md'}>
@@ -145,52 +153,59 @@ const AddTaskDialog: FC<{
         }}
       >
         <AddTaskDialogContentWrapper>
-          <div className="header">
-            <div className="task-list">
-              <TaskList data={taskList} onMoveUp={handleMoveUp} />
-            </div>
-            <div className="add-task-form">
-              <AddTaskForm onSubmit={handleSubmit} />
-            </div>
-          </div>
-          <div className="footer">
-            <Paper
-              sx={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                width: '100%',
-                height: '100%'
-              }}
-            >
-              <div className="count">
-                <span>循环次数：</span>
-                <TextField
-                  type="number"
-                  size="small"
-                  variant="outlined"
-                  defaultValue={0}
+          <section className="header">
+            <TaskParams taskParams={taskParams} onChange={setTaskParams} />
+          </section>
+          {taskParams.vehicleId && (
+            <>
+              <section className="content">
+                <div className="task-list">
+                  <ActionPointList data={actionPointList} onMoveUp={handleMoveUp} />
+                </div>
+                <div className="add-task-form">
+                  <AddTaskForm onSubmit={handleSubmit} />
+                </div>
+              </section>
+              <section className="footer">
+                <Paper
                   sx={{
-                    '.MuiInputBase-input': {
-                      py: 0.5
-                    }
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    width: '100%',
+                    height: '100%'
                   }}
-                  value={loopCount}
-                  onChange={(e) => {
-                    setLoopCount(parseInt(e.target.value))
-                  }}
-                ></TextField>
-              </div>
-              <DialogActions>
-                <Button variant="contained" size="small" onClick={handleSave}>
-                  保存
-                </Button>
-                <Button size="small" color="error" onClick={() => setTaskList([])}>
-                  清空
-                </Button>
-              </DialogActions>
-            </Paper>
-          </div>
+                >
+                  <div className="count">
+                    <span>循环次数：</span>
+                    <TextField
+                      type="number"
+                      size="small"
+                      variant="outlined"
+                      defaultValue={0}
+                      sx={{
+                        '.MuiInputBase-input': {
+                          py: 0.5
+                        }
+                      }}
+                      value={loopCount}
+                      onChange={(e) => {
+                        setLoopCount(parseInt(e.target.value))
+                      }}
+                    ></TextField>
+                  </div>
+                  <DialogActions>
+                    <Button variant="contained" size="small" onClick={handleSave}>
+                      保存
+                    </Button>
+                    <Button size="small" color="error" onClick={() => setActionPointList([])}>
+                      清空
+                    </Button>
+                  </DialogActions>
+                </Paper>
+              </section>
+            </>
+          )}
         </AddTaskDialogContentWrapper>
       </DialogContent>
     </Dialog>

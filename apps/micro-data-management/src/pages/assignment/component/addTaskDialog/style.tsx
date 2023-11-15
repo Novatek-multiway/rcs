@@ -4,13 +4,17 @@ export const AddTaskDialogContentWrapper = styled.div`
   display: flex;
   flex-direction: column;
   padding: 12px;
+  gap: 12px;
   background: #16181c;
-  height: 800px;
+  /* height: 700px; */
   box-sizing: border-box;
   .header {
+    height: 80px;
+  }
+  .content {
     display: flex;
     gap: 12px;
-    height: 720px;
+    height: 520px;
     .task-list {
       width: 600px;
       height: 100%;
@@ -26,7 +30,6 @@ export const AddTaskDialogContentWrapper = styled.div`
   }
   .footer {
     height: 80px;
-    margin-top: 12px;
     .count {
       display: flex;
       align-items: center;
@@ -37,7 +40,7 @@ export const AddTaskDialogContentWrapper = styled.div`
   }
 `
 
-export const AddTaskFormWrapper = styled.div`
+export const ActionPointParamsWrapper = styled.div`
   form {
     display: flex;
     flex-wrap: wrap;

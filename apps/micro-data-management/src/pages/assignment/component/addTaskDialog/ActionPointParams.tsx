@@ -1,18 +1,20 @@
 import { useAsyncEffect } from 'ahooks'
-import { getControlStates, getVertexs } from 'apis'
+import { getVertexs } from 'apis'
 import { Field, Form, Formik } from 'formik'
-import { CheckboxProps, fieldToCheckbox, fieldToTextField, TextFieldProps as FormikTextFieldProps } from 'formik-mui'
+import { fieldToTextField, TextFieldProps as FormikTextFieldProps } from 'formik-mui'
 import { isNil } from 'lodash'
 import type { FC } from 'react'
 import React, { memo, useCallback, useState } from 'react'
 import { useDictStore } from 'store'
-import { Autocomplete, Button, Checkbox, FormControlLabel, MenuItem, Paper, TextField, Typography } from 'ui'
+import { Autocomplete, Button, MenuItem, Paper, TextField, Typography } from 'ui'
 
-import { AddTaskFormWrapper } from './style'
+import { ActionPointParamsWrapper } from './style'
 import { IOption, ITaskFormData } from './type'
 
-export interface IAddTaskFormProps {
-  onSubmit?: (formData: ITaskFormData) => void
+type TActionPointParams = Omit<ITaskFormData, 'vehicleId' | 'priority' | 'isAutoCompleted'>
+
+export interface IActionPointParamsProps {
+  onSubmit?: (actionPointParams: TActionPointParams) => void
 }
 
 // hack 临时解决TextField主题问题
@@ -34,58 +36,23 @@ const CustomTextField = memo((props: FormikTextFieldProps) => {
 
   return <TextField {...(fieldToTextField(props) as any)} onChange={onChange} />
 })
-const CustomCheckbox = memo((props: CheckboxProps & { label: string }) => {
-  const {
-    form: { setFieldValue },
-    field: { name },
-    label
-  } = props
-  const onChange = useCallback(
-    (event: any) => {
-      const { value } = event.target
-      setFieldValue(name, value)
-    },
-    [setFieldValue, name]
-  )
-
-  return (
-    <FormControlLabel
-      control={
-        <Checkbox
-          size="small"
-          sx={{
-            py: 0
-          }}
-          {...(fieldToCheckbox(props) as any)}
-          onChange={onChange}
-        />
-      }
-      label={label}
-      sx={{
-        ml: 'auto',
-        '.MuiFormControlLabel-label': {
-          fontSize: 14
-        }
-      }}
-    />
-  )
-})
 
 // TODO 虚拟列表优化
 // TODO 列表搜索K
-const AddTaskForm: FC<IAddTaskFormProps> = (props) => {
+const initialValues: TActionPointParams = {
+  taskPoint: null,
+  action: 0,
+  param1: 0,
+  param2: 0,
+  param3: 0,
+  param4: 0,
+  id: 0
+}
+const ActionPointParams: FC<IActionPointParamsProps> = (props) => {
   const { onSubmit } = props
   const orderActionOptions = useDictStore((state) => state.dicts.OrderActionType)
-  const [carrierOptions, setCarrierOptions] = useState<IOption[]>([])
   const [vertexOptions, setVertexOptions] = useState<IOption[]>([])
   useAsyncEffect(async () => {
-    const carrierRes = await getControlStates()
-    const newCarrierOptions = carrierRes.data.map((item: any) => ({
-      label: item.id,
-      value: item.id
-    }))
-    setCarrierOptions(newCarrierOptions)
-
     const vertexRes = await getVertexs()
     const newVertexOptions = vertexRes.data.map((item: any) => ({
       value: item.id,
@@ -101,29 +68,14 @@ const AddTaskForm: FC<IAddTaskFormProps> = (props) => {
         height: '100%'
       }}
     >
-      <Formik<ITaskFormData>
-        initialValues={{
-          vehicleId: null,
-          priority: 0,
-          isAutoCompleted: true,
-          taskPoint: null,
-          action: 0,
-          param1: 0,
-          param2: 0,
-          param3: 0,
-          param4: 0,
-          id: 0
-        }}
+      <Formik<TActionPointParams>
+        initialValues={initialValues}
         onSubmit={async (values) => {
           onSubmit?.(values)
         }}
         validate={(values) => {
           const errors: Partial<Record<keyof ITaskFormData, string>> = {}
-          if (isNil(values.vehicleId) || values.vehicleId + '' === '') {
-            errors.vehicleId = '请选择车辆'
-          } else if (isNil(values.priority) || values.priority + '' === '') {
-            errors.priority = '请输入优先级'
-          } else if (isNil(values.taskPoint) || values.taskPoint + '' === '') {
+          if (isNil(values.taskPoint) || values.taskPoint + '' === '') {
             errors.taskPoint = '请选择任务点'
           } else if (isNil(values.action) || values.action + '' === '') {
             errors.action = '请选择动作类型'
@@ -131,48 +83,19 @@ const AddTaskForm: FC<IAddTaskFormProps> = (props) => {
           return errors
         }}
       >
-        {({ isSubmitting, submitForm, setFieldValue, errors }) => (
-          <AddTaskFormWrapper>
+        {({ isSubmitting, submitForm, setFieldValue, errors, resetForm, values }) => (
+          <ActionPointParamsWrapper>
             <Form>
-              <Typography variant="h6" fontSize={15}>
-                任务参数
-              </Typography>
-
-              <Autocomplete
-                options={carrierOptions.map((c) => Number(c.value))}
-                getOptionLabel={(option: number) => option + ''}
-                onChange={(e, value) => setFieldValue('vehicleId', value)}
-                renderInput={(params) => (
-                  <TextField
-                    {...params}
-                    label="指定车辆"
-                    name="vehicleId"
-                    variant="outlined"
-                    size="small"
-                    required
-                    error={!!errors.vehicleId}
-                    helperText={errors.vehicleId ? errors.vehicleId : ''}
-                  />
-                )}
-              />
-              <Field
-                component={CustomTextField}
-                name="priority"
-                type="number"
-                label="优先级"
-                variant="outlined"
-                size="small"
-                required
-              />
-              <Field component={CustomCheckbox} type="checkbox" name="isAutoCompleted" label="是否自动结束任务" />
               <Typography variant="h6" fontSize={15}>
                 命令参数
               </Typography>
-
               <Autocomplete
                 options={vertexOptions.map((c) => Number(c.value))}
                 getOptionLabel={(option: number) => option + ''}
-                onChange={(e, value) => setFieldValue('taskPoint', value)}
+                onChange={(e, value) => {
+                  setFieldValue('taskPoint', value)
+                }}
+                value={values.taskPoint}
                 renderInput={(params) => (
                   <TextField
                     {...params}
@@ -237,17 +160,22 @@ const AddTaskForm: FC<IAddTaskFormProps> = (props) => {
                 variant="outlined"
                 color="info"
                 disabled={isSubmitting}
-                onClick={submitForm}
+                onClick={async () => {
+                  await submitForm()
+                  setTimeout(() => {
+                    resetForm()
+                  })
+                }}
                 size="small"
               >
                 添加
               </Button>
             </Form>
-          </AddTaskFormWrapper>
+          </ActionPointParamsWrapper>
         )}
       </Formik>
     </Paper>
   )
 }
 
-export default memo(AddTaskForm)
+export default memo(ActionPointParams)

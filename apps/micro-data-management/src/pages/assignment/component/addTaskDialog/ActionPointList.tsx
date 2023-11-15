@@ -4,14 +4,14 @@ import { BaseTable, Button, createMRTColumnHelper } from 'ui'
 
 import { ITaskItem } from './type'
 
-export interface ITaskListProps {
+export interface IActionPointListProps {
   data?: ITaskItem[]
   onMoveUp?: (index: number) => void
 }
 
 const columnHelper = createMRTColumnHelper<ITaskItem>()
 
-const TaskList: FC<PropsWithChildren<ITaskListProps>> = (props) => {
+const ActionPointList: FC<PropsWithChildren<IActionPointListProps>> = (props) => {
   const { data = [], onMoveUp } = props
   const columns = useMemo(
     () => [
@@ -92,4 +92,4 @@ const TaskList: FC<PropsWithChildren<ITaskListProps>> = (props) => {
   )
 }
 
-export default memo(TaskList)
+export default memo(ActionPointList)

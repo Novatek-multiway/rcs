@@ -39,3 +39,13 @@ export const completeTask = (Guid: string) => {
     }
   })
 }
+
+// 获取任务组的任务信息
+export const getTaskByGuid = (Guid: string) => {
+  return request<IResponse<any>>('/Job/GetTaskInfo', {
+    method: 'GET',
+    params: {
+      Guid
+    }
+  })
+}
