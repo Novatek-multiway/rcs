@@ -1,12 +1,12 @@
 import { useAsyncEffect } from 'ahooks'
 import { getControlStates, getVertexs } from 'apis'
 import { Field, Form, Formik } from 'formik'
-import { CheckboxProps, fieldToCheckbox, fieldToTextField, TextFieldProps } from 'formik-mui'
+import { CheckboxProps, fieldToCheckbox, fieldToTextField, TextFieldProps as FormikTextFieldProps } from 'formik-mui'
 import { isNil } from 'lodash'
 import type { FC } from 'react'
 import React, { memo, useCallback, useState } from 'react'
 import { useDictStore } from 'store'
-import { Button, Checkbox, FormControlLabel, MenuItem, Paper, TextField, Typography } from 'ui'
+import { Autocomplete, Button, Checkbox, FormControlLabel, MenuItem, Paper, TextField, Typography } from 'ui'
 
 import { AddTaskFormWrapper } from './style'
 import { IOption, ITaskFormData } from './type'
@@ -17,7 +17,7 @@ export interface IAddTaskFormProps {
 
 // hack 临时解决TextField主题问题
 
-const CustomTextField = memo((props: TextFieldProps) => {
+const CustomTextField = memo((props: FormikTextFieldProps) => {
   const {
     form: { setFieldValue },
     field: { name },
@@ -72,11 +72,10 @@ const CustomCheckbox = memo((props: CheckboxProps & { label: string }) => {
 })
 
 // TODO 虚拟列表优化
-// TODO 列表搜索
+// TODO 列表搜索K
 const AddTaskForm: FC<IAddTaskFormProps> = (props) => {
   const { onSubmit } = props
   const orderActionOptions = useDictStore((state) => state.dicts.OrderActionType)
-  console.log('🚀 ~ file: AddTaskForm.tsx ~ line 79 ~ orderActionOptions', orderActionOptions)
   const [carrierOptions, setCarrierOptions] = useState<IOption[]>([])
   const [vertexOptions, setVertexOptions] = useState<IOption[]>([])
   useAsyncEffect(async () => {
@@ -104,10 +103,10 @@ const AddTaskForm: FC<IAddTaskFormProps> = (props) => {
     >
       <Formik<ITaskFormData>
         initialValues={{
-          vehicleId: '' as any,
+          vehicleId: null,
           priority: 0,
           isAutoCompleted: true,
-          taskPoint: 0,
+          taskPoint: null,
           action: 0,
           param1: 0,
           param2: 0,
@@ -116,7 +115,6 @@ const AddTaskForm: FC<IAddTaskFormProps> = (props) => {
           id: 0
         }}
         onSubmit={async (values) => {
-          console.log('🚀 ~ file: AddTaskForm.tsx ~ line 119 ~ onSubmit={ ~ values', values)
           onSubmit?.(values)
         }}
         validate={(values) => {
@@ -128,32 +126,35 @@ const AddTaskForm: FC<IAddTaskFormProps> = (props) => {
           } else if (isNil(values.taskPoint) || values.taskPoint + '' === '') {
             errors.taskPoint = '请选择任务点'
           } else if (isNil(values.action) || values.action + '' === '') {
-            errors.taskPoint = '请选择动作类型'
+            errors.action = '请选择动作类型'
           }
           return errors
         }}
       >
-        {({ isSubmitting, submitForm }) => (
+        {({ isSubmitting, submitForm, setFieldValue, errors }) => (
           <AddTaskFormWrapper>
             <Form>
               <Typography variant="h6" fontSize={15}>
                 任务参数
               </Typography>
-              <Field
-                component={CustomTextField}
-                select
-                name="vehicleId"
-                label="指定车辆"
-                variant="outlined"
-                size="small"
-              >
-                {carrierOptions.map((item: IOption) => (
-                  <MenuItem key={item.value} value={item.value}>
-                    {item.label}
-                  </MenuItem>
-                ))}
-              </Field>
 
+              <Autocomplete
+                options={carrierOptions.map((c) => Number(c.value))}
+                getOptionLabel={(option: number) => option + ''}
+                onChange={(e, value) => setFieldValue('vehicleId', value)}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    label="指定车辆"
+                    name="vehicleId"
+                    variant="outlined"
+                    size="small"
+                    required
+                    error={!!errors.vehicleId}
+                    helperText={errors.vehicleId ? errors.vehicleId : ''}
+                  />
+                )}
+              />
               <Field
                 component={CustomTextField}
                 name="priority"
@@ -167,21 +168,24 @@ const AddTaskForm: FC<IAddTaskFormProps> = (props) => {
               <Typography variant="h6" fontSize={15}>
                 命令参数
               </Typography>
-              <Field
-                component={CustomTextField}
-                name="taskPoint"
-                label="任务点"
-                variant="outlined"
-                size="small"
-                required
-                select
-              >
-                {vertexOptions.map((v) => (
-                  <MenuItem key={v.value} value={v.value}>
-                    {v.label}
-                  </MenuItem>
-                ))}
-              </Field>
+
+              <Autocomplete
+                options={vertexOptions.map((c) => Number(c.value))}
+                getOptionLabel={(option: number) => option + ''}
+                onChange={(e, value) => setFieldValue('taskPoint', value)}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    label="任务点"
+                    name="taskPoint"
+                    variant="outlined"
+                    size="small"
+                    required
+                    error={!!errors.taskPoint}
+                    helperText={errors.taskPoint ? errors.taskPoint : ''}
+                  />
+                )}
+              />
 
               <Field component={CustomTextField} select name="action" label="动作类型" variant="outlined" size="small">
                 {orderActionOptions.map((item: IOption) => (

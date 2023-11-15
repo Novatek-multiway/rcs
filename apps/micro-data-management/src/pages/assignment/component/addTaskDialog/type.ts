@@ -2,7 +2,7 @@ export interface ITaskFormData {
   vehicleId: number | null
   priority: number
   isAutoCompleted: boolean
-  taskPoint: number
+  taskPoint: number | null
   action: number
   param1: number
   param2: number

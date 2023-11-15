@@ -243,7 +243,8 @@ const DataTable = () => {
             state={{
               isLoading: loading,
               showLoadingOverlay: false,
-              showProgressBars: loading
+              showProgressBars: loading,
+              density: 'compact'
             }}
             muiTablePaperProps={{
               sx: {
