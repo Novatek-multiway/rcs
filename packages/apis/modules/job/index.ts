@@ -49,3 +49,11 @@ export const getTaskByGuid = (Guid: string) => {
     }
   })
 }
+
+// 添加任务点
+export const addTaskPoint = (data: { Guid: string; Points: any[] }) => {
+  return request<IResponse<any>>('/Job/AddTaskPoint', {
+    method: 'POST',
+    data
+  })
+}

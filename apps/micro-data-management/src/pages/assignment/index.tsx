@@ -1,12 +1,13 @@
 import AddIcon from '@mui/icons-material/Add'
 import { useRequest, useUpdateEffect } from 'ahooks'
-import { createTask, getTaskByGuid, postGTaskList } from 'apis'
-import { useCallback, useEffect, useState } from 'react'
+import { addTaskPoint, createTask, getTaskByGuid, postGTaskList } from 'apis'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { Box, Button, Grid, MuiTable } from 'ui'
 
 import Refresh from '@/component/refreshIcon'
 
 import { ChildTaskColumn, TaskColumn, TaskPointsColumn } from './columns'
+import AddActionPointDialog from './component/addActionPointDialog'
 import AddTaskDialog from './component/addTaskDialog'
 
 const DataTable = () => {
@@ -21,9 +22,7 @@ const DataTable = () => {
   const [rowCount, setRowCount] = useState(0)
   const [taskGroupsData, setTaskGroupsData] = useState([])
   const [selectedTaskGroupData, setSelectedTaskGroupData] = useState({}) as any
-  const [selectedTaskData, setSelectedTaskData] = useState([]) as any
-
-  const [open, setOpen] = useState(false)
+  const [selectedTaskData, setSelectedTaskData] = useState({}) as any
 
   const fetchTaskGroups = useCallback(async () => {
     const res = await runAsync({ ...page, pageIndex: page.pageIndex + 1, sortBy: 'CreateTime', order: 'desc' })
@@ -38,38 +37,50 @@ const DataTable = () => {
   }, [fetchTaskGroups])
 
   const [tasks, setTasks] = useState([])
-  const fetchTasks = useCallback(async (taskGroupId: string) => {
-    const res = await getTaskByGuid(taskGroupId)
-    const tasks = res.data || []
-    setTasks(tasks)
-  }, [])
+  const fetchTasks = useCallback(
+    async (taskGroupId: string) => {
+      const res = await getTaskByGuid(taskGroupId)
+      const tasks = res.data || []
+      setTasks(tasks)
+      const { taskCode } = selectedTaskData
+      const newSelectedTaskData = tasks.find((item: any) => item.taskCode === taskCode)
+      setSelectedTaskData(newSelectedTaskData)
+    },
+    [selectedTaskData]
+  )
 
   useUpdateEffect(() => {
     fetchTasks(selectedTaskGroupData.orderCode)
-  }, [fetchTasks, selectedTaskGroupData])
+  }, [selectedTaskGroupData])
 
-  const actionPoints = useCallback(() => {
-    if (!selectedTaskGroupData.tasks) {
-      return []
-    }
-    if (selectedTaskData.actionPoint?.length) {
-      return selectedTaskData.actionPoint
-    }
+  const taskActionPoints = useMemo(() => selectedTaskData?.actionPoint || [], [selectedTaskData])
 
-    if (selectedTaskGroupData?.tasks.length) {
-      return selectedTaskGroupData.tasks[0].actionPoint
-    }
-    return []
-  }, [selectedTaskGroupData, selectedTaskData])
-
-  const handleSave = useCallback(
+  /* -------------------------------- 添加任务组的任务 -------------------------------- */
+  const [addTaskDialogOpen, setAddTaskDialogOpen] = useState(false)
+  const handleSaveTask = useCallback(
     async (data: any) => {
       await createTask(data)
       fetchTaskGroups()
-      setOpen(false)
+      setAddTaskDialogOpen(false)
     },
     [fetchTaskGroups]
   )
+  /* -------------------------------- 添加任务组的任务 -------------------------------- */
+
+  /* -------------------------------- 给任务添加任务点 -------------------------------- */
+  const [addActionPointDialogOpen, setAddActionPointDialogOpen] = useState(false)
+  const handleSaveActionPoint = useCallback(
+    async (data: any) => {
+      await addTaskPoint({
+        Guid: selectedTaskData.taskCode,
+        Points: [data]
+      })
+      fetchTasks(selectedTaskGroupData.orderCode)
+      setAddActionPointDialogOpen(false)
+    },
+    [selectedTaskData, fetchTasks, selectedTaskGroupData.orderCode]
+  )
+  /* -------------------------------- 给任务添加任务点 -------------------------------- */
 
   return (
     <Grid container rowSpacing={2} columnSpacing={{ xs: 1, sm: 2, md: 2 }} sx={{ height: '100%' }}>
@@ -80,7 +91,6 @@ const DataTable = () => {
           overflow: 'auto'
         }}
       >
-        {/* {taskGroupsData.length && ( */}
         <MuiTable
           columns={TaskColumn({
             refreshTable: () => {
@@ -94,7 +104,6 @@ const DataTable = () => {
             setSelectedTaskGroupData({})
           }}
           rowCount={rowCount}
-          // enableColumnResizing
           defaultColumn={{
             minSize: 80,
             size: 100,
@@ -112,6 +121,7 @@ const DataTable = () => {
               },
               onClick: () => {
                 setSelectedTaskGroupData(row.original)
+                setSelectedTaskData(row.original.tasks[0])
               }
             }
           }}
@@ -175,7 +185,7 @@ const DataTable = () => {
                   <Refresh loading={loading}></Refresh>
                   刷新
                 </Button>
-                <Button variant="outlined" size="small" color="primary" onClick={() => setOpen(true)}>
+                <Button variant="outlined" size="small" color="primary" onClick={() => setAddTaskDialogOpen(true)}>
                   <AddIcon />
                   新增
                 </Button>
@@ -187,11 +197,9 @@ const DataTable = () => {
       </Grid>
       <Grid xs={6} item container rowSpacing={2}>
         <Grid item xs={12}>
-          {/* {taskGroupsData.length && ( */}
           <MuiTable
             columns={ChildTaskColumn({ refreshTable: () => fetchTasks(selectedTaskGroupData.orderCode) })}
             data={tasks || []}
-            // enableColumnResizing
             defaultColumn={{
               minSize: 100,
               size: 100,
@@ -240,16 +248,12 @@ const DataTable = () => {
               }
             }}
           ></MuiTable>
-          {/* )} */}
           {/* 新增区域 */}
         </Grid>
         <Grid item xs={12}>
-          {/* {taskGroupsData.length && ( */}
           <MuiTable
             columns={TaskPointsColumn}
-            data={actionPoints()}
-            // enableColumnResizing
-            // enableColumnResizing
+            data={taskActionPoints}
             defaultColumn={{
               minSize: 100,
               size: 100,
@@ -297,7 +301,16 @@ const DataTable = () => {
                     p: '4px'
                   }}
                 >
-                  <Button variant="outlined" size="small" color="primary">
+                  <Button
+                    variant="outlined"
+                    size="small"
+                    color="primary"
+                    disabled={taskActionPoints.length === 0}
+                    sx={{
+                      lineHeight: 1
+                    }}
+                    onClick={() => setAddActionPointDialogOpen(true)}
+                  >
                     <AddIcon />
                     添加任务点
                   </Button>
@@ -308,7 +321,12 @@ const DataTable = () => {
           {/* )} */}
         </Grid>
       </Grid>
-      <AddTaskDialog open={open} onClose={() => setOpen(false)} onSave={handleSave} />
+      <AddTaskDialog open={addTaskDialogOpen} onClose={() => setAddTaskDialogOpen(false)} onSave={handleSaveTask} />
+      <AddActionPointDialog
+        open={addActionPointDialogOpen}
+        onClose={() => setAddActionPointDialogOpen(false)}
+        onSave={handleSaveActionPoint}
+      />
     </Grid>
   )
 }

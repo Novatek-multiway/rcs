@@ -11,7 +11,7 @@ import { Autocomplete, Button, MenuItem, Paper, TextField, Typography } from 'ui
 import { ActionPointParamsWrapper } from './style'
 import { IOption, ITaskFormData } from './type'
 
-type TActionPointParams = Omit<ITaskFormData, 'vehicleId' | 'priority' | 'isAutoCompleted'>
+export type TActionPointParams = Omit<ITaskFormData, 'vehicleId' | 'priority' | 'isAutoCompleted'>
 
 export interface IActionPointParamsProps {
   onSubmit?: (actionPointParams: TActionPointParams) => void
@@ -83,7 +83,7 @@ const ActionPointParams: FC<IActionPointParamsProps> = (props) => {
           return errors
         }}
       >
-        {({ isSubmitting, submitForm, setFieldValue, errors, resetForm, values }) => (
+        {({ isSubmitting, submitForm, setFieldValue, errors, resetForm, values, validateForm }) => (
           <ActionPointParamsWrapper>
             <Form>
               <Typography variant="h6" fontSize={15}>
@@ -162,8 +162,9 @@ const ActionPointParams: FC<IActionPointParamsProps> = (props) => {
                 disabled={isSubmitting}
                 onClick={async () => {
                   await submitForm()
+                  const errors = await validateForm()
                   setTimeout(() => {
-                    resetForm()
+                    Object.keys(errors).length === 0 && resetForm()
                   })
                 }}
                 size="small"
