@@ -1,19 +1,18 @@
-import * as React from "react";
-import { BrowserRouter, Route, RouteObject, Routes } from "react-router-dom";
-import { theme } from "theme";
-import { CssBaseline, ThemeProvider } from "ui";
-import { qiankunWindow } from "vite-plugin-qiankun/dist/helper";
+import * as React from 'react'
+import { BrowserRouter, Route, RouteObject, Routes } from 'react-router-dom'
+import { theme } from 'theme'
+import { CssBaseline, ThemeProvider } from 'ui'
 
-import routerList from "@/router/router";
+import routerList from '@/router/router'
 
-import GlobalContext from "./global";
+import GlobalContext from './global'
 
 const renderRoutes = (routes: RouteObject[]) =>
   routes.map((item) => (
     <Route key={item.path} path={item.path} element={item.element}>
       {item.children && renderRoutes(item.children)}
     </Route>
-  ));
+  ))
 
 export default function App() {
   return (
@@ -21,18 +20,12 @@ export default function App() {
       <ThemeProvider theme={theme}>
         <CssBaseline />
         <GlobalContext />
-        <BrowserRouter
-          basename={
-            qiankunWindow.__POWERED_BY_QIANKUN__
-              ? `/${import.meta.env.VITE_APP_NAME}`
-              : "/"
-          }
-        >
-          <React.Suspense fallback={"loading..."}>
+        <BrowserRouter basename={`/${import.meta.env.VITE_APP_NAME}`}>
+          <React.Suspense fallback={'loading...'}>
             <Routes>{renderRoutes(routerList)}</Routes>
           </React.Suspense>
         </BrowserRouter>
       </ThemeProvider>
     </React.StrictMode>
-  );
+  )
 }

@@ -23,8 +23,9 @@ import {
   Typography
 } from 'ui'
 
-export interface IAddBlockDialogProps {
-  initialValue?: Omit<ITrafficBlock, 'points'>
+export interface IBlockDialogProps {
+  initialValue?: Partial<Omit<ITrafficBlock, 'points'>>
+  title?: string
   open?: boolean
   onClose?: () => void
   onSubmit?: (values: Omit<ITrafficBlock, 'points'>) => Promise<void>
@@ -34,7 +35,7 @@ export interface IAddBlockDialogProps {
   }[]
 }
 
-const AddBlockDialogContent = styled(DialogContent)(() => ({
+const BlockDialogContent = styled(DialogContent)(() => ({
   overflowY: 'visible',
   form: {
     display: 'flex',
@@ -47,8 +48,8 @@ const AddBlockDialogContent = styled(DialogContent)(() => ({
 }))
 
 // 添加区块弹窗
-const AddBlockDialog: FC<PropsWithChildren<IAddBlockDialogProps>> = (props) => {
-  const { initialValue, open = false, points = [], onClose, onSubmit } = props
+const BlockDialog: FC<PropsWithChildren<IBlockDialogProps>> = (props) => {
+  const { initialValue, title = '新增区块信息', open = false, points = [], onClose, onSubmit } = props
   const dicts = useDictStore((state) => state.dicts)
   const trafficBlockTypes = useMemo(() => dicts.TrafficBlockType, [dicts])
 
@@ -60,36 +61,45 @@ const AddBlockDialog: FC<PropsWithChildren<IAddBlockDialogProps>> = (props) => {
 
   return (
     <Dialog open={open} onClose={handleClose} maxWidth={'xs'} sx={{}}>
-      <DialogTitle>添加区块</DialogTitle>
+      <DialogTitle>{title}</DialogTitle>
 
-      <Formik<NonNullable<IAddBlockDialogProps['initialValue']>>
+      <Formik<NonNullable<IBlockDialogProps['initialValue']>>
         initialValues={initialValue || { type: 1, floor: 1, maxNumber: 1 }}
         onSubmit={async (values) => {
-          await onSubmit?.(values)
+          await onSubmit?.(values as Required<typeof values>)
           onClose?.()
+        }}
+        validate={(values) => {
+          const errors: Partial<Record<keyof Omit<ITrafficBlock, 'points'>, string>> = {}
+          if (!values.floor) {
+            errors.floor = '楼层不能为空'
+          } else if (!values.maxNumber) {
+            errors.maxNumber = '限制数量不能为空'
+          }
+          return errors
         }}
       >
         {({ submitForm, isSubmitting }) => (
           <>
-            <AddBlockDialogContent>
+            <BlockDialogContent>
               <Form>
-                <Field component={Select} name="type" label="区块类型" variant="filled">
+                <Field component={Select} name="type" label="区块类型" variant="outlined">
                   {trafficBlockTypes?.map((type: any) => (
                     <MenuItem value={type.value} key={type.label}>
                       {type.label}
                     </MenuItem>
                   ))}
                 </Field>
-                <Field component={TextField} name="floor" type="number" label="楼层" variant="filled" />
-                <Field component={TextField} name="maxNumber" type="number" label="限制数量" variant="filled" />
+                <Field component={TextField} name="floor" type="number" label="楼层" variant="outlined" />
+                <Field component={TextField} name="maxNumber" type="number" label="限制数量" variant="outlined" />
               </Form>
 
-              <Card sx={{ background: 'transparent', boxShadow: 'none' }}>
+              <Card sx={{ boxShadow: 'none', mt: 2, bgcolor: 'transparent' }}>
                 <CardContent sx={{ gap: 10 }}>
                   <Typography sx={{ fontSize: 14 }} color="text.secondary">
                     区块点位
                   </Typography>
-                  <Box sx={{ bgcolor: 'background.paper', position: 'relative' }}>
+                  <Box sx={{ position: 'relative' }}>
                     <List
                       sx={{
                         position: 'static',
@@ -102,10 +112,9 @@ const AddBlockDialog: FC<PropsWithChildren<IAddBlockDialogProps>> = (props) => {
                         sx={{
                           position: 'absolute',
                           top: 0,
-                          bgcolor: 'background.paper',
+                          // bgcolor: 'background.paper',
                           zIndex: 1
                         }}
-                        secondaryAction={<span>操作</span>}
                       >
                         <ListItemIcon>
                           <span style={{ textAlign: 'center', flex: 1 }}>Index</span>
@@ -114,7 +123,7 @@ const AddBlockDialog: FC<PropsWithChildren<IAddBlockDialogProps>> = (props) => {
                         <ListItemText sx={{ textAlign: 'center' }} primary="Y" />
                       </ListItem>
                       {points?.map((point, index) => (
-                        <ListItem key={index} secondaryAction={<span></span>}>
+                        <ListItem key={index}>
                           <ListItemIcon sx={{ textAlign: 'center' }}>
                             <span style={{ textAlign: 'center', flex: 1 }}>{index}</span>
                           </ListItemIcon>
@@ -126,7 +135,7 @@ const AddBlockDialog: FC<PropsWithChildren<IAddBlockDialogProps>> = (props) => {
                   </Box>
                 </CardContent>
               </Card>
-            </AddBlockDialogContent>
+            </BlockDialogContent>
 
             <DialogActions>
               <Button onClick={() => onClose?.()}>取消</Button>
@@ -141,4 +150,4 @@ const AddBlockDialog: FC<PropsWithChildren<IAddBlockDialogProps>> = (props) => {
   )
 }
 
-export default memo(AddBlockDialog)
+export default memo(BlockDialog)

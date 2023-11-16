@@ -1,8 +1,10 @@
 import { Close } from '@mui/icons-material'
 import { useSpring } from '@react-spring/web'
 import { useUpdateEffect } from 'ahooks'
+import { useStorage } from 'hooks'
+import { TAppStorageKey } from 'hooks/modules/useStorage'
 import type { FC, PropsWithChildren } from 'react'
-import React, { memo, useCallback, useMemo, useState } from 'react'
+import React, { memo, useCallback, useEffect, useMemo, useState } from 'react'
 import { theme } from 'theme'
 import { Button, Panel, Switch } from 'ui'
 
@@ -36,6 +38,7 @@ const Settings: FC<PropsWithChildren<ISettingsProps>> = (props) => {
     setSettingSwitches: state.setSettingSwitches,
     setCurrentChangedSwitch: state.setCurrentChangedSwitch
   }))
+  const { setItem } = useStorage()
 
   const [isSettingsOpen, setIsSettingsOpen] = useState(open)
   const [settingsSpring, settingsApi] = useSpring(() => ({ transform: 'translateY(100%)', opacity: 0 }))
@@ -105,6 +108,27 @@ const Settings: FC<PropsWithChildren<ISettingsProps>> = (props) => {
     },
     [setSettings, settingSwitches, setSettingSwitches, setCurrentChangedSwitch]
   )
+
+  useEffect(() => {
+    return () => {
+      handleClose()
+    }
+  }, [handleClose])
+
+  const handleLineColorChange = useCallback(
+    (
+      color: string,
+      storageKey: TAppStorageKey,
+      storeKey: Extract<EMapSettingsKeys, 'lineColor' | 'planningLineColor'>
+    ) => {
+      setSettings({
+        [storeKey]: color
+      })
+      setItem(storageKey, color)
+    },
+    [setSettings, setItem]
+  )
+
   return (
     <SettingsWrapper style={settingsSpring}>
       <Panel title="">
@@ -138,12 +162,14 @@ const Settings: FC<PropsWithChildren<ISettingsProps>> = (props) => {
             <LineColorPicker
               label="地图路线"
               initialColor={settings.lineColor}
-              onChange={(color) => setSettings({ lineColor: color })}
+              onChange={(color) => handleLineColorChange(color, 'LINE_COLOR', EMapSettingsKeys.LINE_COLOR)}
             />
             <LineColorPicker
               label="规划路线"
               initialColor={settings.planningLineColor}
-              onChange={(color) => setSettings({ planningLineColor: color })}
+              onChange={(color) =>
+                handleLineColorChange(color, 'PLANNING_LINE_COLOR', EMapSettingsKeys.PLANNING_LINE_COLOR)
+              }
             />
             <div>
               <Button

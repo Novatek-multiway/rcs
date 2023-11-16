@@ -8,6 +8,7 @@ import AutoResizerStage from './components/autoResizerStage'
 import CursorPosition from './components/cursorPosition'
 import DrawingBlockCard from './components/drawingBlockCard'
 import MeasuringScale from './components/measuringScale'
+import SearchArea from './components/searchArea'
 import Toolbar from './components/toolbar'
 import { Switches } from './components/toolbar/components/settings/constant'
 import { EMapSettingsKeys } from './constants'
@@ -29,7 +30,8 @@ const TwoDMap: FC<PropsWithChildren<ITwoDMapProps>> = (props) => {
     setSettingSwitches,
     setSettings,
     currentChangedSwitch,
-    isDrawingBlockCardOpen
+    isDrawingBlockCardOpen,
+    searchAreaVisible
   } = useTwoDMapStore((state) => ({
     isLoading: state.isLoading,
     setIsLoading: state.setIsLoading,
@@ -38,7 +40,8 @@ const TwoDMap: FC<PropsWithChildren<ITwoDMapProps>> = (props) => {
     setSettingSwitches: state.setSettingSwitches,
     setSettings: state.setSettings,
     currentChangedSwitch: state.currentChangedSwitch,
-    isDrawingBlockCardOpen: state.isDrawingBlockCardOpen
+    isDrawingBlockCardOpen: state.isDrawingBlockCardOpen,
+    searchAreaVisible: state.searchAreaVisible
   }))
   const { onlineCarriers, homeChargeGoodsStations } = useWebsocketStore((state) => ({
     onlineCarriers: state['Report/GetOnLineCarriers'],
@@ -158,6 +161,7 @@ const TwoDMap: FC<PropsWithChildren<ITwoDMapProps>> = (props) => {
           }}
         />
       )}
+      {searchAreaVisible && <SearchArea />}
     </TwoDMapWrapper>
   )
 }

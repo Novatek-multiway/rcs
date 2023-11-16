@@ -16,9 +16,10 @@ interface IToolbarProps {
 
 const Toolbar: FC<PropsWithChildren<IToolbarProps>> = (props) => {
   const { toolbarRight } = props
-  const { currentScale, zoom } = useTwoDMapStore((state) => ({
+  const { currentScale, zoom, setSearchAreaVisible } = useTwoDMapStore((state) => ({
     currentScale: state.currentScale,
-    zoom: state.zoom
+    zoom: state.zoom,
+    setSearchAreaVisible: state.setSearchAreaVisible
   }))
   const { setAsideOpen } = useDashboardStore((state) => ({
     setAsideOpen: state.setAsideOpen
@@ -43,14 +44,18 @@ const Toolbar: FC<PropsWithChildren<IToolbarProps>> = (props) => {
     setAsideOpen(true)
   }, [setAsideOpen])
 
+  const handleSearchClick = useCallback(() => {
+    setSearchAreaVisible(true)
+  }, [setSearchAreaVisible])
+
   const actions = useMemo(
     () => [
       { icon: <SettingsIcon />, name: '设置', onClick: handleSettingsClick },
-      { icon: <Search />, name: '搜索' },
+      { icon: <Search />, name: '搜索', onClick: handleSearchClick }, // TODO 搜索功能实现
       { icon: <Remove />, name: '缩小', onClick: () => zoom?.(currentScale - 1) },
       { icon: <Add />, name: '放大', onClick: () => zoom?.(currentScale + 1) }
     ],
-    [handleSettingsClick, zoom, currentScale]
+    [handleSettingsClick, zoom, currentScale, handleSearchClick]
   )
 
   return (

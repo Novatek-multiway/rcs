@@ -441,7 +441,7 @@ declare namespace TrafficAPI {
     edges?: number[]
     floor?: number
     groupId?: number
-    id?: number
+    id: number
     maxNumber?: number
     maxRoadUsage?: number
     opposite?: string[]

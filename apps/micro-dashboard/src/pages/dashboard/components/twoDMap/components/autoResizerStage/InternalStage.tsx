@@ -29,7 +29,7 @@ export interface IInternalStageProps {
 // const mapData = JSON.parse((map as any).data) as MapAPI.RootMapObject
 // const vehiclesData = vehicles.data as ReportAPI.OnlineCarrier[]
 
-const INIT_SCALE = 6
+const INIT_SCALE = 8
 const SCALE_BOUNDARY = 6.5 // 缩放显示边界（低于一定缩放值，部分元素不显示，提升初始化渲染性能）
 const SELECTED_FILL_COLOR = 'rgba(0, 203, 202, 0.2)'
 const InternalStage: FC<PropsWithChildren<IInternalStageProps>> = (props) => {
@@ -51,7 +51,9 @@ const InternalStage: FC<PropsWithChildren<IInternalStageProps>> = (props) => {
     setDrawingResultListMap,
     setNewDrawingResult,
     drawingSelectedId,
-    setDrawingSelectedId
+    setDrawingSelectedId,
+    lastCenter,
+    setLastCenter
   } = useTwoDMapStore((state) => ({
     settings: state.settings,
     setInsidePoints: state.setInsidePoints,
@@ -67,7 +69,9 @@ const InternalStage: FC<PropsWithChildren<IInternalStageProps>> = (props) => {
     setDrawingResultListMap: state.setDrawingResultListMap,
     setNewDrawingResult: state.setNewDrawingResult,
     drawingSelectedId: state.drawingSelectedId,
-    setDrawingSelectedId: state.setDrawingSelectedId
+    setDrawingSelectedId: state.setDrawingSelectedId,
+    lastCenter: state.lastCenter,
+    setLastCenter: state.setLastCenter
   }))
 
   useUpdateEffect(() => {
@@ -213,6 +217,25 @@ const InternalStage: FC<PropsWithChildren<IInternalStageProps>> = (props) => {
     [drawingSelectedId]
   )
   /* ---------------------------------- 绘制区域 ---------------------------------- */
+
+  /* ---------------------------------- 搜索居中 ---------------------------------- */
+  useUpdateEffect(() => {
+    const stage = stageRef.current
+    const stagePosition = stage?.getPosition()
+    if (!stagePosition || !stage || !lastCenter) return
+    const offsetX = stage?.width() / 2 - lastCenter.x * currentScale
+    const offsetY = stage?.height() / 2 - lastCenter.y * currentScale
+    const newPosition = {
+      x: offsetX,
+      y: offsetY
+    }
+    stage.position(newPosition)
+    // 更新stageLeftTopPosition， 从而更新当前可视节点
+    const { x, y } = stage.absolutePosition()
+    setStageLeftTopPosition({ x: -x / globalCurrentScale, y: -y / globalCurrentScale })
+    setLastCenter(null)
+  }, [lastCenter, currentScale, setLastCenter, setStageLeftTopPosition])
+  /* ---------------------------------- 搜索居中 ---------------------------------- */
   return (
     <Stage
       ref={stageRef}

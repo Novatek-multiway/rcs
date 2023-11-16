@@ -8,10 +8,11 @@ interface IPanelProps {
   title?: string
   wrapperStyle?: React.CSSProperties
   contentStyle?: React.CSSProperties
+  contentWrapperStyle?: React.CSSProperties
 }
 
 const Panel: FC<PropsWithChildren<IPanelProps>> = (props) => {
-  const { title = 'panel', wrapperStyle, contentStyle } = props
+  const { title = 'panel', wrapperStyle, contentStyle, contentWrapperStyle } = props
   return (
     <PanelWrapper style={wrapperStyle}>
       {title && (
@@ -19,7 +20,7 @@ const Panel: FC<PropsWithChildren<IPanelProps>> = (props) => {
           {title}
         </Typography>
       )}
-      <PanelContentWrapper>
+      <PanelContentWrapper style={contentWrapperStyle}>
         <PanelBackdrop />
         <div className="panel-content" style={contentStyle}>
           {props.children}
