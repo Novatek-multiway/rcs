@@ -43,7 +43,7 @@ export default defineConfig(({ mode }) => {
   }
 
   return {
-    base: '/micro-data-management',
-    ...mergeConfig(sharedConfig, mode === 'production' ? productionConfig : developmentConfig)
+    ...mergeConfig(sharedConfig, mode === 'production' ? productionConfig : developmentConfig),
+    base: mode === 'development' ? '/' : 'http://localhost:6992'
   }
 })

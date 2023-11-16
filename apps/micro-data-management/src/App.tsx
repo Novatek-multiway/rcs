@@ -2,10 +2,13 @@ import * as React from 'react'
 import { BrowserRouter, Route, RouteObject, Routes } from 'react-router-dom'
 import { theme } from 'theme'
 import { CssBaseline, ThemeProvider } from 'ui'
+import { qiankunWindow } from 'vite-plugin-qiankun/dist/helper'
 
 import routerList from '@/router/router'
 
 import GlobalContext from './global'
+
+const { __POWERED_BY_QIANKUN__ } = qiankunWindow
 
 const renderRoutes = (routes: RouteObject[]) =>
   routes.map((item) => (
@@ -20,7 +23,7 @@ export default function App() {
       <ThemeProvider theme={theme}>
         <CssBaseline />
         <GlobalContext />
-        <BrowserRouter basename={`/${import.meta.env.VITE_APP_NAME}`}>
+        <BrowserRouter basename={__POWERED_BY_QIANKUN__ ? `/${import.meta.env.VITE_APP_NAME}` : '/'}>
           <React.Suspense fallback={'loading...'}>
             <Routes>{renderRoutes(routerList)}</Routes>
           </React.Suspense>

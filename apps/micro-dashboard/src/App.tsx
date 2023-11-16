@@ -5,8 +5,11 @@ import { getDicts } from 'apis'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import { useDictStore } from 'store'
 import { theme } from 'theme'
+import { qiankunWindow } from 'vite-plugin-qiankun/dist/helper'
 
 import routerList from '@/router/router'
+
+const { __POWERED_BY_QIANKUN__ } = qiankunWindow
 
 const dictsTransform = (obj: Record<string, any[]>) => {
   const keys = Object.keys(obj)
@@ -33,7 +36,7 @@ export default function App() {
     // <React.StrictMode>
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <BrowserRouter basename={`/${import.meta.env.VITE_APP_NAME}`}>
+      <BrowserRouter basename={__POWERED_BY_QIANKUN__ ? `/${import.meta.env.VITE_APP_NAME}` : '/'}>
         <Routes>
           {routerList.map((item) => (
             <Route key={item.path} path={item.path} element={item.element}></Route>
