@@ -36,20 +36,24 @@ export const useVehicles = (
         const lines = carrier.plannings
           .filter((planning) => {
             const planningTypeCondition = planning.planningType === 2 // 只需要渲染计划类型为2的路线
+            const stateCondition = planning.state1 !== 5 // 已路过的路线不显示
             const lineExistCondition = idLineMap.has(planning.planningKey) // 当前路线存在
             const customCondition = carrierPlanningFilter ? carrierPlanningFilter(planning) : true // 自定义过滤
-            return planningTypeCondition && lineExistCondition && customCondition
+            return planningTypeCondition && stateCondition && lineExistCondition && customCondition
           })
           .map((p) => idLineMap.get(p.planningKey)!)
+        const isFull = carrier.goodsStatus === 1
+        const vehicleImageName = carrier.image.replace('.png', isFull ? '.FULL' : '')
         const vehicle = {
           id: carrier.id,
           x: carrier.x * stageMapRatio,
           y: carrier.y * stageMapRatio,
-          vehicleImageName: carrier.image.replace('.png', ''),
+          vehicleImageName,
           vehicleLightImageName: getVehicleLightImageName(carrier),
           lines: lines,
           statusName: carrier.statusName,
-          battery: carrier.elecQuantity
+          battery: carrier.elecQuantity,
+          angle: carrier.angle
         }
         return vehicle
       }),

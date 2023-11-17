@@ -117,18 +117,17 @@ const TwoDMap: FC<PropsWithChildren<ITwoDMapProps>> = (props) => {
   /* ---------------------------------- 实时推送 ---------------------------------- */
   // 车辆状态更新
   useUpdateEffect(() => {
-    console.log('🚀 ~ file: index.tsx ~ line 118 ~ onlineCarriers', onlineCarriers)
-    // setVehiclesData(onlineCarriers)
+    if (!mapData) return // 等待地图加载完毕再接收数据推送
+    setVehiclesData(onlineCarriers)
   }, [onlineCarriers])
   // 库位点状态更新
   useUpdateEffect(() => {
-    if (!mapData) return
+    if (!mapData) return // 等待地图加载完毕再接收数据推送
     const newMapData = { ...mapData }
     const vertexes = newMapData.Vertexs
     const locations = homeChargeGoodsStations.filter((d) => d.type === 1 || d.type === 4)
-    console.log('🚀 ~ file: index.tsx ~ line 124 ~ useUpdateEffect ~ locations', locations)
     locations.forEach((l) => {
-      const vertex = vertexes?.find((v) => v.ID === l.id)
+      const vertex = vertexes?.find((v) => v.ID === l.pointKey)
       // 修改对应点的库位状态
       if (vertex) {
         vertex.LocationState = l.LocationState
