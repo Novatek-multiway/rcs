@@ -13,6 +13,7 @@ services: # 集合
       context: .
       dockerfile: Dockerfile
     container_name: rcs-web # 容器名称
+    image: rcs-web-image
     # volumes: # 卷挂载路径
     #   - /Users/luyao/works/mw/wcs/wcs-monorepo-frontend/dist/:/source/dist/
 
