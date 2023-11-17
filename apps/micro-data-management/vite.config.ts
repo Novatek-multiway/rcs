@@ -44,6 +44,6 @@ export default defineConfig(({ mode }) => {
 
   return {
     ...mergeConfig(sharedConfig, mode === 'production' ? productionConfig : developmentConfig),
-    base: mode === 'development' ? '/' : 'http://localhost:6992'
+    base: mode === 'development' ? '/' : env.VITE_APP_HOST
   }
 })
