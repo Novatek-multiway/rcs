@@ -16,7 +16,7 @@ export function useImage(path: string) {
       } else {
         const image = new Image()
         POINT_IMAGE_MAP[path] = image
-        image.src = import.meta.env.VITE_APP_HOST + path
+        image.src = path.startsWith('http') ? path : import.meta.env.VITE_APP_HOST + path
         image.onload = () => {
           setImage(image)
         }
