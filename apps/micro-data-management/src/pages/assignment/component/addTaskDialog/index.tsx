@@ -72,6 +72,15 @@ const AddTaskDialog: FC<{
     [actionPointList]
   )
 
+  const handleDelete = useCallback<NonNullable<IActionPointListProps['onDelete']>>(
+    (index) => {
+      const newActionPointList = [...actionPointList]
+      newActionPointList.splice(index, 1)
+      setActionPointList(newActionPointList)
+    },
+    [actionPointList]
+  )
+
   const handleSave = useCallback(async () => {
     const { isAutoCompleted, vehicleId, priority } = taskParams
     const taskGroupID = generateUUID()
@@ -129,6 +138,12 @@ const AddTaskDialog: FC<{
       tasks
     }
     onSave?.(createTaskData)
+    setActionPointList([])
+    setTaskParams({
+      vehicleId: null,
+      priority: 1,
+      isAutoCompleted: true
+    })
   }, [actionPointList, loopCount, onSave, taskParams])
 
   return (
@@ -160,7 +175,7 @@ const AddTaskDialog: FC<{
             <>
               <section className="content">
                 <div className="task-list">
-                  <ActionPointList data={actionPointList} onMoveUp={handleMoveUp} />
+                  <ActionPointList data={actionPointList} onMoveUp={handleMoveUp} onDelete={handleDelete} />
                 </div>
                 <div className="add-task-form">
                   <AddTaskForm onSubmit={handleSubmit} />

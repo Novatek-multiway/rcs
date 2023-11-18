@@ -321,12 +321,16 @@ const DataTable = () => {
           {/* )} */}
         </Grid>
       </Grid>
-      <AddTaskDialog open={addTaskDialogOpen} onClose={() => setAddTaskDialogOpen(false)} onSave={handleSaveTask} />
-      <AddActionPointDialog
-        open={addActionPointDialogOpen}
-        onClose={() => setAddActionPointDialogOpen(false)}
-        onSave={handleSaveActionPoint}
-      />
+      {addTaskDialogOpen && (
+        <AddTaskDialog open={addTaskDialogOpen} onClose={() => setAddTaskDialogOpen(false)} onSave={handleSaveTask} />
+      )}
+      {addActionPointDialogOpen && (
+        <AddActionPointDialog
+          open={addActionPointDialogOpen}
+          onClose={() => setAddActionPointDialogOpen(false)}
+          onSave={handleSaveActionPoint}
+        />
+      )}
     </Grid>
   )
 }
