@@ -29,7 +29,6 @@ export interface IInternalStageProps {
 // const mapData = JSON.parse((map as any).data) as MapAPI.RootMapObject
 // const vehiclesData = vehicles.data as ReportAPI.OnlineCarrier[]
 
-const INIT_SCALE = 8
 const SCALE_BOUNDARY = 6.5 // 缩放显示边界（低于一定缩放值，部分元素不显示，提升初始化渲染性能）
 const SELECTED_FILL_COLOR = 'rgba(0, 203, 202, 0.2)'
 const InternalStage: FC<PropsWithChildren<IInternalStageProps>> = (props) => {
@@ -43,6 +42,7 @@ const InternalStage: FC<PropsWithChildren<IInternalStageProps>> = (props) => {
     setCurrentScale,
     setZoom,
     setStageSize,
+    stageMapRatio,
     setCursorPosition,
     setStageLeftTopPosition,
     stageMode,
@@ -53,7 +53,8 @@ const InternalStage: FC<PropsWithChildren<IInternalStageProps>> = (props) => {
     drawingSelectedId,
     setDrawingSelectedId,
     lastCenter,
-    setLastCenter
+    setLastCenter,
+    mapSize
   } = useTwoDMapStore((state) => ({
     settings: state.settings,
     setInsidePoints: state.setInsidePoints,
@@ -61,6 +62,7 @@ const InternalStage: FC<PropsWithChildren<IInternalStageProps>> = (props) => {
     setCurrentScale: state.setCurrentScale,
     setZoom: state.setZoom,
     setStageSize: state.setStageSize,
+    stageMapRatio: state.stageMapRatio,
     setCursorPosition: state.setCursorPosition,
     setStageLeftTopPosition: state.setStageLeftTopPosition,
     stageMode: state.stageMode,
@@ -71,7 +73,8 @@ const InternalStage: FC<PropsWithChildren<IInternalStageProps>> = (props) => {
     drawingSelectedId: state.drawingSelectedId,
     setDrawingSelectedId: state.setDrawingSelectedId,
     lastCenter: state.lastCenter,
-    setLastCenter: state.setLastCenter
+    setLastCenter: state.setLastCenter,
+    mapSize: state.mapSize
   }))
 
   useUpdateEffect(() => {
@@ -107,10 +110,17 @@ const InternalStage: FC<PropsWithChildren<IInternalStageProps>> = (props) => {
     [setStageLeftTopPosition, globalCurrentScale]
   )
 
-  // 设置初始缩放
   useEffect(() => {
-    zoom(INIT_SCALE, { targetPosition: { x: 0, y: 0 } })
-  }, [zoom])
+    if (stageRef.current) {
+      const x = 0
+      const y = mapSize.height * stageMapRatio
+      stageRef.current!.position({ x, y })
+      setStageLeftTopPosition({
+        x: -x,
+        y: -y
+      })
+    }
+  }, [mapSize.height, stageMapRatio, setStageLeftTopPosition])
 
   /* ---------------------------------- 地图数据 ---------------------------------- */
   const vertexes = useMemo(() => mapData?.Vertexs || [], [mapData])

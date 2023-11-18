@@ -72,9 +72,9 @@ export const useLines = (edges: MapAPI.Edge[]) => {
       const startPoint = idPointMap.get(edge.Start)
       const endPoint = idPointMap.get(edge.End)
       const directions =
-        edge.CustomDirection?.map((d) => ({ ...d, x: d.x * stageMapRatio, y: d.y * stageMapRatio })) || []
+        edge.CustomDirection?.map((d) => ({ ...d, x: d.x * stageMapRatio, y: -d.y * stageMapRatio })) || []
       const controlPoints = sampleControlPoints(
-        edge.ControlPoint.map((cPoint) => [cPoint.X * stageMapRatio, cPoint.Y * stageMapRatio])
+        edge.ControlPoint.map((cPoint) => [cPoint.X * stageMapRatio, -cPoint.Y * stageMapRatio])
       )
 
       const line = {

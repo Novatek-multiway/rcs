@@ -47,7 +47,7 @@ export const useVehicles = (
         const vehicle = {
           id: carrier.id,
           x: carrier.x * stageMapRatio,
-          y: carrier.y * stageMapRatio,
+          y: -carrier.y * stageMapRatio,
           vehicleImageName,
           vehicleLightImageName: getVehicleLightImageName(carrier),
           lines: lines,
