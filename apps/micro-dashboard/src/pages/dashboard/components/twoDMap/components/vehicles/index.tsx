@@ -207,7 +207,8 @@ const Vehicle: FC<IVehicleProps> = memo((props) => {
                 fontSize: '6px',
                 touchAction: 'none',
                 pointerEvents: 'none',
-                userSelect: 'none'
+                userSelect: 'none',
+                willChange: 'transform'
               }
             }}
           >
