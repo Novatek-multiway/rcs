@@ -106,8 +106,8 @@ const Vehicle: FC<IVehicleProps> = memo((props) => {
   const carRef = useRef<Konva.Image>(null)
   const [isFirstRender, setIsFirstRender] = useState(true)
   useEffect(() => {
-    if (x && y) {
-      const carGroup = carGroupRef.current!
+    if (x && y && carGroupRef.current) {
+      const carGroup = carGroupRef.current
       const carGroupTween = new Konva.Tween({
         node: carGroup,
         duration: 0.06,
@@ -130,8 +130,8 @@ const Vehicle: FC<IVehicleProps> = memo((props) => {
   }, [x, y, carGroupRef, isFirstRender])
 
   useEffect(() => {
-    if (angle) {
-      const car = carRef.current!
+    if (angle && carRef.current) {
+      const car = carRef.current
 
       const carTween = new Konva.Tween({
         node: car,

@@ -265,16 +265,20 @@ const InternalStage: FC<PropsWithChildren<IInternalStageProps>> = (props) => {
       </Layer>
 
       {/* 改变频率低的层
-        缩放值小于边界时隐藏， 提升显示元素多时的性能
-        */}
-      {currentScale >= SCALE_BOUNDARY && (
+       */}
+      {
         <Layer listening={false}>
           {settings.isLocationVisible && <LocationPoints points={locationPoint} />}
-          {settings.isPointVisible && <Points points={insidePoints} />}
-          {settings.isStationVisible && <ImagePoints points={imagePoints} />}
-          {settings.isDirectionVisible && <LineDirections directions={lineDirections} />}
+          {/* 缩放值小于边界时隐藏， 提升显示元素多时的性能 */}
+          {currentScale >= SCALE_BOUNDARY && (
+            <>
+              {settings.isPointVisible && <Points points={insidePoints} />}
+              {settings.isStationVisible && <ImagePoints points={imagePoints} />}
+              {settings.isDirectionVisible && <LineDirections directions={lineDirections} />}
+            </>
+          )}
         </Layer>
-      )}
+      }
 
       {/* 改变频率高的层 */}
       <Layer>
