@@ -1,3 +1,5 @@
+import { useAsyncEffect } from 'ahooks'
+import { useAuth } from 'hooks'
 import * as React from 'react'
 import { BrowserRouter, Route, RouteObject, Routes } from 'react-router-dom'
 import { theme } from 'theme'
@@ -18,6 +20,10 @@ const renderRoutes = (routes: RouteObject[]) =>
   ))
 
 export default function App() {
+  const { globalLogin } = useAuth()
+  useAsyncEffect(async () => {
+    await globalLogin()
+  }, [])
   return (
     <React.StrictMode>
       <ThemeProvider theme={theme}>

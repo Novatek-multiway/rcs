@@ -1,7 +1,8 @@
 import { CssBaseline } from '@mui/material'
 import { ThemeProvider } from '@mui/material/styles'
-import { useRequest } from 'ahooks'
+import { useAsyncEffect, useRequest } from 'ahooks'
 import { getDicts } from 'apis'
+import { useAuth } from 'hooks'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import { useDictStore } from 'store'
 import { theme } from 'theme'
@@ -32,6 +33,10 @@ export default function App() {
       }
     }
   })
+  const { globalLogin } = useAuth()
+  useAsyncEffect(async () => {
+    await globalLogin()
+  }, [])
   return (
     // <React.StrictMode>
     <ThemeProvider theme={theme}>
