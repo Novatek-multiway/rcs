@@ -136,11 +136,11 @@ const Vehicle: FC<IVehicleProps> = memo((props) => {
       const carTween = new Konva.Tween({
         node: car,
         duration: 0.06,
-        rotation: angle + ROTATION_OFFSET
+        rotation: -angle + ROTATION_OFFSET
       })
 
       if (isFirstRender) {
-        car.rotate(angle + ROTATION_OFFSET)
+        car.rotate(-angle + ROTATION_OFFSET)
         setIsFirstRender(false)
       } else {
         carTween.play()
