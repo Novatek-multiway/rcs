@@ -2,8 +2,10 @@ import { useAsyncEffect, useUpdateEffect } from 'ahooks'
 import { getThroughReport } from 'apis'
 import { echarts, useEcharts } from 'hooks'
 import type { FC, PropsWithChildren } from 'react'
-import React, { memo, useRef, useState } from 'react'
+import React, { memo, useCallback, useRef, useState } from 'react'
 import { Panel } from 'ui'
+
+import { useWebsocketStore } from '../../store/websocket'
 
 interface IUtilizationRateStatsProps {}
 
@@ -90,6 +92,7 @@ const option: echarts.EChartsOption = {
 
 // 稼动率统计
 const UtilizationRateStats: FC<PropsWithChildren<IUtilizationRateStatsProps>> = () => {
+  const wsUtilizationRateStatsData = useWebsocketStore((state) => state['Report/GetAgvThroughs'])
   const el = useRef<HTMLDivElement | null>(null)
   // 传递元素给useEcharts
   const { updateOption } = useEcharts(el, { echartsOption: option, theme: 'dark' })
@@ -101,22 +104,32 @@ const UtilizationRateStats: FC<PropsWithChildren<IUtilizationRateStatsProps>> = 
     setUtilizationRateStatsData(utilizationRateData)
   }, [])
 
+  const updateOptionCallback = useCallback(
+    (utilizationRateStatsData: ReportAPI.Through) => {
+      const data = utilizationRateStatsData?.labels.reduce((acc: number[], cur, index) => {
+        const utilizationRate = utilizationRateStatsData.values?.reduce((total, item) => total + item.list[index], 0)
+        return acc.concat([utilizationRate])
+      }, [])
+      updateOption({
+        xAxis: {
+          data: utilizationRateStatsData?.labels || []
+        },
+        series: [
+          {
+            data
+          }
+        ]
+      })
+    },
+    [updateOption]
+  )
   useUpdateEffect(() => {
-    const data = utilizationRateStatsData?.labels.reduce((acc: number[], cur, index) => {
-      const utilizationRate = utilizationRateStatsData.values?.reduce((total, item) => total + item.list[index], 0)
-      return acc.concat([utilizationRate])
-    }, [])
-    updateOption({
-      xAxis: {
-        data: utilizationRateStatsData?.labels || []
-      },
-      series: [
-        {
-          data
-        }
-      ]
-    })
+    utilizationRateStatsData && updateOptionCallback(utilizationRateStatsData)
   }, [utilizationRateStatsData])
+
+  useUpdateEffect(() => {
+    wsUtilizationRateStatsData && setUtilizationRateStatsData(wsUtilizationRateStatsData)
+  }, [wsUtilizationRateStatsData])
   return (
     <Panel
       title="稼动率统计"

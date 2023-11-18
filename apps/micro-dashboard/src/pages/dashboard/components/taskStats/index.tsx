@@ -2,9 +2,10 @@ import { useAsyncEffect, useUpdateEffect } from 'ahooks'
 import { getTaskReport } from 'apis'
 import { echarts, useEcharts } from 'hooks'
 import type { FC, PropsWithChildren } from 'react'
-import React, { memo, useMemo, useRef, useState } from 'react'
+import React, { memo, useCallback, useMemo, useRef, useState } from 'react'
 import { Panel } from 'ui'
 
+import { useWebsocketStore } from '../../store/websocket'
 import TaskStatsList from './components/taskStatsList'
 import { TaskStatusWrapper } from './style'
 
@@ -55,6 +56,7 @@ const option: echarts.EChartsOption = {
 
 // 车辆任务统计
 const TaskStats: FC<PropsWithChildren<ITaskStatsProps>> = () => {
+  const wsTaskStatsData = useWebsocketStore((state) => state['Report/GetJobSumByAgv'])
   const el = useRef<HTMLDivElement | null>(null)
   // 传递元素给useEcharts
   const { updateOption } = useEcharts(el, { echartsOption: option, theme: 'dark' })
@@ -73,22 +75,31 @@ const TaskStats: FC<PropsWithChildren<ITaskStatsProps>> = () => {
     setTaskStatsData(taskStatsData)
   }, [])
 
+  const updateOptionCallback = useCallback(
+    (taskStatsData: ReportAPI.AgvTaskRoot) => {
+      updateOption({
+        title: {
+          text: `任务量：${taskStatsData?.Finished + taskStatsData?.NotFinished}个`
+        },
+        series: [
+          {
+            data: taskStatsData.AgvList.map((d) => ({
+              name: '编号-' + d.Id,
+              value: d.TaskQty
+            }))
+          }
+        ]
+      })
+    },
+    [updateOption]
+  )
   useUpdateEffect(() => {
-    if (!taskStatsData) return
-    updateOption({
-      title: {
-        text: `任务量：${taskStatsData?.Finished + taskStatsData?.NotFinished}个`
-      },
-      series: [
-        {
-          data: taskStatsData.AgvList.map((d) => ({
-            name: '编号-' + d.Id,
-            value: d.TaskQty
-          }))
-        }
-      ]
-    })
+    taskStatsData && updateOptionCallback(taskStatsData)
   }, [taskStatsData])
+
+  useUpdateEffect(() => {
+    wsTaskStatsData && setTaskStatsData(wsTaskStatsData)
+  }, [wsTaskStatsData])
   return (
     <Panel
       title="车辆任务统计"

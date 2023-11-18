@@ -1,9 +1,10 @@
-import { useAsyncEffect } from 'ahooks'
+import { useAsyncEffect, useUpdateEffect } from 'ahooks'
 import { getAgvStatus } from 'apis'
 import type { FC, PropsWithChildren } from 'react'
 import React, { memo, useMemo, useState } from 'react'
 import Panel from 'ui/src/panel'
 
+import { useWebsocketStore } from '../../store/websocket'
 import VehicleStatusItem from './components/vehicleStatusItem'
 import { VehicleStatusWrapper } from './style'
 
@@ -25,6 +26,7 @@ const ColorMap: Record<EVehicleStatus, string> = {
 
 // 车辆状态
 const VehicleStatus: FC<PropsWithChildren<IVehicleStatusProps>> = () => {
+  const wsVehicleStatusData = useWebsocketStore((state) => state['Report/GetAgvStatus'])
   const [vehicleStatusData, setVehicleStatusData] = useState<ReportAPI.CarrierStatus>()
   const vehicleStatusList = useMemo(
     () => [
@@ -57,6 +59,10 @@ const VehicleStatus: FC<PropsWithChildren<IVehicleStatusProps>> = () => {
     const vehicleStatusData = res.data as ReportAPI.CarrierStatus
     setVehicleStatusData(vehicleStatusData)
   }, [])
+
+  useUpdateEffect(() => {
+    wsVehicleStatusData && setVehicleStatusData(wsVehicleStatusData)
+  }, [wsVehicleStatusData])
 
   return (
     <Panel
