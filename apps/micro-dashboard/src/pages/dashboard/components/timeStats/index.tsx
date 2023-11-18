@@ -198,7 +198,7 @@ const TimeStats: FC<PropsWithChildren<ITimeStatsProps>> = () => {
         Cell: ({ cell }) => cell.getValue() + ' h'
       },
       {
-        accessorKey: 'average',
+        accessorKey: 'averageTask',
         header: '时均任务',
         size: 50,
         Cell: ({ cell }) => cell.getValue() + ' 个'
@@ -297,7 +297,7 @@ const TimeStats: FC<PropsWithChildren<ITimeStatsProps>> = () => {
             data: taskStatsData.map((item) => item.errorTime)
           },
           {
-            data: taskStatsData.map((item) => item.average)
+            data: taskStatsData.map((item) => item.averageTask)
           }
         ]
       })

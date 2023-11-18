@@ -108,7 +108,7 @@ const UtilizationRateStats: FC<PropsWithChildren<IUtilizationRateStatsProps>> = 
     (utilizationRateStatsData: ReportAPI.Through) => {
       const data = utilizationRateStatsData?.labels.reduce((acc: number[], cur, index) => {
         const utilizationRate = utilizationRateStatsData.values?.reduce((total, item) => total + item.list[index], 0)
-        return acc.concat([utilizationRate])
+        return acc.concat([utilizationRate / utilizationRateStatsData.values.length])
       }, [])
       updateOption({
         xAxis: {
