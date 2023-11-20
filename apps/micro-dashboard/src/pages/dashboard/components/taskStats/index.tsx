@@ -64,7 +64,7 @@ const TaskStats: FC<PropsWithChildren<ITaskStatsProps>> = () => {
   const [taskStatsData, setTaskStatsData] = useState<ReportAPI.AgvTaskRoot>()
   const taskStatsList = useMemo(
     () =>
-      taskStatsData?.AgvList?.map((item) => ({ id: item.Id, finishedCount: item.TaskQty, time: item.ConsumeTime })) ||
+      taskStatsData?.agvList?.map((item) => ({ id: item.Id, finishedCount: item.TaskQty, time: item.ConsumeTime })) ||
       [],
     [taskStatsData]
   )
@@ -79,11 +79,11 @@ const TaskStats: FC<PropsWithChildren<ITaskStatsProps>> = () => {
     (taskStatsData: ReportAPI.AgvTaskRoot) => {
       updateOption({
         title: {
-          text: `任务量：${taskStatsData?.Finished + taskStatsData?.NotFinished}个`
+          text: `任务量：${taskStatsData?.finished + taskStatsData?.notFinished}个`
         },
         series: [
           {
-            data: taskStatsData.AgvList.map((d) => ({
+            data: taskStatsData.agvList.map((d) => ({
               name: '编号-' + d.Id,
               value: d.TaskQty
             }))
@@ -113,10 +113,10 @@ const TaskStats: FC<PropsWithChildren<ITaskStatsProps>> = () => {
       <TaskStatusWrapper>
         <div className="header">
           <div className="finished">
-            已完成<span>{Number(taskStatsData?.Finished) + Number(taskStatsData?.NotFinished)}</span>个
+            已完成<span>{Number(taskStatsData?.finished) + Number(taskStatsData?.notFinished)}</span>个
           </div>
           <div className="unfinished">
-            未完成<span>{taskStatsData?.NotFinished}</span>个
+            未完成<span>{taskStatsData?.notFinished}</span>个
           </div>
         </div>
         <div style={{ width: '100%', height: '40%' }} ref={el}></div>

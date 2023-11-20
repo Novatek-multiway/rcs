@@ -391,9 +391,9 @@ declare namespace ReportAPI {
 
   // 车辆任务
   interface AgvTaskRoot {
-    AgvList: AgvTaskItem[]
-    Finished: number
-    NotFinished: number
+    agvList: AgvTaskItem[]
+    finished: number
+    notFinished: number
   }
 
   interface AgvTaskItem {
