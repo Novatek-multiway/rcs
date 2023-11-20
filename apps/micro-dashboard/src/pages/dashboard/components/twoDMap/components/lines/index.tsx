@@ -21,6 +21,7 @@ const DIRECTION_REGULAR_POLYGON_SIZE = 0.2 // 边方向的尺寸
 export const Line: FC<ILineProps> = memo((props) => {
   const {
     // id,
+
     bezier,
     points = [],
     strokeWidth,

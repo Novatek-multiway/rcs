@@ -47,17 +47,17 @@ const processLine = (edges: MapAPI.Edge[]) => {
 }
 
 // 采样起点、终点和中间两个控制点作为konva的三次贝塞尔曲线的点（只需要四个点）
-// const SEGMENTS = 4
-// const sampleControlPoints = (controlPoints: number[][]) => {
-//   const result = []
-//   const length = controlPoints.length
-//   for (let i = 0; i < SEGMENTS; i++) {
-//     const index = i === SEGMENTS - 1 ? length - 1 : Math.ceil(length / SEGMENTS) * i
-//     result.push(controlPoints[index])
-//   }
+const SEGMENTS = 4
+const sampleControlPoints = (controlPoints: number[][]) => {
+  const result = []
+  const length = controlPoints.length
+  for (let i = 0; i < SEGMENTS; i++) {
+    const index = i === SEGMENTS - 1 ? length - 1 : Math.ceil(length / SEGMENTS) * i
+    result.push(controlPoints[index])
+  }
 
-//   return result.flat()
-// }
+  return result.flat()
+}
 
 export const useLines = (edges: MapAPI.Edge[]) => {
   const { setIdLineMap, stageMapRatio } = useTwoDMapStore((state) => ({
@@ -71,14 +71,11 @@ export const useLines = (edges: MapAPI.Edge[]) => {
     const line = deduplicatedEdges.map((edge) => {
       const directions =
         edge.CustomDirection?.map((d) => ({ ...d, x: d.x * stageMapRatio, y: -d.y * stageMapRatio })) || []
-      const controlPoints = edge.ControlPoint.map((cPoint) => [
-        cPoint.X * stageMapRatio,
-        -cPoint.Y * stageMapRatio
-      ]).flat()
+      const controlPoints = edge.ControlPoint.map((cPoint) => [cPoint.X * stageMapRatio, -cPoint.Y * stageMapRatio])
 
       const line = {
         id: edge.ID,
-        points: controlPoints,
+        points: sampleControlPoints(controlPoints),
         bezier: !!edge.ControlPoint.length,
         directions
       }
