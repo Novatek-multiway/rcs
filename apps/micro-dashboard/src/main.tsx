@@ -4,7 +4,7 @@ import createCache from '@emotion/cache'
 import { CacheProvider } from '@emotion/react'
 import * as ReactDOM from 'react-dom/client'
 import { useGlobalStore } from 'store'
-import { renderWithQiankun } from 'vite-plugin-qiankun/dist/helper'
+import { qiankunWindow, renderWithQiankun } from 'vite-plugin-qiankun/dist/helper'
 
 import App from './App'
 
@@ -53,13 +53,13 @@ renderWithQiankun({
   }
 })
 
-// @ts-ignore
-if (!window.__POWERED_BY_QIANKUN__) {
+if (!qiankunWindow.__POWERED_BY_QIANKUN__) {
   console.log('Not __POWERED_BY_QIANKUN__ start')
   start()
 }
 
 // @ts-ignore
 if (process.env.NODE_ENV === 'development') {
+  // @ts-ignore
   import('@/hmr.fix')
 }

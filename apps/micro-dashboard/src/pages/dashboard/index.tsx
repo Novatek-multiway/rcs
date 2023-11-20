@@ -15,6 +15,15 @@ import { DashboardWrapper } from './style'
 
 const WS_URL = 'ws://192.168.1.240:10019'
 const DEFAULT_TOOLBAR_RIGHT = 380
+// 消息推送频率设置
+const MESSAGE_INTERVAL_MAP = {
+  [EWebsocketMessagePath.ReportGetOnLineCarriers]: 60,
+  [EWebsocketMessagePath.ReportGetHomeChargeGoodsStations]: 1000,
+  [EWebsocketMessagePath.ReportGetTimeSum]: 1000,
+  [EWebsocketMessagePath.ReportGetAgvThroughs]: 1000,
+  [EWebsocketMessagePath.ReportGetAgvStatus]: 1000,
+  [EWebsocketMessagePath.ReportGetJobSumByAgv]: 1000
+}
 
 const Dashboard = () => {
   const logoTitleClickTime = useGlobalStore((state) => state.globalState.logoTitleClickTime)
@@ -22,9 +31,20 @@ const Dashboard = () => {
     asideOpen: state.asideOpen,
     setAsideOpen: state.setAsideOpen
   }))
-  const { setReportGetOnLineCarriers, setReportGetHomeChargeGoodsStations } = useWebsocketStore((state) => ({
+  const {
+    setReportGetOnLineCarriers,
+    setReportGetHomeChargeGoodsStations,
+    setReportGetTimeSum,
+    setReportGetAgvThroughs,
+    setReportGetAgvStatus,
+    setReportGetJobSumByAgv
+  } = useWebsocketStore((state) => ({
     setReportGetOnLineCarriers: state.setReportGetOnLineCarriers,
-    setReportGetHomeChargeGoodsStations: state.setReportGetHomeChargeGoodsStations
+    setReportGetHomeChargeGoodsStations: state.setReportGetHomeChargeGoodsStations,
+    setReportGetTimeSum: state.setReportGetTimeSum,
+    setReportGetAgvThroughs: state.setReportGetAgvThroughs,
+    setReportGetAgvStatus: state.setReportGetAgvStatus,
+    setReportGetJobSumByAgv: state.setReportGetJobSumByAgv
   }))
   const { sendMessage, disconnect, readyState } = useWebSocket(WS_URL, {
     onMessage: (params: any) => {
@@ -33,6 +53,14 @@ const Dashboard = () => {
         setReportGetOnLineCarriers(JSON.parse(data.Model))
       } else if (data.Path === EWebsocketMessagePath.ReportGetHomeChargeGoodsStations) {
         setReportGetHomeChargeGoodsStations(JSON.parse(data.Model))
+      } else if (data.Path === EWebsocketMessagePath.ReportGetJobSumByAgv) {
+        setReportGetJobSumByAgv(JSON.parse(data.Model))
+      } else if (data.Path === EWebsocketMessagePath.ReportGetTimeSum) {
+        setReportGetTimeSum(JSON.parse(data.Model))
+      } else if (data.Path === EWebsocketMessagePath.ReportGetAgvThroughs) {
+        setReportGetAgvThroughs(JSON.parse(data.Model))
+      } else if (data.Path === EWebsocketMessagePath.ReportGetAgvStatus) {
+        setReportGetAgvStatus(JSON.parse(data.Model))
       }
     },
     onOpen: () => {},
@@ -44,7 +72,8 @@ const Dashboard = () => {
     if (readyState === ReadyState.Open) {
       Object.values(EWebsocketMessagePath).forEach((p) => {
         const message = JSON.stringify({
-          Path: p
+          Path: p,
+          Interval: MESSAGE_INTERVAL_MAP[p]
         })
         sendMessage && sendMessage(message)
       })

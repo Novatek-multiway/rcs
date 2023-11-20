@@ -7,7 +7,7 @@ import { Html } from 'react-konva-utils'
 import { useImage } from '../../hooks/useImage'
 import { useTwoDMapStore } from '../../store'
 import Lines, { ILinesProps } from '../lines'
-import { LINE_COLORS, VEHICLE_IMAGE_SIZE, VEHICLE_LIGHT_IMAGE_SIZE, vehicleColorMap } from './constant'
+import { LINE_COLORS, ROTATION_OFFSET, VEHICLE_IMAGE_SIZE, VEHICLE_LIGHT_IMAGE_SIZE, vehicleColorMap } from './constant'
 import { TooltipWrapper } from './style'
 import { getPowerColor, getVehicleImage, getVehicleLightImage } from './utils'
 
@@ -19,6 +19,7 @@ export interface IVehicleProps {
   vehicleLightImageName: string
   statusName?: string
   battery?: number
+  angle?: number
   lines?: ILinesProps['lines']
   stroke?: ILinesProps['stroke']
   strokeWidth?: ILinesProps['strokeWidth']
@@ -37,6 +38,7 @@ const Vehicle: FC<IVehicleProps> = memo((props) => {
     vehicleLightImageName = 'circleBlue',
     statusName = '离线',
     battery = 0,
+    angle = 0,
     lines = [],
     stroke,
     strokeWidth,
@@ -55,10 +57,6 @@ const Vehicle: FC<IVehicleProps> = memo((props) => {
   )
 
   const vehicleLightImage = useImage(vehicleLightImagePath)
-  const vehicleLightImageAspectRatio = useMemo(
-    () => (vehicleLightImage && vehicleLightImage?.width / vehicleLightImage?.height) || 1,
-    [vehicleLightImage]
-  )
   useEffect(() => {
     const setImageExternal = async () => {
       const vehicleImagePath = await getVehicleImage(vehicleImageName)
@@ -103,23 +101,76 @@ const Vehicle: FC<IVehicleProps> = memo((props) => {
     }
   }, [id])
 
+  /* ---------------------------------- 车辆运动 ---------------------------------- */
+  const carGroupRef = useRef<Konva.Group>(null)
+  const carRef = useRef<Konva.Image>(null)
+  const [isFirstRender, setIsFirstRender] = useState(true)
+  useEffect(() => {
+    if (x && y && carGroupRef.current) {
+      const carGroup = carGroupRef.current
+      const carGroupTween = new Konva.Tween({
+        node: carGroup,
+        duration: 0.06,
+        x,
+        y
+      })
+
+      if (isFirstRender) {
+        carGroup.setPosition({ x, y })
+        setIsFirstRender(false)
+      } else {
+        // 第一次不做动画，否则会跳跃
+        carGroupTween.play()
+      }
+
+      return () => {
+        carGroupTween.destroy()
+      }
+    }
+  }, [x, y, carGroupRef, isFirstRender])
+
+  useEffect(() => {
+    if (angle && carRef.current) {
+      const car = carRef.current
+
+      const carTween = new Konva.Tween({
+        node: car,
+        duration: 0.06,
+        rotation: -angle + ROTATION_OFFSET
+      })
+
+      if (isFirstRender) {
+        car.rotate(-angle + ROTATION_OFFSET)
+        setIsFirstRender(false)
+      } else {
+        carTween.play()
+      }
+
+      return () => {
+        carTween.destroy()
+      }
+    }
+  }, [angle, isFirstRender])
+  /* ---------------------------------- 车辆运动 ---------------------------------- */
+
   return (
     <Group>
       {showLines && <Lines lines={lines} stroke={stroke ?? randomStroke} strokeWidth={strokeWidth} />}
 
-      <Group x={x} y={y}>
+      <Group ref={carGroupRef}>
         {showImage && (
           <>
             <KonvaImage
               ref={vehicleLightImageRef}
               perfectDrawEnabled={false}
               image={vehicleLightImage}
-              width={VEHICLE_LIGHT_IMAGE_SIZE * vehicleLightImageAspectRatio}
+              width={8.72}
               height={VEHICLE_LIGHT_IMAGE_SIZE}
-              offsetX={(VEHICLE_LIGHT_IMAGE_SIZE * vehicleLightImageAspectRatio) / 2}
+              offsetX={8.72 / 2}
               offsetY={VEHICLE_LIGHT_IMAGE_SIZE / 2}
             ></KonvaImage>
             <KonvaImage
+              ref={carRef}
               perfectDrawEnabled={false}
               image={vehicleImage}
               width={VEHICLE_IMAGE_SIZE * vehicleImageAspectRatio}
@@ -156,7 +207,8 @@ const Vehicle: FC<IVehicleProps> = memo((props) => {
                 fontSize: '6px',
                 touchAction: 'none',
                 pointerEvents: 'none',
-                userSelect: 'none'
+                userSelect: 'none',
+                willChange: 'transform'
               }
             }}
           >

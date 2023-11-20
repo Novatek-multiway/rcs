@@ -11,7 +11,7 @@ export default defineConfig(({ mode }) => {
   const matches = env.VITE_APP_HOST.match(ipRegex)
   const ip = parseInt(matches[0].slice(1).replace('/', ''))
   return {
-    base: '/micro-dashboard',
+    base: mode === 'development' ? '/' : 'http://localhost:6991',
     define: {
       qiankunMainAppHost: `'http://localhost:8000'`
     },

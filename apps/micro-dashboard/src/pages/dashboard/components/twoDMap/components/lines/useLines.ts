@@ -3,8 +3,8 @@ import { useMemo } from 'react'
 import { useTwoDMapStore } from '../../store'
 import { ILineDirectionsProps, ILineProps } from '.'
 
-// 删除方向相反，但是路径相同的边
-const removeDuplicateLine = (edges: MapAPI.Edge[]) => {
+// 边处理：删除重复边、生成方向
+const processLine = (edges: MapAPI.Edge[]) => {
   const set = new Set()
   const map = new Map<string, MapAPI.Edge & { CustomDirection?: ILineDirectionsProps['directions'] }>()
 
@@ -12,8 +12,8 @@ const removeDuplicateLine = (edges: MapAPI.Edge[]) => {
   const _generateCustomDirection = (line: MapAPI.Edge & { CustomDirection?: ILineDirectionsProps['directions'] }) => {
     const leftCenterIndex = (line.ControlPoint.length >> 1) - 1
     const { X, Y } = line.ControlPoint[leftCenterIndex]
-    const endPoint = line.ControlPoint.at(-1)!
-    const rad = Math.atan2(endPoint?.Y - Y, endPoint?.X - X)
+    const nextIndex = line.ControlPoint[leftCenterIndex + 1]
+    const rad = Math.atan2(nextIndex?.Y - Y, nextIndex?.X - X)
     const deg = (rad * 180) / Math.PI
     const direction: NonNullable<ILineDirectionsProps['directions']>[0] = {
       id: line.ID,
@@ -46,32 +46,40 @@ const removeDuplicateLine = (edges: MapAPI.Edge[]) => {
   return uniqueArr
 }
 
+// 采样起点、终点和中间两个控制点作为konva的三次贝塞尔曲线的点（只需要四个点）
+const SEGMENTS = 4
+const sampleControlPoints = (controlPoints: number[][]) => {
+  const result = []
+  const length = controlPoints.length
+  for (let i = 0; i < SEGMENTS; i++) {
+    const index = i === SEGMENTS - 1 ? length - 1 : Math.ceil(length / SEGMENTS) * i
+    result.push(controlPoints[index])
+  }
+
+  return result.flat()
+}
+
 export const useLines = (edges: MapAPI.Edge[]) => {
   const { idPointMap, setIdLineMap, stageMapRatio } = useTwoDMapStore((state) => ({
     stageMapRatio: state.stageMapRatio,
     idPointMap: state.idPointMap,
     setIdLineMap: state.setIdLineMap
   }))
-  const deduplicatedEdges = useMemo(() => removeDuplicateLine(edges), [edges])
+  const deduplicatedEdges = useMemo(() => processLine(edges), [edges])
   const lines: (ILineProps & ILineDirectionsProps)[] = useMemo(() => {
     const idLineMap = new Map()
     const line = deduplicatedEdges.map((edge) => {
       const startPoint = idPointMap.get(edge.Start)
       const endPoint = idPointMap.get(edge.End)
       const directions =
-        edge.CustomDirection?.map((d) => ({ ...d, x: d.x * stageMapRatio, y: d.y * stageMapRatio })) || []
+        edge.CustomDirection?.map((d) => ({ ...d, x: d.x * stageMapRatio, y: -d.y * stageMapRatio })) || []
+      const controlPoints = sampleControlPoints(
+        edge.ControlPoint.map((cPoint) => [cPoint.X * stageMapRatio, -cPoint.Y * stageMapRatio])
+      )
+
       const line = {
         id: edge.ID,
-        points:
-          startPoint && endPoint
-            ? [
-                startPoint?.x,
-                startPoint?.y,
-                ...edge.ControlPoint.map((cPoint) => [cPoint.X * stageMapRatio, cPoint.Y * stageMapRatio]),
-                endPoint?.x,
-                endPoint?.y
-              ].flat()
-            : [],
+        points: startPoint && endPoint ? [...controlPoints] : [],
         bezier: !!edge.ControlPoint.length,
         directions
       }

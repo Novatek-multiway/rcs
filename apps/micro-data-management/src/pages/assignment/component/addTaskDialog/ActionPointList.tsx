@@ -7,12 +7,13 @@ import { ITaskItem } from './type'
 export interface IActionPointListProps {
   data?: ITaskItem[]
   onMoveUp?: (index: number) => void
+  onDelete?: (index: number) => void
 }
 
 const columnHelper = createMRTColumnHelper<ITaskItem>()
 
 const ActionPointList: FC<PropsWithChildren<IActionPointListProps>> = (props) => {
-  const { data = [], onMoveUp } = props
+  const { data = [], onMoveUp, onDelete } = props
   const columns = useMemo(
     () => [
       columnHelper.accessor('taskPoint', {
@@ -49,7 +50,6 @@ const ActionPointList: FC<PropsWithChildren<IActionPointListProps>> = (props) =>
                 minWidth: 36
               }}
               onClick={() => {
-                console.log(row.index)
                 onMoveUp?.(row.index)
               }}
             >
@@ -64,6 +64,9 @@ const ActionPointList: FC<PropsWithChildren<IActionPointListProps>> = (props) =>
                 paddingX: 0.5,
                 minWidth: 36
               }}
+              onClick={() => {
+                onDelete?.(row.index)
+              }}
             >
               删除
             </Button>
@@ -71,7 +74,7 @@ const ActionPointList: FC<PropsWithChildren<IActionPointListProps>> = (props) =>
         )
       })
     ],
-    [onMoveUp]
+    [onMoveUp, onDelete]
   )
 
   return (

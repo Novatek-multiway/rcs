@@ -3,8 +3,10 @@ import { getTimeSum } from 'apis'
 import { echarts, useEcharts } from 'hooks'
 import { MaterialReactTable, type MRT_ColumnDef, useMaterialReactTable } from 'material-react-table'
 import type { FC, PropsWithChildren } from 'react'
-import React, { memo, useMemo, useRef, useState } from 'react'
+import React, { memo, useCallback, useMemo, useRef, useState } from 'react'
 import { Panel } from 'ui'
+
+import { useWebsocketStore } from '../../store/websocket'
 
 interface ITimeStatsProps {}
 
@@ -164,6 +166,7 @@ const option: echarts.EChartsOption = {
 
 // 车辆时间统计
 const TimeStats: FC<PropsWithChildren<ITimeStatsProps>> = () => {
+  const wsTaskStatsData = useWebsocketStore((state) => state['Report/GetTimeSum'])
   const el = useRef<HTMLDivElement | null>(null)
   // 传递元素给useEcharts
   const { updateOption } = useEcharts(el, { echartsOption: option, theme: 'dark' })
@@ -195,7 +198,7 @@ const TimeStats: FC<PropsWithChildren<ITimeStatsProps>> = () => {
         Cell: ({ cell }) => cell.getValue() + ' h'
       },
       {
-        accessorKey: 'average',
+        accessorKey: 'averageTask',
         header: '时均任务',
         size: 50,
         Cell: ({ cell }) => cell.getValue() + ' 个'
@@ -277,27 +280,37 @@ const TimeStats: FC<PropsWithChildren<ITimeStatsProps>> = () => {
     setTaskStatsData(newTaskStatsData)
   }, [])
 
+  const updateOptionCallback = useCallback(
+    (taskStatsData: ReportAPI.TimeSumDatum[]) => {
+      updateOption({
+        xAxis: {
+          data: taskStatsData.map((item) => item.id)
+        },
+        series: [
+          {
+            data: taskStatsData.map((item) => item.workTime)
+          },
+          {
+            data: taskStatsData.map((item) => item.freeTime)
+          },
+          {
+            data: taskStatsData.map((item) => item.errorTime)
+          },
+          {
+            data: taskStatsData.map((item) => item.averageTask)
+          }
+        ]
+      })
+    },
+    [updateOption]
+  )
   useUpdateEffect(() => {
-    updateOption({
-      xAxis: {
-        data: taskStatsData.map((item) => item.id)
-      },
-      series: [
-        {
-          data: taskStatsData.map((item) => item.workTime)
-        },
-        {
-          data: taskStatsData.map((item) => item.freeTime)
-        },
-        {
-          data: taskStatsData.map((item) => item.errorTime)
-        },
-        {
-          data: taskStatsData.map((item) => item.average)
-        }
-      ]
-    })
-  }, [taskStatsData, updateOption])
+    updateOptionCallback(taskStatsData)
+  }, [taskStatsData])
+
+  useUpdateEffect(() => {
+    setTaskStatsData(wsTaskStatsData)
+  }, [wsTaskStatsData])
 
   return (
     <Panel

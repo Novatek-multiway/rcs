@@ -16,7 +16,7 @@ const LINE_TEXT_FONT_SIZE = 0.5 // 边的字体大小
 const LINE_SIZE = 0.1 // 边的尺寸
 const DIRECTION_REGULAR_POLYGON_SIZE = 0.2 // 边方向的尺寸
 // 单个边
-const Line: FC<ILineProps> = memo((props) => {
+export const Line: FC<ILineProps> = memo((props) => {
   const { bezier, points = [], strokeWidth, stroke = '#393c44' } = props
 
   return (
