@@ -77,7 +77,7 @@ const VehicleOperation: FC<IProps> = () => {
             <Electricity labels={electricityData?.labels || []} values={electricityData?.values || []} />
           </div>
 
-          <div style={{ flex: 1 }}>
+          <div style={{ flex: 1, minWidth: 0 }}>
             <Efficiency
               useRatio={efficiencyData?.useRatio || 0}
               troubleprool={efficiencyData?.troubleprool}
@@ -95,16 +95,16 @@ const VehicleOperation: FC<IProps> = () => {
           </div>
         </div>
         <div className="footer">
-          <div style={{ width: '25%' }}>
+          <div style={{ flex: 1, minWidth: 0 }}>
             <UtilizationRate labels={utilizationRateData?.labels} values={utilizationRateData?.values} />
           </div>
-          <div style={{ width: '25%' }}>
+          <div style={{ flex: 1, minWidth: 0 }}>
             <NoFaultTime labels={noFaultTimeData?.labels} values={noFaultTimeData?.values} />
           </div>
-          <div style={{ width: '25%' }}>
+          <div style={{ flex: 1, minWidth: 0 }}>
             <FinishedTasks labels={finishedTasksData?.labels} values={finishedTasksData?.values} />
           </div>
-          <div style={{ width: '25%' }}>
+          <div style={{ flex: 1, minWidth: 0 }}>
             <Mileage labels={mileageData?.labels} values={mileageData?.values} />
           </div>
         </div>

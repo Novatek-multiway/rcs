@@ -8,12 +8,14 @@ export const VehicleOperationWrapper = styled.div`
 
   .content {
     flex: 1;
+    min-height: 0;
     display: flex;
     flex-direction: column;
     gap: 12px;
     .header,
     .footer {
       flex: 1;
+      min-height: 0;
       display: flex;
       gap: 12px;
       justify-content: space-between;
