@@ -427,11 +427,10 @@ declare namespace ReportAPI {
     number: number
     pointKey: number
     priority: number
-    state: number
+    state: 0 | 1 | 2 | 4 // 0: 无货 1: 完整满货 2: 有缺陷 4: 货物偏移
     type: number
     usageCount: number
     workAreaTypeStr: string
-    LocationState?: 0 | 1 | 2 | 4 // 0: 无货 1: 完整满货 2: 有缺陷 4: 货物偏移
   }
 }
 

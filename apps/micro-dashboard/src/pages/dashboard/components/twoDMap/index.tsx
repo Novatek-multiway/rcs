@@ -124,15 +124,16 @@ const TwoDMap: FC<PropsWithChildren<ITwoDMapProps>> = (props) => {
   useUpdateEffect(() => {
     if (!mapData) return // 等待地图加载完毕再接收数据推送
     const newMapData = { ...mapData }
-    const vertexes = newMapData.Vertexs
+    const newVertexes = [...newMapData.Vertexs]
     const locations = homeChargeGoodsStations.filter((d) => d.type === 1 || d.type === 4)
     locations.forEach((l) => {
-      const vertex = vertexes?.find((v) => v.ID === l.pointKey)
+      const vertex = newVertexes?.find((v) => v.ID === l.pointKey)
       // 修改对应点的库位状态
       if (vertex) {
-        vertex.LocationState = l.LocationState
+        vertex.LocationState = l.state
       }
     })
+    newMapData.Vertexs = newVertexes
     setMapData(newMapData)
   }, [homeChargeGoodsStations])
   /* ---------------------------------- 实时推送 ---------------------------------- */
