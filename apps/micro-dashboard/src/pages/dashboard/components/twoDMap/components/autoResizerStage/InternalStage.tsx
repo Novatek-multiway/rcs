@@ -290,6 +290,7 @@ const InternalStage: FC<PropsWithChildren<IInternalStageProps>> = (props) => {
           showOutline={settings.isVehicleOutlineVisible}
           showLines={settings.isVehiclePlanningVisible}
           showTooltip={settings.isVehicleDetailVisible}
+          showBenchmarks={settings.isVehicleBenchmarkVisible}
         />
       </Layer>
       {/* 绘制层 */}
