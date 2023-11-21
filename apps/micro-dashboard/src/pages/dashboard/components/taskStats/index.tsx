@@ -64,7 +64,7 @@ const TaskStats: FC<PropsWithChildren<ITaskStatsProps>> = () => {
   const [taskStatsData, setTaskStatsData] = useState<ReportAPI.AgvTaskRoot>()
   const taskStatsList = useMemo(
     () =>
-      taskStatsData?.agvList?.map((item) => ({ id: item.Id, finishedCount: item.TaskQty, time: item.ConsumeTime })) ||
+      taskStatsData?.agvList?.map((item) => ({ id: item.id, finishedCount: item.taskQty, time: item.consumeTime })) ||
       [],
     [taskStatsData]
   )
@@ -84,8 +84,8 @@ const TaskStats: FC<PropsWithChildren<ITaskStatsProps>> = () => {
         series: [
           {
             data: taskStatsData.agvList.map((d) => ({
-              name: '编号-' + d.Id,
-              value: d.TaskQty
+              name: '编号-' + d.id,
+              value: d.taskQty
             }))
           }
         ]
@@ -113,7 +113,7 @@ const TaskStats: FC<PropsWithChildren<ITaskStatsProps>> = () => {
       <TaskStatusWrapper>
         <div className="header">
           <div className="finished">
-            已完成<span>{Number(taskStatsData?.finished) + Number(taskStatsData?.notFinished)}</span>个
+            已完成<span>{Number(taskStatsData?.finished)}</span>个
           </div>
           <div className="unfinished">
             未完成<span>{taskStatsData?.notFinished}</span>个

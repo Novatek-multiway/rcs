@@ -7,6 +7,7 @@ export const TaskStatsItemWrapper = styled.div`
   width: 100%;
   padding: 12px 0 12px 12px;
   box-sizing: border-box;
+  border-bottom: 1px solid #404144;
   .vehicle-id {
     font-size: 14px;
     padding: 4px 0;

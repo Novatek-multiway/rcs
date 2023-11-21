@@ -137,7 +137,7 @@ const UtilizationRateStats: FC<PropsWithChildren<IUtilizationRateStatsProps>> = 
         height: '40%'
       }}
     >
-      <div ref={el} style={{ width: '100%', height: '100%' }}></div>
+      <div ref={el} style={{ width: '100%', height: '32vh' }}></div>
     </Panel>
   )
 }

@@ -13,7 +13,7 @@ const CursorPosition: FC<PropsWithChildren<ICursorPositionProps>> = () => {
   }))
   return (
     <CursorPositionWrapper>
-      {(cursorPosition.x / stageMapRatio).toFixed(2)},{(cursorPosition.y / stageMapRatio).toFixed(2)}
+      {(cursorPosition.x / stageMapRatio).toFixed(2)},{(-cursorPosition.y / stageMapRatio).toFixed(2)}
     </CursorPositionWrapper>
   )
 }

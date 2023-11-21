@@ -4,6 +4,7 @@ import { echarts, useEcharts } from 'hooks'
 import { MaterialReactTable, type MRT_ColumnDef, useMaterialReactTable } from 'material-react-table'
 import type { FC, PropsWithChildren } from 'react'
 import React, { memo, useCallback, useMemo, useRef, useState } from 'react'
+import AutoSizer from 'react-virtualized-auto-sizer'
 import { Panel } from 'ui'
 
 import { useWebsocketStore } from '../../store/websocket'
@@ -48,7 +49,7 @@ const option: echarts.EChartsOption = {
     type: 'inside'
   },
   grid: {
-    right: 36,
+    right: 42,
     left: 36,
     bottom: 24
   },
@@ -164,13 +165,8 @@ const option: echarts.EChartsOption = {
   ]
 }
 
-// 车辆时间统计
-const TimeStats: FC<PropsWithChildren<ITimeStatsProps>> = () => {
-  const wsTaskStatsData = useWebsocketStore((state) => state['Report/GetTimeSum'])
-  const el = useRef<HTMLDivElement | null>(null)
-  // 传递元素给useEcharts
-  const { updateOption } = useEcharts(el, { echartsOption: option, theme: 'dark' })
-
+const TimeStatsTable = memo((props: { data: TimeStatsItem[]; maxHeight?: number }) => {
+  const { data, maxHeight = 218 } = props
   //should be memoized or stable
   const columns = useMemo<MRT_ColumnDef<TimeStatsItem>[]>(
     () => [
@@ -206,11 +202,9 @@ const TimeStats: FC<PropsWithChildren<ITimeStatsProps>> = () => {
     ],
     []
   )
-
-  const [taskStatsData, setTaskStatsData] = useState<ReportAPI.TimeSumDatum[]>([])
   const table = useMaterialReactTable({
     columns,
-    data: taskStatsData,
+    data,
     enableColumnActions: false,
     enableColumnFilters: false,
     enablePagination: false,
@@ -226,7 +220,7 @@ const TimeStats: FC<PropsWithChildren<ITimeStatsProps>> = () => {
     },
     muiTableContainerProps: {
       sx: {
-        maxHeight: '218px',
+        maxHeight: maxHeight + 'px',
         height: '100%'
       }
     },
@@ -273,31 +267,42 @@ const TimeStats: FC<PropsWithChildren<ITimeStatsProps>> = () => {
       }
     }
   })
+  return <MaterialReactTable table={table} />
+})
+
+// 车辆时间统计
+const TimeStats: FC<PropsWithChildren<ITimeStatsProps>> = () => {
+  const wsTaskStatsData = useWebsocketStore((state) => state['Report/GetTimeSum'])
+  const el = useRef<HTMLDivElement | null>(null)
+  // 传递元素给useEcharts
+  const { updateOption } = useEcharts(el, { echartsOption: option, theme: 'dark' })
+
+  const [timeStatsData, setTimeStatsData] = useState<ReportAPI.TimeSumDatum[]>([])
 
   useAsyncEffect(async () => {
     const res = await getTimeSum()
     const newTaskStatsData = res.data as ReportAPI.TimeSumDatum[]
-    setTaskStatsData(newTaskStatsData)
+    setTimeStatsData(newTaskStatsData)
   }, [])
 
   const updateOptionCallback = useCallback(
-    (taskStatsData: ReportAPI.TimeSumDatum[]) => {
+    (timeStatsData: ReportAPI.TimeSumDatum[]) => {
       updateOption({
         xAxis: {
-          data: taskStatsData.map((item) => item.id)
+          data: timeStatsData.map((item) => item.id)
         },
         series: [
           {
-            data: taskStatsData.map((item) => item.workTime)
+            data: timeStatsData.map((item) => item.workTime)
           },
           {
-            data: taskStatsData.map((item) => item.freeTime)
+            data: timeStatsData.map((item) => item.freeTime)
           },
           {
-            data: taskStatsData.map((item) => item.errorTime)
+            data: timeStatsData.map((item) => item.errorTime)
           },
           {
-            data: taskStatsData.map((item) => item.averageTask)
+            data: timeStatsData.map((item) => item.averageTask)
           }
         ]
       })
@@ -305,11 +310,11 @@ const TimeStats: FC<PropsWithChildren<ITimeStatsProps>> = () => {
     [updateOption]
   )
   useUpdateEffect(() => {
-    updateOptionCallback(taskStatsData)
-  }, [taskStatsData])
+    updateOptionCallback(timeStatsData)
+  }, [timeStatsData])
 
   useUpdateEffect(() => {
-    setTaskStatsData(wsTaskStatsData)
+    setTimeStatsData(wsTaskStatsData)
   }, [wsTaskStatsData])
 
   return (
@@ -321,7 +326,14 @@ const TimeStats: FC<PropsWithChildren<ITimeStatsProps>> = () => {
     >
       <div ref={el} style={{ width: '100%', height: '55%' }}></div>
       <div style={{ height: '45%' }}>
-        <MaterialReactTable table={table} />
+        <AutoSizer defaultHeight={218}>
+          {({ width, height }) => (
+            <div style={{ width, height }}>
+              <TimeStatsTable data={timeStatsData} maxHeight={height} />
+            </div>
+          )}
+        </AutoSizer>
+        {/* <MaterialReactTable table={table} /> */}
       </div>
     </Panel>
   )

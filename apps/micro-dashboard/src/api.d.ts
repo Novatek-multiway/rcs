@@ -397,10 +397,10 @@ declare namespace ReportAPI {
   }
 
   interface AgvTaskItem {
-    Average: number
-    ConsumeTime: number
-    Id: number
-    TaskQty: number
+    average: number
+    consumeTime: number
+    id: number
+    taskQty: number
   }
 
   interface ChargeGoodsStations {

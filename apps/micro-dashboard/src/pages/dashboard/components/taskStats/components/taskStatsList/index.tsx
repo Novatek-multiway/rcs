@@ -53,7 +53,7 @@ const TaskStatsList: FC<PropsWithChildren<ITaskStatsListProps>> = (props) => {
   return (
     <AutoSizer>
       {({ width, height }) => (
-        <FixedSizeList height={height} width={width} itemSize={height / 3} itemCount={data.length}>
+        <FixedSizeList height={height} width={width} itemSize={110} itemCount={data.length}>
           {(props) => <TaskStatsItem {...props} {...data[props.index]} />}
         </FixedSizeList>
       )}
