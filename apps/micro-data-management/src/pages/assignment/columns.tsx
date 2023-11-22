@@ -24,7 +24,7 @@ export const TaskColumn: (props: { refreshTable: () => void }) => MRT_ColumnDef<
     accessorKey: 'taskPoint',
     id: 'taskPoint',
     header: '任务点',
-    minSize: 148,
+    minSize: 158,
     maxSize: 300,
     Cell: ({ row }) => {
       const { original } = row
