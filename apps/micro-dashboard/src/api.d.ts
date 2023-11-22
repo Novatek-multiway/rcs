@@ -391,16 +391,16 @@ declare namespace ReportAPI {
 
   // 车辆任务
   interface AgvTaskRoot {
-    AgvList: AgvTaskItem[]
-    Finished: number
-    NotFinished: number
+    agvList: AgvTaskItem[]
+    finished: number
+    notFinished: number
   }
 
   interface AgvTaskItem {
-    Average: number
-    ConsumeTime: number
-    Id: number
-    TaskQty: number
+    average: number
+    consumeTime: number
+    id: number
+    taskQty: number
   }
 
   interface ChargeGoodsStations {
@@ -427,11 +427,10 @@ declare namespace ReportAPI {
     number: number
     pointKey: number
     priority: number
-    state: number
+    state: 0 | 1 | 2 | 4 // 0: 无货 1: 完整满货 2: 有缺陷 4: 货物偏移
     type: number
     usageCount: number
     workAreaTypeStr: string
-    LocationState?: 0 | 1 | 2 | 4 // 0: 无货 1: 完整满货 2: 有缺陷 4: 货物偏移
   }
 }
 

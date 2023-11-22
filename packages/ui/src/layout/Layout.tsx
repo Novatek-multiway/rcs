@@ -1,60 +1,53 @@
-import MenuIcon from "@mui/icons-material/Menu";
-import {
-  AppBar,
-  Box,
-  Collapse,
-  CssBaseline,
-  Toolbar,
-  Typography,
-} from "@mui/material";
-import { ThemeProvider } from "@mui/material/styles";
-import type { FC } from "react";
-import React, { memo, useState } from "react";
-import { theme } from "theme";
+import MenuIcon from '@mui/icons-material/Menu'
+import { AppBar, Box, Collapse, CssBaseline, Toolbar, Typography } from '@mui/material'
+import { ThemeProvider } from '@mui/material/styles'
+import type { FC } from 'react'
+import React, { memo, useState } from 'react'
+import { theme } from 'theme'
 
-import logo from "./assets/logo.png";
-import Nav from "./Nav";
-import Time from "./Time";
+import logo from './assets/logo.png'
+import Nav from './Nav'
+import Time from './Time'
 
 interface LayoutProps {
-  children: React.ReactNode;
-  onLogoTitleClick?: () => void;
+  children: React.ReactNode
+  onLogoTitleClick?: () => void
 }
 
 const Layout: FC<LayoutProps> = (props) => {
-  const { onLogoTitleClick } = props;
-  const [collapsed, setCollapsed] = useState(false);
+  const { onLogoTitleClick } = props
+  const [collapsed, setCollapsed] = useState(false)
 
   return (
     <ThemeProvider theme={theme}>
       <Box
         sx={{
-          display: "flex",
-          height: "100%",
-          overflow: "auto",
-          flexDirection: "column",
-          userSelect: "none",
+          display: 'flex',
+          height: '100%',
+          overflow: 'auto',
+          flexDirection: 'column',
+          userSelect: 'none'
         }}
       >
         <CssBaseline />
         <AppBar
           component="nav"
           sx={{
-            background: "rgb(24, 26, 33)",
+            background: 'rgb(24, 26, 33)',
             color: theme.palette.text.primary,
-            zIndex: 1000,
+            zIndex: 1000
           }}
         >
-          <Toolbar variant="dense" sx={{ alignItems: "center" }}>
+          <Toolbar variant="dense" sx={{ alignItems: 'center' }}>
             <img src={logo} alt="logo" height={28} onClick={onLogoTitleClick} />
             <Typography
               variant="h6"
               component="div"
               sx={{
                 flexGrow: 1,
-                display: { xs: "none", sm: "block" },
-                marginLeft: "6px",
-                transform: "translateY(2px)",
+                display: { xs: 'none', sm: 'block' },
+                marginLeft: '6px',
+                transform: 'translateY(2px)'
               }}
               onClick={onLogoTitleClick}
             >
@@ -63,16 +56,16 @@ const Layout: FC<LayoutProps> = (props) => {
             <MenuIcon
               fontSize="medium"
               onClick={() => setCollapsed((collapsed) => !collapsed)}
-              sx={{ cursor: "pointer", marginLeft: "auto" }}
+              sx={{ cursor: 'pointer', marginLeft: 'auto' }}
             />
             <Collapse in={!collapsed} orientation="horizontal">
               <Box
                 sx={{
-                  "&.MuiBox-root": {
-                    display: "flex",
-                    flexWrap: "nowrap",
-                    whiteSpace: "nowrap",
-                  },
+                  '&.MuiBox-root': {
+                    display: 'flex',
+                    flexWrap: 'nowrap',
+                    whiteSpace: 'nowrap'
+                  }
                 }}
               >
                 <Nav />
@@ -81,11 +74,11 @@ const Layout: FC<LayoutProps> = (props) => {
             <Time />
           </Toolbar>
         </AppBar>
-        <Box component="main" sx={{ p: 0, mt: theme.spacing(6), flex: 1 }}>
+        <Box component="main" sx={{ p: 0, mt: theme.spacing(6), flex: 1, minHeight: 0 }}>
           {props?.children}
         </Box>
       </Box>
     </ThemeProvider>
-  );
-};
-export default memo(Layout);
+  )
+}
+export default memo(Layout)

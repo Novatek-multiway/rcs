@@ -1,7 +1,7 @@
 import Konva from 'konva'
 import type { FC, PropsWithChildren } from 'react'
-import React, { memo, useEffect, useMemo, useRef, useState } from 'react'
-import { Group, Image as KonvaImage, Rect } from 'react-konva'
+import React, { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { Circle, Group, Image as KonvaImage, Rect } from 'react-konva'
 import { Html } from 'react-konva-utils'
 
 import { useImage } from '../../hooks/useImage'
@@ -9,7 +9,7 @@ import { useTwoDMapStore } from '../../store'
 import Lines, { ILinesProps } from '../lines'
 import { LINE_COLORS, ROTATION_OFFSET, VEHICLE_IMAGE_SIZE, VEHICLE_LIGHT_IMAGE_SIZE, vehicleColorMap } from './constant'
 import { TooltipWrapper } from './style'
-import { getPowerColor, getVehicleImage, getVehicleLightImage } from './utils'
+import { getPowerColor, getShortestRotation, getVehicleImage, getVehicleLightImage } from './utils'
 
 export interface IVehicleProps {
   id: number
@@ -27,6 +27,7 @@ export interface IVehicleProps {
   showOutline?: boolean
   showLines?: boolean // 是否显示规划路线
   showTooltip?: boolean // 是否显示提示信息
+  showBenchmarks?: boolean // 是否显示基准点
 }
 
 const Vehicle: FC<IVehicleProps> = memo((props) => {
@@ -45,7 +46,8 @@ const Vehicle: FC<IVehicleProps> = memo((props) => {
     showImage = true,
     showOutline = false,
     showLines = true,
-    showTooltip = true
+    showTooltip = true,
+    showBenchmarks = false
   } = props
   const currentScale = useTwoDMapStore((state) => state.currentScale)
   const [vehicleImagePath, setVehicleImagePath] = useState<string>('')
@@ -129,18 +131,26 @@ const Vehicle: FC<IVehicleProps> = memo((props) => {
     }
   }, [x, y, carGroupRef, isFirstRender])
 
+  const [prevAngle, setPrevAngle] = useState(0)
+  const getTargetRotation = useCallback(
+    (angle: number) => getShortestRotation(prevAngle, -angle + ROTATION_OFFSET),
+    [prevAngle]
+  )
   useEffect(() => {
     if (angle && carRef.current) {
       const car = carRef.current
 
+      const rotation = getTargetRotation(angle)
+      setPrevAngle(rotation)
+
       const carTween = new Konva.Tween({
         node: car,
         duration: 0.06,
-        rotation: -angle + ROTATION_OFFSET
+        rotation: rotation
       })
 
       if (isFirstRender) {
-        car.rotate(-angle + ROTATION_OFFSET)
+        car.rotate(rotation)
         setIsFirstRender(false)
       } else {
         carTween.play()
@@ -150,7 +160,7 @@ const Vehicle: FC<IVehicleProps> = memo((props) => {
         carTween.destroy()
       }
     }
-  }, [angle, isFirstRender])
+  }, [angle, isFirstRender, getTargetRotation])
   /* ---------------------------------- 车辆运动 ---------------------------------- */
 
   return (
@@ -227,6 +237,7 @@ const Vehicle: FC<IVehicleProps> = memo((props) => {
             </TooltipWrapper>
           </Html>
         )}
+        {showBenchmarks && <Circle width={0.3} height={0.3} fill="red" />}
       </Group>
     </Group>
   )
@@ -240,10 +251,11 @@ export interface IVehiclesProps {
   showOutline?: IVehicleProps['showOutline']
   showLines?: IVehicleProps['showLines']
   showTooltip?: IVehicleProps['showTooltip']
+  showBenchmarks?: IVehicleProps['showBenchmarks']
 }
 
 const Vehicles: FC<PropsWithChildren<IVehiclesProps>> = (props) => {
-  const { vehicles, stroke, strokeWidth, showImage, showOutline, showLines, showTooltip } = props
+  const { vehicles, stroke, strokeWidth, showImage, showOutline, showLines, showTooltip, showBenchmarks } = props
   return vehicles.map((vehicle) => (
     <Vehicle
       key={vehicle.id}
@@ -253,6 +265,7 @@ const Vehicles: FC<PropsWithChildren<IVehiclesProps>> = (props) => {
       showOutline={showOutline}
       showLines={showLines}
       showTooltip={showTooltip}
+      showBenchmarks={showBenchmarks}
       {...vehicle}
     />
   ))

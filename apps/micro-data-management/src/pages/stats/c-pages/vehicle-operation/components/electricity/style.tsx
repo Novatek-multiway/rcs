@@ -29,6 +29,7 @@ export const ElectricityWrapper = styled.div`
   }
   .chart {
     flex: 1;
+    min-height: 0;
     background-color: #1d1e25;
     border-radius: 5px;
   }

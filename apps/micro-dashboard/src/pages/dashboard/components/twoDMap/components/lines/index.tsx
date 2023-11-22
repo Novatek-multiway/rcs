@@ -1,8 +1,10 @@
 import Konva from 'konva'
+// import _ from 'lodash'
 import type { ElementRef, FC, PropsWithChildren } from 'react'
 import React, { memo, useEffect, useRef, useState } from 'react'
 import { Group, Line as KonvaLine, RegularPolygon, Text } from 'react-konva'
 
+// import BezierShape from '@/components/BezierShape'
 import { getDirectionFromAngle } from '../../utils'
 
 export interface ILineProps {
@@ -17,7 +19,34 @@ const LINE_SIZE = 0.1 // 边的尺寸
 const DIRECTION_REGULAR_POLYGON_SIZE = 0.2 // 边方向的尺寸
 // 单个边
 export const Line: FC<ILineProps> = memo((props) => {
-  const { bezier, points = [], strokeWidth, stroke = '#393c44' } = props
+  const {
+    // id,
+
+    bezier,
+    points = [],
+    strokeWidth,
+    stroke = '#393c44'
+  } = props
+
+  // return points.length <= 8 ? (
+  //   <KonvaLine
+  //     perfectDrawEnabled={false}
+  //     listening={false}
+  //     stroke={stroke}
+  //     strokeWidth={strokeWidth || LINE_SIZE}
+  //     bezier={bezier}
+  //     points={points}
+  //   />
+  // ) : (
+  //   <BezierShape
+  //     id={id}
+  //     controlPoints={_.chunk(points, 2).map(([x, y]) => ({ x, y }))}
+  //     bezierMakerOptions={{
+  //       stroke: stroke,
+  //       strokeWidth: strokeWidth || LINE_SIZE
+  //     }}
+  //   />
+  // )
 
   return (
     <KonvaLine

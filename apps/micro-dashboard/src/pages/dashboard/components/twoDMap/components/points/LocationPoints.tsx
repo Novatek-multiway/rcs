@@ -11,7 +11,7 @@ interface ILocationPointProps {
   isFull?: boolean
 }
 
-const LOCATION_SIZE = 5
+const LOCATION_SIZE = 2.5
 const LocationPoint: FC<PropsWithChildren<ILocationPointProps>> = memo((props) => {
   const { id, x, y, isFull = false } = props
   return isFull ? (

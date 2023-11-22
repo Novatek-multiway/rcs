@@ -60,7 +60,7 @@ const sampleControlPoints = (controlPoints: number[][]) => {
 }
 
 export const useLines = (edges: MapAPI.Edge[]) => {
-  const { idPointMap, setIdLineMap, stageMapRatio } = useTwoDMapStore((state) => ({
+  const { setIdLineMap, stageMapRatio } = useTwoDMapStore((state) => ({
     stageMapRatio: state.stageMapRatio,
     idPointMap: state.idPointMap,
     setIdLineMap: state.setIdLineMap
@@ -69,17 +69,13 @@ export const useLines = (edges: MapAPI.Edge[]) => {
   const lines: (ILineProps & ILineDirectionsProps)[] = useMemo(() => {
     const idLineMap = new Map()
     const line = deduplicatedEdges.map((edge) => {
-      const startPoint = idPointMap.get(edge.Start)
-      const endPoint = idPointMap.get(edge.End)
       const directions =
         edge.CustomDirection?.map((d) => ({ ...d, x: d.x * stageMapRatio, y: -d.y * stageMapRatio })) || []
-      const controlPoints = sampleControlPoints(
-        edge.ControlPoint.map((cPoint) => [cPoint.X * stageMapRatio, -cPoint.Y * stageMapRatio])
-      )
+      const controlPoints = edge.ControlPoint.map((cPoint) => [cPoint.X * stageMapRatio, -cPoint.Y * stageMapRatio])
 
       const line = {
         id: edge.ID,
-        points: startPoint && endPoint ? [...controlPoints] : [],
+        points: sampleControlPoints(controlPoints),
         bezier: !!edge.ControlPoint.length,
         directions
       }
@@ -89,7 +85,7 @@ export const useLines = (edges: MapAPI.Edge[]) => {
     })
     setIdLineMap(idLineMap)
     return line
-  }, [idPointMap, stageMapRatio, setIdLineMap, deduplicatedEdges])
+  }, [stageMapRatio, setIdLineMap, deduplicatedEdges])
 
   return lines
 }

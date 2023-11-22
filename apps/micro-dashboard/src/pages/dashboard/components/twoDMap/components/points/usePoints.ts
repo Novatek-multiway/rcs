@@ -15,7 +15,8 @@ export const usePoints = (vertexes: MapAPI.Vertex[]) => {
         x: vertex.X * stageMapRatio,
         y: -vertex.Y * stageMapRatio,
         text: vertex.ID,
-        type: vertex.Type
+        type: vertex.Type,
+        isFull: vertex.LocationState === 1
       }
 
       newIdPointMap.set(vertex.ID, point)
@@ -23,7 +24,6 @@ export const usePoints = (vertexes: MapAPI.Vertex[]) => {
     })
     // TODO fix error:  Cannot update a component (`InternalStage`) while rendering a different component (`TwoDMap`) 可能是导致更新鼠标位置时TwoDMap组件重新渲染次数过多，cpu占用提升的原因
     setIdPointMap(newIdPointMap)
-    console.log('🚀 ~ file: usePoints.ts ~ line 26 ~ points ~ newIdPointMap', newIdPointMap.get(7))
     return points
   }, [stageMapRatio, setIdPointMap, vertexes])
 
