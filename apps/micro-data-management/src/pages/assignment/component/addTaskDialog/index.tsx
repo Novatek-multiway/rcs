@@ -197,7 +197,7 @@ const AddTaskDialog: FC<{
                       type="number"
                       size="small"
                       variant="outlined"
-                      defaultValue={0}
+                      defaultValue={1}
                       sx={{
                         '.MuiInputBase-input': {
                           py: 0.5
