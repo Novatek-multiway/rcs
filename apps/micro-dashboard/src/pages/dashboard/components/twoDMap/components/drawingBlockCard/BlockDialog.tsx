@@ -51,7 +51,7 @@ const BlockDialogContent = styled(DialogContent)(() => ({
 const BlockDialog: FC<PropsWithChildren<IBlockDialogProps>> = (props) => {
   const { initialValue, title = '新增区块信息', open = false, points = [], onClose, onSubmit } = props
   const dicts = useDictStore((state) => state.dicts)
-  const trafficBlockTypes = useMemo(() => dicts.TrafficBlockType, [dicts])
+  const trafficBlockTypes = useMemo(() => dicts.TrafficBlockTypes, [dicts])
 
   const handleClose: DialogProps['onClose'] = (e, reason) => {
     if (reason !== 'backdropClick' && reason !== 'escapeKeyDown') {
