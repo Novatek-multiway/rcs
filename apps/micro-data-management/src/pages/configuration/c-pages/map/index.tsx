@@ -6,9 +6,7 @@ import {
   DeleteRouteFileInfo,
   GetChassisList,
   GetMapOptionPageList,
-  GetRuleChassisInfos,
   GetRuleControlStates,
-  getVertexs,
 } from "apis";
 import type { FC, ReactNode } from "react";
 import React, { memo } from "react";
@@ -19,6 +17,7 @@ import Refresh from "@/component/refreshIcon";
 
 import AddDialog from "./components/add";
 import EditDialog from "./components/edit";
+import ImportDialog from "./components/import";
 
 interface IProps {
   children?: ReactNode;
@@ -38,6 +37,7 @@ const dictsTransform = (arr: [], label: string, value: string) => {
 const MapPage: FC<IProps> = () => {
   const [open, setOpen] = React.useState(false);
   const [editOpen, setEditOpen] = React.useState(false);
+  const [openImport, setOpenImport] = React.useState(false);
   const [row, setRow] = React.useState({});
   const {
     data: chassisData,
@@ -48,7 +48,6 @@ const MapPage: FC<IProps> = () => {
   const { runAsync: delFn } = useRequest(DeleteRouteFileInfo, {
     manual: true,
   });
-  const { data: carrierData } = useRequest(GetRuleChassisInfos);
   const { data: controlStates } = useRequest(GetRuleControlStates);
 
   const { runAsync: changeFn } = useRequest(ChangeActive, {
@@ -58,7 +57,6 @@ const MapPage: FC<IProps> = () => {
     },
   });
 
-  const { data: vertexData } = useRequest(() => getVertexs());
   const { data: chassisList } = useRequest(GetChassisList);
 
   const convertChassisList = dictsTransform(chassisList?.data, "model", "id");
@@ -78,23 +76,23 @@ const MapPage: FC<IProps> = () => {
       header: "地图名称",
     },
     {
-      accessorKey: "mapCarrier",
+      accessorKey: "mapChassis",
       header: "适用车辆",
       Cell: ({ row }) => {
         const { original } = row;
         const tyles = carsList?.find(
-          (item) => item.value === original.mapCarrier
+          (item) => item.value === original.mapChassis
         );
         return <>{tyles?.label || ""}</>;
       },
     },
     {
-      accessorKey: "mapChassis",
+      accessorKey: "mapCarrier",
       header: "适用车型",
       Cell: ({ row }) => {
         const { original } = row;
         const tyles = convertChassisList?.find(
-          (item) => item.value === original.mapChassis
+          (item) => item.value === Number(original.mapCarrier)
         );
         return <>{tyles?.label || ""}</>;
       },
@@ -233,7 +231,7 @@ const MapPage: FC<IProps> = () => {
                 variant="outlined"
                 size="small"
                 color="success"
-                onClick={() => setOpen(true)}
+                onClick={() => setOpenImport(true)}
               >
                 <AddIcon />
                 上传底图文件
@@ -266,11 +264,13 @@ const MapPage: FC<IProps> = () => {
         open={editOpen}
         row={row}
         onClose={() => setEditOpen(false)}
-        vertexData={dictsTransform(vertexData?.data, "id", "id")}
-        carrierData={dictsTransform(carrierData?.data, "name", "id")}
-        chassisList={dictsTransform(chassisList?.data, "model", "id")}
-        callback={() => getChass()}
+        carrierData={convertChassisList}
+        controlStates={carsList}
+        callback={() => {
+          getChass();
+        }}
       />
+      <ImportDialog open={openImport} onClose={() => setOpenImport(false)} />
     </>
   );
 };

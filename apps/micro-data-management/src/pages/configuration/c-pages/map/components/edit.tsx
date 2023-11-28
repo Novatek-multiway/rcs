@@ -1,8 +1,7 @@
 import { useRequest } from "ahooks";
-import { UpdateEvent } from "apis";
+import { message } from "antd";
+import { UpdateRouteFileInfo } from "apis";
 import * as React from "react";
-import { memo } from "react";
-import { useDictStore } from "store";
 import {
   Button,
   Dialog,
@@ -14,11 +13,12 @@ import {
   nygFormik,
   useTheme,
 } from "ui";
+
+import useMapHooks from "./hooks";
 const EditDialog: React.FC<{
   open: boolean;
-  vertexData?: any;
   carrierData?: any;
-  chassisList?: any;
+  controlStates?: any;
   onClose?: () => void;
   callback?: () => void;
   row?: Record<string, any>;
@@ -26,89 +26,138 @@ const EditDialog: React.FC<{
   open,
   onClose = () => {},
   callback,
-  chassisList = [],
-  vertexData = [],
+  carrierData = [],
+  controlStates = [],
   row = {},
 }) => {
-  const { runAsync: run } = useRequest(UpdateEvent, {
+  const { runAsync: run } = useRequest(UpdateRouteFileInfo, {
     manual: true,
   });
+  const { svgList, dxfList } = useMapHooks();
+
   const theme = useTheme();
   const formRef = React.useRef<nygFormik>(null);
-  const { dicts } = useDictStore();
   const schemaObject = [
     {
-      name: "description",
-      label: "事件描述",
+      name: "projectName",
+      label: "项目名称",
       type: "text",
-      required: true,
       // type: "select",
     },
     {
-      name: "genus",
-      label: "元素类型",
-      type: "select",
-      items: dicts["GraphGenus"],
-      // type: "select",
+      name: "routeName",
+      label: "地图名称",
+      type: "text",
     },
     {
-      name: "routeKey",
-      label: "路径ID",
-      type: "autoComplete",
-      items: vertexData,
-      // type: "select",
+      name: "guid",
+      label: "地图GUID",
+      type: "text",
     },
     {
-      name: "carrierType",
-      label: "车辆类型",
-      type: "select",
-      items: chassisList,
-    },
-    {
-      name: "doTime",
-      label: "执行阶段",
-      type: "select",
-      items: dicts["EventTime"],
-    },
-    {
-      name: "waitTime",
-      label: "等待阶段",
-      type: "select",
-      items: dicts["EventTime"],
-    },
-
-    {
-      name: "eventType",
-      label: "事件类型",
-      type: "select",
-      items: dicts["EventType"],
-    },
-    {
-      name: "timeOut",
-      label: "超时",
+      name: "revision",
+      label: "版本号",
       type: "number",
     },
     {
-      name: "delay",
-      label: "延时",
-      type: "number",
-    },
-    {
-      name: "priority",
-      label: "优先级",
-      type: "number",
-    },
-    {
-      name: "checkHasGoods",
-      label: "载货判断",
+      name: "mapChassis",
+      label: "适用车辆",
       type: "select",
-      items: dicts["CheckGoods"],
+      items: controlStates,
+    },
+    {
+      name: "mapCarrier",
+      label: "适用车型",
+      type: "select",
+      items: carrierData,
+    },
+    {
+      name: "path",
+      label: "根文件目录",
+      type: "text",
+    },
+    {
+      name: "url",
+      label: "地图URL",
+      type: "text",
+    },
+    {
+      name: "routeFile",
+      label: "路径数据文件名",
+      type: "text",
+      disabled: true,
+    },
+    {
+      name: "dwgFile",
+      label: "地图Dxf文件名",
+      type: "select",
+      items: dxfList,
+    },
+    {
+      name: "svgFile",
+      label: "地图Svg文件名",
+      type: "select",
+      items: svgList,
+    },
+    {
+      name: "dwgMinX",
+      label: "地图XMin",
+      type: "number",
+      disabled: true,
+    },
+    {
+      name: "dwgMaxX",
+      label: "地图XMax",
+      type: "number",
+      disabled: true,
+    },
+    {
+      name: "dwgMinY",
+      label: "地图YMin",
+      type: "number",
+      disabled: true,
+    },
+    {
+      name: "dwgMaxY",
+      label: "地图YMax",
+      type: "number",
+      disabled: true,
+    },
+    {
+      name: "dwgScale",
+      label: "地图缩放",
+      type: "number",
+      disabled: true,
+    },
+    {
+      name: "routeMinX",
+      label: "路径Xmin",
+      type: "number",
+      disabled: true,
+    },
+    {
+      name: "routeMaxX",
+      label: "路径XMax",
+      type: "number",
+      disabled: true,
+    },
+    {
+      name: "routeMinY",
+      label: "路径YMin",
+      type: "number",
+      disabled: true,
+    },
+    {
+      name: "routeMaxY",
+      label: "路径YMax",
+      type: "number",
+      disabled: true,
     },
   ];
 
   return (
     <Dialog maxWidth="md" open={open} onClose={onClose}>
-      <DialogTitle>修改事件</DialogTitle>
+      <DialogTitle>新增路径文件</DialogTitle>
       <DialogContent
         sx={{
           py: `${theme.spacing(3.25)} !important`,
@@ -117,10 +166,7 @@ const EditDialog: React.FC<{
         <MaterialForm
           columns={3}
           ref={formRef}
-          defaultValue={{
-            ...row,
-            routeKey: { value: Number(row.routeKey), label: row.routeKey },
-          }}
+          defaultValue={row}
           schemaObject={schemaObject}
         ></MaterialForm>
       </DialogContent>
@@ -130,21 +176,19 @@ const EditDialog: React.FC<{
           onClick={async () => {
             await formRef.current?.submitForm();
             const { isValid, values } = formRef.current;
-            schemaObject.map((item) => {
-              if (item.type === "select") {
-                values[item.name] = Number(values[item.name]);
-              }
-            });
-            console.log(values);
 
             if (isValid) {
               const sendData = {
                 ...values,
-                routeKey: values.routeKey.value,
               };
-              await run(sendData);
+              const res = await run(sendData);
+              if (res.code === 0) {
+                callback && callback();
+                message.success(res.msg);
+              } else {
+                message.error(res.msg);
+              }
               onClose();
-              callback && callback();
             }
           }}
         >
@@ -157,4 +201,4 @@ const EditDialog: React.FC<{
     </Dialog>
   );
 };
-export default memo(EditDialog);
+export default EditDialog;

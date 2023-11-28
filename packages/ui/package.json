@@ -52,6 +52,7 @@
     "material-react-table": "2.0.0-beta.10",
     "mui-daterange-picker": "^1.0.5",
     "mui-form": "workspace:*",
+    "notistack": "^3.0.1",
     "react": "^18.2.0",
     "react-router-dom": "^6.15.0",
     "store": "workspace:*",

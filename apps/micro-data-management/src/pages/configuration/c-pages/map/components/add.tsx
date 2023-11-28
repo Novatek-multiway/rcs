@@ -2,7 +2,6 @@ import { useRequest } from "ahooks";
 import { message } from "antd";
 import { GetRouteFileInfo, WriteRouteFileInfo } from "apis";
 import * as React from "react";
-import { useDictStore } from "store";
 import {
   Button,
   Dialog,
@@ -14,6 +13,8 @@ import {
   nygFormik,
   useTheme,
 } from "ui";
+
+import useMapHooks from "./hooks";
 const AddDialog: React.FC<{
   open: boolean;
   carrierData?: any;
@@ -31,6 +32,7 @@ const AddDialog: React.FC<{
     fileContent: any;
     fileName: string;
   }>({});
+  const { svgList, dxfList } = useMapHooks();
   const { runAsync: run } = useRequest(WriteRouteFileInfo, {
     manual: true,
   });
@@ -48,7 +50,6 @@ const AddDialog: React.FC<{
   });
   const theme = useTheme();
   const formRef = React.useRef<nygFormik>(null);
-  const { dicts } = useDictStore();
   const schemaObject = [
     {
       name: "description",
@@ -121,16 +122,16 @@ const AddDialog: React.FC<{
       disabled: true,
     },
     {
-      name: "checkHasGoods",
+      name: "dwgFile",
       label: "地图Dxf文件名",
       type: "select",
-      items: dicts["CheckGoods"],
+      items: dxfList,
     },
     {
-      name: "SVGFile",
+      name: "svgFile",
       label: "地图Svg文件名",
       type: "select",
-      items: dicts["CheckGoods"],
+      items: svgList,
     },
     {
       name: "dwgMinX",
