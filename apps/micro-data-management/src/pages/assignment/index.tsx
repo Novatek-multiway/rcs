@@ -75,10 +75,11 @@ const DataTable = () => {
         Guid: selectedTaskData.taskCode,
         Points: [data]
       })
+      fetchTaskGroups()
       fetchTasks(selectedTaskGroupData.orderCode)
       setAddActionPointDialogOpen(false)
     },
-    [selectedTaskData, fetchTasks, selectedTaskGroupData.orderCode]
+    [selectedTaskData, fetchTasks, selectedTaskGroupData.orderCode, fetchTaskGroups]
   )
   /* -------------------------------- 给任务添加任务点 -------------------------------- */
 
@@ -212,7 +213,8 @@ const DataTable = () => {
             muiTableBodyRowProps={({ row }) => {
               return {
                 sx: {
-                  cursor: 'pointer'
+                  cursor: 'pointer',
+                  opacity: row.original.state === 5 ? 0.3 : 1
                 },
                 onClick: () => {
                   setSelectedTaskData(row.original)

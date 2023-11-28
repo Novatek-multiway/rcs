@@ -212,7 +212,7 @@ export const ChildTaskColumn: (props: { refreshTable: () => void }) => MRT_Colum
             width: '100px'
           }}
         >
-          <DelButton size="small" delFn={handleComplete}>
+          <DelButton size="small" delFn={handleComplete} disabled={row.original.state === 5}>
             设置完成
           </DelButton>
         </div>
