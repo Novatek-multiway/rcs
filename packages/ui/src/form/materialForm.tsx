@@ -1,88 +1,82 @@
-import {
-  Grid,
-  LinearProgress,
-  Paper,
-  TextFieldProps as MuiTextFieldProps,
-} from "@mui/material";
-import { Form, Formik, useFormikContext } from "formik";
-import { yup } from "mui-form";
-import PropTypes from "prop-types";
-import * as React from "react";
+import { Grid, LinearProgress, Paper, TextFieldProps as MuiTextFieldProps } from '@mui/material'
+import { Form, Formik, useFormikContext } from 'formik'
+import { yup } from 'mui-form'
+import PropTypes from 'prop-types'
+import * as React from 'react'
 
-import { forwardRef } from "../utils/inex";
+import { forwardRef } from '../utils/inex'
 import {
   FormFieldLabelAutoComplete,
   FormFieldLabelFile,
   FormFieldLabelRadioGroup,
   FormFieldLabelSelect,
   FormFieldLabelSwitch,
-  FormFieldLabelText,
-} from "./formField";
+  FormFieldLabelText
+} from './formField'
 
-interface FieldSchema
-  extends Omit<MuiTextFieldProps, "name" | "value" | "error"> {
-  name: string;
-  label: string;
-  helperText?: string;
-  type?: string;
-  multiple?: boolean; // 新增了 multiple 属性的类型定义
-  items?: Array<{ value: string; label: string }>; // 新增了 items 属性的类型定义
-  required?: boolean;
-  disabled?: boolean;
-  endAdornment?: React.ReactNode | string;
+interface FieldSchema extends Omit<MuiTextFieldProps, 'name' | 'value' | 'error'> {
+  name: string
+  label: string
+  helperText?: string
+  type?: string
+  multiple?: boolean // 新增了 multiple 属性的类型定义
+  items?: Array<{ value: string; label: string }> // 新增了 items 属性的类型定义
+  required?: boolean
+  disabled?: boolean
+  endAdornment?: React.ReactNode | string
 }
 
 interface MaterialFormProps {
-  defaultValue?: Record<string, any>;
-  schemaObject: FieldSchema[];
-  columns?: number;
+  defaultValue?: Record<string, any>
+  schemaObject: FieldSchema[]
+  columns?: number
 }
 
 export const MaterialForm = forwardRef<any, MaterialFormProps>((props, ref) => {
-  const { defaultValue = {}, schemaObject, columns = 2 } = props;
+  const { defaultValue = {}, schemaObject, columns = 2 } = props
   const AutoToken = () => {
-    const formikbag = useFormikContext();
-    React.useImperativeHandle(ref, () => formikbag);
-    return null;
-  };
+    const formikbag = useFormikContext()
+    React.useImperativeHandle(ref, () => formikbag)
+    return null
+  }
   const initValue = React.useMemo(() => {
     if (Array.isArray(schemaObject)) {
       const schemaKeys = schemaObject.reduce((pre, cur) => {
-        const { name, multiple } = cur;
-        pre[name] = multiple ? [] : "";
-        return pre;
-      }, {});
-      return { ...schemaKeys, ...defaultValue };
+        const { name, multiple } = cur
+        pre[name] = multiple ? [] : ''
+        return pre
+      }, {})
+      return { ...schemaKeys, ...defaultValue }
     }
-    return defaultValue;
-  }, [defaultValue, schemaObject]);
+    return defaultValue
+  }, [defaultValue, schemaObject])
   const schema = yup.object().shape(
     Array.isArray(schemaObject)
       ? schemaObject.reduce((shape, field) => {
-          const required = field.required ?? false;
-          let fieldSchema = field.multiple ? yup.array() : yup.string();
-          if (field.type === "autoComplete") {
-            fieldSchema = yup.mixed();
+          const required = field.required ?? false
+          let fieldSchema = field.multiple ? yup.array() : yup.string()
+          if (field.type === 'autoComplete') {
+            fieldSchema = yup.mixed()
           }
-          if (field.multiple && field.type === "select") {
+          if (field.multiple && field.type === 'select') {
             fieldSchema = fieldSchema.test({
               name: field.name,
               message: `${field.label} 字段必填`,
               test: (value) => {
-                return value && value.length > 0;
-              },
-            });
+                return value && value.length > 0
+              }
+            })
           }
           if (required) {
-            fieldSchema = fieldSchema.required(`${field.label} 字段必填`);
+            fieldSchema = fieldSchema.required(`${field.label} 字段必填`)
           }
           return {
             ...shape,
-            [field.name]: fieldSchema,
-          };
+            [field.name]: fieldSchema
+          }
         }, {})
       : {}
-  );
+  )
 
   const fileds = (errors, touched) => {
     if (Array.isArray(schemaObject)) {
@@ -95,14 +89,12 @@ export const MaterialForm = forwardRef<any, MaterialFormProps>((props, ref) => {
             md={12 / columns}
             key={field.name}
             sx={{
-              display: "flex",
-              alignItems: "flex-end",
+              display: 'flex',
+              alignItems: 'flex-end'
             }}
           >
-            {field.type === "checkbox" && (
-              <FormFieldLabelSwitch label={field.label} name={field.name} />
-            )}
-            {field.type === "select" && (
+            {field.type === 'checkbox' && <FormFieldLabelSwitch label={field.label} name={field.name} />}
+            {field.type === 'select' && (
               <FormFieldLabelSelect
                 label={field.label}
                 name={field.name}
@@ -110,7 +102,7 @@ export const MaterialForm = forwardRef<any, MaterialFormProps>((props, ref) => {
                 multiple={field.multiple}
               />
             )}
-            {field.type === "autoComplete" && (
+            {field.type === 'autoComplete' && (
               <FormFieldLabelAutoComplete
                 label={field.label}
                 name={field.name}
@@ -120,38 +112,21 @@ export const MaterialForm = forwardRef<any, MaterialFormProps>((props, ref) => {
                 touched
               />
             )}
-            {field.type === "text" && (
-              <FormFieldLabelText
-                disabled={field.disabled || false}
-                {...field}
-              />
+            {field.type === 'text' && <FormFieldLabelText disabled={field.disabled || false} {...field} />}
+            {field.type === 'number' && (
+              <FormFieldLabelText type="number" disabled={field.disabled || false} {...field} />
             )}
-            {field.type === "number" && (
-              <FormFieldLabelText
-                type="number"
-                disabled={field.disabled || false}
-                {...field}
-              />
+            {field.type === 'radioGroup' && (
+              <FormFieldLabelRadioGroup label={field.label} name={field.name} items={field.items} />
             )}
-            {field.type === "radioGroup" && (
-              <FormFieldLabelRadioGroup
-                label={field.label}
-                name={field.name}
-                items={field.items}
-              />
-            )}
-            {field.type === "file" && (
-              <FormFieldLabelFile
-                label={field.label}
-                name={field.name}
-                onChange={field.onChange}
-              />
+            {field.type === 'file' && (
+              <FormFieldLabelFile label={field.label} name={field.name} onChange={field.onChange} />
             )}
           </Grid>
-        );
-      });
+        )
+      })
     }
-  };
+  }
   return (
     <Paper elevation={2}>
       <Formik
@@ -159,8 +134,8 @@ export const MaterialForm = forwardRef<any, MaterialFormProps>((props, ref) => {
         validationSchema={schema}
         onSubmit={(values, { setSubmitting }) => {
           setTimeout(() => {
-            setSubmitting(false);
-          }, 2000);
+            setSubmitting(false)
+          }, 2000)
         }}
       >
         {({ isSubmitting, errors, touched }) => (
@@ -174,13 +149,13 @@ export const MaterialForm = forwardRef<any, MaterialFormProps>((props, ref) => {
         )}
       </Formik>
     </Paper>
-  );
-});
+  )
+})
 
 MaterialForm.propTypes = {
-  defaultValue: PropTypes.object,
-};
+  defaultValue: PropTypes.object
+}
 
-MaterialForm.displayName = "MaterialForm";
+MaterialForm.displayName = 'MaterialForm'
 
-export type nygFormik = ReturnType<typeof useFormikContext>;
+export type nygFormik = ReturnType<typeof useFormikContext>
