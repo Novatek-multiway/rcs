@@ -37,6 +37,7 @@ export interface IBlockDialogProps {
 
 const BlockDialogContent = styled(DialogContent)(() => ({
   overflowY: 'visible',
+  paddingTop: '20px !important',
   form: {
     display: 'flex',
     flexWrap: 'wrap',

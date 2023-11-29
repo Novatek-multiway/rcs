@@ -25,6 +25,27 @@ export const theme = createTheme({
           color: '#e1e1e3'
         }
       }
+    },
+    MuiPaper: {
+      styleOverrides: {
+        root: {
+          backgroundImage: 'none'
+        }
+      }
+    },
+    MuiDialogTitle: {
+      styleOverrides: {
+        root: {
+          background: 'rgb(32, 33, 35)'
+        }
+      }
+    },
+    MuiCardContent: {
+      styleOverrides: {
+        root: {
+          background: 'rgb(32, 33, 35)'
+        }
+      }
     }
   }
 })
