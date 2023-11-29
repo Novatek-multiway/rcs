@@ -1,8 +1,8 @@
 import { ITrafficBlock } from 'apis'
 import { Field, Form, Formik } from 'formik'
-import { Select, TextField } from 'formik-mui'
+import { fieldToTextField, TextFieldProps } from 'formik-mui'
 import type { FC, PropsWithChildren } from 'react'
-import React, { memo, useMemo } from 'react'
+import React, { memo, useCallback, useMemo } from 'react'
 import { useDictStore } from 'store'
 import {
   Box,
@@ -20,6 +20,7 @@ import {
   ListItemText,
   MenuItem,
   styled,
+  TextField,
   Typography
 } from 'ui'
 
@@ -34,6 +35,24 @@ export interface IBlockDialogProps {
     y: number
   }[]
 }
+
+const CustomTextField = memo((props: TextFieldProps) => {
+  const {
+    form: { setFieldValue },
+    field: { name },
+    type
+  } = props
+  const onChange = useCallback(
+    (event: any) => {
+      let { value } = event.target
+      if (type === 'number') value = Number(value)
+      setFieldValue(name, value)
+    },
+    [setFieldValue, name, type]
+  )
+
+  return <TextField {...(fieldToTextField(props) as any)} onChange={onChange} />
+})
 
 const BlockDialogContent = styled(DialogContent)(() => ({
   overflowY: 'visible',
@@ -67,6 +86,7 @@ const BlockDialog: FC<PropsWithChildren<IBlockDialogProps>> = (props) => {
       <Formik<NonNullable<IBlockDialogProps['initialValue']>>
         initialValues={initialValue || { type: 1, floor: 1, maxNumber: 1 }}
         onSubmit={async (values) => {
+          console.log('🚀 ~ file: BlockDialog.tsx ~ line 90 ~ onSubmit={ ~ values', values)
           await onSubmit?.(values as Required<typeof values>)
           onClose?.()
         }}
@@ -80,19 +100,32 @@ const BlockDialog: FC<PropsWithChildren<IBlockDialogProps>> = (props) => {
           return errors
         }}
       >
-        {({ submitForm, isSubmitting }) => (
+        {({ submitForm, isSubmitting, setFieldValue, values }) => (
           <>
             <BlockDialogContent>
               <Form>
-                <Field component={Select} name="type" label="区块类型" variant="outlined">
+                {/* <Field component={Select} name="type" label="区块类型" variant="outlined">
+                  
+                </Field> */}
+                <TextField
+                  inputProps={{
+                    onChange: (e: any) => {
+                      setFieldValue('type', e.target.value)
+                    }
+                  }}
+                  select
+                  value={values.type}
+                  label="区块类型"
+                  variant="outlined"
+                >
                   {trafficBlockTypes?.map((type: any) => (
                     <MenuItem value={type.value} key={type.label}>
                       {type.label}
                     </MenuItem>
                   ))}
-                </Field>
-                <Field component={TextField} name="floor" type="number" label="楼层" variant="outlined" />
-                <Field component={TextField} name="maxNumber" type="number" label="限制数量" variant="outlined" />
+                </TextField>
+                <Field component={CustomTextField} name="floor" type="number" label="楼层" variant="outlined" />
+                <Field component={CustomTextField} name="maxNumber" type="number" label="限制数量" variant="outlined" />
               </Form>
 
               <Card sx={{ boxShadow: 'none', mt: 2, bgcolor: 'transparent' }}>

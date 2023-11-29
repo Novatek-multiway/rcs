@@ -7,7 +7,6 @@ import qiankun from 'vite-plugin-qiankun'
 const ipRegex = /:\d+(\/)?/g
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '')
-  console.log('🚀 ~ file: vite.config.ts ~ line 10 ~ defineConfig ~ env', env)
 
   const matches = env.VITE_APP_HOST.match(ipRegex)
   const ip = parseInt(matches[0].slice(1).replace('/', ''))

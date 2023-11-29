@@ -1,3 +1,4 @@
+import { ThemeProvider } from '@mui/material'
 import { useAsyncEffect, useUpdateEffect } from 'ahooks'
 import { getTimeSum } from 'apis'
 import { echarts, useEcharts } from 'hooks'
@@ -5,6 +6,7 @@ import { MaterialReactTable, type MRT_ColumnDef, useMaterialReactTable } from 'm
 import type { FC, PropsWithChildren } from 'react'
 import React, { memo, useCallback, useMemo, useRef, useState } from 'react'
 import AutoSizer from 'react-virtualized-auto-sizer'
+import { theme } from 'theme'
 import { Panel } from 'ui'
 
 import { useWebsocketStore } from '../../store/websocket'
@@ -267,7 +269,11 @@ const TimeStatsTable = memo((props: { data: TimeStatsItem[]; maxHeight?: number 
       }
     }
   })
-  return <MaterialReactTable table={table} />
+  return (
+    <ThemeProvider theme={theme}>
+      <MaterialReactTable table={table} />
+    </ThemeProvider>
+  )
 })
 
 // 车辆时间统计
