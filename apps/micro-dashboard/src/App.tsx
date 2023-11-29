@@ -1,11 +1,10 @@
-import { CssBaseline } from '@mui/material'
-import { ThemeProvider } from '@mui/material/styles'
 import { useAsyncEffect, useRequest } from 'ahooks'
 import { getDicts } from 'apis'
 import { useAuth } from 'hooks'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import { useDictStore } from 'store'
 import { theme } from 'theme'
+import { CssBaseline, ThemeProvider } from 'ui'
 import { qiankunWindow } from 'vite-plugin-qiankun/dist/helper'
 
 import routerList from '@/router/router'
