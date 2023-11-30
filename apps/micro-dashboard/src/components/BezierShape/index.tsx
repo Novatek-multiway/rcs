@@ -28,12 +28,14 @@ const BezierShape: FC<PropsWithChildren<IBezierShapeProps>> = (props) => {
   }, [])
 
   useEffect(() => {
-    worker.postMessage(
-      JSON.stringify({
-        id,
-        controlPoints
-      })
-    )
+    if (!bezierMap.has(id)) {
+      worker.postMessage(
+        JSON.stringify({
+          id,
+          controlPoints
+        })
+      )
+    }
   }, [controlPoints, id])
 
   return (
@@ -44,6 +46,10 @@ const BezierShape: FC<PropsWithChildren<IBezierShapeProps>> = (props) => {
         const controlPoints = bezierMap.get(id) || []
         bezier.drawBezier(controlPoints)
       }}
+      shadowForStrokeEnabled={false}
+      hitStrokeWidth={0}
+      perfectDrawEnabled={false}
+      listening={false}
     />
   )
 }
