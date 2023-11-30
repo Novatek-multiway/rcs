@@ -38,7 +38,8 @@ const Vehicle = () => {
 
   const _Dict = useMemo(() => {
     const obj: any = {},
-      ary = ["ControlState", "DeviceState", "GoodsState"];
+      ary = ["ControlState", "DeviceState", "GoodsState", "GraphGenus"];
+    console.log("dicts", dicts);
     ary.forEach((key: string) => {
       if (!dicts[key] || !dicts[key]?.length) return;
       dicts[key]?.forEach((item: any) => {
@@ -84,6 +85,11 @@ const Vehicle = () => {
       header: "车体名称",
     },
     {
+      accessorKey: "chassisType",
+      id: "chassisType",
+      header: "车辆类型",
+    },
+    {
       accessorKey: "carrierPos",
       id: "carrierPos",
       header: "车辆位置",
@@ -94,9 +100,17 @@ const Vehicle = () => {
       header: "当前电量",
     },
     {
-      accessorKey: "carrierPosFrontWPF",
-      id: "carrierPosFrontWPF",
+      accessorKey: "routeType",
+      id: "routeType",
       header: "当前途径",
+      Cell: ({ cell, row }: any) => {
+        return (
+          <div>
+            {_Dict["GraphGenus"][cell.getValue()]} {" - "}
+            {row?.original?.currentRoute}
+          </div>
+        );
+      },
     },
     {
       accessorKey: "controlState",
@@ -119,7 +133,7 @@ const Vehicle = () => {
       id: "ip",
       header: "交管车辆",
       Cell: ({ row }: any) => {
-        return <div>{row?.original?.id}</div>;
+        return <div>{row?.original?.trafficControlCar || "无"}</div>;
       },
     },
     {
@@ -132,7 +146,7 @@ const Vehicle = () => {
       id: "isLockdown",
       header: "锁定状态",
       Cell: ({ cell }: any) => {
-        return <div>{cell.getValue() ? "锁定" : "未锁定"}</div>;
+        return <div>{!cell.getValue() ? "锁定" : "未锁定"}</div>;
       },
     },
     {
