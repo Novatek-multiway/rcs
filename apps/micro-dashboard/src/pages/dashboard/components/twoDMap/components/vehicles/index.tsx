@@ -17,6 +17,10 @@ export interface IVehicleProps {
   y: number
   vehicleImageName: string
   vehicleLightImageName: string
+  outlineWidth?: number // 车辆轮廓宽
+  outlineHeight?: number // 车辆轮廓高
+  outlineNormalizedCenterX?: number // 轮廓归一化的中心点x
+  outlineNormalizedCenterY?: number // 轮廓归一化的中心点y
   statusName?: string
   battery?: number
   angle?: number
@@ -37,6 +41,10 @@ const Vehicle: FC<IVehicleProps> = memo((props) => {
     y,
     vehicleImageName,
     vehicleLightImageName = 'circleBlue',
+    outlineHeight = VEHICLE_LIGHT_IMAGE_SIZE,
+    outlineWidth = VEHICLE_LIGHT_IMAGE_SIZE,
+    outlineNormalizedCenterX = 0.5,
+    outlineNormalizedCenterY = 0.5,
     statusName = '离线',
     battery = 0,
     angle = 0,
@@ -49,6 +57,7 @@ const Vehicle: FC<IVehicleProps> = memo((props) => {
     showTooltip = true,
     showBenchmarks = false
   } = props
+
   const currentScale = useTwoDMapStore((state) => state.currentScale)
   const [vehicleImagePath, setVehicleImagePath] = useState<string>('')
   const [vehicleLightImagePath, setVehicleLightImagePath] = useState<string>('')
@@ -105,7 +114,7 @@ const Vehicle: FC<IVehicleProps> = memo((props) => {
 
   /* ---------------------------------- 车辆运动 ---------------------------------- */
   const carGroupRef = useRef<Konva.Group>(null)
-  const carRef = useRef<Konva.Image>(null)
+  const carRotateGroupRef = useRef<Konva.Group>(null)
   const [isFirstRender, setIsFirstRender] = useState(true)
   useEffect(() => {
     if (x && y && carGroupRef.current) {
@@ -137,27 +146,26 @@ const Vehicle: FC<IVehicleProps> = memo((props) => {
     [prevAngle]
   )
   useEffect(() => {
-    if (angle && carRef.current) {
-      const car = carRef.current
-
+    if (angle && carRotateGroupRef.current) {
       const rotation = getTargetRotation(angle)
       setPrevAngle(rotation)
+      const carRotateGroup = carRotateGroupRef.current
 
-      const carTween = new Konva.Tween({
-        node: car,
+      const carRotateGroupTween = new Konva.Tween({
+        node: carRotateGroup,
         duration: 0.06,
         rotation: rotation
       })
 
       if (isFirstRender) {
-        car.rotate(rotation)
+        carRotateGroup && carRotateGroup.rotate(rotation)
         setIsFirstRender(false)
       } else {
-        carTween.play()
+        carRotateGroupTween && carRotateGroupTween.play()
       }
 
       return () => {
-        carTween.destroy()
+        carRotateGroupTween && carRotateGroupTween.destroy()
       }
     }
   }, [angle, isFirstRender, getTargetRotation])
@@ -168,41 +176,57 @@ const Vehicle: FC<IVehicleProps> = memo((props) => {
       {showLines && <Lines lines={lines} stroke={stroke ?? randomStroke} strokeWidth={strokeWidth} />}
 
       <Group ref={carGroupRef}>
-        {showImage && (
-          <>
-            <KonvaImage
-              ref={vehicleLightImageRef}
-              perfectDrawEnabled={false}
-              image={vehicleLightImage}
-              width={8.72}
-              height={VEHICLE_LIGHT_IMAGE_SIZE}
-              offsetX={8.72 / 2}
-              offsetY={VEHICLE_LIGHT_IMAGE_SIZE / 2}
-            ></KonvaImage>
-            <KonvaImage
-              ref={carRef}
-              perfectDrawEnabled={false}
-              image={vehicleImage}
-              width={VEHICLE_IMAGE_SIZE * vehicleImageAspectRatio}
-              height={VEHICLE_IMAGE_SIZE}
-              offsetX={(VEHICLE_IMAGE_SIZE * vehicleImageAspectRatio) / 2}
-              offsetY={VEHICLE_IMAGE_SIZE / 2}
-            ></KonvaImage>
-          </>
-        )}
-        {showOutline && (
-          <Rect
-            perfectDrawEnabled={false}
-            image={vehicleImage}
-            width={VEHICLE_LIGHT_IMAGE_SIZE}
-            height={VEHICLE_LIGHT_IMAGE_SIZE}
-            offsetX={VEHICLE_LIGHT_IMAGE_SIZE / 2}
-            offsetY={VEHICLE_LIGHT_IMAGE_SIZE / 2}
-            stroke={'#00cbca'}
-            strokeWidth={0.1}
-            fill="transparent"
-          />
-        )}
+        <Group
+          ref={carRotateGroupRef}
+          offsetY={-outlineNormalizedCenterX * outlineWidth}
+          offsetX={-outlineNormalizedCenterY * outlineHeight}
+        >
+          {showImage && (
+            <>
+              <KonvaImage
+                ref={vehicleLightImageRef}
+                perfectDrawEnabled={false}
+                image={vehicleLightImage}
+                width={8.72}
+                height={VEHICLE_LIGHT_IMAGE_SIZE}
+                offsetX={8.72 / 2}
+                offsetY={VEHICLE_LIGHT_IMAGE_SIZE / 2}
+              ></KonvaImage>
+              <KonvaImage
+                perfectDrawEnabled={false}
+                image={vehicleImage}
+                width={VEHICLE_IMAGE_SIZE * vehicleImageAspectRatio}
+                height={VEHICLE_IMAGE_SIZE}
+                offsetX={(VEHICLE_IMAGE_SIZE * vehicleImageAspectRatio) / 2}
+                offsetY={VEHICLE_IMAGE_SIZE / 2}
+              ></KonvaImage>
+            </>
+          )}
+          <Group rotation={-ROTATION_OFFSET}>
+            {showOutline && (
+              <Rect
+                perfectDrawEnabled={false}
+                image={vehicleImage}
+                width={outlineWidth}
+                height={outlineHeight}
+                offsetX={outlineWidth / 2}
+                offsetY={outlineHeight / 2}
+                stroke={'#00cbca'}
+                strokeWidth={0.1}
+                fill="transparent"
+              />
+            )}
+            {showBenchmarks && (
+              <Circle
+                width={0.3}
+                height={0.3}
+                fill="red"
+                x={outlineWidth * outlineNormalizedCenterX}
+                y={outlineHeight * outlineNormalizedCenterY}
+              />
+            )}
+          </Group>
+        </Group>
         {showTooltip && (
           <Html
             transform
@@ -237,7 +261,6 @@ const Vehicle: FC<IVehicleProps> = memo((props) => {
             </TooltipWrapper>
           </Html>
         )}
-        {showBenchmarks && <Circle width={0.3} height={0.3} fill="red" />}
       </Group>
     </Group>
   )

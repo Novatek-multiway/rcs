@@ -44,6 +44,11 @@ export const useVehicles = (
           .map((p) => idLineMap.get(p.planningKey)!)
         const isFull = carrier.goodsStatus === 1
         const vehicleImageName = carrier.image.replace('.png', isFull ? '.FULL' : '')
+        const outlineWidth = Math.abs(carrier.lkX2 - carrier.lkX1) * stageMapRatio // 车辆轮廓宽
+        const outlineHeight = Math.abs(carrier.lkY2 - carrier.lkY1) * stageMapRatio // 车辆轮廓高
+        const outlineNormalizedCenterX = (Math.abs(-carrier.lkX1) * stageMapRatio) / outlineWidth - 0.5 // 轮廓归一化的中心点x
+        const outlineNormalizedCenterY = (Math.abs(-carrier.lkY1) * stageMapRatio) / outlineHeight - 0.5 // 轮廓归一化的中心点y
+
         const vehicle = {
           id: carrier.id,
           x: carrier.x * stageMapRatio,
@@ -53,7 +58,11 @@ export const useVehicles = (
           lines: lines,
           statusName: carrier.statusName,
           battery: carrier.elecQuantity,
-          angle: carrier.angle
+          angle: carrier.angle,
+          outlineHeight,
+          outlineWidth,
+          outlineNormalizedCenterX,
+          outlineNormalizedCenterY
         }
         return vehicle
       }),
