@@ -20,14 +20,22 @@ while (count < 9999) {
 
 const EditDialog: React.FC<{
   open: boolean;
+  option: any;
   onClose?: () => void;
   callback?: () => void;
   row?: Record<string, any>;
-}> = ({ open, onClose = () => {}, callback, row = {} }) => {
+}> = ({
+  open,
+  onClose = () => {},
+  callback,
+  option: carrierData,
+  row = {},
+}) => {
   const theme = useTheme();
   const formRef = React.useRef<nygFormik>(null);
 
   React.useEffect(() => {
+    console.log(row);
     if (!row.area) return;
     row.area = row?.area.map((key: string) => ({ value: key, label: key }));
     formRef?.current?.setValues(row);
@@ -65,8 +73,9 @@ const EditDialog: React.FC<{
             },
             {
               name: "type",
-              label: "车辆类型",
-              type: "text",
+              label: "适用车型",
+              type: "select",
+              items: carrierData,
             },
             {
               name: "area",

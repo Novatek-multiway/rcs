@@ -2,9 +2,10 @@ import AcUnitIcon from "@mui/icons-material/AcUnit";
 import AddIcon from "@mui/icons-material/Add";
 import EditNoteIcon from "@mui/icons-material/EditNote";
 import SportsSoccerIcon from "@mui/icons-material/SportsSoccer";
-import { useAsyncEffect } from "ahooks";
+import { useAsyncEffect, useRequest } from "ahooks";
 import {
   delCreateCarrier,
+  GetChassisList,
   getSimulationCarrierLogin,
   notification,
   postGetCarrierInfo,
@@ -25,6 +26,16 @@ import AddDialog from "./components/add";
 import EditDialog from "./components/edit";
 import InfoDialog from "./components/info";
 
+const dictsTransform = (arr: [], label: string, value: string) => {
+  if (!arr) {
+    return [];
+  }
+  return arr.map((item) => ({
+    label: String(item[label]),
+    value: item[value],
+  }));
+};
+
 const Vehicle = () => {
   const [loading, setLoading] = useState(false);
   const [tableData, setTableData] = useState<any[]>([]);
@@ -35,6 +46,9 @@ const Vehicle = () => {
   const [row, setRow] = useState({});
 
   const { dicts } = useDictStore();
+  const { data: chassisList } = useRequest(GetChassisList);
+
+  const convertChassisList = dictsTransform(chassisList?.data, "model", "id");
 
   const _Dict = useMemo(() => {
     const obj: any = {},
@@ -193,6 +207,7 @@ const Vehicle = () => {
               onClick={async () => {
                 const id = row?.original?.id;
                 const { msg } = await postRemoveCarrier({ id });
+                getTableData();
                 RcsMessage.success(msg);
               }}
               startIcon={<SportsSoccerIcon />}
@@ -216,6 +231,7 @@ const Vehicle = () => {
                 const id = row?.original?.id;
                 const { msg } = await getSimulationCarrierLogin(id);
                 RcsMessage.success(msg);
+                getTableData();
               }}
               startIcon={<AcUnitIcon />}
             >
@@ -259,7 +275,12 @@ const Vehicle = () => {
           ? { ...hashMap[statesId], ...states?.data[index] }
           : { ...initHash, ...states?.data[index] });
     }
-    setTableData(Object.values(hashMap));
+    console.log("hashMap", hashMap);
+    let ary = Object.values(hashMap);
+    ary = ary.sort((a: any, b: any) => {
+      return b.heart - a.heart;
+    });
+    setTableData(ary);
     setTimeout(() => {
       setLoading(false);
     }, 1000);
@@ -275,29 +296,33 @@ const Vehicle = () => {
   };
   // 锁车0 解锁1
   const updateCarrierState = async (table: any, status: 0 | 1) => {
-    if (table.getSelectedRowModel().rows.length != 1) {
-      notification.warning({
-        message: `警告`,
-        description: "请选择一条数据",
-      });
-      return;
-    }
-    const [row] = table.getSelectedRowModel().rows;
-    await postUpdateCarrierState({ carId: row?.original?.id, key: status });
+    // if (table.getSelectedRowModel().rows.length != 1) {
+    //   notification.warning({
+    //     message: `警告`,
+    //     description: "请选择一条数据",
+    //   });
+    //   return;
+    // }
+    const promiseAry = table.getSelectedRowModel().rows.map((row: any) => {
+      return postUpdateCarrierState({ carId: row?.original?.id, key: status });
+    });
+    await Promise.all(promiseAry);
     table.resetRowSelection();
     RcsMessage.success();
   };
   // 急停 0急停 1解除
   const sendRemoteStop = async (table: any, status: 0 | 1) => {
-    if (table.getSelectedRowModel().rows.length != 1) {
-      notification.warning({
-        message: `警告`,
-        description: "请选择一条数据",
-      });
-      return;
-    }
-    const [row] = table.getSelectedRowModel().rows;
-    await postSendRemoteStop({ carId: row?.original?.id, key: status });
+    // if (table.getSelectedRowModel().rows.length != 1) {
+    //   notification.warning({
+    //     message: `警告`,
+    //     description: "请选择一条数据",
+    //   });
+    //   return;
+    // }
+    const promiseAry = table.getSelectedRowModel().rows.map((row: any) => {
+      return postSendRemoteStop({ carId: row?.original?.id, key: status });
+    });
+    await Promise.all(promiseAry);
     RcsMessage.success();
     table.resetRowSelection();
   };
@@ -311,7 +336,11 @@ const Vehicle = () => {
           sx: {
             height: "100%",
             padding: 2,
+            overflow: "auto",
           },
+        }}
+        muiTableBodyRowProps={{
+          title: "双击查看路径状态",
         }}
         loading={loading}
         renderTopToolbarCustomActions={({ table }) => {
@@ -413,6 +442,7 @@ const Vehicle = () => {
       />
       <AddDialog
         open={addOpen}
+        option={convertChassisList}
         onClose={() => setAddOpen(false)}
         callback={() => {
           RcsMessage.success();
@@ -422,6 +452,7 @@ const Vehicle = () => {
       />
       <EditDialog
         open={editOpen}
+        option={convertChassisList}
         row={row}
         onClose={() => setEditOpen(false)}
         callback={() => {
