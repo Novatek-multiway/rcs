@@ -20,11 +20,24 @@ while (count < 9999) {
 
 const AddDialog: React.FC<{
   open: boolean;
+  option: any;
   onClose?: () => void;
   callback?: () => void;
-}> = ({ open, onClose = () => {}, callback }) => {
+}> = ({ open, onClose = () => {}, option: carrierData, callback }) => {
   const theme = useTheme();
   const formRef = React.useRef<nygFormik>(null);
+
+  React.useEffect(() => {
+    // formRef.current?.setFieldValue()
+    open && console.log("!2");
+    open &&
+      setTimeout(() => {
+        console.log("formRef.current", formRef.current);
+        formRef?.current?.setValues({
+          area: [{ label: 1, value: 1 }],
+        });
+      }, 0);
+  }, [open, formRef]);
 
   return (
     <Dialog maxWidth="md" open={open} onClose={onClose}>
@@ -42,21 +55,26 @@ const AddDialog: React.FC<{
               name: "ip",
               label: "车辆IP",
               type: "text",
+              required: true,
             },
             {
               name: "name",
               label: "车体名称",
               type: "text",
+              required: true,
             },
             {
               name: "id",
               label: "车辆编号",
               type: "text",
+              required: true,
             },
             {
               name: "type",
               label: "车辆类型",
-              type: "text",
+              type: "select",
+              items: carrierData,
+              required: true,
             },
             {
               name: "area",
@@ -72,9 +90,9 @@ const AddDialog: React.FC<{
         <Button
           color="primary"
           onClick={async () => {
+            await formRef?.current?.validateForm();
             await formRef?.current?.submitForm();
             const { isValid, values }: any = formRef.current || {};
-            console.log(values, isValid);
 
             if (isValid) {
               const params = { ...values };
