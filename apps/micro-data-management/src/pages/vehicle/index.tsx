@@ -308,6 +308,7 @@ const Vehicle = () => {
     });
     await Promise.all(promiseAry);
     table.resetRowSelection();
+    getTableData();
     RcsMessage.success();
   };
   // 急停 0急停 1解除
@@ -323,6 +324,7 @@ const Vehicle = () => {
       return postSendRemoteStop({ carId: row?.original?.id, key: status });
     });
     await Promise.all(promiseAry);
+    getTableData();
     RcsMessage.success();
     table.resetRowSelection();
   };
