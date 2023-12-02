@@ -1,95 +1,103 @@
-import AddIcon from "@mui/icons-material/Add";
-import EditNoteIcon from "@mui/icons-material/EditNote";
-import { useRequest } from "ahooks";
-import { delChassisInfos, getChassisInfos } from "apis";
-import type { FC, ReactNode } from "react";
-import React, { memo } from "react";
-import { useDictStore } from "store";
-import { BaseTable, Box, Button } from "ui";
-import { getUpperCaseKeyObject } from "utils";
+import AddIcon from '@mui/icons-material/Add'
+import EditNoteIcon from '@mui/icons-material/EditNote'
+import { useRequest, useUpdateEffect } from 'ahooks'
+import { delChassisInfos, getChassisInfos } from 'apis'
+import type { FC, ReactNode } from 'react'
+import React, { memo, useMemo, useState } from 'react'
+import { useDictStore } from 'store'
+import { BaseTable, Box, Button } from 'ui'
 
-import DelButton from "@/component/delButton";
-import Refresh from "@/component/refreshIcon";
+import DelButton from '@/component/delButton'
+import Refresh from '@/component/refreshIcon'
 
-import AddDialog from "./components/add";
-import EditDialog from "./components/edit";
+import AddDialog from './components/add'
+import EditDialog from './components/edit'
 
 interface IProps {
-  children?: ReactNode;
+  children?: ReactNode
 }
 
 // 车型配置
 const VehicleType: FC<IProps> = () => {
-  const { dicts } = useDictStore();
-  const [open, setOpen] = React.useState(false);
-  const [editOpen, setEditOpen] = React.useState(false);
-  const [row, setRow] = React.useState({});
-  const {
-    data: chassisData,
-    loading,
-    run: getChass,
-  } = useRequest(() => getChassisInfos({ type: 0 }));
+  const { dicts } = useDictStore()
+  const [open, setOpen] = React.useState(false)
+  const [editOpen, setEditOpen] = React.useState(false)
+  const [row, setRow] = React.useState({})
+  const [page, setPage] = useState({
+    pageIndex: 0,
+    pageSize: 10
+  })
+  const [rowCount, setRowCount] = useState(0)
+
+  const { data: chassisData, loading, run: getChass } = useRequest(() => getChassisInfos({ type: 0 }))
+
+  useUpdateEffect(() => {
+    setRowCount(chassisData?.data.length)
+  }, [chassisData])
+
+  const currentPageTableData = useMemo(
+    () => chassisData?.data?.slice?.(page.pageIndex * page.pageSize, (page.pageIndex + 1) * page.pageSize) || [],
+    [page, chassisData]
+  )
 
   const { runAsync: delFn } = useRequest(delChassisInfos, {
-    manual: true,
-  });
+    manual: true
+  })
 
   const columns = [
     {
-      accessorKey: "id",
-      header: "ID",
+      accessorKey: 'id',
+      header: 'ID'
     },
     {
-      accessorKey: "type",
-      header: "类型",
+      accessorKey: 'type',
+      header: '类型',
       Cell: ({ row }) => {
-        const { original } = row;
-        const tyles = dicts.CarrierType?.find(
-          (item) => item.value === original.type
-        );
-        return <>{tyles?.label || ""}</>;
-      },
+        const { original } = row
+        const tyles = dicts.CarrierType?.find((item) => item.value === original.type)
+        return <>{tyles?.label || ''}</>
+      }
     },
     {
-      accessorKey: "model",
-      header: "名称",
+      accessorKey: 'model',
+      header: '名称'
     },
     {
-      accessorKey: "forcedCharge",
-      header: "强制充电电量",
+      accessorKey: 'forcedCharge',
+      header: '强制充电电量'
     },
     {
-      accessorKey: "noLoadOffsetX",
-      header: "空载偏移X",
+      accessorKey: 'noLoadOffsetX',
+      header: '空载偏移X'
     },
     {
-      accessorKey: "noLoadOffsetY",
-      header: "空载偏移Y",
+      accessorKey: 'noLoadOffsetY',
+      header: '空载偏移Y'
     },
     {
-      accessorKey: "noLoadWidth",
-      header: "空载车宽",
+      accessorKey: 'noLoadWidth',
+      header: '空载车宽'
     },
     {
-      accessorKey: "noLoadLength",
-      header: "空载车长",
+      accessorKey: 'noLoadLength',
+      header: '空载车长'
     },
     {
-      accessorKey: "chassisModel",
-      header: "模型文件",
+      accessorKey: 'chassisModel',
+      header: '模型文件'
     },
     {
-      accessorKey: "actions",
-      header: "操作",
+      accessorKey: 'actions',
+      header: '操作',
       enableSorting: false,
       Cell: ({ row }) => {
         return (
           <div
             style={{
-              display: "flex",
-              flexWrap: "nowrap",
-              gap: "0.5rem",
-              width: "100px",
+              display: 'flex',
+              flexWrap: 'nowrap',
+              gap: '0.5rem',
+              width: '100px'
             }}
           >
             <Button
@@ -97,8 +105,18 @@ const VehicleType: FC<IProps> = () => {
               size="small"
               color="warning"
               onClick={() => {
-                setEditOpen(true);
-                setRow(row.original);
+                setEditOpen(true)
+                const x2 = (row.original.noLoadOffsetX * 2 + row.original.noLoadLength) / 2
+                const x1 = x2 - row.original.noLoadLength
+                const y2 = (row.original.noLoadOffsetY * 2 + row.original.noLoadWidth) / 2
+                const y1 = y2 - row.original.noLoadWidth
+                setRow({
+                  ...row.original,
+                  x1,
+                  x2,
+                  y1,
+                  y2
+                })
               }}
               startIcon={<EditNoteIcon />}
             >
@@ -107,37 +125,37 @@ const VehicleType: FC<IProps> = () => {
             <DelButton
               delFn={async () => {
                 await delFn({
-                  id: row.original.id,
-                });
-                getChass();
+                  id: row.original.id
+                })
+                getChass()
               }}
             />
           </div>
-        );
-      },
-    },
-  ];
+        )
+      }
+    }
+  ]
 
   return (
     <>
       <BaseTable
         columns={columns}
-        data={chassisData?.data || []}
+        data={currentPageTableData}
         muiTablePaperProps={{
           sx: {
-            height: "100%",
-            padding: 2,
-          },
+            height: '100%',
+            padding: 2
+          }
         }}
         loading={loading}
         renderTopToolbarCustomActions={() => {
           return (
             <Box
               sx={{
-                display: "flex",
-                alignItems: "center",
+                display: 'flex',
+                alignItems: 'center',
                 gap: 1,
-                p: "4px",
+                p: '4px'
               }}
             >
               <Button
@@ -145,45 +163,43 @@ const VehicleType: FC<IProps> = () => {
                 size="small"
                 color="warning"
                 onClick={() => {
-                  getChass();
+                  getChass()
                 }}
               >
                 <Refresh loading={loading}></Refresh>
                 刷新
               </Button>
-              <Button
-                variant="outlined"
-                size="small"
-                color="primary"
-                onClick={() => setOpen(true)}
-              >
+              <Button variant="outlined" size="small" color="primary" onClick={() => setOpen(true)}>
                 <AddIcon />
                 新增
               </Button>
             </Box>
-          );
+          )
         }}
         initialState={{
           columnPinning: {
-            right: ["actions"],
-          },
+            right: ['actions']
+          }
         }}
+        state={{
+          pagination: page
+        }}
+        rowCount={rowCount}
+        onPaginationChange={(page) => {
+          setPage(page)
+        }}
+        manualPagination
       />
       <AddDialog
         open={open}
         onClose={() => setOpen(false)}
         callback={() => {
-          getChass();
+          getChass()
         }}
       />
-      <EditDialog
-        open={editOpen}
-        row={getUpperCaseKeyObject(row)}
-        onClose={() => setEditOpen(false)}
-        callback={() => getChass()}
-      />
+      <EditDialog open={editOpen} row={row} onClose={() => setEditOpen(false)} callback={() => getChass()} />
     </>
-  );
-};
+  )
+}
 
-export default memo(VehicleType);
+export default memo(VehicleType)
