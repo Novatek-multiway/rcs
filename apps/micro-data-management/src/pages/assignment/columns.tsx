@@ -176,11 +176,11 @@ export const ChildTaskColumn: (props: { refreshTable: () => void }) => MRT_Colum
   },
   {
     accessorKey: 'action',
-    header: '动作类型',
+    header: '任务类型',
     Cell: ({ row }) => {
-      const orderActionOptions = useDictStore((state) => state.dicts.OrderActionType)
-      const currentAction = row.original.actionPoint[0].action
-      const label = orderActionOptions.find((item: any) => item.value === currentAction)?.label
+      const taskTypeOptions = useDictStore((state) => state.dicts.TaskType)
+      const type = row.original.type
+      const label = taskTypeOptions.find((item: any) => item.value === type)?.label
       return <span>{label}</span>
     }
   },
@@ -244,9 +244,9 @@ export const TaskPointsColumn: MRT_ColumnDef<any>[] = [
     accessorKey: 'state',
     header: '状态',
     Cell: ({ row }) => {
-      const taskStateOptions = useDictStore((state) => state.dicts.TaskState)
+      const commandStateOptions = useDictStore((state) => state.dicts.CommandState)
       const currentState = row.original.state
-      const label = taskStateOptions.find((item: any) => item.value === currentState)?.label
+      const label = commandStateOptions.find((item: any) => item.value === currentState)?.label
       return <span>{label}</span>
     }
   },
