@@ -1,6 +1,6 @@
 import { cancelTask, completeTask } from 'apis'
 import { useDictStore } from 'store'
-import { Box, Chip, Divider, Grid, MRT_ColumnDef, Switch, Tooltip } from 'ui'
+import { Box, Chip, Grid, MRT_ColumnDef, Switch, Tooltip } from 'ui'
 
 import DelButton, { IDelButtonProps } from '@/component/delButton'
 export const TaskColumn: (props: { refreshTable: () => void }) => MRT_ColumnDef<any>[] = ({ refreshTable }) => [
@@ -36,7 +36,7 @@ export const TaskColumn: (props: { refreshTable: () => void }) => MRT_ColumnDef<
         }
         return (
           <>
-            <Grid container>
+            <Grid container xs={12}>
               {tasks[0].actionPoint?.map((item: { vertexID: string }, i: number) => (
                 <Box
                   sx={{
@@ -44,12 +44,17 @@ export const TaskColumn: (props: { refreshTable: () => void }) => MRT_ColumnDef<
                     alignItems: 'center'
                   }}
                 >
-                  <Chip key={item.vertexID + i} size="small" label={item.vertexID} variant="outlined" color="primary" />
-                  {i !== tasks[0].actionPoint.length - 1 && (
-                    <Divider orientation="vertical" flexItem>
-                      -
-                    </Divider>
-                  )}
+                  <Chip
+                    key={item.vertexID + i}
+                    size="small"
+                    label={item.vertexID}
+                    variant="outlined"
+                    color="primary"
+                    sx={{
+                      m: 1
+                    }}
+                  />
+                  {i !== tasks[0].actionPoint.length - 1 && <span> -</span>}
                 </Box>
               ))}
             </Grid>
@@ -60,12 +65,12 @@ export const TaskColumn: (props: { refreshTable: () => void }) => MRT_ColumnDef<
     }
   },
   {
-    accessorKey: 'description',
-    id: 'description',
-    header: '描述',
+    accessorKey: 'orderCode',
+    id: 'orderCode',
+    header: '组Guid',
     Cell: ({ row }) => {
       return (
-        <Tooltip title={row.original.description} placement="top">
+        <Tooltip title={row.original.orderCode} placement="top">
           <div
             style={{
               overflow: 'hidden',
@@ -74,7 +79,7 @@ export const TaskColumn: (props: { refreshTable: () => void }) => MRT_ColumnDef<
               maxWidth: '120px'
             }}
           >
-            {row.original.description}
+            {row.original.orderCode}
           </div>
         </Tooltip>
       )
