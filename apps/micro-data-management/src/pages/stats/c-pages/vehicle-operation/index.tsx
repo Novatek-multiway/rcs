@@ -43,10 +43,13 @@ const VehicleOperation: FC<IProps> = () => {
   const [mileageData, setMileageData] = useState<ReportAPI.Mileage>() // 无故障时间统计
 
   const handleSearch = useCallback<NonNullable<ISearchAreaProps['onSearch']>>(() => {
+    const timeDiff = searchFormData.endDate?.diff(searchFormData.startDate, 'day')
+    const isOneDay = timeDiff === 0
+    const format = isOneDay ? '' : 'YYYY-MM-DD'
     const data: ICarrierReportParams = {
-      startTime: searchFormData.startDate!.format('YYYY-MM-DD'),
-      endTime: searchFormData.endDate!.format('YYYY-MM-DD'),
-      type: 1
+      startTime: searchFormData.startDate!.format(format),
+      endTime: searchFormData.endDate!.format(format),
+      type: isOneDay ? 0 : 1
     }
     if (searchFormData.carrierID !== '全部') data['carrierID'] = searchFormData.carrierID
 
