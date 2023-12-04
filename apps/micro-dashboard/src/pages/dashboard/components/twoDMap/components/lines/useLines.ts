@@ -3,7 +3,7 @@ import { useMemo } from 'react'
 import { useTwoDMapStore } from '../../store'
 import { ILineDirectionsProps, ILineProps } from '.'
 
-// 边处理：删除重复边、生成方向
+// 边处理：删除反方向边、生成方向
 const processLine = (edges: MapAPI.Edge[]) => {
   const set = new Set()
   const map = new Map<string, MapAPI.Edge & { CustomDirection?: ILineDirectionsProps['directions'] }>()
@@ -25,19 +25,37 @@ const processLine = (edges: MapAPI.Edge[]) => {
   }
   for (let i = 0; i < edges.length; i++) {
     const { Start, End } = edges[i]
+
     const key = `${Start}-${End}`
     const reverseKey = `${End}-${Start}`
     if (!set.has(reverseKey)) {
-      set.add(key)
-      // 生成非重复边的方向
-      const direction = _generateCustomDirection(edges[i])
-      map.set(key, { ...edges[i], CustomDirection: [direction] })
+      /**
+       * A-B 可能会有两条重复的边
+       */
+      if (!set.has(key)) {
+        // key边不存在，生成一条新边
+        set.add(key)
+        // 生成非反方向边的方向
+        const direction = _generateCustomDirection(edges[i])
+        map.set(key, { ...edges[i], CustomDirection: [direction] })
+      } else {
+        // key边存在，合并方向
+        const line = map.get(key)
+        if (!line?.ControlPoint.length) continue
+        // 生成反方向边的方向
+        const direction = _generateCustomDirection(edges[i])
+        const customDirection = line.CustomDirection || []
+        const newLine = { ...line, CustomDirection: [...customDirection, direction] }
+        map.set(key, newLine)
+      }
     } else {
       const line = map.get(reverseKey)
       if (!line?.ControlPoint.length) continue
-      // 生成重复边的方向
+      // 生成反方向边的方向
       const direction = _generateCustomDirection(edges[i])
-      map.set(reverseKey, { ...line, CustomDirection: [...(line.CustomDirection || []), direction] })
+      const customDirection = line.CustomDirection || []
+      const newLine = { ...line, CustomDirection: [...customDirection, direction] }
+      map.set(reverseKey, newLine)
     }
   }
 
@@ -65,7 +83,9 @@ export const useLines = (edges: MapAPI.Edge[]) => {
     idPointMap: state.idPointMap,
     setIdLineMap: state.setIdLineMap
   }))
+
   const deduplicatedEdges = useMemo(() => processLine(edges), [edges])
+
   const lines: (ILineProps & ILineDirectionsProps)[] = useMemo(() => {
     const idLineMap = new Map()
     const line = deduplicatedEdges.map((edge) => {
