@@ -90,23 +90,29 @@ const ElapsedTimeRatio: FC<PropsWithChildren<IElapsedTimeRatioProps>> = (props) 
           data: [
             {
               name: '运行',
-              value: ((workTime / total) * 100).toFixed(4)
+              value: workTime
             },
             {
               name: '充电',
-              value: ((chargeTime / total) * 100).toFixed(4)
+              value: chargeTime
             },
             {
               name: '堵车',
-              value: ((trafficTime / total) * 100).toFixed(4)
+              value: trafficTime
             },
             {
               name: '待命',
-              value: ((freeTime / total) * 100).toFixed(4)
+              value: freeTime
             }
           ]
         }
-      ]
+      ],
+      tooltip: {
+        valueFormatter: (v) => {
+          const v1 = parseFloat(v as any)
+          return `${v1}h（${((v1 / total) * 100).toFixed(4)}%）`
+        }
+      }
     })
   }, [freeTime, workTime, trafficTime, chargeTime])
   return (
