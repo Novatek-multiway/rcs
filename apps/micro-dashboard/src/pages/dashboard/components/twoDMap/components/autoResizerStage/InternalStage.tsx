@@ -153,7 +153,19 @@ const InternalStage: FC<PropsWithChildren<IInternalStageProps>> = (props) => {
 
   /* ----------------------------------- 车辆 ----------------------------------- */
   const vehicles = useVehicles(vehiclesData, {
-    carrierPlanningFilter: (planning) => (settings.isDevMode ? true : planning.state1 === 0)
+    carrierPlanningFilter: (planning) => {
+      /**
+       * 0-已规划  6-已分配 7-交管确认 3-已下发  4-行驶中 1-事件失败  2-被交管  5-已路过
+       */
+      const invisiblePlanningState = []
+      if (!settings.isDevMode) {
+        invisiblePlanningState.push(0, 6, 7, 4, 1, 2, 5)
+      }
+      if (!settings.isVehiclePlanningVisible) {
+        invisiblePlanningState.push(3)
+      }
+      return !invisiblePlanningState.includes(planning.state1)
+    }
   })
   const insideVehicles = useShapesInside(vehicles, (originInsideFilter) => {
     // 车或车的路径在可见范围，则要显示当前车辆
@@ -288,7 +300,7 @@ const InternalStage: FC<PropsWithChildren<IInternalStageProps>> = (props) => {
           strokeWidth={currentScale >= SCALE_BOUNDARY ? 0.1 : 3 / currentScale}
           showImage={settings.isVehicleImageVisible}
           showOutline={settings.isVehicleOutlineVisible}
-          showLines={settings.isVehiclePlanningVisible}
+          // showLines={settings.isVehiclePlanningVisible}
           showTooltip={settings.isVehicleDetailVisible}
           showBenchmarks={settings.isVehicleBenchmarkVisible}
         />
