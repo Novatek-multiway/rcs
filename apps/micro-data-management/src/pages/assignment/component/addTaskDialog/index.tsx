@@ -33,7 +33,7 @@ const AddTaskDialog: FC<{
   const [actionPointList, setActionPointList] = useState<
     (ITaskItem & Pick<ITaskFormData, 'vehicleId' | 'priority' | 'action'>)[]
   >([])
-  const [loopCount, setLoopCount] = useState(0)
+  const [loopCount, setLoopCount] = useState(1)
   const handleClose = useCallback<NonNullable<DialogProps['onClose']>>(
     (e, reason) => {
       if (reason !== 'backdropClick' && reason !== 'escapeKeyDown') {
@@ -197,7 +197,6 @@ const AddTaskDialog: FC<{
                       type="number"
                       size="small"
                       variant="outlined"
-                      defaultValue={1}
                       sx={{
                         '.MuiInputBase-input': {
                           py: 0.5
