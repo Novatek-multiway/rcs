@@ -288,7 +288,7 @@ const TimeStats: FC<PropsWithChildren<ITimeStatsProps>> = () => {
   useAsyncEffect(async () => {
     const res = await getTimeSum()
     const newTaskStatsData = res.data as ReportAPI.TimeSumDatum[]
-    setTimeStatsData(newTaskStatsData)
+    setTimeStatsData(newTaskStatsData.sort((a, b) => b.taskQty - a.taskQty))
   }, [])
 
   const updateOptionCallback = useCallback(
@@ -320,7 +320,7 @@ const TimeStats: FC<PropsWithChildren<ITimeStatsProps>> = () => {
   }, [timeStatsData])
 
   useUpdateEffect(() => {
-    setTimeStatsData(wsTaskStatsData)
+    setTimeStatsData(wsTaskStatsData.sort((a, b) => b.taskQty - a.taskQty))
   }, [wsTaskStatsData])
 
   return (

@@ -64,8 +64,9 @@ const TaskStats: FC<PropsWithChildren<ITaskStatsProps>> = () => {
   const [taskStatsData, setTaskStatsData] = useState<ReportAPI.AgvTaskRoot>()
   const taskStatsList = useMemo(
     () =>
-      taskStatsData?.agvList?.map((item) => ({ id: item.id, finishedCount: item.taskQty, time: item.consumeTime })) ||
-      [],
+      taskStatsData?.agvList
+        ?.map((item) => ({ id: item.id, finishedCount: item.taskQty, time: item.consumeTime }))
+        .sort((a, b) => b.finishedCount - a.finishedCount) || [],
     [taskStatsData]
   )
 
