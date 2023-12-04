@@ -1,5 +1,6 @@
 import type { FC, PropsWithChildren } from 'react'
 import React, { memo, useMemo } from 'react'
+import { useDictStore } from 'store'
 import { BaseTable, Button, createMRTColumnHelper } from 'ui'
 
 import { ITaskItem } from './type'
@@ -22,7 +23,14 @@ const ActionPointList: FC<PropsWithChildren<IActionPointListProps>> = (props) =>
       }),
       columnHelper.accessor('action', {
         header: '动作类型',
-        size: 60
+        size: 60,
+        Cell: ({ row }) => {
+          const orderActionOptions = useDictStore((state) => state.dicts.OrderActionType)
+          const currentAction = row.original.action
+          const label = orderActionOptions.find((item: any) => item.value === currentAction)?.label
+
+          return <span>{label}</span>
+        }
       }),
       columnHelper.accessor('params', {
         header: '参数信息',
