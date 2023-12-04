@@ -83,10 +83,12 @@ const TaskStats: FC<PropsWithChildren<ITaskStatsProps>> = () => {
         },
         series: [
           {
-            data: taskStatsData.agvList.map((d) => ({
-              name: '编号-' + d.id,
-              value: d.taskQty
-            }))
+            data: taskStatsData.agvList
+              .filter((d) => !!d.taskQty)
+              .map((d) => ({
+                name: '编号-' + d.id,
+                value: d.taskQty
+              }))
           }
         ]
       })
