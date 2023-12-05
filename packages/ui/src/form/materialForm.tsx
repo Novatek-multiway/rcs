@@ -32,10 +32,11 @@ interface MaterialFormProps {
   defaultValue?: Record<string, any>
   schemaObject: FieldSchema[]
   columns?: number
+  onFormValueChange?: React.ComponentProps<typeof Form>['onChange']
 }
 
 export const MaterialForm = forwardRef<any, MaterialFormProps>((props, ref) => {
-  const { defaultValue = {}, schemaObject, columns = 2 } = props
+  const { defaultValue = {}, schemaObject, columns = 2, onFormValueChange } = props
   const AutoToken = () => {
     const formikbag = useFormikContext()
     React.useImperativeHandle(ref, () => formikbag)
@@ -146,8 +147,8 @@ export const MaterialForm = forwardRef<any, MaterialFormProps>((props, ref) => {
           }, 2000)
         }}
       >
-        {({ isSubmitting, errors, touched }) => (
-          <Form>
+        {({ isSubmitting, errors, touched, values }) => (
+          <Form onChange={onFormValueChange}>
             <Grid container spacing={2} sx={{ p: 2 }}>
               {fileds(errors, touched)}
             </Grid>
