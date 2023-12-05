@@ -102,6 +102,7 @@ export const MaterialForm = forwardRef<any, MaterialFormProps>((props, ref) => {
                 name={field.name}
                 items={field.items}
                 multiple={field.multiple}
+                onChange={field.onChange as any}
               />
             )}
             {field.type === 'autoComplete' && (

@@ -8,11 +8,16 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
+  Grid,
   //   FormikContext,
   MaterialForm,
   nygFormik,
   useTheme
 } from 'ui'
+
+import { VehicleTypeImageCommon } from '../common'
+import { getVehicleImage } from '../utils'
+
 const AddDialog: React.FC<{
   open: boolean
   onClose?: () => void
@@ -24,6 +29,8 @@ const AddDialog: React.FC<{
   const theme = useTheme()
   const formRef = React.useRef<nygFormik>(null)
   const { dicts } = useDictStore()
+
+  const [currentChassisModelUrl, setCurrentChassisModelUrl] = React.useState<string>()
 
   return (
     <Dialog open={open} onClose={onClose}>
@@ -83,10 +90,20 @@ const AddDialog: React.FC<{
             {
               name: 'chassisModel',
               label: '模型文件',
-              type: 'text'
+              type: 'select',
+              items: VehicleTypeImageCommon,
+              onChange: async (e) => {
+                const url = await getVehicleImage(e.target.value)
+                setCurrentChassisModelUrl(url)
+              }
             }
           ]}
         ></MaterialForm>
+        <Grid container justifyContent={'center'}>
+          {currentChassisModelUrl && (
+            <img src={currentChassisModelUrl} style={{ transform: 'rotate(90deg)', height: 100, objectFit: 'cover' }} />
+          )}
+        </Grid>
       </DialogContent>
       <DialogActions>
         <Button

@@ -10,7 +10,7 @@ interface FormFieldLabelSelectProps extends SelectProps {
   multiple?: boolean
 }
 
-export const FormFieldLabelSelect = ({ label, name, items, multiple = false }: FormFieldLabelSelectProps) => {
+export const FormFieldLabelSelect = ({ label, name, items, multiple = false, onChange }: FormFieldLabelSelectProps) => {
   const sxFormControl = {
     minWidth: 140,
     width: '100%',
@@ -32,6 +32,7 @@ export const FormFieldLabelSelect = ({ label, name, items, multiple = false }: F
         name={name}
         labelId={`${name}-native`}
         label={label}
+        onChange={onChange}
       >
         {items?.map((item) => {
           return (
