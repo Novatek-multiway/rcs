@@ -1,33 +1,30 @@
-import { InputProps } from "@mui/material";
-import { Field } from "formik";
+import { InputProps } from '@mui/material'
+import { Field } from 'formik'
 
-import { SimpleFileUpload } from "../components";
+import { SimpleFileUpload, SimpleFileUploadProps } from '../components'
 
-interface FormFieldLabelInputProps extends InputProps {
-  label?: string;
-  name: string;
-  onChange?: any;
+interface FormFieldLabelInputProps extends InputProps, Partial<SimpleFileUploadProps> {
+  label?: string
+  name: string
+  onChange?: any
 }
 
-export const FormFieldLabelFile = ({
-  label,
-  name,
-  onChange,
-}: FormFieldLabelInputProps) => {
+export const FormFieldLabelFile = ({ label, name, onChange, accept }: FormFieldLabelInputProps) => {
   const sxFormControl = {
     m: 1,
     minWidth: 140,
-    width: "100%",
-  };
+    width: '100%'
+  }
   return (
     <Field
-      formControl={{ sx: sxFormControl, variant: "standard" }}
+      formControl={{ sx: sxFormControl, variant: 'standard' }}
       component={SimpleFileUpload}
       name={name}
       label={label}
+      accept={accept}
       InputProps={{
-        onChange: onChange,
+        onChange: onChange
       }}
     />
-  );
-};
+  )
+}

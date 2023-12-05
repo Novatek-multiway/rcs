@@ -49,8 +49,8 @@ const MapPage: FC<IProps> = () => {
 
   const { data: chassisList } = useRequest(GetChassisList)
 
-  const convertChassisList = dictsTransform(chassisList?.data, 'model', 'id')
-  const carsList = dictsTransform(controlStates?.data, 'id', 'id')
+  const convertChassisList = [{ label: '全部', value: 0 }].concat(...dictsTransform(chassisList?.data, 'model', 'id'))
+  const carsList = [{ label: '全部', value: 0 }].concat(dictsTransform(controlStates?.data, 'id', 'id'))
 
   const columns = [
     {
@@ -196,10 +196,10 @@ const MapPage: FC<IProps> = () => {
                 <AddIcon />
                 新增路径文件
               </Button>
-              <Button variant="outlined" size="small" color="success" onClick={() => setOpenImport(true)}>
+              {/* <Button variant="outlined" size="small" color="success" onClick={() => setOpenImport(true)}>
                 <AddIcon />
                 上传底图文件
-              </Button>
+              </Button> */}
             </Box>
           )
         }}

@@ -6,7 +6,7 @@ import { FieldProps, getIn } from 'formik'
 import * as React from 'react'
 
 export interface SimpleFileUploadProps extends FieldProps {
-  label: string
+  label?: string
   accept: string
   disabled?: boolean
   InputProps?: Omit<InputProps, 'name' | 'type' | 'label'>
@@ -51,7 +51,7 @@ export const SimpleFileUpload = ({
         }}
         {...inputProps}
       />
-      {error && <FormHelperText error>{error}</FormHelperText>}
+      {/* {error && <FormHelperText error>{error}</FormHelperText>} */}
     </FormControl>
   )
 }

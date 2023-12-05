@@ -5,6 +5,7 @@ import PropTypes from 'prop-types'
 import * as React from 'react'
 
 import { forwardRef } from '../utils/inex'
+import { SimpleFileUploadProps } from './components'
 import {
   FormFieldLabelAutoComplete,
   FormFieldLabelFile,
@@ -24,6 +25,7 @@ interface FieldSchema extends Omit<MuiTextFieldProps, 'name' | 'value' | 'error'
   required?: boolean
   disabled?: boolean
   endAdornment?: React.ReactNode | string
+  accept?: SimpleFileUploadProps['accept']
 }
 
 interface MaterialFormProps {
@@ -120,7 +122,12 @@ export const MaterialForm = forwardRef<any, MaterialFormProps>((props, ref) => {
               <FormFieldLabelRadioGroup label={field.label} name={field.name} items={field.items} />
             )}
             {field.type === 'file' && (
-              <FormFieldLabelFile label={field.label} name={field.name} onChange={field.onChange} />
+              <FormFieldLabelFile
+                label={field.label}
+                name={field.name}
+                onChange={field.onChange}
+                accept={field.accept}
+              />
             )}
           </Grid>
         )
