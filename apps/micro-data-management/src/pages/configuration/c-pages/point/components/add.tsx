@@ -13,6 +13,25 @@ import {
   nygFormik,
   useTheme
 } from 'ui'
+
+const standByPointSchema = [
+  {
+    name: 'HomeGroup',
+    label: '待命点分组',
+    type: 'number'
+  },
+  {
+    name: 'HomeGroupType',
+    label: '待命点类型',
+    type: 'number'
+  },
+  {
+    name: 'HomeGroupPriority',
+    label: '待命点优先级',
+    type: 'number'
+  }
+]
+
 const AddDialog: React.FC<{
   open: boolean
   vertexData?: any
@@ -20,13 +39,62 @@ const AddDialog: React.FC<{
   chassisList?: any
   onClose?: () => void
   callback?: () => void
-}> = ({ open, onClose = () => {}, callback, vertexData = [], carrierData = [], chassisList = [] }) => {
+}> = ({ open, onClose = () => {}, callback, vertexData = [], chassisList = [] }) => {
   const { runAsync: run } = useRequest(CreateStationInfos, {
     manual: true
   })
   const theme = useTheme()
   const formRef = React.useRef<nygFormik>(null)
   const { dicts } = useDictStore()
+
+  const [isStandByPoint, setIsStandByPoint] = React.useState<boolean>(false)
+
+  const commonSchema = [
+    {
+      name: 'PointKey',
+      label: '路径编号',
+      type: 'autoComplete',
+      required: true,
+      items: vertexData
+      // type: "select",
+    },
+    {
+      name: 'Priority',
+      label: '优先级',
+      type: 'number',
+      inputProps: {
+        min: 0,
+        onChange: (e: any) => {
+          if (e.target.value < 0) e.target.value = 0
+        }
+      }
+    },
+    {
+      name: 'Type',
+      label: '站点类型',
+      type: 'select',
+      items: dicts['StationType'],
+      onChange: (e: any) => setIsStandByPoint(e.target.value + '' === '2')
+    },
+    {
+      name: 'AreaID',
+      label: '区域',
+      type: 'autoComplete',
+      multiple: true,
+      items: vertexData
+    },
+    {
+      name: 'CarrierType',
+      label: '车辆类型',
+      type: 'select',
+      items: chassisList
+    },
+    {
+      name: 'Name',
+      label: '名称',
+      type: 'text'
+    }
+  ]
 
   return (
     <Dialog maxWidth="md" open={open} onClose={onClose}>
@@ -56,125 +124,13 @@ const AddDialog: React.FC<{
             ID: 0,
             Name: '',
             Number: 0,
-            PointKey: 0,
             Priority: 0,
             State: 0,
             Type: 0,
             UsageCount: 0,
             WorkAreaTypeStr: ''
           }}
-          schemaObject={[
-            {
-              name: 'PointKey',
-              label: '路径编号',
-              type: 'autoComplete',
-              required: true,
-              items: vertexData
-              // type: "select",
-            },
-            {
-              name: 'Carrier',
-              label: '车号',
-              type: 'select',
-              items: carrierData
-              // type: "select",
-            },
-            {
-              name: 'CarrierType',
-              label: '车型',
-              type: 'select',
-              items: chassisList
-            },
-            {
-              name: 'Number',
-              label: '车数',
-              type: 'number'
-            },
-            {
-              name: 'Priority',
-              label: '优先级',
-              type: 'number'
-            },
-            {
-              name: 'Type',
-              label: '站点类型',
-              type: 'select',
-              items: dicts['StationType']
-            },
-            {
-              name: 'State',
-              label: '状态',
-              type: 'select',
-              items: dicts['LocationState']
-            },
-            {
-              name: 'Name',
-              label: '名称',
-              type: 'text'
-            },
-            {
-              name: 'DisplayName',
-              label: '显示名称',
-              type: 'text'
-            },
-            {
-              name: 'DisplayFontColor',
-              label: '显示颜色',
-              type: 'text'
-            },
-            {
-              name: 'DisPlayWidth',
-              label: '宽度',
-              type: 'number'
-            },
-            {
-              name: 'DisPlayLength',
-              label: '长度',
-              type: 'number'
-            },
-            {
-              name: 'Angle',
-              label: '角度',
-              type: 'number'
-            },
-            {
-              name: 'HomeGroup',
-              label: '待命点分组',
-              type: 'number'
-            },
-            {
-              name: 'HomeGroupType',
-              label: '待命点类型',
-              type: 'number'
-            },
-            {
-              name: 'HomeGroupPriority',
-              label: '待命点优先级',
-              type: 'number'
-            },
-            {
-              name: 'BackGroundColor',
-              label: '背景颜色',
-              type: 'text'
-            },
-            {
-              name: 'WorkAreaTypeStr',
-              label: '标注',
-              type: 'text'
-            },
-            {
-              name: 'DisPlayModel',
-              label: '模型',
-              type: 'text'
-            },
-            {
-              name: 'AreaID',
-              label: '区域ID',
-              type: 'autoComplete',
-              multiple: true,
-              items: vertexData
-            }
-          ]}
+          schemaObject={isStandByPoint ? commonSchema.concat(...standByPointSchema) : commonSchema}
         ></MaterialForm>
       </DialogContent>
       <DialogActions>

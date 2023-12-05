@@ -15,13 +15,14 @@ import {
 } from 'ui'
 const EditDialog: React.FC<{
   open: boolean
+  areaInfos?: any
   vertexData?: any
   carrierData?: any
   chassisList?: any
   onClose?: () => void
   callback?: () => void
   row?: Record<string, any>
-}> = ({ open, onClose = () => {}, callback, vertexData = [], carrierData = [], chassisList = [], row = {} }) => {
+}> = ({ open, onClose = () => {}, callback, areaInfos = [], vertexData = [], chassisList = [], row = {} }) => {
   const { runAsync: run } = useRequest(UpdateStationInfos, {
     manual: true
   })
@@ -58,28 +59,17 @@ const EditDialog: React.FC<{
               // type: "select",
             },
             {
-              name: 'Carrier',
-              label: '车号',
-              type: 'select',
-              items: carrierData
-              // type: "select",
-            },
-            {
-              name: 'CarrierType',
-              label: '车型',
-              type: 'select',
-              items: chassisList
-            },
-            {
-              name: 'Number',
-              label: '车数',
-              type: 'number'
-            },
-            {
               name: 'Priority',
               label: '优先级',
-              type: 'number'
+              type: 'number',
+              inputProps: {
+                min: 0,
+                onChange: (e: any) => {
+                  if (e.target.value < 0) e.target.value = 0
+                }
+              }
             },
+
             {
               name: 'Type',
               label: '站点类型',
@@ -87,78 +77,39 @@ const EditDialog: React.FC<{
               items: dicts['StationType']
             },
             {
-              name: 'State',
-              label: '状态',
-              type: 'select',
-              items: dicts['LocationState']
+              name: 'AreaID',
+              label: '区域',
+              type: 'autoComplete',
+              multiple: true,
+              items: areaInfos
             },
+            {
+              name: 'CarrierType',
+              label: '车辆类型',
+              type: 'select',
+              items: chassisList
+            },
+
             {
               name: 'Name',
               label: '名称',
               type: 'text'
-            },
-            {
-              name: 'DisplayName',
-              label: '显示名称',
-              type: 'text'
-            },
-            {
-              name: 'DisplayFontColor',
-              label: '显示颜色',
-              type: 'text'
-            },
-            {
-              name: 'DisPlayWidth',
-              label: '宽度',
-              type: 'number'
-            },
-            {
-              name: 'DisPlayLength',
-              label: '长度',
-              type: 'number'
-            },
-            {
-              name: 'Angle',
-              label: '角度',
-              type: 'number'
-            },
-            {
-              name: 'HomeGroup',
-              label: '待命点分组',
-              type: 'number'
-            },
-            {
-              name: 'HomeGroupType',
-              label: '待命点类型',
-              type: 'number'
-            },
-            {
-              name: 'HomeGroupPriority',
-              label: '待命点优先级',
-              type: 'number'
-            },
-            {
-              name: 'BackGroundColor',
-              label: '背景颜色',
-              type: 'text'
-            },
-            {
-              name: 'WorkAreaTypeStr',
-              label: '标注',
-              type: 'text'
-            },
-            {
-              name: 'DisPlayModel',
-              label: '模型',
-              type: 'text'
-            },
-            {
-              name: 'AreaID',
-              label: '区域ID',
-              type: 'autoComplete',
-              multiple: true,
-              items: vertexData
             }
+            // {
+            //   name: 'HomeGroup',
+            //   label: '待命点分组',
+            //   type: 'number'
+            // },
+            // {
+            //   name: 'HomeGroupType',
+            //   label: '待命点类型',
+            //   type: 'number'
+            // },
+            // {
+            //   name: 'HomeGroupPriority',
+            //   label: '待命点优先级',
+            //   type: 'number'
+            // }
           ]}
         ></MaterialForm>
       </DialogContent>

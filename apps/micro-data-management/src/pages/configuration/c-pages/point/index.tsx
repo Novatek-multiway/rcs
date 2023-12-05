@@ -1,17 +1,17 @@
-import AddIcon from '@mui/icons-material/Add'
+// import AddIcon from '@mui/icons-material/Add'
 import EditNoteIcon from '@mui/icons-material/EditNote'
 import { useRequest } from 'ahooks'
-import { delStationInfos, GetCarrierOptions, GetChassisList, getStationInfos, getVertexs } from 'apis'
+import { getAreaInfos, GetCarrierOptions, GetChassisList, getStationInfoById, getStationInfos, getVertexs } from 'apis'
 import type { FC, ReactNode } from 'react'
 import React, { memo } from 'react'
 import { useDictStore } from 'store'
 import { BaseTable, Box, Button, MenuItem, TextField } from 'ui'
 import { getUpperCaseKeyObject } from 'utils'
 
-import DelButton from '@/component/delButton'
+// import DelButton from '@/component/delButton'
 import Refresh from '@/component/refreshIcon'
 
-import AddDialog from './components/add'
+// import AddDialog from './components/add'
 import EditDialog from './components/edit'
 
 interface IProps {
@@ -31,16 +31,17 @@ const dictsTransform = (arr: [], label: string, value: string) => {
 // 车型配置
 const VehicleType: FC<IProps> = () => {
   const { dicts } = useDictStore()
-  const [open, setOpen] = React.useState(false)
+  // const [open, setOpen] = React.useState(false)
   const [editOpen, setEditOpen] = React.useState(false)
   const [row, setRow] = React.useState({})
   const { data: chassisData, loading, run: getChass } = useRequest(() => getStationInfos({ type: 0 }))
 
-  const { runAsync: delFn } = useRequest(delStationInfos, {
-    manual: true
-  })
+  // const { runAsync: delFn } = useRequest(delStationInfos, {
+  //   manual: true
+  // })
 
   const { data: vertexData } = useRequest(() => getVertexs())
+  const { data: areaInfos } = useRequest(() => getAreaInfos())
 
   const { data: carrierData } = useRequest(GetCarrierOptions)
   const { data: chassisList } = useRequest(GetChassisList)
@@ -51,8 +52,17 @@ const VehicleType: FC<IProps> = () => {
       header: 'ID'
     },
     {
+      accessorKey: 'pointKey',
+      header: '路径编号'
+    },
+
+    {
+      accessorKey: 'name',
+      header: '名称'
+    },
+    {
       accessorKey: 'type',
-      header: '类型',
+      header: '站点类型',
       Filter: ({ header }) => {
         return (
           <TextField
@@ -76,39 +86,24 @@ const VehicleType: FC<IProps> = () => {
       },
       Cell: ({ row }) => {
         const { original } = row
-        const tyles = dicts.StationType?.find((item) => item.value === original.type)
+        const tyles = dicts.StationType?.find((item: any) => item.value === original.type)
         return <>{tyles?.label || ''}</>
       }
     },
-    {
-      accessorKey: 'pointKey',
-      header: '路径编号'
-    },
-    {
-      accessorKey: 'displayName',
-      header: '名称'
-    },
-    {
-      accessorKey: 'disPlayModel',
-      enableFilters: true,
-      header: '站点类型'
-    },
+
     {
       accessorKey: 'priority',
       header: '优先级'
     },
-    {
-      accessorKey: 'state',
-      header: '状态',
-      Cell: ({ row }) => {
-        const { original } = row
-        const tyles = dicts.LocationState?.find((item) => item.value === original.state)
-        return <>{tyles?.label || ''}</>
-      }
-    },
+
     {
       accessorKey: 'carrierType',
-      header: '车辆类型'
+      header: '车辆类型',
+      Cell: ({ row }) => {
+        const { original } = row
+        const tyles = chassisList?.data?.find((item: any) => item.id === original.carrierType)
+        return <>{tyles?.model || '全部'}</>
+      }
     },
     {
       accessorKey: 'homeGroup',
@@ -142,22 +137,23 @@ const VehicleType: FC<IProps> = () => {
               component="label"
               size="small"
               color="warning"
-              onClick={() => {
+              onClick={async () => {
                 setEditOpen(true)
-                setRow(row.original)
+                const stationInfos = await getStationInfoById({ id: row.original.id })
+                setRow(stationInfos.data)
               }}
               startIcon={<EditNoteIcon />}
             >
               修改
             </Button>
-            <DelButton
+            {/* <DelButton
               delFn={async () => {
                 await delFn({
                   id: row.original.id
                 })
                 getChass()
               }}
-            />
+            /> */}
           </div>
         )
       }
@@ -197,10 +193,10 @@ const VehicleType: FC<IProps> = () => {
                 <Refresh loading={loading}></Refresh>
                 刷新
               </Button>
-              <Button variant="outlined" size="small" color="primary" onClick={() => setOpen(true)}>
+              {/* <Button variant="outlined" size="small" color="primary" onClick={() => setOpen(true)}>
                 <AddIcon />
                 新增
-              </Button>
+              </Button> */}
             </Box>
           )
         }}
@@ -215,7 +211,7 @@ const VehicleType: FC<IProps> = () => {
         enableDensityToggle={false}
         enableColumnActions={false}
       />
-      <AddDialog
+      {/* <AddDialog
         open={open}
         onClose={() => setOpen(false)}
         vertexData={dictsTransform(vertexData?.data, 'id', 'id')}
@@ -224,11 +220,12 @@ const VehicleType: FC<IProps> = () => {
         callback={() => {
           getChass()
         }}
-      />
+      /> */}
       <EditDialog
         open={editOpen}
         row={getUpperCaseKeyObject(row)}
         onClose={() => setEditOpen(false)}
+        areaInfos={dictsTransform(areaInfos?.data, 'areaName', 'id')}
         vertexData={dictsTransform(vertexData?.data, 'id', 'id')}
         carrierData={dictsTransform(carrierData?.data, 'name', 'id')}
         chassisList={dictsTransform(chassisList?.data, 'model', 'id')}
