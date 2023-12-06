@@ -13,6 +13,7 @@ import {
   nygFormik,
   useTheme
 } from 'ui'
+import { toastWarn } from 'utils'
 const EditDialog: React.FC<{
   open: boolean
   areaInfos?: any
@@ -47,14 +48,14 @@ const EditDialog: React.FC<{
             PointKey: {
               label: String(row.PointKey),
               value: String(row.PointKey)
-            }
+            },
+            AreaID: areaInfos.filter((a: any) => row?.AreaID?.includes(a.value))
           }}
           schemaObject={[
             {
               name: 'PointKey',
               label: '路径编号',
               type: 'autoComplete',
-              required: true,
               items: vertexData
               // type: "select",
             },
@@ -87,7 +88,7 @@ const EditDialog: React.FC<{
               name: 'CarrierType',
               label: '车辆类型',
               type: 'select',
-              items: chassisList
+              items: [{ label: '全部', value: 0 }].concat(...chassisList)
             },
 
             {
@@ -118,8 +119,10 @@ const EditDialog: React.FC<{
           color="primary"
           onClick={async () => {
             await formRef.current?.submitForm()
-            const { isValid, values } = formRef.current || {}
-            console.log('values', values)
+            const { isValid, values, errors } = formRef.current || {}
+            if ((errors as Record<string, string>)['PointKey']) {
+              toastWarn('请输入路径编号')
+            }
 
             if (isValid) {
               const sendData = {

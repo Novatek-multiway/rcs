@@ -298,12 +298,12 @@ const Vehicle = () => {
 
   const RcsMessage = {
     success: (msg?: string) => {
-      toastSuccess( msg || `操作成功`)
+      toastSuccess(msg || `操作成功`)
     }
   }
   // 锁车0 解锁1
   const updateCarrierState = async (table: any, status: 0 | 1) => {
-    if (table.getSelectedRowModel().rows.length != 1) {
+    if (table.getSelectedRowModel().rows.length === 0) {
       toastWarn('请选择一条数据')
       return
     }
@@ -314,7 +314,7 @@ const Vehicle = () => {
   }
   // 急停 0急停 1解除
   const sendRemoteStop = async (table: any, status: 0 | 1) => {
-    if (table.getSelectedRowModel().rows.length != 1) {
+    if (table.getSelectedRowModel().rows.length === 0) {
       toastWarn('请选择一条数据')
       return
     }

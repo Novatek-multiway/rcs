@@ -52,7 +52,8 @@ const AddDialog: React.FC<{
               name: 'type',
               label: '车辆类型',
               type: 'select',
-              items: vehicleTypeOptions
+              items: vehicleTypeOptions,
+              required: true
             },
             {
               name: 'area',

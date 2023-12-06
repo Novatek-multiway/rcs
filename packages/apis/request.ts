@@ -30,5 +30,8 @@ request.interceptors.response.use(async (response) => {
       return Promise.reject(data.msg)
     }
     return data
-  } else return response
+  } else {
+    toastError(response.statusText)
+    return Promise.reject(response.statusText)
+  }
 })

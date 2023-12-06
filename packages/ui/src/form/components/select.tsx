@@ -1,5 +1,5 @@
 import FormControl, { FormControlProps } from '@mui/material/FormControl'
-import FormHelperText, { FormHelperTextProps } from '@mui/material/FormHelperText'
+import { FormHelperTextProps } from '@mui/material/FormHelperText'
 import InputLabel, { InputLabelProps } from '@mui/material/InputLabel'
 import MuiSelect, { SelectProps as MuiSelectProps } from '@mui/material/Select'
 import { FieldProps, getIn } from 'formik'
@@ -55,10 +55,10 @@ export function fieldToSelect({
   }
 }
 
-export function Select({ formControl, inputLabel, formHelperText, ...selectProps }: SelectProps) {
-  const { error, formError, disabled, ...selectFieldProps } = fieldToSelect(selectProps)
-  const { children: formHelperTextChildren, ...formHelperTextProps } = formHelperText || {}
-  const shouldDisplayFormHelperText = error || formHelperTextChildren
+export function Select({ formControl, inputLabel, ...selectProps }: SelectProps) {
+  const { error, disabled, ...selectFieldProps } = fieldToSelect(selectProps)
+  // const { children: formHelperTextChildren, ...formHelperTextProps } = formHelperText || {}
+  // const shouldDisplayFormHelperText = error || formHelperTextChildren
 
   return (
     <FormControl disabled={disabled} error={error} {...formControl}>
@@ -66,9 +66,9 @@ export function Select({ formControl, inputLabel, formHelperText, ...selectProps
         {selectFieldProps.label}
       </InputLabel>
       <MuiSelect {...selectFieldProps} />
-      {shouldDisplayFormHelperText && (
+      {/* {shouldDisplayFormHelperText && (
         <FormHelperText {...formHelperTextProps}>{error ? formError : formHelperTextChildren}</FormHelperText>
-      )}
+      )} */}
     </FormControl>
   )
 }

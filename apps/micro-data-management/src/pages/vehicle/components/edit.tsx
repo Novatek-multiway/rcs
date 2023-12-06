@@ -44,7 +44,8 @@ const EditDialog: React.FC<{
             {
               name: 'id',
               label: '车辆编号',
-              type: 'text'
+              type: 'text',
+              disabled: true
             },
             {
               name: 'type',

@@ -13,6 +13,7 @@ import {
   nygFormik,
   useTheme
 } from 'ui'
+import { toastWarn } from 'utils'
 const AddDialog: React.FC<{
   open: boolean
   vertexData?: any
@@ -76,8 +77,7 @@ const AddDialog: React.FC<{
         name: 'carrierType',
         label: '车辆类型',
         type: 'select',
-        items: ruleCarrierData,
-        required: true
+        items: ruleCarrierData
       },
       {
         name: 'priority',
@@ -195,16 +195,20 @@ const AddDialog: React.FC<{
           onClick={async () => {
             await formRef.current?.submitForm()
             const { isValid, values } = formRef.current || {}
-            console.log(values)
 
             if (isValid) {
+              const hasCarrierKeys = !!values.carrierKeys && !!values.carrierKeys.length
+              if (!hasCarrierKeys && !values.carrierType) {
+                return toastWarn('“车辆编号与车辆类型必设置一个”（同时设置仅车辆编号生效）')
+              }
+
               const sendData = {
                 ...values,
                 // Genus: 3,
                 carrierKeys: values.carrierKeys.join(','),
-                pileKeys: values.pileKeys.map((item) => item.value).join(',')
+                pileKeys: values.pileKeys.map((item) => item.value).join(','),
+                carrierType: hasCarrierKeys ? 0 : values.carrierType
               }
-              console.log(sendData)
               await run(sendData)
               onClose()
               callback && callback()

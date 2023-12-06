@@ -138,9 +138,9 @@ const VehicleType: FC<IProps> = () => {
               size="small"
               color="warning"
               onClick={async () => {
-                setEditOpen(true)
                 const stationInfos = await getStationInfoById({ id: row.original.id })
                 setRow(stationInfos.data)
+                setEditOpen(true)
               }}
               startIcon={<EditNoteIcon />}
             >

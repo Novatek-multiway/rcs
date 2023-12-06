@@ -13,6 +13,7 @@ import {
   nygFormik,
   useTheme
 } from 'ui'
+import { toastWarn } from 'utils'
 
 const AddDialog: React.FC<{
   open: boolean
@@ -25,6 +26,8 @@ const AddDialog: React.FC<{
     fileContent: any
     fileName: string
   }>({})
+  console.log('🚀 ~ file: add.tsx ~ line 26 ~ sendFile', sendFile)
+
   const { runAsync: run } = useRequest(WriteRouteFileInfo, {
     manual: true
   })
@@ -47,6 +50,15 @@ const AddDialog: React.FC<{
       name: 'description',
       label: '路径数据文件',
       onChange: async (event) => {
+        if (!event.currentTarget.files.length) {
+          setSendFile({
+            fileContent: null,
+            fileName: ''
+          })
+          formRef.current?.resetForm()
+
+          return
+        }
         const file = event.currentTarget.files[0]
         const render = new FileReader()
         render.readAsDataURL(file)
@@ -178,15 +190,16 @@ const AddDialog: React.FC<{
           color="primary"
           onClick={async () => {
             await formRef.current?.submitForm()
-            const { isValid, values } = formRef.current
-            console.log('🚀 ~ file: add.tsx ~ line 183 ~ onClick={ ~ isValid', isValid)
-            console.log(values)
+            const { isValid, values, errors } = formRef.current
+            if (!sendFile.fileContent) toastWarn('请选择路径数据文件')
+            console.log('🚀 ~ file: add.tsx ~ line 184 ~ onClick={ ~ sendFile', sendFile)
 
-            schemaObject.map((item) => {
-              if (item.type === 'select') {
-                values[item.name] = Number(values[item.name])
-              }
-            })
+            if (errors[''])
+              schemaObject.map((item) => {
+                if (item.type === 'select') {
+                  values[item.name] = Number(values[item.name])
+                }
+              })
             if (isValid) {
               const sendData = {
                 ...values,
@@ -194,7 +207,6 @@ const AddDialog: React.FC<{
                 ...sendFile
               }
               const res = await run(sendData)
-              console.log(res)
               if (res.code === 0) {
                 callback && callback()
                 message.success(res.msg)

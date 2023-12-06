@@ -1,7 +1,7 @@
-import { useRequest } from "ahooks";
-import { AddEvent } from "apis";
-import * as React from "react";
-import { useDictStore } from "store";
+import { useRequest } from 'ahooks'
+import { AddEvent } from 'apis'
+import * as React from 'react'
+import { useDictStore } from 'store'
 import {
   Button,
   Dialog,
@@ -11,110 +11,124 @@ import {
   //   FormikContext,
   MaterialForm,
   nygFormik,
-  useTheme,
-} from "ui";
+  useTheme
+} from 'ui'
 const AddDialog: React.FC<{
-  open: boolean;
-  vertexData?: any;
-  carrierData?: any;
-  chassisList?: any;
-  onClose?: () => void;
-  callback?: () => void;
-}> = ({
-  open,
-  onClose = () => {},
-  callback,
-  chassisList = [],
-  vertexData = [],
-}) => {
+  open: boolean
+  vertexData?: any
+  carrierData?: any
+  chassisList?: any
+  onClose?: () => void
+  callback?: () => void
+}> = ({ open, onClose = () => {}, callback, chassisList = [], vertexData = [] }) => {
   const { runAsync: run } = useRequest(AddEvent, {
-    manual: true,
-  });
-  const theme = useTheme();
-  const formRef = React.useRef<nygFormik>(null);
-  const { dicts } = useDictStore();
+    manual: true
+  })
+  const theme = useTheme()
+  const formRef = React.useRef<nygFormik>(null)
+  const { dicts } = useDictStore()
   const schemaObject = [
     {
-      name: "description",
-      label: "事件描述",
-      type: "text",
+      name: 'description',
       required: true,
+      label: '事件描述',
+      type: 'text'
       // type: "select",
     },
     {
-      name: "genus",
-      label: "元素类型",
-      type: "select",
-      items: dicts["GraphGenus"],
+      name: 'genus',
+      required: true,
+      label: '元素类型',
+      type: 'select',
+      items: dicts['GraphGenus']
       // type: "select",
     },
     {
-      name: "routeKey",
-      label: "路径ID",
-      type: "autoComplete",
-      items: vertexData,
+      name: 'routeKey',
+      required: true,
+      label: '路径ID',
+      type: 'autoComplete',
+      items: vertexData
       // type: "select",
     },
     {
-      name: "carrierType",
-      label: "车辆类型",
-      type: "select",
-      items: chassisList,
+      name: 'carrierType',
+      required: true,
+      label: '车辆类型',
+      type: 'select',
+      items: [{ label: '全部', value: 0 }].concat(...chassisList)
     },
     {
-      name: "doTime",
-      label: "执行阶段",
-      type: "select",
-      items: dicts["EventTime"],
+      name: 'doTime',
+      required: true,
+      label: '执行阶段',
+      type: 'select',
+      items: dicts['EventTime']
     },
     {
-      name: "waitTime",
-      label: "等待阶段",
-      type: "select",
-      items: dicts["EventTime"],
+      name: 'waitTime',
+      required: true,
+      label: '等待阶段',
+      type: 'select',
+      items: dicts['EventTime']
     },
 
     {
-      name: "eventType",
-      label: "事件类型",
-      type: "select",
-      items: dicts["EventType"],
+      name: 'timeOut',
+      required: true,
+      label: '超时',
+      type: 'number'
     },
     {
-      name: "timeOut",
-      label: "超时",
-      type: "number",
+      name: 'delay',
+      required: true,
+      label: '延时',
+      type: 'number'
     },
     {
-      name: "delay",
-      label: "延时",
-      type: "number",
+      name: 'priority',
+      required: true,
+      label: '优先级',
+      type: 'number'
     },
     {
-      name: "priority",
-      label: "优先级",
-      type: "number",
+      name: 'checkHasGoods',
+      required: true,
+      label: '载货判断',
+      type: 'select',
+      items: dicts['CheckGoods']
     },
     {
-      name: "checkHasGoods",
-      label: "载货判断",
-      type: "select",
-      items: dicts["CheckGoods"],
-    },
-  ];
+      name: 'eventType',
+      required: true,
+      label: '事件类型',
+      type: 'select',
+      items: dicts['EventType']
+    }
+  ]
 
   return (
     <Dialog maxWidth="md" open={open} onClose={onClose}>
       <DialogTitle>添加事件</DialogTitle>
       <DialogContent
         sx={{
-          py: `${theme.spacing(3.25)} !important`,
+          py: `${theme.spacing(3.25)} !important`
         }}
       >
         <MaterialForm
           columns={3}
           ref={formRef}
-          defaultValue={{}}
+          defaultValue={{
+            genus: dicts['GraphGenus']?.[0]?.value,
+            routeKey: vertexData[0],
+            carrierType: 0,
+            doTime: dicts['EventTime']?.[0]?.value,
+            waitTime: dicts['EventTime']?.[0]?.value,
+            timeOut: 0,
+            delay: 0,
+            priority: 0,
+            checkHasGoods: dicts['CheckGoods']?.[1]?.value
+          }}
           schemaObject={schemaObject}
         ></MaterialForm>
       </DialogContent>
@@ -122,22 +136,22 @@ const AddDialog: React.FC<{
         <Button
           color="primary"
           onClick={async () => {
-            await formRef.current?.submitForm();
-            const { isValid, values } = formRef.current;
+            await formRef.current?.submitForm()
+            const { isValid, values } = formRef.current
 
             schemaObject.map((item) => {
-              if (item.type === "select") {
-                values[item.name] = Number(values[item.name]);
+              if (item.type === 'select') {
+                values[item.name] = Number(values[item.name])
               }
-            });
+            })
             if (isValid) {
               const sendData = {
                 ...values,
-                routeKey: values.routeKey.value,
-              };
-              await run(sendData);
-              onClose();
-              callback && callback();
+                routeKey: values.routeKey.value
+              }
+              await run(sendData)
+              onClose()
+              callback && callback()
             }
           }}
         >
@@ -148,6 +162,6 @@ const AddDialog: React.FC<{
         </Button>
       </DialogActions>
     </Dialog>
-  );
-};
-export default AddDialog;
+  )
+}
+export default AddDialog
