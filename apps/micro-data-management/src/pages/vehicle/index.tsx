@@ -8,7 +8,6 @@ import {
   getAreaInfos,
   getChassisInfos,
   getSimulationCarrierLogin,
-  notification,
   postGetCarrierInfo,
   postGetControlOptions,
   postGetControlStates,
@@ -19,7 +18,7 @@ import {
 import { useMemo, useState } from 'react'
 import { useDictStore } from 'store'
 import { BaseTable, Box, Button, ButtonGroup, MRT_PaginationState } from 'ui'
-import { dictsTransform } from 'utils'
+import { dictsTransform, toastSuccess, toastWarn } from 'utils'
 
 import DelButton from '@/component/delButton'
 import Refresh from '@/component/refreshIcon'
@@ -299,18 +298,13 @@ const Vehicle = () => {
 
   const RcsMessage = {
     success: (msg?: string) => {
-      notification.success({
-        message: msg || `操作成功`
-      })
+      toastSuccess( msg || `操作成功`)
     }
   }
   // 锁车0 解锁1
   const updateCarrierState = async (table: any, status: 0 | 1) => {
     if (table.getSelectedRowModel().rows.length != 1) {
-      notification.warning({
-        message: `警告`,
-        description: '请选择一条数据'
-      })
+      toastWarn('请选择一条数据')
       return
     }
     const [row] = table.getSelectedRowModel().rows
@@ -321,10 +315,7 @@ const Vehicle = () => {
   // 急停 0急停 1解除
   const sendRemoteStop = async (table: any, status: 0 | 1) => {
     if (table.getSelectedRowModel().rows.length != 1) {
-      notification.warning({
-        message: `警告`,
-        description: '请选择一条数据'
-      })
+      toastWarn('请选择一条数据')
       return
     }
     const [row] = table.getSelectedRowModel().rows

@@ -4,6 +4,7 @@ import * as React from 'react'
 import { BrowserRouter, Route, RouteObject, Routes } from 'react-router-dom'
 import { theme } from 'theme'
 import { CssBaseline, ThemeProvider } from 'ui'
+import { ToastContainer } from 'utils'
 import { qiankunWindow } from 'vite-plugin-qiankun/dist/helper'
 
 import routerList from '@/router/router'
@@ -29,6 +30,7 @@ export default function App() {
       <ThemeProvider theme={theme}>
         <CssBaseline />
         <GlobalContext />
+        <ToastContainer />
         <BrowserRouter basename={__POWERED_BY_QIANKUN__ ? `/${import.meta.env.VITE_APP_NAME}` : '/'}>
           <React.Suspense fallback={'loading...'}>
             <Routes>{renderRoutes(routerList)}</Routes>

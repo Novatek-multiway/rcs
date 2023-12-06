@@ -12,7 +12,7 @@ import {
   Paper,
   TextField
 } from 'ui'
-import { generateUUID } from 'utils'
+import { generateUUID, toastWarn } from 'utils'
 
 import ActionPointList, { IActionPointListProps } from './ActionPointList'
 import AddTaskForm, { IActionPointParamsProps } from './ActionPointParams'
@@ -82,6 +82,9 @@ const AddTaskDialog: FC<{
   )
 
   const handleSave = useCallback(async () => {
+    if (!actionPointList.length) {
+      return toastWarn('请输入命令后再保存数据')
+    }
     const { isAutoCompleted, vehicleId, priority } = taskParams
     const taskGroupID = generateUUID()
     const taskID = generateUUID()

@@ -1,4 +1,4 @@
-import { request, notification } from '../../request'
+import { request } from '../../request'
 import { IResponse } from '../../type'
 
 /**
@@ -6,7 +6,6 @@ import { IResponse } from '../../type'
  *
  * @returns Promise of the layout object.
  */
-export { notification }
 export const postGetControlStates = (data: Record<string, any>) => {
   return request<IResponse<any>>('/Carrier/GetControlStates', {
     method: 'GET',
