@@ -2,9 +2,11 @@ import AcUnitIcon from '@mui/icons-material/AcUnit'
 import AddIcon from '@mui/icons-material/Add'
 import EditNoteIcon from '@mui/icons-material/EditNote'
 import SportsSoccerIcon from '@mui/icons-material/SportsSoccer'
-import { useAsyncEffect, useUpdateEffect } from 'ahooks'
+import { useAsyncEffect, useRequest } from 'ahooks'
 import {
   delCreateCarrier,
+  getAreaInfos,
+  getChassisInfos,
   getSimulationCarrierLogin,
   notification,
   postGetCarrierInfo,
@@ -17,6 +19,7 @@ import {
 import { useMemo, useState } from 'react'
 import { useDictStore } from 'store'
 import { BaseTable, Box, Button, ButtonGroup, MRT_PaginationState } from 'ui'
+import { dictsTransform } from 'utils'
 
 import DelButton from '@/component/delButton'
 import Refresh from '@/component/refreshIcon'
@@ -35,6 +38,9 @@ const Vehicle = () => {
   const [row, setRow] = useState({})
 
   const { dicts } = useDictStore()
+
+  const { data: chassisData } = useRequest(() => getChassisInfos({ type: 0 }))
+  const { data: areaInfos } = useRequest(() => getAreaInfos())
 
   const _Dict = useMemo(() => {
     const obj: any = {},
@@ -72,37 +78,43 @@ const Vehicle = () => {
             )}
           </div>
         )
-      }
+      },
+      size: 50
     },
     {
       accessorKey: 'id',
       id: 'id',
-      header: '车辆编号'
+      header: '车辆编号',
+      size: 50
     },
     {
       accessorKey: 'name',
       id: 'name',
-      header: '车体名称'
+      header: '车体名称',
+      size: 50
     },
     {
       accessorKey: 'chassisType',
       id: 'chassisType',
-      header: '车辆类型'
+      header: '车辆类型',
+      size: 50
     },
     {
       accessorKey: 'carrierPos',
       id: 'carrierPos',
-      header: '车辆位置'
+      header: '车辆位置',
+      size: 180
     },
     {
       accessorKey: 'elecQuantity',
       id: 'elecQuantity',
-      header: '当前电量'
+      header: '当前电量（%）',
+      size: 50
     },
     {
       accessorKey: 'routeType',
       id: 'routeType',
-      header: '当前途径',
+      header: '当前路径',
       Cell: ({ cell, row }: any) => {
         return (
           <div>
@@ -110,7 +122,8 @@ const Vehicle = () => {
             {row?.original?.currentRoute}
           </div>
         )
-      }
+      },
+      size: 80
     },
     {
       accessorKey: 'controlState',
@@ -118,7 +131,8 @@ const Vehicle = () => {
       header: '控制状态',
       Cell: ({ cell }: any) => {
         return <div>{_Dict['ControlState'][cell.getValue()]}</div>
-      }
+      },
+      size: 80
     },
     {
       accessorKey: 'goodsStatus',
@@ -126,7 +140,8 @@ const Vehicle = () => {
       header: '载货状态',
       Cell: ({ cell }: any) => {
         return <div>{_Dict['GoodsState'][cell.getValue()]}</div>
-      }
+      },
+      size: 80
     },
     {
       accessorKey: 'ip',
@@ -134,12 +149,14 @@ const Vehicle = () => {
       header: '交管车辆',
       Cell: ({ row }: any) => {
         return <div>{row?.original?.trafficControlCar || '无'}</div>
-      }
+      },
+      size: 120
     },
     {
       accessorKey: 'currentTask',
       id: 'currentTask',
-      header: '当前任务'
+      header: '当前任务',
+      size: 120
     },
     {
       accessorKey: 'isLockdown',
@@ -147,7 +164,8 @@ const Vehicle = () => {
       header: '锁定状态',
       Cell: ({ cell }: any) => {
         return <div>{!cell.getValue() ? '锁定' : '未锁定'}</div>
-      }
+      },
+      size: 50
     },
     {
       accessorKey: 'carrierState',
@@ -155,7 +173,8 @@ const Vehicle = () => {
       header: '急停状态',
       Cell: ({ cell }: any) => {
         return <div>{_Dict['DeviceState'][cell.getValue()]}</div>
-      }
+      },
+      size: 50
     },
     {
       accessorKey: 'actions',
@@ -278,13 +297,10 @@ const Vehicle = () => {
     [paginationState, tableData]
   )
 
-  useUpdateEffect(() => {}, [paginationState])
-
   const RcsMessage = {
     success: (msg?: string) => {
       notification.success({
-        message: msg || `操作成功`,
-        description: new Date().getTime()
+        message: msg || `操作成功`
       })
     }
   }
@@ -442,6 +458,8 @@ const Vehicle = () => {
           // table.resetRowSelection();
           getTableData()
         }}
+        vehicleTypeOptions={dictsTransform(chassisData?.data, 'model', 'id')}
+        areaInfosOptions={dictsTransform(areaInfos?.data, 'areaName', 'id')}
       />
       <EditDialog
         open={editOpen}
@@ -452,6 +470,8 @@ const Vehicle = () => {
           // table.resetRowSelection();
           getTableData()
         }}
+        vehicleTypeOptions={dictsTransform(chassisData?.data, 'model', 'id')}
+        areaInfosOptions={dictsTransform(areaInfos?.data, 'areaName', 'id')}
       />
       <InfoDialog open={infoOpen} row={row} onClose={() => setInfoOpen(false)}></InfoDialog>
     </>
