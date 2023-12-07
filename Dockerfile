@@ -1,4 +1,4 @@
-FROM 120.79.85.168:9997/node:16.20.0 as base
+FROM node:16.20.0 as base
 WORKDIR /source
 # ENV NODE_OPTIONS="--max-old-space-size=8192"
 # ARG APP=main

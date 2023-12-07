@@ -18,14 +18,14 @@ function qiankunInit() {
     [
       {
         name: 'micro-dashboard',
-        entry: import.meta.env.DEV ? 'http://localhost:8001' : 'http://192.168.1.240:6991',
+        entry: import.meta.env.DEV ? 'http://localhost:8001' : 'http://127.0.0.1:6991',
         container: '#app',
         activeRule: getActiveRule('/micro-dashboard'),
         props: {}
       },
       {
         name: 'micro-data-management',
-        entry: import.meta.env.DEV ? 'http://localhost:8002' : 'http://192.168.1.240:6992',
+        entry: import.meta.env.DEV ? 'http://localhost:8002' : 'http://127.0.0.1:6992',
         container: '#app',
         activeRule: getActiveRule('/micro-data-management'),
         props: {}

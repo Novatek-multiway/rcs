@@ -35,6 +35,12 @@ export default defineConfig(({ mode }) => {
           changeOrigin: true,
           secure: true,
           rewrite: (path) => path.replace(/^\/api/, '')
+        },
+        '/wsUrl': {
+          target: 'ws://192.168.1.240:10019',
+          changeOrigin: true,
+          ws: true,
+          rewrite: (path) => path.replace(/~\/wsUrl/, '')
         }
       }
     },

@@ -13,7 +13,7 @@ import { useDashboardStore } from './store'
 import { EWebsocketMessagePath, useWebsocketStore } from './store/websocket'
 import { DashboardWrapper } from './style'
 
-const WS_URL = 'ws://192.168.1.240:10019'
+const WS_URL = `ws://${location.host}/wsUrl`
 const DEFAULT_TOOLBAR_RIGHT = 380
 // 消息推送频率设置
 const MESSAGE_INTERVAL_MAP = {
