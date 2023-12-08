@@ -47,7 +47,8 @@ const VehicleType: FC<IProps> = () => {
   const columns = [
     {
       accessorKey: 'id',
-      header: 'ID'
+      header: 'ID',
+      size: 80
     },
     {
       accessorKey: 'type',
@@ -56,35 +57,43 @@ const VehicleType: FC<IProps> = () => {
         const { original } = row
         const tyles = dicts.CarrierType?.find((item) => item.value === original.type)
         return <>{tyles?.label || ''}</>
-      }
+      },
+      size: 80
     },
     {
       accessorKey: 'model',
-      header: '名称'
+      header: '名称',
+      size: 120
     },
     {
       accessorKey: 'forcedCharge',
-      header: '强制充电电量'
+      header: '强制充电电量',
+      size: 80
     },
     {
       accessorKey: 'noLoadOffsetX',
-      header: '空载偏移X'
+      header: '空载偏移X',
+      size: 80
     },
     {
       accessorKey: 'noLoadOffsetY',
-      header: '空载偏移Y'
+      header: '空载偏移Y',
+      size: 80
     },
     {
       accessorKey: 'noLoadWidth',
-      header: '空载车宽'
+      header: '空载车宽',
+      size: 80
     },
     {
       accessorKey: 'noLoadLength',
-      header: '空载车长'
+      header: '空载车长',
+      size: 80
     },
     {
       accessorKey: 'chassisModel',
-      header: '模型文件'
+      header: '模型文件',
+      size: 140
     },
     {
       accessorKey: 'actions',
@@ -132,7 +141,8 @@ const VehicleType: FC<IProps> = () => {
             />
           </div>
         )
-      }
+      },
+      size: 160
     }
   ]
 
