@@ -84,7 +84,7 @@ const DataTable = () => {
   /* -------------------------------- 给任务添加任务点 -------------------------------- */
 
   return (
-    <Grid container rowSpacing={2} columnSpacing={{ xs: 1, sm: 2, md: 2 }} sx={{ height: '100%' }}>
+    <Grid container rowSpacing={2} columnSpacing={{ xs: 1, sm: 2, md: 2 }} sx={{ height: '100%', marginTop: 0 }}>
       <Grid
         xs={6}
         item
@@ -157,7 +157,7 @@ const DataTable = () => {
           }}
           muiTableContainerProps={{
             sx: {
-              maxHeight: '75vh',
+              maxHeight: '72vh',
               overflow: 'scroll'
             }
           }}
@@ -196,8 +196,8 @@ const DataTable = () => {
         ></MuiTable>
         {/* )} */}
       </Grid>
-      <Grid xs={6} item container rowSpacing={2}>
-        <Grid item xs={12}>
+      <Grid xs={6} item flexDirection={'column'} container rowSpacing={2}>
+        <Grid item xs={6} sx={{ width: '100%', maxWidth: '100% !important' }}>
           <MuiTable
             columns={ChildTaskColumn({ refreshTable: () => fetchTasks(selectedTaskGroupData.orderCode) })}
             data={tasks || []}
@@ -249,10 +249,16 @@ const DataTable = () => {
                 overflow: 'auto'
               }
             }}
+            muiTableContainerProps={{
+              sx: {
+                maxHeight: '30vh',
+                overflow: 'scroll'
+              }
+            }}
           ></MuiTable>
           {/* 新增区域 */}
         </Grid>
-        <Grid item xs={12}>
+        <Grid item xs={6} sx={{ width: '100%', maxWidth: '100% !important' }}>
           <MuiTable
             columns={TaskPointsColumn}
             data={taskActionPoints}
@@ -291,6 +297,12 @@ const DataTable = () => {
               sx: {
                 height: '100%',
                 overflow: 'auto'
+              }
+            }}
+            muiTableContainerProps={{
+              sx: {
+                maxHeight: '40vh',
+                overflow: 'scroll'
               }
             }}
             renderTopToolbarCustomActions={() => {

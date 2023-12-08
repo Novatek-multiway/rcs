@@ -16,7 +16,7 @@ export const AddTaskDialogContentWrapper = styled.div`
     gap: 12px;
     height: 520px;
     .task-list {
-      width: 600px;
+      width: 700px;
       height: 100%;
       border-radius: 2px;
       overflow: hidden;

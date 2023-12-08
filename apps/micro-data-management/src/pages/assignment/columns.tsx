@@ -1,6 +1,6 @@
 import { cancelTask, completeTask } from 'apis'
 import { useDictStore } from 'store'
-import { Box, Chip, Grid, MRT_ColumnDef, Switch, Tooltip } from 'ui'
+import { Chip, MRT_ColumnDef, Switch, Tooltip } from 'ui'
 
 import DelButton, { IDelButtonProps } from '@/component/delButton'
 export const TaskColumn: (props: { refreshTable: () => void }) => MRT_ColumnDef<any>[] = ({ refreshTable }) => [
@@ -30,38 +30,19 @@ export const TaskColumn: (props: { refreshTable: () => void }) => MRT_ColumnDef<
       const { original } = row
 
       const { tasks } = original
-      const tasksVDom = () => {
-        if (!tasks.length) {
-          return <></>
-        }
-        return (
-          <>
-            <Grid container xs={12}>
-              {tasks[0].actionPoint?.map((item: { vertexID: string }, i: number) => (
-                <Box
-                  sx={{
-                    display: 'flex',
-                    alignItems: 'center'
-                  }}
-                >
-                  <Chip
-                    key={item.vertexID + i}
-                    size="small"
-                    label={item.vertexID}
-                    variant="outlined"
-                    color="primary"
-                    sx={{
-                      m: 1
-                    }}
-                  />
-                  {i !== tasks[0].actionPoint.length - 1 && <span> -</span>}
-                </Box>
-              ))}
-            </Grid>
-          </>
-        )
-      }
-      return <>{tasksVDom()}</>
+      return (
+        <Chip
+          color="primary"
+          size="small"
+          label={tasks[0].actionPoint.map((p: any) => p.vertexID).join('>')}
+          sx={{
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+            whiteSpace: 'nowrap',
+            maxWidth: '160px'
+          }}
+        ></Chip>
+      )
     }
   },
   {

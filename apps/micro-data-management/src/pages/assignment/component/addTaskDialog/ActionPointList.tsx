@@ -93,6 +93,7 @@ const ActionPointList: FC<PropsWithChildren<IActionPointListProps>> = (props) =>
       enablePagination={false}
       enableTopToolbar={false}
       enableBottomToolbar={false}
+      enableRowNumbers
       muiTableHeadCellProps={{
         align: 'center'
       }}

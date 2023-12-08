@@ -150,7 +150,7 @@ const AddTaskDialog: FC<{
   }, [actionPointList, loopCount, onSave, taskParams])
 
   return (
-    <Dialog open={open} onClose={handleClose} maxWidth={'md'}>
+    <Dialog open={open} onClose={handleClose} maxWidth={'lg'}>
       <DialogTitle
         sx={{
           display: 'flex',
