@@ -49,7 +49,7 @@ const AddDialog: React.FC<{
               required: true
             },
             {
-              name: 'type',
+              name: 'chassisID',
               label: '车辆类型',
               type: 'select',
               items: vehicleTypeOptions,

@@ -48,7 +48,7 @@ const EditDialog: React.FC<{
               disabled: true
             },
             {
-              name: 'type',
+              name: 'chassisID',
               label: '车辆类型',
               type: 'select',
               items: vehicleTypeOptions
