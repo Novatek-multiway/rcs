@@ -1,6 +1,6 @@
 import { useUpdateEffect, useWebSocket } from 'ahooks'
 import { ReadyState } from 'ahooks/lib/useWebSocket'
-import { ElementRef, memo, useCallback, useEffect, useRef, useState } from 'react'
+import { ElementRef, memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useGlobalStore } from 'store'
 
 import Aside, { IAsideProps } from './components/aside'
@@ -46,22 +46,33 @@ const Dashboard = () => {
     setReportGetAgvStatus: state.setReportGetAgvStatus,
     setReportGetJobSumByAgv: state.setReportGetJobSumByAgv
   }))
+
+  const RECEIVE_MESSAGE_STRATEGY = useMemo<Record<EWebsocketMessagePath, (data: any) => void>>(
+    () => ({
+      [EWebsocketMessagePath.ReportGetOnLineCarriers]: (data: any) =>
+        setReportGetOnLineCarriers(JSON.parse(data.Model)),
+      [EWebsocketMessagePath.ReportGetHomeChargeGoodsStations]: (data: any) =>
+        setReportGetHomeChargeGoodsStations(JSON.parse(data.Model)),
+      [EWebsocketMessagePath.ReportGetTimeSum]: (data: any) => setReportGetTimeSum(JSON.parse(data.Model)),
+      [EWebsocketMessagePath.ReportGetAgvThroughs]: (data: any) => setReportGetAgvThroughs(JSON.parse(data.Model)),
+      [EWebsocketMessagePath.ReportGetAgvStatus]: (data: any) => setReportGetAgvStatus(JSON.parse(data.Model)),
+      [EWebsocketMessagePath.ReportGetJobSumByAgv]: (data: any) => setReportGetJobSumByAgv(JSON.parse(data.Model))
+    }),
+    [
+      setReportGetOnLineCarriers,
+      setReportGetHomeChargeGoodsStations,
+      setReportGetTimeSum,
+      setReportGetAgvThroughs,
+      setReportGetAgvStatus,
+      setReportGetJobSumByAgv
+    ]
+  )
+
   const { sendMessage, disconnect, readyState } = useWebSocket(WS_URL, {
     onMessage: (params: any) => {
       const data = JSON.parse(params.data)
-      if (data.Path === EWebsocketMessagePath.ReportGetOnLineCarriers) {
-        setReportGetOnLineCarriers(JSON.parse(data.Model))
-      } else if (data.Path === EWebsocketMessagePath.ReportGetHomeChargeGoodsStations) {
-        setReportGetHomeChargeGoodsStations(JSON.parse(data.Model))
-      } else if (data.Path === EWebsocketMessagePath.ReportGetJobSumByAgv) {
-        setReportGetJobSumByAgv(JSON.parse(data.Model))
-      } else if (data.Path === EWebsocketMessagePath.ReportGetTimeSum) {
-        setReportGetTimeSum(JSON.parse(data.Model))
-      } else if (data.Path === EWebsocketMessagePath.ReportGetAgvThroughs) {
-        setReportGetAgvThroughs(JSON.parse(data.Model))
-      } else if (data.Path === EWebsocketMessagePath.ReportGetAgvStatus) {
-        setReportGetAgvStatus(JSON.parse(data.Model))
-      }
+      const path = data.Path as EWebsocketMessagePath
+      RECEIVE_MESSAGE_STRATEGY[path](data)
     },
     onOpen: () => {},
     reconnectInterval: 10000,
