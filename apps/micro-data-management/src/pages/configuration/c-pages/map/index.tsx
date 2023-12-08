@@ -4,7 +4,7 @@ import { useRequest } from 'ahooks'
 import { ChangeActive, DeleteRouteFileInfo, GetChassisList, GetMapOptionPageList, GetRuleControlStates } from 'apis'
 import type { FC, ReactNode } from 'react'
 import React, { memo } from 'react'
-import { BaseTable, Box, Button, Switch } from 'ui'
+import { BaseTable, Box, Button, Switch, Tooltip } from 'ui'
 
 import DelButton from '@/component/delButton'
 import Refresh from '@/component/refreshIcon'
@@ -55,15 +55,18 @@ const MapPage: FC<IProps> = () => {
   const columns = [
     {
       accessorKey: 'id',
-      header: '编号'
+      header: '编号',
+      size: 55
     },
     {
       accessorKey: 'projectName',
-      header: '项目名称'
+      header: '项目名称',
+      size: 100
     },
     {
       accessorKey: 'routeName',
-      header: '地图名称'
+      header: '地图名称',
+      size: 100
     },
     {
       accessorKey: 'mapChassis',
@@ -72,7 +75,8 @@ const MapPage: FC<IProps> = () => {
         const { original } = row
         const tyles = carsList?.find((item) => item.value === original.mapChassis)
         return <>{tyles?.label || 'All'}</>
-      }
+      },
+      size: 50
     },
     {
       accessorKey: 'mapCarrier',
@@ -81,24 +85,45 @@ const MapPage: FC<IProps> = () => {
         const { original } = row
         const tyles = convertChassisList?.find((item) => item.value === Number(original.mapCarrier))
         return <>{tyles?.label || 'All'}</>
-      }
+      },
+      size: 50
     },
     {
       accessorKey: 'guid',
-      header: '地图GUID'
+      header: '地图GUID',
+      size: 100,
+      Cell: ({ row }) => {
+        return (
+          <Tooltip title={row.original.guid} placement="top">
+            <div
+              style={{
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+                whiteSpace: 'nowrap',
+                maxWidth: '70px'
+              }}
+            >
+              {row.original.guid}
+            </div>
+          </Tooltip>
+        )
+      }
     },
     {
       accessorKey: 'revision',
       enableColumnFilter: false,
-      header: '版本号'
+      header: '版本号',
+      size: 60
     },
     {
       accessorKey: 'routeFile',
-      header: '路径文件名称'
+      header: '路径文件名称',
+      size: 120
     },
     {
       accessorKey: 'dwgFile',
-      header: '地图Dxf文件名'
+      header: '地图Dxf文件名',
+      size: 120
     },
     {
       accessorKey: 'isActive',
@@ -117,7 +142,8 @@ const MapPage: FC<IProps> = () => {
             />
           </>
         )
-      }
+      },
+      size: 60
     },
     {
       accessorKey: 'actions',
@@ -156,7 +182,8 @@ const MapPage: FC<IProps> = () => {
             />
           </div>
         )
-      }
+      },
+      size: 175
     }
   ]
   return (
