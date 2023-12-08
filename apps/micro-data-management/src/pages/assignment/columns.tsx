@@ -109,7 +109,11 @@ export const TaskColumn: (props: { refreshTable: () => void }) => MRT_ColumnDef<
             e.stopPropagation()
           }}
         >
-          <DelButton delFn={handleCancel} disabled={row.original.isCancel} color="error">
+          <DelButton
+            delFn={handleCancel}
+            disabled={row.original.isCancel || row.original.tasks[0].state === 0}
+            color="error"
+          >
             设置取消
           </DelButton>
         </div>
@@ -198,7 +202,11 @@ export const ChildTaskColumn: (props: { refreshTable: () => void }) => MRT_Colum
             width: '100px'
           }}
         >
-          <DelButton size="small" delFn={handleComplete} disabled={row.original.state === 5}>
+          <DelButton
+            size="small"
+            delFn={handleComplete}
+            disabled={row.original.state === 5 || row.original.state === 0}
+          >
             设置完成
           </DelButton>
         </div>

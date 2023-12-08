@@ -118,7 +118,7 @@ const DataTable = () => {
               sx: {
                 cursor: 'pointer',
                 backgroundColor: row.getValue('id') === selectedTaskGroupData.id ? '#1e4141' : '',
-                opacity: row.original.isCancel ? 0.3 : 1
+                opacity: row.original.isCancel || row.original.tasks?.[0]?.state === 0 ? 0.5 : 1
               },
               onClick: () => {
                 setSelectedTaskGroupData(row.original)
@@ -214,7 +214,7 @@ const DataTable = () => {
               return {
                 sx: {
                   cursor: 'pointer',
-                  opacity: row.original.state === 5 ? 0.3 : 1
+                  opacity: row.original.state === 5 || row.original.state === 0 ? 0.5 : 1
                 },
                 onClick: () => {
                   setSelectedTaskData(row.original)
