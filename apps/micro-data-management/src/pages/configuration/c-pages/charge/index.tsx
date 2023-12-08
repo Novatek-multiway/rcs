@@ -97,7 +97,8 @@ const VehicleType: FC<IProps> = () => {
     },
     {
       accessorKey: 'timeLimit',
-      header: '空闲时间（m）'
+      header: '空闲时间（m）',
+      size: 100
     },
     {
       accessorKey: 'limitBattery',
@@ -109,7 +110,8 @@ const VehicleType: FC<IProps> = () => {
             {minLimitBattery} - {maxLimitBattery}
           </span>
         )
-      }
+      },
+      size: 100
     },
     {
       accessorKey: 'strategyTime',
@@ -120,7 +122,8 @@ const VehicleType: FC<IProps> = () => {
         return (
           <span>{`${padZero(startHour)}:${padZero(startMinute)} - ${padZero(endHour)}:${padZero(endMinute)}`}</span>
         )
-      }
+      },
+      size: 140
     },
     {
       accessorKey: 'completeType',
@@ -131,7 +134,8 @@ const VehicleType: FC<IProps> = () => {
         const message = isTime ? `充电 ${original.completeTime} 分钟` : `充至电量 ${original.completePercent} %`
         return <span>{message}</span>
       },
-      header: '充电策略'
+      header: '充电策略',
+      size: 140
     },
 
     {
