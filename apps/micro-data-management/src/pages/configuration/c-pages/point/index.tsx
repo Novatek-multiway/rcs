@@ -49,16 +49,19 @@ const VehicleType: FC<IProps> = () => {
   const columns = [
     {
       accessorKey: 'id',
-      header: 'ID'
+      header: 'ID',
+      size: 100
     },
     {
       accessorKey: 'pointKey',
-      header: '路径编号'
+      header: '路径编号',
+      size: 100
     },
 
     {
       accessorKey: 'name',
-      header: '名称'
+      header: '名称',
+      size: 100
     },
     {
       accessorKey: 'type',
@@ -88,12 +91,14 @@ const VehicleType: FC<IProps> = () => {
         const { original } = row
         const tyles = dicts.StationType?.find((item: any) => item.value === original.type)
         return <>{tyles?.label || ''}</>
-      }
+      },
+      size: 100
     },
 
     {
       accessorKey: 'priority',
-      header: '优先级'
+      header: '优先级',
+      size: 100
     },
 
     {
@@ -107,16 +112,19 @@ const VehicleType: FC<IProps> = () => {
     },
     {
       accessorKey: 'homeGroup',
-      header: '待命点分组'
+      header: '待命点分组',
+      size: 100
     },
     {
       accessorKey: 'homeGroupPriority',
       enableColumnFilter: false,
-      header: '待命点优先级'
+      header: '待命点优先级',
+      size: 100
     },
     {
       accessorKey: 'homeGroupType',
-      header: '待命点类型'
+      header: '待命点类型',
+      size: 100
     },
     {
       accessorKey: 'actions',
@@ -156,7 +164,8 @@ const VehicleType: FC<IProps> = () => {
             /> */}
           </div>
         )
-      }
+      },
+      size: 100
     }
   ]
 
