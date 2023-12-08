@@ -3,7 +3,7 @@ import { toastError } from 'utils'
 
 //全局请求参数设置
 export const request = extend({
-  timeout: 10000,
+  timeout: 60000,
   // 记得区分开发环境与生产环境
   prefix: '/api'
 })

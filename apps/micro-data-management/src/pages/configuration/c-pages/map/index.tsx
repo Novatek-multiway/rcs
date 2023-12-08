@@ -40,7 +40,7 @@ const MapPage: FC<IProps> = () => {
   })
   const { data: controlStates } = useRequest(GetRuleControlStates)
 
-  const { runAsync: changeFn } = useRequest(ChangeActive, {
+  const { runAsync: changeFn, loading: changeActiveLoading } = useRequest(ChangeActive, {
     manual: true,
     onSuccess: () => {
       getChass()
@@ -133,8 +133,8 @@ const MapPage: FC<IProps> = () => {
           <>
             <Switch
               checked={row.original.isActive}
-              onChange={() =>
-                changeFn({
+              onChange={async () =>
+                await changeFn({
                   id: row.original.id,
                   isActive: !row.original.isActive
                 })
@@ -197,7 +197,7 @@ const MapPage: FC<IProps> = () => {
             padding: 2
           }
         }}
-        loading={loading}
+        loading={loading || changeActiveLoading}
         renderTopToolbarCustomActions={() => {
           return (
             <Box
