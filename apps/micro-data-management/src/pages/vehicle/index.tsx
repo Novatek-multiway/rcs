@@ -1,7 +1,4 @@
-import AcUnitIcon from '@mui/icons-material/AcUnit'
 import AddIcon from '@mui/icons-material/Add'
-import EditNoteIcon from '@mui/icons-material/EditNote'
-import SportsSoccerIcon from '@mui/icons-material/SportsSoccer'
 import { useAsyncEffect, useRequest } from 'ahooks'
 import {
   delCreateCarrier,
@@ -102,7 +99,7 @@ const Vehicle = () => {
       accessorKey: 'carrierPos',
       id: 'carrierPos',
       header: '车辆位置',
-      size: 180
+      size: 170
     },
     {
       accessorKey: 'elecQuantity',
@@ -122,7 +119,7 @@ const Vehicle = () => {
           </div>
         )
       },
-      size: 80
+      size: 70
     },
     {
       accessorKey: 'controlState',
@@ -131,7 +128,7 @@ const Vehicle = () => {
       Cell: ({ cell }: any) => {
         return <div>{_Dict['ControlState'][cell.getValue()]}</div>
       },
-      size: 80
+      size: 70
     },
     {
       accessorKey: 'goodsStatus',
@@ -140,7 +137,7 @@ const Vehicle = () => {
       Cell: ({ cell }: any) => {
         return <div>{_Dict['GoodsState'][cell.getValue()]}</div>
       },
-      size: 80
+      size: 70
     },
     {
       accessorKey: 'ip',
@@ -182,43 +179,50 @@ const Vehicle = () => {
       enableSorting: false,
       Cell: ({ row, table }) => {
         return (
-          <div
-            style={{
-              display: 'flex',
-              flexWrap: 'nowrap',
-              gap: '0.5rem',
-              width: '300px'
-            }}
-          >
+          <div style={{ display: 'flex', alignItems: 'center' }}>
             <Button
-              component="label"
+              variant="text"
               size="small"
-              color="warning"
+              sx={{
+                paddingX: 0.5,
+                minWidth: 36
+              }}
               onClick={async () => {
                 setEditOpen(true)
                 const id = row?.original?.id
                 const { data } = await postGetCarrierInfo(id)
                 setRow(data)
               }}
-              startIcon={<EditNoteIcon />}
             >
               配置
             </Button>
+            /
             <Button
-              component="label"
+              color="warning"
+              variant="text"
               size="small"
-              color="inherit"
+              sx={{
+                paddingX: 0.5,
+                minWidth: 36
+              }}
               onClick={async () => {
                 const id = row?.original?.id
                 const { msg } = await postRemoveCarrier({ id })
                 RcsMessage.success(msg)
                 getTableData()
               }}
-              startIcon={<SportsSoccerIcon />}
             >
               踢出
             </Button>
+            /
             <DelButton
+              color="error"
+              variant="text"
+              size="small"
+              sx={{
+                paddingX: 0.5,
+                minWidth: 36
+              }}
               delFn={async () => {
                 const id = row?.original?.id
                 await delCreateCarrier(id)
@@ -226,18 +230,25 @@ const Vehicle = () => {
                 table.resetRowSelection()
                 getTableData()
               }}
-            />
+              startIcon={null}
+            >
+              删除
+            </DelButton>
+            /
             <Button
-              component="label"
-              size="small"
               color="success"
+              variant="text"
+              size="small"
+              sx={{
+                paddingX: 0.5,
+                minWidth: 36
+              }}
               onClick={async () => {
                 const id = row?.original?.id
                 const { msg } = await getSimulationCarrierLogin(id)
                 RcsMessage.success(msg)
                 getTableData()
               }}
-              startIcon={<AcUnitIcon />}
             >
               激活
             </Button>
