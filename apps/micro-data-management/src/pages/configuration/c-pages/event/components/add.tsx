@@ -11,22 +11,33 @@ import {
   //   FormikContext,
   MaterialForm,
   nygFormik,
+  SelectChangeEvent,
   useTheme
 } from 'ui'
 const AddDialog: React.FC<{
   open: boolean
   vertexData?: any
+  edgesData?: any
   carrierData?: any
   chassisList?: any
   onClose?: () => void
   callback?: () => void
-}> = ({ open, onClose = () => {}, callback, chassisList = [], vertexData = [] }) => {
+}> = ({ open, onClose = () => {}, callback, chassisList = [], vertexData = [], edgesData = [] }) => {
   const { runAsync: run } = useRequest(AddEvent, {
     manual: true
   })
   const theme = useTheme()
   const formRef = React.useRef<nygFormik>(null)
   const { dicts } = useDictStore()
+  const [currentGenus, setCurrentGenus] = React.useState(dicts['GraphGenus']?.[0]?.value)
+  const routeKeyOptions = React.useMemo(() => {
+    if (currentGenus === 1) {
+      return vertexData
+    } else if (currentGenus === 2) {
+      return edgesData
+    }
+    return []
+  }, [currentGenus, vertexData, edgesData])
   const schemaObject = [
     {
       name: 'description',
@@ -40,7 +51,10 @@ const AddDialog: React.FC<{
       required: true,
       label: '元素类型',
       type: 'select',
-      items: dicts['GraphGenus']
+      items: dicts['GraphGenus'],
+      onChange: (e: SelectChangeEvent) => {
+        setCurrentGenus(e.target.value)
+      }
       // type: "select",
     },
     {
@@ -48,7 +62,7 @@ const AddDialog: React.FC<{
       required: true,
       label: '路径ID',
       type: 'autoComplete',
-      items: vertexData
+      items: routeKeyOptions
       // type: "select",
     },
     {
@@ -119,8 +133,8 @@ const AddDialog: React.FC<{
           columns={3}
           ref={formRef}
           defaultValue={{
-            genus: dicts['GraphGenus']?.[0]?.value,
-            routeKey: vertexData[0],
+            genus: currentGenus,
+            routeKey: routeKeyOptions[0],
             carrierType: 0,
             doTime: dicts['EventTime']?.[0]?.value,
             waitTime: dicts['EventTime']?.[0]?.value,

@@ -1,7 +1,7 @@
 import AddIcon from '@mui/icons-material/Add'
 import EditNoteIcon from '@mui/icons-material/EditNote'
 import { useRequest } from 'ahooks'
-import { DelEvent, GetCarrierOptions, GetChassisList, GetEventsPageList, getVertexs } from 'apis'
+import { DelEvent, GetCarrierOptions, GetChassisList, GetEventsPageList, getMapEdges, getVertexs } from 'apis'
 import type { FC, ReactNode } from 'react'
 import React, { memo } from 'react'
 import { useDictStore } from 'store'
@@ -40,6 +40,7 @@ const Event: FC<IProps> = () => {
   })
 
   const { data: vertexData } = useRequest(() => getVertexs())
+  const { data: edgesData } = useRequest(() => getMapEdges())
 
   const { data: carrierData } = useRequest(GetCarrierOptions)
   const { data: chassisList } = useRequest(GetChassisList)
@@ -257,6 +258,7 @@ const Event: FC<IProps> = () => {
         open={open}
         onClose={() => setOpen(false)}
         vertexData={dictsTransform(vertexData?.data, 'id', 'id')}
+        edgesData={dictsTransform(edgesData?.data, 'id', 'id')}
         carrierData={dictsTransform(carrierData?.data, 'name', 'id')}
         chassisList={convertChassisList}
         callback={() => {
@@ -268,6 +270,7 @@ const Event: FC<IProps> = () => {
         row={row}
         onClose={() => setEditOpen(false)}
         vertexData={dictsTransform(vertexData?.data, 'id', 'id')}
+        edgesData={dictsTransform(edgesData?.data, 'id', 'id')}
         carrierData={dictsTransform(carrierData?.data, 'name', 'id')}
         chassisList={dictsTransform(chassisList?.data, 'model', 'id')}
         callback={() => getChass()}
