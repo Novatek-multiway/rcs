@@ -192,7 +192,6 @@ const AddDialog: React.FC<{
             await formRef.current?.submitForm()
             const { isValid, values, errors } = formRef.current
             if (!sendFile.fileContent) toastWarn('请选择路径数据文件')
-            console.log('🚀 ~ file: add.tsx ~ line 184 ~ onClick={ ~ sendFile', sendFile)
 
             if (errors[''])
               schemaObject.map((item) => {
@@ -204,7 +203,8 @@ const AddDialog: React.FC<{
               const sendData = {
                 ...values,
                 id: 0,
-                ...sendFile
+                ...sendFile,
+                routeFile: sendFile.fileName
               }
               const res = await run(sendData)
               if (res.code === 0) {
