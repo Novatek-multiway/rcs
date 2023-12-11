@@ -318,20 +318,32 @@ const Vehicle = () => {
       toastWarn('请选择一条数据')
       return
     }
-    const [row] = table.getSelectedRowModel().rows
-    await postUpdateCarrierState({ carId: row?.original?.id, key: status })
+    const rows = table.getSelectedRowModel().rows
+    const promises: (() => Promise<any>)[] = []
+    rows.forEach((row: any) => {
+      promises.push(() => postUpdateCarrierState({ carId: row?.original?.id, key: status }))
+    })
+    // await postUpdateCarrierState({ carId: row?.original?.id, key: status })
+    Promise.all(promises.map((p) => p())).then(() => {
+      RcsMessage.success()
+    })
     table.resetRowSelection()
-    RcsMessage.success()
   }
   // 急停 0急停 1解除
-  const sendRemoteStop = async (table: any, status: 0 | 1) => {
+  const sendRemoteStop = async (table: any, status: 0 | 5) => {
     if (table.getSelectedRowModel().rows.length === 0) {
       toastWarn('请选择一条数据')
       return
     }
-    const [row] = table.getSelectedRowModel().rows
-    await postSendRemoteStop({ carId: row?.original?.id, key: status })
-    RcsMessage.success()
+    const rows = table.getSelectedRowModel().rows
+    const promises: (() => Promise<any>)[] = []
+    rows.forEach((row: any) => {
+      promises.push(() => postSendRemoteStop({ vehicle: row?.original?.id, remoteStop: status }))
+    })
+    // await postSendRemoteStop({ carId: row?.original?.id, key: status })
+    Promise.all(promises.map((p) => p())).then(() => {
+      RcsMessage.success()
+    })
     table.resetRowSelection()
   }
 
@@ -416,7 +428,7 @@ const Vehicle = () => {
                   variant="outlined"
                   size="small"
                   onClick={() => {
-                    sendRemoteStop(table, 1)
+                    sendRemoteStop(table, 5)
                   }}
                 >
                   {'解除'}
