@@ -24,6 +24,8 @@ import AddDialog from './components/add'
 import EditDialog from './components/edit'
 import InfoDialog from './components/info'
 
+const isVehicleOnline = (row: any) => row.heart > 0 && row.errorCode === 0
+
 const Vehicle = () => {
   const [loading, setLoading] = useState(false)
   const [tableData, setTableData] = useState<any[]>([])
@@ -300,10 +302,15 @@ const Vehicle = () => {
   }
   const currentPageTableData = useMemo(
     () =>
-      tableData.slice(
-        paginationState.pageIndex * paginationState.pageSize,
-        (paginationState.pageIndex + 1) * paginationState.pageSize
-      ),
+      tableData
+        .slice(
+          paginationState.pageIndex * paginationState.pageSize,
+          (paginationState.pageIndex + 1) * paginationState.pageSize
+        )
+        .sort((a, b) => {
+          if (!isVehicleOnline(a) && isVehicleOnline(b)) return 1
+          else return -1
+        }),
     [paginationState, tableData]
   )
 
