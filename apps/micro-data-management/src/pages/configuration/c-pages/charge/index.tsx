@@ -34,7 +34,7 @@ const VehicleType: FC<IProps> = () => {
   const { data: controlStates } = useRequest(GetRuleControlStates)
   const { data: chargingPiles } = useRequest(GetRuleChargingPiles)
 
-  const ConvertChargingPiles = dictsTransform(chargingPiles?.data, 'displayName', 'id')
+  const ConvertChargingPiles = dictsTransform(chargingPiles?.data, 'id', 'id')
 
   const columns = [
     {
@@ -143,13 +143,9 @@ const VehicleType: FC<IProps> = () => {
       header: '充电桩',
       Cell: ({ row }) => {
         const { original } = row
-        const pileKeys = original.pileKeys.split(',')
+        const pileKeys = original.pileKeys
         if (!pileKeys.length) return null
-        return chargingPiles?.data.map((item) => {
-          if (pileKeys.includes(String(item.id))) {
-            return <Chip size="small" label={item.displayName} />
-          }
-        })
+        return <Chip size="small" label={pileKeys} />
       },
       size: 80
     },

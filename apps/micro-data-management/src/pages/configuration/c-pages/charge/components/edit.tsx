@@ -178,7 +178,7 @@ const EditDialog: React.FC<{
           defaultValue={{
             ...row,
             carrierKeys: row?.carrierKeys?.split(','),
-            pileKeys: row?.pileKeys?.split(',')
+            pileKeys: chargingPiles.filter((p: any) => row?.pileKeys?.split(',').includes(p.label))
           }}
           onFormValueChange={(e) => setCurrentCompleteType((e.target as any).value)}
           schemaObject={schemaObject}
