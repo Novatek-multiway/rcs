@@ -1,3 +1,5 @@
+import './style.css'
+
 import ReactDOM from 'react-dom'
 // import * as ReactDOM from "react-dom/client";
 import { qiankunWindow, renderWithQiankun } from 'vite-plugin-qiankun/dist/helper'

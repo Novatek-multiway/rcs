@@ -103,12 +103,12 @@ const NoFaultTime: FC<PropsWithChildren<INoFaultTimeProps>> = (props) => {
         color: '#fff'
       },
       tooltip: {
-        valueFormatter: (v) => v + 'h'
+        valueFormatter: (v) => v + '%'
       }
     }))
     const newOption: any = { ...option }
     newOption.xAxis[0].data = labels
-    newOption.yAxis[0].max = labels.length * 24
+    newOption.yAxis[0].max = 100
     newOption.series = series
     updateOption(newOption)
   }, [updateOption, labels, values])
