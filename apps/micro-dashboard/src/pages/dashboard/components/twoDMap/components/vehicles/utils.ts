@@ -19,16 +19,17 @@ export const getPowerColor = (power: number) => {
 
 /**
  * @description: 获取最短旋转距离的旋转角度（如从360 -> 15，防止逆向旋转）
- * @param {number} startAngle
- * @param {number} endAngle
+ * @param {number} startAngle 0 - 360
+ * @param {number} endAngle 0 - 360
  * @return {*}
  */
+let revolutions = 0
 export const getShortestRotation = (startAngle: number, endAngle: number) => {
-  const diff = endAngle - startAngle
+  const diff = endAngle + 360 * revolutions - (startAngle + 360 * revolutions)
   if (diff > 180) {
-    return endAngle - 360
+    revolutions--
   } else if (diff < -180) {
-    return endAngle + 360
+    revolutions++
   }
-  return endAngle
+  return endAngle + 360 * revolutions
 }

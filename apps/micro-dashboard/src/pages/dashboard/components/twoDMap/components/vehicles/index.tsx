@@ -141,20 +141,17 @@ const Vehicle: FC<IVehicleProps> = memo((props) => {
   }, [x, y, carGroupRef, isFirstRender])
 
   const [prevAngle, setPrevAngle] = useState(0)
-  const getTargetRotation = useCallback(
-    (angle: number) => getShortestRotation(prevAngle, -angle + ROTATION_OFFSET),
-    [prevAngle]
-  )
+  const getTargetRotation = useCallback((angle: number) => getShortestRotation(prevAngle, angle), [prevAngle])
   useEffect(() => {
     if (angle && carRotateGroupRef.current) {
       const rotation = getTargetRotation(angle)
-      setPrevAngle(rotation)
+      setPrevAngle(angle)
       const carRotateGroup = carRotateGroupRef.current
 
       const carRotateGroupTween = new Konva.Tween({
         node: carRotateGroup,
         duration: 0.06,
-        rotation: rotation
+        rotation: -rotation + ROTATION_OFFSET
       })
 
       if (isFirstRender) {
