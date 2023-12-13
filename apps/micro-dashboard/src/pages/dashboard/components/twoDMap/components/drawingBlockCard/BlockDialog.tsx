@@ -86,7 +86,6 @@ const BlockDialog: FC<PropsWithChildren<IBlockDialogProps>> = (props) => {
       <Formik<NonNullable<IBlockDialogProps['initialValue']>>
         initialValues={initialValue || { type: 1, floor: 1, maxNumber: 1 }}
         onSubmit={async (values) => {
-          console.log('🚀 ~ file: BlockDialog.tsx ~ line 90 ~ onSubmit={ ~ values', values)
           await onSubmit?.(values as Required<typeof values>)
           onClose?.()
         }}

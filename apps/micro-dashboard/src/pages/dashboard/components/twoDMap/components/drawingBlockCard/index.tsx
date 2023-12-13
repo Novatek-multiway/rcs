@@ -88,7 +88,7 @@ const DrawingBlockCard: FC<PropsWithChildren<IDrawingBlockCardProps>> = () => {
     newDrawingResultListMap.polygon = trafficBlocks.map((block) => ({
       id: block.id + '',
       type: EDrawingType.POLYGON,
-      data: block.border?.flatMap((border) => [border.x * stageMapRatio, border.y * stageMapRatio]) || []
+      data: block.border?.flatMap((border) => [border.x * stageMapRatio, -border.y * stageMapRatio]) || []
     }))
     setDrawingResultListMap(newDrawingResultListMap)
     setTrafficBlocksData(trafficBlocks)
@@ -148,11 +148,15 @@ const DrawingBlockCard: FC<PropsWithChildren<IDrawingBlockCardProps>> = () => {
       setBlockDialogOpen(true)
     }
   }, [newDrawingResult])
+
+  // 点位、路径、车辆为了与地图保持一致，y轴取反， 所以这里需要取反
+  const reverseYPoints = useMemo(() => blockPoints.map((p) => ({ x: p.x, y: -p.y })), [blockPoints])
+
   const handleSubmit = useCallback<NonNullable<IBlockDialogProps['onSubmit']>>(
     async (values) => {
       const data = {
         ...values,
-        points: blockPoints
+        points: reverseYPoints
       }
 
       if (mode === 'add') {
@@ -164,7 +168,7 @@ const DrawingBlockCard: FC<PropsWithChildren<IDrawingBlockCardProps>> = () => {
       }
       fetchTrafficBlock()
     },
-    [blockPoints, fetchTrafficBlock, mode]
+    [reverseYPoints, fetchTrafficBlock, mode]
   )
   const handleBlockDialogClose = useCallback<NonNullable<IBlockDialogProps['onClose']>>(() => {
     setBlockDialogOpen(false)
@@ -331,7 +335,7 @@ const DrawingBlockCard: FC<PropsWithChildren<IDrawingBlockCardProps>> = () => {
         title={mode === 'add' ? '新增区块信息' : '编辑区块信息'}
         initialValue={blockInitialValue}
         open={addBlockDialogOpen}
-        points={blockPoints}
+        points={reverseYPoints}
         onClose={handleBlockDialogClose}
         onSubmit={handleSubmit}
       />
