@@ -9,6 +9,8 @@ import { qiankunWindow } from 'vite-plugin-qiankun/dist/helper'
 
 import routerList from '@/router/router'
 
+import SystemConfig from './components/SystemConfig'
+
 const { __POWERED_BY_QIANKUN__ } = qiankunWindow
 
 const dictsTransform = (obj: Record<string, any[]>) => {
@@ -36,17 +38,20 @@ export default function App() {
   useAsyncEffect(async () => {
     await globalLogin()
   }, [])
+
   return (
     // <React.StrictMode>
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <BrowserRouter basename={__POWERED_BY_QIANKUN__ ? `/${import.meta.env.VITE_APP_NAME}` : '/'}>
-        <Routes>
-          {routerList.map((item) => (
-            <Route key={item.path} path={item.path} element={item.element}></Route>
-          ))}
-        </Routes>
-      </BrowserRouter>
+      <SystemConfig systemConfigPath={import.meta.env.VITE_APP_HOST}>
+        <BrowserRouter basename={__POWERED_BY_QIANKUN__ ? `/${import.meta.env.VITE_APP_NAME}` : '/'}>
+          <Routes>
+            {routerList.map((item) => (
+              <Route key={item.path} path={item.path} element={item.element}></Route>
+            ))}
+          </Routes>
+        </BrowserRouter>
+      </SystemConfig>
     </ThemeProvider>
     // </React.StrictMode>
   )

@@ -1,7 +1,9 @@
 import { useUpdateEffect, useWebSocket } from 'ahooks'
 import { ReadyState } from 'ahooks/lib/useWebSocket'
-import { ElementRef, memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { ElementRef, memo, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react'
 import { useGlobalStore } from 'store'
+
+import { SystemConfigContext } from '@/components/SystemConfig'
 
 import Aside, { IAsideProps } from './components/aside'
 import TaskStats from './components/taskStats'
@@ -13,7 +15,7 @@ import { useDashboardStore } from './store'
 import { EWebsocketMessagePath, useWebsocketStore } from './store/websocket'
 import { DashboardWrapper } from './style'
 
-const WS_URL = `ws://${location.host}/wsUrl`
+const WS_URL = `ws://127.0.0.1:10019`
 const DEFAULT_TOOLBAR_RIGHT = 380
 // 消息推送频率设置
 const MESSAGE_INTERVAL_MAP = {
@@ -67,8 +69,9 @@ const Dashboard = () => {
       setReportGetJobSumByAgv
     ]
   )
+  const systemConfig = useContext(SystemConfigContext)
 
-  const { sendMessage, disconnect, readyState } = useWebSocket(WS_URL, {
+  const { sendMessage, disconnect, readyState } = useWebSocket(systemConfig.network?.ws_url || WS_URL, {
     onMessage: (params: any) => {
       const data = JSON.parse(params.data)
       const path = data.Path as EWebsocketMessagePath
