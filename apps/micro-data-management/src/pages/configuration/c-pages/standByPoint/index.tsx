@@ -1,52 +1,46 @@
-import EditNoteIcon from "@mui/icons-material/EditNote";
-import EuroIcon from "@mui/icons-material/Euro";
-import { useRequest } from "ahooks";
-import { GetRuleChassisInfos, postCarrierInfoPageList } from "apis";
-import type { FC, ReactNode } from "react";
-import React, { memo } from "react";
-import { BaseTable, Box, Button, Chip } from "ui";
+import EditNoteIcon from '@mui/icons-material/EditNote'
+import EuroIcon from '@mui/icons-material/Euro'
+import { useRequest } from 'ahooks'
+import { GetRuleChassisInfos, postCarrierInfoPageList } from 'apis'
+import type { FC, ReactNode } from 'react'
+import React, { memo } from 'react'
+import { BaseTable, Box, Button, Chip } from 'ui'
 // import { useDictStore } from "store";
-import { dictsTransform } from "utils";
+import { dictsTransform } from 'utils'
 
-import Refresh from "@/component/refreshIcon";
+import Refresh from '@/component/refreshIcon'
 
-import ConfigDialog from "./components/config";
+import ConfigDialog from './components/config'
 
 interface IProps {
-  children?: ReactNode;
+  children?: ReactNode
 }
 
 // 车型配置
 const StandByPoint: FC<IProps> = () => {
-  const [editOpen, setEditOpen] = React.useState(false);
-  const [row, setRow] = React.useState({});
-  const {
-    data: chassisData,
-    loading,
-    run: getChass,
-  } = useRequest(() => postCarrierInfoPageList({ type: 0 }));
+  const [editOpen, setEditOpen] = React.useState(false)
+  const [row, setRow] = React.useState({})
+  const { data: chassisData, loading, run: getChass } = useRequest(() => postCarrierInfoPageList({ type: 0 }))
 
-  const { data: ruleCarrierData } = useRequest(GetRuleChassisInfos);
+  const { data: ruleCarrierData } = useRequest(GetRuleChassisInfos)
 
   const columns = [
     {
-      accessorKey: "id",
-      header: "车辆编号",
+      accessorKey: 'id',
+      header: '车辆编号'
     },
     {
-      accessorKey: "name",
-      header: "车体名称",
+      accessorKey: 'name',
+      header: '车体名称'
     },
     {
-      accessorKey: "type",
-      header: "车辆类型",
+      accessorKey: 'type',
+      header: '车辆类型',
       Cell: ({ row }) => {
-        const { original } = row;
-        const tyles = dictsTransform(
-          ruleCarrierData?.data,
-          "model",
-          "type"
-        )?.find((item) => item.value === original.type);
+        const { original } = row
+        const tyles = dictsTransform(ruleCarrierData?.data, 'model', 'type')?.find(
+          (item) => item.value === original.type
+        )
         return (
           <>
             {tyles?.label ? (
@@ -59,26 +53,26 @@ const StandByPoint: FC<IProps> = () => {
                 label={tyles?.label}
               />
             ) : (
-              ""
+              ''
             )}
           </>
-        );
-      },
+        )
+      }
     },
     {
-      accessorKey: "homePoint",
-      header: "待命点位置",
+      accessorKey: 'homePoint',
+      header: '待命点位置'
     },
     {
-      accessorKey: "isAutoReHome",
-      header: "是否回待命点",
+      accessorKey: 'isAutoReHome',
+      header: '是否回待命点',
       Cell: ({ row }) => {
-        return row.original.isAutoReHome ? "是" : "否";
-      },
+        return row.original.isAutoReHome ? '是' : '否'
+      }
     },
     {
-      accessorKey: "actions",
-      header: "操作",
+      accessorKey: 'actions',
+      header: '操作',
       enableColumnFilter: false,
       enableSorting: false,
       size: 50,
@@ -86,10 +80,10 @@ const StandByPoint: FC<IProps> = () => {
         return (
           <div
             style={{
-              display: "flex",
-              flexWrap: "nowrap",
-              gap: "0.5rem",
-              width: "100px",
+              display: 'flex',
+              flexWrap: 'nowrap',
+              gap: '0.5rem',
+              width: '100px'
             }}
           >
             <Button
@@ -97,18 +91,18 @@ const StandByPoint: FC<IProps> = () => {
               size="small"
               color="warning"
               onClick={() => {
-                setEditOpen(true);
-                setRow(row.original);
+                setEditOpen(true)
+                setRow(row.original)
               }}
               startIcon={<EditNoteIcon />}
             >
               配置
             </Button>
           </div>
-        );
-      },
-    },
-  ];
+        )
+      }
+    }
+  ]
 
   return (
     <>
@@ -117,19 +111,19 @@ const StandByPoint: FC<IProps> = () => {
         data={chassisData?.data.data || []}
         muiTablePaperProps={{
           sx: {
-            height: "100%",
-            padding: 2,
-          },
+            height: '100%',
+            padding: 2
+          }
         }}
         loading={loading}
         renderTopToolbarCustomActions={() => {
           return (
             <Box
               sx={{
-                display: "flex",
-                alignItems: "center",
+                display: 'flex',
+                alignItems: 'center',
                 gap: 1,
-                p: "4px",
+                p: '4px'
               }}
             >
               <Button
@@ -137,20 +131,26 @@ const StandByPoint: FC<IProps> = () => {
                 size="small"
                 color="warning"
                 onClick={() => {
-                  getChass();
+                  getChass()
                 }}
               >
                 <Refresh loading={loading}></Refresh>
                 刷新
               </Button>
             </Box>
-          );
+          )
         }}
         initialState={{
           columnPinning: {
-            right: ["actions"],
-          },
+            right: ['actions']
+          }
         }}
+        muiTableContainerProps={{
+          sx: {
+            maxHeight: '85%'
+          }
+        }}
+        enableStickyHeader
         enableToolbarInternalActions={true}
         enableFullScreenToggle={false}
         enableHiding={false}
@@ -163,11 +163,11 @@ const StandByPoint: FC<IProps> = () => {
         onClose={() => setEditOpen(false)}
         rows={row}
         callback={() => {
-          getChass();
+          getChass()
         }}
       />
     </>
-  );
-};
+  )
+}
 
-export default memo(StandByPoint);
+export default memo(StandByPoint)

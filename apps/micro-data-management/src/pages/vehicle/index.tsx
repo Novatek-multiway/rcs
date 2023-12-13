@@ -462,6 +462,12 @@ const Vehicle = () => {
             setInfoOpen(true)
           }
         })}
+        muiTableContainerProps={{
+          sx: {
+            maxHeight: '85%'
+          }
+        }}
+        enableStickyHeader
         state={{
           pagination: { ...paginationState }
         }}

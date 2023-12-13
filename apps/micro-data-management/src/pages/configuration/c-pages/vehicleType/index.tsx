@@ -199,6 +199,12 @@ const VehicleType: FC<IProps> = () => {
           setPage(page)
         }}
         manualPagination
+        muiTableContainerProps={{
+          sx: {
+            maxHeight: '85%'
+          }
+        }}
+        enableStickyHeader
       />
       <AddDialog
         open={open}

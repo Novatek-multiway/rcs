@@ -235,6 +235,12 @@ const MapPage: FC<IProps> = () => {
             right: ['isActive', 'actions']
           }
         }}
+        muiTableContainerProps={{
+          sx: {
+            maxHeight: '85%'
+          }
+        }}
+        enableStickyHeader
         enableToolbarInternalActions={true}
         enableFullScreenToggle={false}
         enableHiding={false}
