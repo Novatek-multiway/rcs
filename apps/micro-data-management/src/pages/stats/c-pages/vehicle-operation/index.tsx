@@ -77,7 +77,12 @@ const VehicleOperation: FC<IProps> = () => {
       <div className="content">
         <div className="header">
           <div style={{ width: '25%' }}>
-            <Electricity labels={electricityData?.labels || []} values={electricityData?.values || []} />
+            <Electricity
+              count={electricityData?.dayCount}
+              totalCount={electricityData?.grandTotal}
+              labels={electricityData?.labels || []}
+              values={electricityData?.values || []}
+            />
           </div>
 
           <div style={{ flex: 1, minWidth: 0 }}>

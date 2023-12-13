@@ -7,6 +7,8 @@ import { Panel } from 'ui'
 import { ElectricityWrapper } from './style'
 
 interface IElectricityProps {
+  count?: number
+  totalCount?: number
   labels?: string[]
   values?: { title: string; list: number[] }[]
 }
@@ -72,7 +74,7 @@ const option: echarts.EChartsOption = {
 
 // 电量统计
 const Electricity: FC<PropsWithChildren<IElectricityProps>> = (props) => {
-  const { labels = [], values = [] } = props
+  const { count = 0, totalCount = 0, labels = [], values = [] } = props
   const el = useRef<HTMLDivElement | null>(null)
   // 传递元素给useEcharts
   const { updateOption } = useEcharts(el, {
@@ -122,11 +124,11 @@ const Electricity: FC<PropsWithChildren<IElectricityProps>> = (props) => {
       <ElectricityWrapper>
         <div className="stats-card">
           <div className="item">
-            <span className="value">0</span>
+            <span className="value">{count}</span>
             <span className="label">充电次数</span>
           </div>
           <div className="item">
-            <span className="value">0</span>
+            <span className="value">{totalCount}</span>
             <span className="label">累计充满电次数</span>
           </div>
         </div>
