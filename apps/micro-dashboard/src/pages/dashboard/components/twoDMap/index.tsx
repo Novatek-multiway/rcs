@@ -2,6 +2,7 @@ import { useAsyncEffect, useUpdateEffect } from 'ahooks'
 import { getInitStates, getMapFunction, getOnLineCarriers, updateMapFunction } from 'apis'
 import React, { FC, memo, PropsWithChildren, useState } from 'react'
 import { CircularProgress } from 'ui'
+import { toastError } from 'utils'
 
 import { useWebsocketStore } from '../../store/websocket'
 import AutoResizerStage from './components/autoResizerStage'
@@ -92,10 +93,11 @@ const TwoDMap: FC<PropsWithChildren<ITwoDMapProps>> = (props) => {
     if (!mapData) return
     const { DWGMaxX, DWGMinX, DWGMaxY, DWGMinY } = mapData.MapOption
     const mapSize = { width: Math.abs(DWGMaxX - DWGMinX), height: Math.abs(DWGMaxY - DWGMinY) }
+    if (mapSize.width === 0 || mapSize.height === 0) return toastError('地图尺寸为0，请检查地图数据')
     setMapSize(mapSize)
     const mapCenterPosition = { x: DWGMinX + mapSize.width / 2, y: DWGMinY + mapSize.height / 2 }
     setMapCenterPosition(mapCenterPosition)
-  }, [setMapSize, setMapCenterPosition, mapData])
+  }, [setMapSize, setMapCenterPosition, mapData?.MapOption])
 
   /* ---------------------------------- 更新开关 ---------------------------------- */
   useUpdateEffect(() => {

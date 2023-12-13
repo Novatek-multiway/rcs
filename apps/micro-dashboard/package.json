@@ -37,6 +37,7 @@
     "store": "workspace:*",
     "theme": "workspace:*",
     "ui": "workspace:*",
+    "utils": "workspace:*",
     "vite-plugin-qiankun": "^1.0.15",
     "zustand": "^4.4.6"
   },
