@@ -45,7 +45,7 @@ const VehicleOperation: FC<IProps> = () => {
   const handleSearch = useCallback<NonNullable<ISearchAreaProps['onSearch']>>(() => {
     const timeDiff = searchFormData.endDate?.diff(searchFormData.startDate, 'day')
     const isOneDay = timeDiff === 0
-    const format = isOneDay ? '' : 'YYYY-MM-DD'
+    const format = ''
     const data: ICarrierReportParams = {
       startTime: searchFormData.startDate!.format(format),
       endTime: searchFormData.endDate!.format(format),

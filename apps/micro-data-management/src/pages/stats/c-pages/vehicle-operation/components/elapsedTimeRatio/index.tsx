@@ -41,6 +41,10 @@ const option: echarts.EChartsOption = {
       labelLine: {
         show: false
       },
+      itemStyle: {
+        borderColor: 'rgb(27, 28, 33)',
+        borderWidth: 2
+      },
       data: [
         {
           name: '运行',
@@ -87,6 +91,13 @@ const ElapsedTimeRatio: FC<PropsWithChildren<IElapsedTimeRatioProps>> = (props) 
     updateOption({
       series: [
         {
+          label: {
+            formatter: (params: any) => {
+              const v1 = parseFloat(params.value as string)
+              const showValue = `${((v1 / total) * 100).toFixed(2)}%`
+              return `${showValue}`
+            }
+          },
           data: [
             {
               name: '运行',
