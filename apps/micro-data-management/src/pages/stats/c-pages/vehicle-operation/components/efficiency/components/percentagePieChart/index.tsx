@@ -27,7 +27,7 @@ const option: echarts.EChartsOption = {
     {
       name: '车辆利用率',
       type: 'pie',
-      radius: ['45%', '80%'],
+      radius: ['65%', '80%'],
       center: ['50%', '45%'],
       avoidLabelOverlap: false,
       label: {
