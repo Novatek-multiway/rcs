@@ -1,4 +1,4 @@
-import { useRequest } from 'ahooks'
+import { useRequest, useUpdateEffect } from 'ahooks'
 import { UpdateStationInfos } from 'apis'
 import * as React from 'react'
 import { useDictStore } from 'store'
@@ -31,10 +31,90 @@ const EditDialog: React.FC<{
   const theme = useTheme()
   const formRef = React.useRef<nygFormik>(null)
   const { dicts } = useDictStore()
+  const [currentStationType, setCurrentStationType] = React.useState(row.Type)
+
+  useUpdateEffect(() => {
+    setCurrentStationType(row.Type)
+  }, [row.Type])
+
+  const schemaObject = React.useMemo(() => {
+    const commonSchema = [
+      {
+        name: 'PointKey',
+        label: '路径编号',
+        type: 'autoComplete',
+        items: vertexData
+        // type: "select",
+      },
+      {
+        name: 'Priority',
+        label: '优先级',
+        type: 'number',
+        inputProps: {
+          min: 0,
+          onChange: (e: any) => {
+            if (e.target.value < 0) e.target.value = 0
+          }
+        }
+      },
+
+      {
+        name: 'Type',
+        label: '站点类型',
+        type: 'select',
+        items: dicts['StationType'],
+        onChange: (e: React.ChangeEvent<HTMLInputElement>) => {
+          setCurrentStationType(e.target.value)
+        }
+      },
+      {
+        name: 'AreaID',
+        label: '区域',
+        type: 'autoComplete',
+        multiple: true,
+        items: areaInfos
+      },
+      {
+        name: 'CarrierType',
+        label: '车辆类型',
+        type: 'select',
+        items: [{ label: '全部', value: 0 }].concat(...chassisList)
+      },
+
+      {
+        name: 'Name',
+        label: '名称',
+        type: 'text'
+      }
+    ]
+
+    const dynamicSchema =
+      currentStationType === 2
+        ? [
+            {
+              name: 'HomeGroup',
+              label: '待命点分组',
+              type: 'number'
+            },
+            {
+              name: 'HomeGroupType',
+              label: '待命点类型',
+              type: 'number'
+            },
+            {
+              name: 'HomeGroupPriority',
+              label: '待命点优先级',
+              type: 'number'
+            }
+          ]
+        : []
+
+    return [...commonSchema, ...dynamicSchema]
+  }, [areaInfos, chassisList, dicts, vertexData, currentStationType])
 
   return (
     <Dialog maxWidth="md" open={open} onClose={onClose}>
-      <DialogTitle>编辑站点</DialogTitle>
+      <DialogTitle>修改站点</DialogTitle>
       <DialogContent
         sx={{
           py: `${theme.spacing(3.25)} !important`
@@ -51,67 +131,7 @@ const EditDialog: React.FC<{
             },
             AreaID: areaInfos.filter((a: any) => row?.AreaID?.includes(a.value))
           }}
-          schemaObject={[
-            {
-              name: 'PointKey',
-              label: '路径编号',
-              type: 'autoComplete',
-              items: vertexData
-              // type: "select",
-            },
-            {
-              name: 'Priority',
-              label: '优先级',
-              type: 'number',
-              inputProps: {
-                min: 0,
-                onChange: (e: any) => {
-                  if (e.target.value < 0) e.target.value = 0
-                }
-              }
-            },
-
-            {
-              name: 'Type',
-              label: '站点类型',
-              type: 'select',
-              items: dicts['StationType']
-            },
-            {
-              name: 'AreaID',
-              label: '区域',
-              type: 'autoComplete',
-              multiple: true,
-              items: areaInfos
-            },
-            {
-              name: 'CarrierType',
-              label: '车辆类型',
-              type: 'select',
-              items: [{ label: '全部', value: 0 }].concat(...chassisList)
-            },
-
-            {
-              name: 'Name',
-              label: '名称',
-              type: 'text'
-            }
-            // {
-            //   name: 'HomeGroup',
-            //   label: '待命点分组',
-            //   type: 'number'
-            // },
-            // {
-            //   name: 'HomeGroupType',
-            //   label: '待命点类型',
-            //   type: 'number'
-            // },
-            // {
-            //   name: 'HomeGroupPriority',
-            //   label: '待命点优先级',
-            //   type: 'number'
-            // }
-          ]}
+          schemaObject={schemaObject}
         ></MaterialForm>
       </DialogContent>
       <DialogActions>
