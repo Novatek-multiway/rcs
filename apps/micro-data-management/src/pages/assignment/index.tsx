@@ -196,7 +196,7 @@ const DataTable = () => {
         ></MuiTable>
         {/* )} */}
       </Grid>
-      <Grid xs={6} item flexDirection={'column'} container rowSpacing={2}>
+      <Grid xs={6} item flexDirection={'column'} flexWrap={'nowrap'} container rowSpacing={2}>
         <Grid item xs={6} sx={{ width: '100%', maxWidth: '100% !important' }}>
           <MuiTable
             columns={ChildTaskColumn({ refreshTable: () => fetchTasks(selectedTaskGroupData.orderCode) })}
@@ -210,6 +210,7 @@ const DataTable = () => {
             enablePagination={false}
             enableColumnActions={false}
             enableTopToolbar={false}
+            enableSorting={false}
             muiTableBodyRowProps={({ row }) => {
               return {
                 sx: {
