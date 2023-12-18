@@ -1,13 +1,13 @@
 import EditNoteIcon from '@mui/icons-material/EditNote'
 import EuroIcon from '@mui/icons-material/Euro'
 import { useRequest } from 'ahooks'
-import { GetRuleChassisInfos, postCarrierInfoPageList } from 'apis'
+import { postCarrierInfoPageList } from 'apis'
 import type { FC, ReactNode } from 'react'
 import React, { memo } from 'react'
+import { useDictStore } from 'store'
 import { BaseTable, Box, Button, Chip } from 'ui'
-// import { useDictStore } from "store";
-import { dictsTransform } from 'utils'
 
+// import { useDictStore } from "store";
 import Refresh from '@/component/refreshIcon'
 
 import ConfigDialog from './components/config'
@@ -22,7 +22,7 @@ const StandByPoint: FC<IProps> = () => {
   const [row, setRow] = React.useState({})
   const { data: chassisData, loading, run: getChass } = useRequest(() => postCarrierInfoPageList({ type: 0 }))
 
-  const { data: ruleCarrierData } = useRequest(GetRuleChassisInfos)
+  const { dicts } = useDictStore()
 
   const columns = [
     {
@@ -38,19 +38,17 @@ const StandByPoint: FC<IProps> = () => {
       header: '车辆类型',
       Cell: ({ row }) => {
         const { original } = row
-        const tyles = dictsTransform(ruleCarrierData?.data, 'model', 'type')?.find(
-          (item) => item.value === original.type
-        )
+        const carrierType = dicts.CarrierType?.find((item) => item.value === original.type)
         return (
           <>
-            {tyles?.label ? (
+            {carrierType?.label ? (
               <Chip
                 size="small"
                 // avatar={<Avatar></Avatar>}
                 color="primary"
                 variant="outlined"
                 icon={<EuroIcon />}
-                label={tyles?.label}
+                label={carrierType?.label}
               />
             ) : (
               ''
@@ -67,7 +65,7 @@ const StandByPoint: FC<IProps> = () => {
       accessorKey: 'isAutoReHome',
       header: '是否回待命点',
       Cell: ({ row }) => {
-        return row.original.isAutoReHome ? '是' : '否'
+        return row.original.isAutoReHome ? '是' : <span style={{ opacity: 0.5 }}>否</span>
       }
     },
     {

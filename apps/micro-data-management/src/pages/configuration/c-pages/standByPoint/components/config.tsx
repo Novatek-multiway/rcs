@@ -1,6 +1,6 @@
-import { useRequest } from "ahooks";
-import { updateCarrier } from "apis";
-import * as React from "react";
+import { useRequest } from 'ahooks'
+import { updateCarrier } from 'apis'
+import * as React from 'react'
 // import { useDictStore } from "store";
 import {
   Button,
@@ -11,28 +11,28 @@ import {
   //   FormikContext,
   MaterialForm,
   nygFormik,
-  useTheme,
-} from "ui";
+  useTheme
+} from 'ui'
 const ConfigDialog: React.FC<{
-  open: boolean;
-  onClose?: () => void;
-  callback?: () => void;
-  rows?: Record<string, any>;
+  open: boolean
+  onClose?: () => void
+  callback?: () => void
+  rows?: Record<string, any>
 }> = ({ open, onClose = () => {}, callback, rows }) => {
   const { runAsync: run } = useRequest(updateCarrier, {
-    manual: true,
-  });
-  const theme = useTheme();
-  const formRef = React.useRef<nygFormik>(null);
+    manual: true
+  })
+  const theme = useTheme()
+  const formRef = React.useRef<nygFormik>(null)
 
-  console.log(rows);
+  console.log(rows)
 
   return (
-    <Dialog maxWidth="md" open={open} onClose={onClose}>
+    <Dialog maxWidth="xs" open={open} onClose={onClose}>
       <DialogTitle>待命点配置</DialogTitle>
       <DialogContent
         sx={{
-          py: `${theme.spacing(3.25)} !important`,
+          py: `${theme.spacing(3.25)} !important`
         }}
       >
         <MaterialForm
@@ -41,27 +41,27 @@ const ConfigDialog: React.FC<{
           defaultValue={{ ...rows }}
           schemaObject={[
             {
-              name: "id",
-              label: "车辆编号",
+              name: 'id',
+              label: '车辆编号',
               disabled: true,
-              type: "number",
+              type: 'number'
             },
             {
-              name: "reHomeWaitTime",
-              label: "空闲间隔",
-              endAdornment: "s",
-              type: "number",
+              name: 'reHomeWaitTime',
+              label: '空闲间隔',
+              endAdornment: 's',
+              type: 'number'
             },
             {
-              name: "homePoint",
-              label: "待命点",
-              type: "text",
+              name: 'homePoint',
+              label: '待命点',
+              type: 'text'
             },
             {
-              name: "isAutoReHome",
-              label: "是否回待命点",
-              type: "checkbox",
-            },
+              name: 'isAutoReHome',
+              label: '是否回待命点',
+              type: 'checkbox'
+            }
           ]}
         ></MaterialForm>
       </DialogContent>
@@ -69,12 +69,12 @@ const ConfigDialog: React.FC<{
         <Button
           color="primary"
           onClick={async () => {
-            await formRef.current?.submitForm();
-            const { isValid, values } = formRef.current || {};
+            await formRef.current?.submitForm()
+            const { isValid, values } = formRef.current || {}
             if (isValid) {
-              await run(values);
-              onClose();
-              callback && callback();
+              await run(values)
+              onClose()
+              callback && callback()
             }
           }}
         >
@@ -85,6 +85,6 @@ const ConfigDialog: React.FC<{
         </Button>
       </DialogActions>
     </Dialog>
-  );
-};
-export default ConfigDialog;
+  )
+}
+export default ConfigDialog
