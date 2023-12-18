@@ -336,8 +336,8 @@ const Vehicle = () => {
     })
     table.resetRowSelection()
   }
-  // 急停 0急停 1解除
-  const sendRemoteStop = async (table: any, status: 0 | 5) => {
+  // 急停 1急停 0解除
+  const sendRemoteStop = async (table: any, status: 0 | 1) => {
     if (table.getSelectedRowModel().rows.length === 0) {
       toastWarn('请选择一条数据')
       return
@@ -426,7 +426,7 @@ const Vehicle = () => {
                   color="error"
                   size="small"
                   onClick={() => {
-                    sendRemoteStop(table, 0)
+                    sendRemoteStop(table, 1)
                   }}
                 >
                   {'急停'}
@@ -435,7 +435,7 @@ const Vehicle = () => {
                   variant="outlined"
                   size="small"
                   onClick={() => {
-                    sendRemoteStop(table, 5)
+                    sendRemoteStop(table, 0)
                   }}
                 >
                   {'解除'}
