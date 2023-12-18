@@ -303,14 +303,14 @@ const Vehicle = () => {
   const currentPageTableData = useMemo(
     () =>
       tableData
-        .slice(
-          paginationState.pageIndex * paginationState.pageSize,
-          (paginationState.pageIndex + 1) * paginationState.pageSize
-        )
         .sort((a, b) => {
           if (!isVehicleOnline(a) && isVehicleOnline(b)) return 1
           else return -1
-        }),
+        })
+        .slice(
+          paginationState.pageIndex * paginationState.pageSize,
+          (paginationState.pageIndex + 1) * paginationState.pageSize
+        ),
     [paginationState, tableData]
   )
 
