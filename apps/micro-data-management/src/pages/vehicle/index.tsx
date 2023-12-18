@@ -14,7 +14,7 @@ import {
 } from 'apis'
 import { useMemo, useState } from 'react'
 import { useDictStore } from 'store'
-import { BaseTable, Box, Button, ButtonGroup, MRT_PaginationState } from 'ui'
+import { BaseTable, Box, Button, ButtonGroup, MRT_PaginationState, Tooltip } from 'ui'
 import { dictsTransform, toastSuccess, toastWarn } from 'utils'
 
 import DelButton from '@/component/delButton'
@@ -53,6 +53,7 @@ const Vehicle = () => {
     })
     return obj
   }, [dicts])
+  console.log('🚀 ~ file: index.tsx ~ line 56 ~ const_Dict=useMemo ~ _Dict', _Dict)
 
   useAsyncEffect(async () => {
     await getTableData()
@@ -101,7 +102,7 @@ const Vehicle = () => {
       accessorKey: 'carrierPos',
       id: 'carrierPos',
       header: '车辆位置',
-      size: 170
+      size: 220
     },
     {
       accessorKey: 'elecQuantity',
@@ -154,7 +155,23 @@ const Vehicle = () => {
       accessorKey: 'currentTask',
       id: 'currentTask',
       header: '当前任务',
-      size: 120
+      size: 120,
+      Cell: ({ row }) => {
+        return (
+          <Tooltip title={row.original.currentTask} placement="top">
+            <div
+              style={{
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+                whiteSpace: 'nowrap',
+                maxWidth: '120px'
+              }}
+            >
+              {row.original.currentTask}
+            </div>
+          </Tooltip>
+        )
+      }
     },
     {
       accessorKey: 'isLockdown',
@@ -465,6 +482,11 @@ const Vehicle = () => {
         muiTableContainerProps={{
           sx: {
             maxHeight: '85%'
+          }
+        }}
+        muiTableHeadCellProps={{
+          sx: {
+            padding: '1rem 0.5rem'
           }
         }}
         enableStickyHeader
