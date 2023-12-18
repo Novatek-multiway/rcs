@@ -91,19 +91,37 @@ const AddDialog: React.FC<{
       name: 'timeOut',
       required: true,
       label: '超时',
-      type: 'number'
+      type: 'number',
+      inputProps: {
+        min: 0,
+        onChange: (e: any) => {
+          if (e.target.value < 0) e.target.value = 0
+        }
+      }
     },
     {
       name: 'delay',
       required: true,
       label: '延时',
-      type: 'number'
+      type: 'number',
+      inputProps: {
+        min: 0,
+        onChange: (e: any) => {
+          if (e.target.value < 0) e.target.value = 0
+        }
+      }
     },
     {
       name: 'priority',
       required: true,
       label: '优先级',
-      type: 'number'
+      type: 'number',
+      inputProps: {
+        min: 0,
+        onChange: (e: any) => {
+          if (e.target.value < 0) e.target.value = 0
+        }
+      }
     },
     {
       name: 'checkHasGoods',

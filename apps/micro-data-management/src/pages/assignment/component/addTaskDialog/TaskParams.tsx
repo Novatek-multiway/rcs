@@ -84,6 +84,9 @@ const TaskParams: FC<PropsWithChildren<ITaskParamsProps>> = (props) => {
             'priority'
           )
         }}
+        inputProps={{
+          min: 0
+        }}
       />
       <FormControlLabel
         control={

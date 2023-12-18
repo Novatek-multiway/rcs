@@ -85,7 +85,13 @@ const AddDialog: React.FC<{
             {
               name: 'forcedCharge',
               label: '强制充电电量',
-              type: 'number'
+              type: 'number',
+              inputProps: {
+                min: 0,
+                onChange: (e: any) => {
+                  if (e.target.value < 0) e.target.value = 0
+                }
+              }
             },
             {
               name: 'chassisModel',

@@ -208,6 +208,9 @@ const AddActionPointDialog: FC<PropsWithChildren<IAddActionPointDialogProps>> = 
                     label="参数3"
                     variant="outlined"
                     size="small"
+                    inputProps={{
+                      min: 0
+                    }}
                   />
                   <Field
                     component={CustomTextField}
@@ -224,6 +227,9 @@ const AddActionPointDialog: FC<PropsWithChildren<IAddActionPointDialogProps>> = 
                     label="轴id"
                     variant="outlined"
                     size="small"
+                    inputProps={{
+                      min: 0
+                    }}
                   />
                   <Field
                     component={CustomTextField}

@@ -93,17 +93,35 @@ const EditDialog: React.FC<{
     {
       name: 'timeOut',
       label: '超时',
-      type: 'number'
+      type: 'number',
+      inputProps: {
+        min: 0,
+        onChange: (e: any) => {
+          if (e.target.value < 0) e.target.value = 0
+        }
+      }
     },
     {
       name: 'delay',
       label: '延时',
-      type: 'number'
+      type: 'number',
+      inputProps: {
+        min: 0,
+        onChange: (e: any) => {
+          if (e.target.value < 0) e.target.value = 0
+        }
+      }
     },
     {
       name: 'priority',
       label: '优先级',
-      type: 'number'
+      type: 'number',
+      inputProps: {
+        min: 0,
+        onChange: (e: any) => {
+          if (e.target.value < 0) e.target.value = 0
+        }
+      }
     },
     {
       name: 'checkHasGoods',
@@ -142,7 +160,6 @@ const EditDialog: React.FC<{
                 values[item.name] = Number(values[item.name])
               }
             })
-            console.log(values)
 
             if (isValid) {
               const sendData = {

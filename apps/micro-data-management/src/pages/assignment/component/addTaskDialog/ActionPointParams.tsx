@@ -37,8 +37,6 @@ const CustomTextField = memo((props: FormikTextFieldProps) => {
   return <TextField {...(fieldToTextField(props) as any)} onChange={onChange} />
 })
 
-// TODO 虚拟列表优化
-// TODO 列表搜索K
 const initialValues: TActionPointParams = {
   taskPoint: null,
   action: 0,
@@ -152,7 +150,17 @@ const ActionPointParams: FC<IActionPointParamsProps> = (props) => {
                 variant="outlined"
                 size="small"
               />
-              <Field component={CustomTextField} name="id" type="number" label="轴id" variant="outlined" size="small" />
+              <Field
+                component={CustomTextField}
+                name="id"
+                type="number"
+                label="轴id"
+                variant="outlined"
+                size="small"
+                inputProps={{
+                  min: 0
+                }}
+              />
               <Button
                 sx={{
                   margin: '0 auto'

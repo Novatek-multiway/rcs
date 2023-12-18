@@ -49,7 +49,13 @@ const EditDialog: React.FC<{
     {
       name: 'revision',
       label: '版本号',
-      type: 'number'
+      type: 'number',
+      inputProps: {
+        min: 0,
+        onChange: (e: any) => {
+          if (e.target.value < 0) e.target.value = 0
+        }
+      }
     },
     {
       name: 'mapChassis',
@@ -121,7 +127,7 @@ const EditDialog: React.FC<{
 
   return (
     <Dialog maxWidth="md" open={open} onClose={onClose}>
-      <DialogTitle>新增路径文件</DialogTitle>
+      <DialogTitle>修改路径文件</DialogTitle>
       <DialogContent
         sx={{
           py: `${theme.spacing(3.25)} !important`

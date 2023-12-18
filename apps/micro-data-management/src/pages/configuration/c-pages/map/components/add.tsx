@@ -26,7 +26,6 @@ const AddDialog: React.FC<{
     fileContent: any
     fileName: string
   }>({})
-  console.log('🚀 ~ file: add.tsx ~ line 26 ~ sendFile', sendFile)
 
   const { runAsync: run } = useRequest(WriteRouteFileInfo, {
     manual: true
@@ -97,7 +96,13 @@ const AddDialog: React.FC<{
     {
       name: 'revision',
       label: '版本号',
-      type: 'number'
+      type: 'number',
+      inputProps: {
+        min: 0,
+        onChange: (e: any) => {
+          if (e.target.value < 0) e.target.value = 0
+        }
+      }
     },
     {
       name: 'mapChassis',
