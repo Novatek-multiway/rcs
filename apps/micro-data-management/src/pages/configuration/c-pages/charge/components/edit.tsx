@@ -8,6 +8,7 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
+  InputAdornment,
   //   FormikContext,
   MaterialForm,
   nygFormik,
@@ -85,49 +86,114 @@ const EditDialog: React.FC<{
         name: 'carrierType',
         label: '车辆类型',
         type: 'select',
-        items: ruleCarrierData,
-        required: true
+        items: ruleCarrierData
       },
       {
         name: 'priority',
         label: '任务优先级',
-        type: 'number'
+        type: 'number',
+        inputProps: {
+          min: 0,
+          onChange: (e: any) => {
+            if (e.target.value < 0) e.target.value = 0
+          }
+        }
       },
       {
         name: 'level',
         label: '规则优先级',
-        type: 'number'
+        type: 'number',
+        inputProps: {
+          min: 0,
+          onChange: (e: any) => {
+            if (e.target.value < 0) e.target.value = 0
+          }
+        }
       },
       {
         name: 'startHour',
         label: '开始小时',
-        type: 'number'
+        type: 'number',
+        inputProps: {
+          min: 0,
+          max: 24,
+          onChange: (e: any) => {
+            if (e.target.value < 0) e.target.value = 0
+            if (e.target.value > 24) e.target.value = 24
+          }
+        },
+        endAdornment: <InputAdornment position="start">h</InputAdornment>
       },
       {
         name: 'endHour',
         label: '结束小时',
-        type: 'number'
+        type: 'number',
+        inputProps: {
+          min: 0,
+          max: 24,
+          onChange: (e: any) => {
+            if (e.target.value < 0) e.target.value = 0
+            if (e.target.value > 24) e.target.value = 24
+          }
+        },
+        endAdornment: <InputAdornment position="start">h</InputAdornment>
       },
       {
         name: 'startMinute',
         label: '起始分钟',
-        type: 'number'
+        type: 'number',
+        inputProps: {
+          min: 0,
+          max: 59,
+          onChange: (e: any) => {
+            if (e.target.value < 0) e.target.value = 0
+            if (e.target.value > 59) e.target.value = 59
+          }
+        },
+        endAdornment: <InputAdornment position="start">m</InputAdornment>
       },
       {
         name: 'endMinute',
         label: '结束分钟',
-        type: 'number'
+        type: 'number',
+        inputProps: {
+          min: 0,
+          max: 59,
+          onChange: (e: any) => {
+            if (e.target.value < 0) e.target.value = 0
+            if (e.target.value > 59) e.target.value = 59
+          }
+        },
+        endAdornment: <InputAdornment position="start">m</InputAdornment>
       },
 
       {
         name: 'minLimitBattery',
         label: '低电量百分比',
-        type: 'number'
+        type: 'number',
+        inputProps: {
+          min: 0,
+          max: 100,
+          onChange: (e: any) => {
+            if (e.target.value < 0) e.target.value = 0
+            if (e.target.value > 100) e.target.value = 100
+          }
+        },
+        endAdornment: <InputAdornment position="start">%</InputAdornment>
       },
       {
         name: 'maxLimitBattery',
         label: '高电量百分比',
-        type: 'number'
+        type: 'number',
+        inputProps: {
+          min: 0,
+          max: 100,
+          onChange: (e: any) => {
+            if (e.target.value < 0) e.target.value = 0
+            if (e.target.value > 100) e.target.value = 100
+          }
+        },
+        endAdornment: <InputAdornment position="start">%</InputAdornment>
       },
       {
         name: 'pileKeys',
@@ -139,7 +205,14 @@ const EditDialog: React.FC<{
       {
         name: 'timeLimit',
         label: '空闲时间',
-        type: 'number'
+        type: 'number',
+        inputProps: {
+          min: 0,
+          onChange: (e: any) => {
+            if (e.target.value < 0) e.target.value = 0
+          }
+        },
+        endAdornment: <InputAdornment position="start">m</InputAdornment>
       }
     ]
     const dynamicSchema =
@@ -148,13 +221,29 @@ const EditDialog: React.FC<{
             name: 'completeTime',
             label: '充电时间',
             type: 'number',
-            required: true
+            required: true,
+            inputProps: {
+              min: 0,
+              onChange: (e: any) => {
+                if (e.target.value < 0) e.target.value = 0
+              }
+            },
+            endAdornment: <InputAdornment position="start">m</InputAdornment>
           }
         : {
             name: 'completePercent',
             label: '充电百分比',
             type: 'number',
-            required: true
+            required: true,
+            inputProps: {
+              min: 0,
+              max: 100,
+              onChange: (e: any) => {
+                if (e.target.value < 0) e.target.value = 0
+                if (e.target.value > 100) e.target.value = 100
+              }
+            },
+            endAdornment: <InputAdornment position="start">%</InputAdornment>
           }
     commonSchema.splice(1, 0, dynamicSchema)
     return commonSchema
@@ -180,7 +269,14 @@ const EditDialog: React.FC<{
             carrierKeys: row?.carrierKeys?.split(','),
             pileKeys: chargingPiles.filter((p: any) => row?.pileKeys?.split(',').includes(p.label))
           }}
-          onFormValueChange={(e) => setCurrentCompleteType((e.target as any).value)}
+          onFormValueChange={(e) => {
+            const target = e.target as HTMLInputElement
+            if (target.name === 'completeType') {
+              const completeType = target.value
+
+              setCurrentCompleteType(completeType)
+            }
+          }}
           schemaObject={schemaObject}
         ></MaterialForm>
       </DialogContent>
