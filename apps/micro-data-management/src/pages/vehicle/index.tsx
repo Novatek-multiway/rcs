@@ -14,7 +14,7 @@ import {
 } from 'apis'
 import { useMemo, useState } from 'react'
 import { useDictStore } from 'store'
-import { BaseTable, Box, Button, ButtonGroup, MRT_PaginationState, Tooltip } from 'ui'
+import { BaseTable, Box, Button, ButtonGroup, MRT_PaginationState, MRT_RowSelectionState, Tooltip } from 'ui'
 import { dictsTransform, toastSuccess, toastWarn } from 'utils'
 
 import DelButton from '@/component/delButton'
@@ -53,7 +53,6 @@ const Vehicle = () => {
     })
     return obj
   }, [dicts])
-  console.log('🚀 ~ file: index.tsx ~ line 56 ~ const_Dict=useMemo ~ _Dict', _Dict)
 
   useAsyncEffect(async () => {
     await getTableData()
@@ -336,16 +335,17 @@ const Vehicle = () => {
       toastSuccess(msg || `操作成功`)
     }
   }
+  const [rowSelection, setRowSelection] = useState<MRT_RowSelectionState>({})
   // 锁车0 解锁1
   const updateCarrierState = async (table: any, status: 0 | 1) => {
-    if (table.getSelectedRowModel().rows.length === 0) {
+    const selectedVehicleIds = Object.keys(rowSelection)
+    if (selectedVehicleIds.length === 0) {
       toastWarn('请选择一条数据')
       return
     }
-    const rows = table.getSelectedRowModel().rows
     const promises: (() => Promise<any>)[] = []
-    rows.forEach((row: any) => {
-      promises.push(() => postUpdateCarrierState({ carId: row?.original?.id, key: status }))
+    selectedVehicleIds.forEach((vehicleId: string) => {
+      promises.push(() => postUpdateCarrierState({ carId: Number(vehicleId), key: status }))
     })
     // await postUpdateCarrierState({ carId: row?.original?.id, key: status })
     Promise.all(promises.map((p) => p())).then(() => {
@@ -355,14 +355,14 @@ const Vehicle = () => {
   }
   // 急停 1急停 0解除
   const sendRemoteStop = async (table: any, status: 0 | 1) => {
-    if (table.getSelectedRowModel().rows.length === 0) {
+    const selectedVehicleIds = Object.keys(rowSelection)
+    if (selectedVehicleIds.length === 0) {
       toastWarn('请选择一条数据')
       return
     }
-    const rows = table.getSelectedRowModel().rows
     const promises: (() => Promise<any>)[] = []
-    rows.forEach((row: any) => {
-      promises.push(() => postSendRemoteStop({ vehicle: row?.original?.id, remoteStop: status }))
+    selectedVehicleIds.forEach((vehicleId: string) => {
+      promises.push(() => postSendRemoteStop({ vehicle: Number(vehicleId), remoteStop: status }))
     })
     // await postSendRemoteStop({ carId: row?.original?.id, key: status })
     Promise.all(promises.map((p) => p())).then(() => {
@@ -471,6 +471,7 @@ const Vehicle = () => {
         enableDensityToggle={false}
         enableColumnActions={false}
         enableRowSelection={true}
+        getRowId={(row) => row.id}
         muiTableBodyCellProps={({ row }) => ({
           onDoubleClick: async () => {
             const id = row?.original?.id
@@ -491,13 +492,19 @@ const Vehicle = () => {
         }}
         enableStickyHeader
         state={{
-          pagination: { ...paginationState }
+          pagination: { ...paginationState },
+          rowSelection,
+          showAlertBanner: !!Object.keys(rowSelection).length
         }}
         onPaginationChange={(updater) => {
           setPaginationState(updater)
         }}
         rowCount={rowCount}
         manualPagination
+        onRowSelectionChange={setRowSelection}
+        renderToolbarAlertBannerContent={() => (
+          <span style={{ padding: ' 0.5rem 1rem' }}>已选择行：{`${Object.keys(rowSelection).length}/${rowCount}`}</span>
+        )}
       />
       <AddDialog
         open={addOpen}
