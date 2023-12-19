@@ -60,6 +60,9 @@ const Vehicle = () => {
 
   useEffect(() => {
     const interval = setInterval(() => {
+      if (infoOpen || editOpen || addOpen) {
+        return
+      }
       getTableData()
     }, 10 * 1000)
 
@@ -67,7 +70,7 @@ const Vehicle = () => {
       clearInterval(interval)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, [infoOpen, editOpen, addOpen])
 
   const TaskColumn = [
     {
