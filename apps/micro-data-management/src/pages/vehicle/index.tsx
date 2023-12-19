@@ -12,7 +12,7 @@ import {
   postSendRemoteStop,
   postUpdateCarrierState
 } from 'apis'
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useDictStore } from 'store'
 import { BaseTable, Box, Button, ButtonGroup, MRT_PaginationState, MRT_RowSelectionState, Tooltip } from 'ui'
 import { dictsTransform, toastSuccess, toastWarn } from 'utils'
@@ -56,6 +56,17 @@ const Vehicle = () => {
 
   useAsyncEffect(async () => {
     await getTableData()
+  }, [])
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      getTableData()
+    }, 10 * 1000)
+
+    return () => {
+      clearInterval(interval)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const TaskColumn = [
