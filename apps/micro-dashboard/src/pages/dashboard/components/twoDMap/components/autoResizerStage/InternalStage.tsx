@@ -123,8 +123,23 @@ const InternalStage: FC<PropsWithChildren<IInternalStageProps>> = (props) => {
   }, [mapSize.height, stageMapRatio, setStageLeftTopPosition])
 
   /* ---------------------------------- 地图数据 ---------------------------------- */
-  const vertexes = useMemo(() => mapData?.Vertexs || [], [mapData])
-  const edges = useMemo(() => mapData?.Edges || [], [mapData])
+  const vertexes = useMemo(() => {
+    let vertexes = mapData?.Vertexs || []
+    if (vertexes.length > 0) {
+      vertexes = vertexes.map((v) => ({ ...v, Y: -v.Y }))
+    }
+
+    return vertexes
+  }, [mapData])
+  const edges = useMemo(() => {
+    const edges = mapData?.Edges || []
+    if (edges.length > 0) {
+      edges.forEach((edge) => {
+        edge.ControlPoint = edge.ControlPoint.map((cp) => ({ ...cp, Y: -cp.Y }))
+      })
+    }
+    return edges
+  }, [mapData])
   /* ---------------------------------- 地图信息 ---------------------------------- */
 
   /* ----------------------------------- 点位 ----------------------------------- */
@@ -152,7 +167,8 @@ const InternalStage: FC<PropsWithChildren<IInternalStageProps>> = (props) => {
   /* ----------------------------------- 边 ----------------------------------- */
 
   /* ----------------------------------- 车辆 ----------------------------------- */
-  const vehicles = useVehicles(vehiclesData, {
+  const yReversedVehiclesData = useMemo(() => vehiclesData.map((v) => ({ ...v, y: -v.y })), [vehiclesData])
+  const vehicles = useVehicles(yReversedVehiclesData, {
     carrierPlanningFilter: (planning) => {
       /**
        * 0-已规划  6-已分配 7-交管确认 3-已下发  4-行驶中 1-事件失败  2-被交管  5-已路过

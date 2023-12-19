@@ -90,8 +90,8 @@ export const useLines = (edges: MapAPI.Edge[]) => {
     const idLineMap = new Map()
     const line = deduplicatedEdges.map((edge) => {
       const directions =
-        edge.CustomDirection?.map((d) => ({ ...d, x: d.x * stageMapRatio, y: -d.y * stageMapRatio })) || []
-      const controlPoints = edge.ControlPoint.map((cPoint) => [cPoint.X * stageMapRatio, -cPoint.Y * stageMapRatio])
+        edge.CustomDirection?.map((d) => ({ ...d, x: d.x * stageMapRatio, y: d.y * stageMapRatio })) || []
+      const controlPoints = edge.ControlPoint.map((cPoint) => [cPoint.X * stageMapRatio, cPoint.Y * stageMapRatio])
 
       const line = {
         id: edge.ID,

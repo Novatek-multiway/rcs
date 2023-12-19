@@ -13,7 +13,7 @@ export const usePoints = (vertexes: MapAPI.Vertex[]) => {
       const point = {
         id: vertex.ID,
         x: vertex.X * stageMapRatio,
-        y: -vertex.Y * stageMapRatio,
+        y: vertex.Y * stageMapRatio,
         text: vertex.ID,
         type: vertex.Type,
         isFull: vertex.LocationState === 1
