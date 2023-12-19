@@ -12,7 +12,7 @@ import {
   postSendRemoteStop,
   postUpdateCarrierState
 } from 'apis'
-import { useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useDictStore } from 'store'
 import { BaseTable, Box, Button, ButtonGroup, MRT_PaginationState, MRT_RowSelectionState, Tooltip } from 'ui'
 import { dictsTransform, toastSuccess, toastWarn } from 'utils'
@@ -24,7 +24,7 @@ import AddDialog from './components/add'
 import EditDialog from './components/edit'
 import InfoDialog from './components/info'
 
-const isVehicleOnline = (row: any) => row.heart > 0 && row.errorCode === 0
+// const isVehicleOnline = (row: any) => row.heart > 0 && row.errorCode === 0
 
 const Vehicle = () => {
   const [loading, setLoading] = useState(false)
@@ -55,7 +55,8 @@ const Vehicle = () => {
   }, [dicts])
 
   useAsyncEffect(async () => {
-    await getTableData()
+    // await getTableData()
+    await getTableDataNew()
   }, [])
 
   useEffect(() => {
@@ -63,7 +64,7 @@ const Vehicle = () => {
       if (infoOpen || editOpen || addOpen) {
         return
       }
-      getTableData()
+      getTableDataNew()
     }, 10 * 1000)
 
     return () => {
@@ -241,7 +242,7 @@ const Vehicle = () => {
                 const id = row?.original?.id
                 const { msg } = await postRemoveCarrier({ id })
                 RcsMessage.success(msg)
-                getTableData()
+                getTableDataNew()
               }}
             >
               踢出
@@ -260,7 +261,7 @@ const Vehicle = () => {
                 await delCreateCarrier(id)
                 RcsMessage.success()
                 table.resetRowSelection()
-                getTableData()
+                getTableDataNew()
               }}
               startIcon={null}
             >
@@ -279,7 +280,7 @@ const Vehicle = () => {
                 const id = row?.original?.id
                 const { msg } = await getSimulationCarrierLogin(id)
                 RcsMessage.success(msg)
-                getTableData()
+                getTableDataNew()
               }}
             >
               激活
@@ -300,6 +301,7 @@ const Vehicle = () => {
 
   const [paginationState, setPaginationState] = useState<MRT_PaginationState>({ pageIndex: 0, pageSize: 10 })
   const [rowCount, setRowCount] = useState(0)
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const getTableData = async () => {
     setLoading(true)
     const fn = [postGetControlOptions({}), postGetControlStates({})]
@@ -330,13 +332,29 @@ const Vehicle = () => {
       setLoading(false)
     }, 1000)
   }
+
+  const getTableDataNew = useCallback(async () => {
+    setLoading(true)
+    const tableData = await Promise.all([postGetControlOptions({}), postGetControlStates({})]).then(
+      ([controlOptionsRes, controlStateRes]) =>
+        controlOptionsRes.data.map((item: any, index: number) => ({
+          ...controlOptionsRes.data[index],
+          ...controlStateRes.data[index]
+        }))
+    )
+    setRowCount(tableData.length)
+    setLoading(false)
+
+    setTableData(tableData)
+  }, [])
+
   const currentPageTableData = useMemo(
     () =>
       tableData
-        .sort((a, b) => {
-          if (!isVehicleOnline(a) && isVehicleOnline(b)) return 1
-          else return -1
-        })
+        // .sort((a, b) => {
+        //   if (!isVehicleOnline(a) && isVehicleOnline(b)) return 1
+        //   else return -1
+        // })
         .slice(
           paginationState.pageIndex * paginationState.pageSize,
           (paginationState.pageIndex + 1) * paginationState.pageSize
@@ -413,7 +431,7 @@ const Vehicle = () => {
                 color="warning"
                 onClick={() => {
                   table.resetRowSelection()
-                  getTableData()
+                  getTableDataNew()
                 }}
               >
                 <Refresh loading={loading}></Refresh>
@@ -526,7 +544,7 @@ const Vehicle = () => {
         callback={() => {
           RcsMessage.success()
           // table.resetRowSelection();
-          getTableData()
+          getTableDataNew()
         }}
         vehicleTypeOptions={dictsTransform(chassisData?.data, 'model', 'id')}
         areaInfosOptions={dictsTransform(areaInfos?.data, 'areaName', 'id')}
@@ -538,7 +556,7 @@ const Vehicle = () => {
         callback={() => {
           RcsMessage.success()
           // table.resetRowSelection();
-          getTableData()
+          getTableDataNew()
         }}
         vehicleTypeOptions={dictsTransform(chassisData?.data, 'model', 'id')}
         areaInfosOptions={dictsTransform(areaInfos?.data, 'areaName', 'id')}
