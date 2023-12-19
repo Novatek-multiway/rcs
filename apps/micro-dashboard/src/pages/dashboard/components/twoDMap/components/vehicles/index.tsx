@@ -7,7 +7,7 @@ import { Html } from 'react-konva-utils'
 import { useImage } from '../../hooks/useImage'
 import { useTwoDMapStore } from '../../store'
 import Lines, { ILinesProps } from '../lines'
-import { LINE_COLORS, ROTATION_OFFSET, VEHICLE_IMAGE_SIZE, VEHICLE_LIGHT_IMAGE_SIZE, vehicleColorMap } from './constant'
+import { LINE_COLORS, ROTATION_OFFSET, VEHICLE_LIGHT_IMAGE_SIZE, vehicleColorMap } from './constant'
 import { TooltipWrapper } from './style'
 import { getPowerColor, getShortestRotation, getVehicleImage, getVehicleLightImage } from './utils'
 
@@ -66,8 +66,15 @@ const Vehicle: FC<IVehicleProps> = memo((props) => {
     () => (vehicleImage && vehicleImage?.width / vehicleImage?.height) || 1,
     [vehicleImage]
   )
+  const vehicleSize = useMemo(() => outlineWidth, [outlineWidth])
+  const vehicleLightSize = useMemo(() => Math.max(outlineWidth, outlineHeight) * 1.8, [outlineWidth, outlineHeight])
 
   const vehicleLightImage = useImage(vehicleLightImagePath)
+  const vehicleLightImageAspectRatio = useMemo(
+    () => (vehicleLightImage && vehicleLightImage?.width / vehicleLightImage?.height) || 1,
+    [vehicleLightImage]
+  )
+
   useEffect(() => {
     const setImageExternal = async () => {
       const vehicleImagePath = await getVehicleImage(vehicleImageName)
@@ -184,18 +191,18 @@ const Vehicle: FC<IVehicleProps> = memo((props) => {
                 ref={vehicleLightImageRef}
                 perfectDrawEnabled={false}
                 image={vehicleLightImage}
-                width={8.72}
-                height={VEHICLE_LIGHT_IMAGE_SIZE}
-                offsetX={8.72 / 2}
-                offsetY={VEHICLE_LIGHT_IMAGE_SIZE / 2}
+                width={vehicleLightSize * vehicleLightImageAspectRatio}
+                height={vehicleLightSize}
+                offsetX={(vehicleLightSize * vehicleLightImageAspectRatio) / 2}
+                offsetY={vehicleLightSize / 2}
               ></KonvaImage>
               <KonvaImage
                 perfectDrawEnabled={false}
                 image={vehicleImage}
-                width={VEHICLE_IMAGE_SIZE * vehicleImageAspectRatio}
-                height={VEHICLE_IMAGE_SIZE}
-                offsetX={(VEHICLE_IMAGE_SIZE * vehicleImageAspectRatio) / 2}
-                offsetY={VEHICLE_IMAGE_SIZE / 2}
+                width={vehicleSize * vehicleImageAspectRatio}
+                height={vehicleSize}
+                offsetX={(vehicleSize * vehicleImageAspectRatio) / 2}
+                offsetY={vehicleSize / 2}
               ></KonvaImage>
             </>
           )}
@@ -209,8 +216,9 @@ const Vehicle: FC<IVehicleProps> = memo((props) => {
                 offsetX={outlineWidth / 2}
                 offsetY={outlineHeight / 2}
                 stroke={'#00cbca'}
-                strokeWidth={0.1}
+                strokeWidth={0.04}
                 fill="transparent"
+                dash={[0.05, 0.025, 0.05]}
               />
             )}
             {showBenchmarks && (
