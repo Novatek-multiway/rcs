@@ -209,6 +209,9 @@ const AddTaskDialog: FC<{
                       onChange={(e) => {
                         setLoopCount(parseInt(e.target.value))
                       }}
+                      inputProps={{
+                        min: 0
+                      }}
                     ></TextField>
                   </div>
                   <DialogActions>
