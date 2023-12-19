@@ -546,7 +546,7 @@ const Vehicle = () => {
           // table.resetRowSelection();
           getTableDataNew()
         }}
-        vehicleTypeOptions={dictsTransform(chassisData?.data, 'model', 'id')}
+        chassisData={chassisData?.data}
         areaInfosOptions={dictsTransform(areaInfos?.data, 'areaName', 'id')}
       />
       <EditDialog
@@ -558,7 +558,7 @@ const Vehicle = () => {
           // table.resetRowSelection();
           getTableDataNew()
         }}
-        vehicleTypeOptions={dictsTransform(chassisData?.data, 'model', 'id')}
+        chassisData={chassisData?.data}
         areaInfosOptions={dictsTransform(areaInfos?.data, 'areaName', 'id')}
       />
       <InfoDialog open={infoOpen} row={row} onClose={() => setInfoOpen(false)}></InfoDialog>

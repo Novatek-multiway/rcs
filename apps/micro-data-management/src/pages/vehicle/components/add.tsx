@@ -1,14 +1,15 @@
 import { postCreateCarrier } from 'apis'
 import * as React from 'react'
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, MaterialForm, nygFormik, useTheme } from 'ui'
+import { dictsTransform } from 'utils'
 
 const AddDialog: React.FC<{
   open: boolean
-  vehicleTypeOptions: any[]
+  chassisData: any
   areaInfosOptions: any[]
   onClose?: () => void
   callback?: () => void
-}> = ({ open, vehicleTypeOptions = [], areaInfosOptions = [], onClose = () => {}, callback }) => {
+}> = ({ open, chassisData = [], areaInfosOptions = [], onClose = () => {}, callback }) => {
   const theme = useTheme()
   const formRef = React.useRef<nygFormik>(null)
 
@@ -17,6 +18,11 @@ const AddDialog: React.FC<{
       formRef.current?.setFieldValue('area', [areaInfosOptions[0]])
     })
   }, [open, areaInfosOptions])
+
+  const vehicleTypeOptions = React.useMemo(
+    () => dictsTransform(chassisData, 'model', 'id') as { label: string; value: string }[],
+    [chassisData]
+  )
 
   return (
     <Dialog maxWidth="md" open={open} onClose={onClose}>
@@ -71,10 +77,12 @@ const AddDialog: React.FC<{
           onClick={async () => {
             await formRef?.current?.submitForm()
             const { isValid, values }: any = formRef.current || {}
-            console.log(values, isValid)
 
             if (isValid) {
-              const params = { ...values }
+              const params = {
+                ...values,
+                type: chassisData.find((item: any) => item.id + '' === values.chassisID)?.type
+              }
               params.area = params?.area.map((obj: any) => Number(obj.value))
               await postCreateCarrier(params)
               onClose()
