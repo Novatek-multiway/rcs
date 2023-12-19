@@ -56,11 +56,7 @@ export const updateMapFunction = (data: {
   enabled: boolean
   showed: boolean
 }) => {
-  // request<IResponse<any>>('/Map/UpdateFunction', {
-  //   method: 'POST',
-  //   data
-  // })
-  return request<IResponse<any>>('/Map/WriteRouteFileInfo', {
+  request<IResponse<any>>('/Map/UpdateFunction', {
     method: 'POST',
     data
   })
