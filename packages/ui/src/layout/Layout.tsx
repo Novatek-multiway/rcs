@@ -7,15 +7,17 @@ import { theme } from 'theme'
 
 import logo from './assets/logo.png'
 import Nav from './Nav'
+import Settings, { ISettingsProps } from './Settings'
 import Time from './Time'
 
-interface LayoutProps {
+export interface LayoutProps {
   children: React.ReactNode
   onLogoTitleClick?: () => void
+  settingsProps?: ISettingsProps
 }
 
 const Layout: FC<LayoutProps> = (props) => {
-  const { onLogoTitleClick } = props
+  const { onLogoTitleClick, settingsProps } = props
   const [collapsed, setCollapsed] = useState(false)
 
   return (
@@ -72,6 +74,7 @@ const Layout: FC<LayoutProps> = (props) => {
               </Box>
             </Collapse>
             <Time />
+            <Settings {...settingsProps} />
           </Toolbar>
         </AppBar>
         <Box component="main" sx={{ p: 0, mt: theme.spacing(6), flex: 1, minHeight: 0 }}>
