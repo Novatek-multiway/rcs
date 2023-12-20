@@ -6,7 +6,7 @@ import React, { memo, useRef, useState } from 'react'
 
 interface ISettingItemProps {
   title: string
-  options: { label: string; value: any; icon: ReactNode }[]
+  options: { label: string; value: any; icon?: ReactNode }[]
   toggleButtonProps?: Omit<ToggleButtonProps, 'value'>
   defaultValue?: any
   onChange?: (newValue: any) => void
@@ -47,38 +47,36 @@ const SettingItem: FC<ISettingItemProps> = (props) => {
   )
 }
 
+type TSettingKeys = 'language'
 export interface ISettingsProps {
-  onSettingChange?: (key: 'language', newValue: any) => void
+  defaultSettingsValue?: Record<TSettingKeys, any>
+  onSettingChange?: (key: TSettingKeys, newValue: any) => void
 }
 
 const Settings: FC<PropsWithChildren<ISettingsProps>> = (props) => {
-  const { onSettingChange } = props
+  const { onSettingChange, defaultSettingsValue } = props
   const toggleSettings = useRef<ISettingItemProps[]>([
     {
       title: '语言',
       options: [
         {
           label: '中文',
-          value: 'zh',
-          icon: <></>
+          value: 'zh'
         },
         {
           label: 'English',
-          value: 'en',
-          icon: <></>
+          value: 'en'
         },
         {
           label: '日本語',
-          value: 'jp',
-          icon: <></>
+          value: 'jp'
         },
         {
           label: '한국어',
-          value: 'kor',
-          icon: <></>
+          value: 'kor'
         }
       ],
-      defaultValue: 'zh',
+      defaultValue: defaultSettingsValue ? defaultSettingsValue['language'] : 'zh',
       onChange: (newValue) => onSettingChange?.('language', newValue),
       toggleButtonProps: {
         sx: {
