@@ -3,14 +3,18 @@ import { useGlobalStore } from 'store'
 
 const getActiveRule = (path: string) => (location: Location) => location.pathname.startsWith(path)
 
-const globalState = {
-  logoTitleClickTime: Date.now()
+let globalState = {
+  logoTitleClickTime: Date.now(),
+  language: 'zh'
 }
 const actions: MicroAppStateActions = initGlobalState(globalState)
 
-export const updateMicroAppState = (getNewState: (oldState: Record<string, any>) => Partial<typeof globalState>) => {
-  const newState = getNewState(globalState)
-  actions.setGlobalState(newState)
+export const updateMicroAppState = (
+  updateGlobalState: (oldState: Record<string, any>) => Partial<typeof globalState>
+) => {
+  const newGlobalState = { ...globalState, ...updateGlobalState(globalState) }
+  actions.setGlobalState(newGlobalState)
+  globalState = newGlobalState
 }
 
 const env = import.meta.env
@@ -45,6 +49,7 @@ function qiankunInit() {
       afterMount: () => {
         // 子应用挂载后隐藏loading
         useGlobalStore.getState().setGlobalLoading(false)
+        updateMicroAppState(() => globalState)
       }
     }
   )
