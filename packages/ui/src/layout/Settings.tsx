@@ -101,6 +101,7 @@ const Settings: FC<PropsWithChildren<ISettingsProps>> = (props) => {
             width: '400px'
           }
         }}
+        keepMounted
       >
         <Box
           sx={{
