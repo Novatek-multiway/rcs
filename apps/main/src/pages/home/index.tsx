@@ -30,6 +30,9 @@ export default function Home() {
     <Layout
       onLogoTitleClick={handleOnLogoTitleClick}
       settingsProps={{
+        defaultSettingsValue: {
+          language: localStorage.getItem('language') || 'zh'
+        },
         onSettingChange: handleSettingChange
       }}
     >
