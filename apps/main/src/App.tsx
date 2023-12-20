@@ -1,23 +1,26 @@
-import "normalize.css";
-import "./style.css";
+import 'normalize.css'
+import './style.css'
 
-import { useAsyncEffect } from "ahooks";
-import { useAuth } from "hooks";
-import { RouterProvider } from "react-router-dom";
+import { useAsyncEffect } from 'ahooks'
+import { useAuth } from 'hooks'
+import { RouterProvider } from 'react-router-dom'
 
-import RouterConfig from "./router";
+import LanguageProvider from './components/LanguageProvider'
+import RouterConfig from './router'
 
 function App() {
-  const { globalLogin } = useAuth();
+  const { globalLogin } = useAuth()
   useAsyncEffect(async () => {
-    await globalLogin();
-  }, []);
+    await globalLogin()
+  }, [])
 
   return (
     <>
-      <RouterProvider router={RouterConfig}></RouterProvider>
+      <LanguageProvider>
+        <RouterProvider router={RouterConfig}></RouterProvider>
+      </LanguageProvider>
     </>
-  );
+  )
 }
 
-export default App;
+export default App

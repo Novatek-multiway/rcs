@@ -1,0 +1,110 @@
+{
+  "监控": {
+    "en": "Monitor",
+    "$files": ["pages/home/index.tsx"],
+    "jp": "监控",
+    "kor": "监控"
+  },
+  "任务": {
+    "en": "任务",
+    "$files": ["pages/home/index.tsx"],
+    "jp": "任务",
+    "kor": "任务"
+  },
+  "车辆": {
+    "en": "车辆",
+    "$files": ["pages/home/index.tsx"],
+    "jp": "车辆",
+    "kor": "车辆"
+  },
+  "统计": {
+    "en": "统计",
+    "$files": ["pages/home/index.tsx"],
+    "jp": "统计",
+    "kor": "统计"
+  },
+  "车辆运行数据统计": {
+    "en": "车辆运行数据统计",
+    "$files": ["pages/home/index.tsx"],
+    "jp": "车辆运行数据统计",
+    "kor": "车辆运行数据统计"
+  },
+  "配置": {
+    "en": "配置",
+    "$files": ["pages/home/index.tsx"],
+    "jp": "配置",
+    "kor": "配置"
+  },
+  "地图配置": {
+    "en": "地图配置",
+    "$files": ["pages/home/index.tsx"],
+    "jp": "地图配置",
+    "kor": "地图配置"
+  },
+  "车型配置": {
+    "en": "车型配置",
+    "$files": ["pages/home/index.tsx"],
+    "jp": "车型配置",
+    "kor": "车型配置"
+  },
+  "站点配置": {
+    "en": "站点配置",
+    "$files": ["pages/home/index.tsx"],
+    "jp": "站点配置",
+    "kor": "站点配置"
+  },
+  "事件配置": {
+    "en": "事件配置",
+    "$files": ["pages/home/index.tsx"],
+    "jp": "事件配置",
+    "kor": "事件配置"
+  },
+  "充电配置": {
+    "en": "充电配置",
+    "$files": ["pages/home/index.tsx"],
+    "jp": "充电配置",
+    "kor": "充电配置"
+  },
+  "待命点配置": {
+    "en": "待命点配置",
+    "$files": ["pages/home/index.tsx"],
+    "jp": "待命点配置",
+    "kor": "待命点配置"
+  },
+  "调度监控系统": {
+    "en": "调度监控系统",
+    "$files": ["pages/home/index.tsx"],
+    "jp": "调度监控系统",
+    "kor": "调度监控系统"
+  },
+  "早上好": {
+    "en": "早上好",
+    "$files": ["pages/home/index.tsx"],
+    "jp": "早上好",
+    "kor": "早上好"
+  },
+  "上午好": {
+    "en": "上午好",
+    "$files": ["pages/home/index.tsx"],
+    "jp": "上午好",
+    "kor": "上午好"
+  },
+  "中午好": {
+    "en": "中午好",
+    "$files": ["pages/home/index.tsx"],
+    "jp": "中午好",
+    "kor": "中午好"
+  },
+  "下午好": {
+    "en": "下午好",
+    "$files": ["pages/home/index.tsx"],
+    "jp": "下午好",
+    "kor": "下午好"
+  },
+  "晚上好": {
+    "en": "晚上好",
+    "$files": ["pages/home/index.tsx"],
+    "jp": "晚上好",
+    "kor": "晚上好"
+  }
+}

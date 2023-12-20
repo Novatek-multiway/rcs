@@ -3,9 +3,9 @@ import { useGlobalStore } from 'store'
 
 const getActiveRule = (path: string) => (location: Location) => location.pathname.startsWith(path)
 
-let globalState = {
+export let globalState = {
   logoTitleClickTime: Date.now(),
-  language: 'zh'
+  language: localStorage.getItem('language') || 'zh'
 }
 const actions: MicroAppStateActions = initGlobalState(globalState)
 
@@ -15,6 +15,7 @@ export const updateMicroAppState = (
   const newGlobalState = { ...globalState, ...updateGlobalState(globalState) }
   actions.setGlobalState(newGlobalState)
   globalState = newGlobalState
+  useGlobalStore.getState().setGlobalState(newGlobalState)
 }
 
 const env = import.meta.env
