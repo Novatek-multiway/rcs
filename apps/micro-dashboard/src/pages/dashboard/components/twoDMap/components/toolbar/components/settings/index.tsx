@@ -1,5 +1,6 @@
 import { Close } from '@mui/icons-material'
 import { useSpring } from '@react-spring/web'
+import { useVoerkaI18n } from '@voerkai18n/react'
 import { useUpdateEffect } from 'ahooks'
 import { useStorage } from 'hooks'
 import { TAppStorageKey } from 'hooks/modules/useStorage'
@@ -39,9 +40,13 @@ const Settings: FC<PropsWithChildren<ISettingsProps>> = (props) => {
     setCurrentChangedSwitch: state.setCurrentChangedSwitch
   }))
   const { setItem } = useStorage()
+  const { t } = useVoerkaI18n()
 
   const [isSettingsOpen, setIsSettingsOpen] = useState(open)
-  const [settingsSpring, settingsApi] = useSpring(() => ({ transform: 'translateY(100%)', opacity: 0 }))
+  const [settingsSpring, settingsApi] = useSpring(() => ({
+    transform: 'translateY(100%)',
+    opacity: 0
+  }))
 
   const handleClose = useCallback(() => {
     setIsSettingsOpen(false)
@@ -55,7 +60,10 @@ const Settings: FC<PropsWithChildren<ISettingsProps>> = (props) => {
 
   useUpdateEffect(() => {
     settingsApi.start({
-      to: { transform: `translateY(${isSettingsOpen ? 0 : 100}%)`, opacity: !isSettingsOpen ? 0 : 1 }
+      to: {
+        transform: `translateY(${isSettingsOpen ? 0 : 100}%)`,
+        opacity: !isSettingsOpen ? 0 : 1
+      }
     })
   }, [isSettingsOpen])
 
@@ -154,23 +162,26 @@ const Settings: FC<PropsWithChildren<ISettingsProps>> = (props) => {
                     }
                     onChange={(_, checked) => handleSwitchValueChange(checked, switchItem.key)}
                   />
+
                   <span>{switchItem.label}</span>
                 </div>
               ))}
           </div>
           <div className="lines">
             <LineColorPicker
-              label="地图路线"
+              label={t('地图路线')}
               initialColor={settings.lineColor}
               onChange={(color) => handleLineColorChange(color, 'LINE_COLOR', EMapSettingsKeys.LINE_COLOR)}
             />
+
             <LineColorPicker
-              label="规划路线"
+              label={t('规划路线')}
               initialColor={settings.planningLineColor}
               onChange={(color) =>
                 handleLineColorChange(color, 'PLANNING_LINE_COLOR', EMapSettingsKeys.PLANNING_LINE_COLOR)
               }
             />
+
             <div>
               <Button
                 variant="text"
@@ -180,7 +191,7 @@ const Settings: FC<PropsWithChildren<ISettingsProps>> = (props) => {
                   setStageMode(EStageMode.DRAW)
                 }}
               >
-                绘制区块
+                {t('绘制区块')}
               </Button>
             </div>
           </div>

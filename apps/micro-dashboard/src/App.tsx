@@ -1,3 +1,4 @@
+import { VoerkaI18nProvider } from '@voerkai18n/react'
 import { useAsyncEffect, useRequest } from 'ahooks'
 import { getDicts } from 'apis'
 import { useAuth } from 'hooks'
@@ -11,6 +12,7 @@ import { qiankunWindow } from 'vite-plugin-qiankun/dist/helper'
 import routerList from '@/router/router'
 
 import SystemConfig from './components/SystemConfig'
+import { i18nScope } from './languages'
 
 const { __POWERED_BY_QIANKUN__ } = qiankunWindow
 

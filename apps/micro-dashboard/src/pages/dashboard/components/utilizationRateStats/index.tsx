@@ -1,3 +1,4 @@
+import { useVoerkaI18n } from '@voerkai18n/react'
 import { useAsyncEffect, useUpdateEffect } from 'ahooks'
 import { getThroughReport } from 'apis'
 import { echarts, useEcharts } from 'hooks'
@@ -9,93 +10,98 @@ import { useWebsocketStore } from '../../store/websocket'
 
 interface IUtilizationRateStatsProps {}
 
-const option: echarts.EChartsOption = {
-  backgroundColor: 'transparent',
-  tooltip: {
-    trigger: 'axis',
-    backgroundColor: 'rgba(164, 165, 166, 0.38)',
-    borderColor: 'transparent',
-    borderRadius: 10,
-    textStyle: {
-      color: '#fff',
-      fontSize: 12,
-      fontWeight: 700
-    }
-  },
-  grid: {
-    left: 8,
-    // right: '6%',
-    bottom: 8,
-    containLabel: true
-  },
-  xAxis: [
-    {
-      type: 'category',
-      boundaryGap: false,
-      data: [],
-      splitLine: {
-        show: false
-      },
-      axisLine: {
-        show: false
-      },
-      axisTick: {
-        show: false
-      },
-      axisLabel: {
-        fontSize: 12
-      }
-    }
-  ],
-  yAxis: [
-    {
-      type: 'value',
-      min: 0,
-      max: 100,
-      splitNumber: 5,
-      splitLine: {
-        show: true
-      },
-      axisLabel: {
-        fontSize: 12
-      }
-    }
-  ],
-  dataZoom: {
-    type: 'inside'
-  },
-  series: [
-    {
-      name: '稼动率',
-      type: 'line',
-      smooth: true,
-      lineStyle: {
-        width: 3,
-        color: '#148df0'
-      },
-      // showSymbol: false,
-      areaStyle: {
-        opacity: 0.8,
-        color: 'rgba(28, 68, 135, 0.7)'
-      },
-      emphasis: {
-        focus: 'series'
-      },
-      data: [],
-      label: {
-        show: true,
-        color: '#fff'
-      }
-    }
-  ]
-}
-
 // 稼动率统计
 const UtilizationRateStats: FC<PropsWithChildren<IUtilizationRateStatsProps>> = () => {
   const wsUtilizationRateStatsData = useWebsocketStore((state) => state['Report/GetAgvThroughs'])
+  const { t } = useVoerkaI18n()
+  const option = useRef<echarts.EChartsOption>({
+    backgroundColor: 'transparent',
+    tooltip: {
+      trigger: 'axis',
+      backgroundColor: 'rgba(164, 165, 166, 0.38)',
+      borderColor: 'transparent',
+      borderRadius: 10,
+      textStyle: {
+        color: '#fff',
+        fontSize: 12,
+        fontWeight: 700
+      }
+    },
+    grid: {
+      left: 8,
+      // right: '6%',
+      bottom: 8,
+      containLabel: true
+    },
+    xAxis: [
+      {
+        type: 'category',
+        boundaryGap: false,
+        data: [],
+        splitLine: {
+          show: false
+        },
+        axisLine: {
+          show: false
+        },
+        axisTick: {
+          show: false
+        },
+        axisLabel: {
+          fontSize: 12
+        }
+      }
+    ],
+
+    yAxis: [
+      {
+        type: 'value',
+        min: 0,
+        max: 100,
+        splitNumber: 5,
+        splitLine: {
+          show: true
+        },
+        axisLabel: {
+          fontSize: 12
+        }
+      }
+    ],
+
+    dataZoom: {
+      type: 'inside'
+    },
+    series: [
+      {
+        name: t('稼动率'),
+        type: 'line',
+        smooth: true,
+        lineStyle: {
+          width: 3,
+          color: '#148df0'
+        },
+        // showSymbol: false,
+        areaStyle: {
+          opacity: 0.8,
+          color: 'rgba(28, 68, 135, 0.7)'
+        },
+        emphasis: {
+          focus: 'series'
+        },
+        data: [],
+        label: {
+          show: true,
+          color: '#fff'
+        }
+      }
+    ]
+  })
   const el = useRef<HTMLDivElement | null>(null)
   // 传递元素给useEcharts
-  const { updateOption } = useEcharts(el, { echartsOption: option, theme: 'dark' })
+  const { updateOption } = useEcharts(el, {
+    echartsOption: option.current,
+    theme: 'dark'
+  })
 
   const [utilizationRateStatsData, setUtilizationRateStatsData] = useState<ReportAPI.Through>()
   useAsyncEffect(async () => {
@@ -132,7 +138,7 @@ const UtilizationRateStats: FC<PropsWithChildren<IUtilizationRateStatsProps>> = 
   }, [wsUtilizationRateStatsData])
   return (
     <Panel
-      title="稼动率统计"
+      title={t('稼动率统计')}
       wrapperStyle={{
         height: '40%'
       }}

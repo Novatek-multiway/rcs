@@ -1,3 +1,4 @@
+import { useVoerkaI18n } from '@voerkai18n/react'
 import type { FC, PropsWithChildren } from 'react'
 import React, { memo } from 'react'
 
@@ -10,12 +11,13 @@ interface IVehicleStatusItemProps {
 }
 
 const VehicleStatusItem: FC<PropsWithChildren<IVehicleStatusItemProps>> = (props) => {
-  const { value = 0, text = '在线', color = '#00c6c7' } = props
+  const { t } = useVoerkaI18n()
+  const { value = 0, text = t('在线'), color = '#00c6c7' } = props
   return (
     <VehicleStatusItemWrapper dotColor={color}>
       <div className="header">
         <div className="value">{value}</div>
-        <div className="unit">台</div>
+        <div className="unit">{t('台')}</div>
       </div>
       <div className="footer">
         <span className="dot"></span>

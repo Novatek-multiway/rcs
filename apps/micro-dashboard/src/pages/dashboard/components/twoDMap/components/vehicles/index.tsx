@@ -1,3 +1,4 @@
+import { useVoerkaI18n } from '@voerkai18n/react'
 import Konva from 'konva'
 import type { FC, PropsWithChildren } from 'react'
 import React, { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
@@ -35,6 +36,7 @@ export interface IVehicleProps {
 }
 
 const Vehicle: FC<IVehicleProps> = memo((props) => {
+  const { t } = useVoerkaI18n()
   const {
     id,
     x,
@@ -45,7 +47,7 @@ const Vehicle: FC<IVehicleProps> = memo((props) => {
     outlineWidth = VEHICLE_LIGHT_IMAGE_SIZE,
     outlineNormalizedCenterX = 0.5,
     outlineNormalizedCenterY = 0.5,
-    statusName = '离线',
+    statusName = t('离线'),
     battery = 0,
     angle = 0,
     lines = [],
@@ -206,6 +208,7 @@ const Vehicle: FC<IVehicleProps> = memo((props) => {
               ></KonvaImage>
             </>
           )}
+
           <Group rotation={-ROTATION_OFFSET}>
             {showOutline && (
               <Rect
@@ -221,6 +224,7 @@ const Vehicle: FC<IVehicleProps> = memo((props) => {
                 dash={[0.05, 0.025, 0.05]}
               />
             )}
+
             {showBenchmarks && (
               <Circle
                 width={0.3}
@@ -254,13 +258,16 @@ const Vehicle: FC<IVehicleProps> = memo((props) => {
             <TooltipWrapper>
               <div className="tooltip">
                 <div>
-                  编号: <span>{id}</span>
+                  {t('编号:')}
+                  <span>{id}</span>
                 </div>
                 <div>
-                  状态: <span>{statusName}</span>
+                  {t('状态:')}
+                  <span>{statusName}</span>
                 </div>
                 <div className="battery">
-                  电量: <span style={{ color: getPowerColor(battery) }}>{battery}%</span>
+                  {t('电量:')}
+                  <span style={{ color: getPowerColor(battery) }}>{battery}%</span>
                 </div>
               </div>
             </TooltipWrapper>

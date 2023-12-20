@@ -1,3 +1,4 @@
+import { useVoerkaI18n } from '@voerkai18n/react'
 import { useAsyncEffect, useUpdateEffect } from 'ahooks'
 import { getAgvStatus } from 'apis'
 import type { FC, PropsWithChildren } from 'react'
@@ -27,30 +28,33 @@ const ColorMap: Record<EVehicleStatus, string> = {
 // 车辆状态
 const VehicleStatus: FC<PropsWithChildren<IVehicleStatusProps>> = () => {
   const wsVehicleStatusData = useWebsocketStore((state) => state['Report/GetAgvStatus'])
+  const { t } = useVoerkaI18n()
   const [vehicleStatusData, setVehicleStatusData] = useState<ReportAPI.CarrierStatus>()
   const vehicleStatusList = useMemo(
     () => [
       {
         key: EVehicleStatus.ONLINE,
-        name: '在线',
+        name: t('在线'),
         value: vehicleStatusData?.onlineCount || 0
       },
       {
         key: EVehicleStatus.OFFLINE,
-        name: '离线',
+        name: t('离线'),
         value: vehicleStatusData?.offlineCount || 0
       },
       {
         key: EVehicleStatus.FREE,
-        name: '空闲',
+        name: t('空闲'),
         value: vehicleStatusData?.freeCount || 0
       },
       {
         key: EVehicleStatus.ERROR,
-        name: '异常',
+        name: t('异常'),
         value: vehicleStatusData?.abnormalCount || 0
       }
     ],
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [vehicleStatusData]
   )
 
@@ -66,7 +70,7 @@ const VehicleStatus: FC<PropsWithChildren<IVehicleStatusProps>> = () => {
 
   return (
     <Panel
-      title="车辆状态"
+      title={t('车辆状态')}
       wrapperStyle={{
         height: '28.5%'
       }}

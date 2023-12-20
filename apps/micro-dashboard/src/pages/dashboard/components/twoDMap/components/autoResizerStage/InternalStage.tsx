@@ -92,8 +92,8 @@ const InternalStage: FC<PropsWithChildren<IInternalStageProps>> = (props) => {
   }, [width, height])
 
   useUpdateEffect(() => {
-    // eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
-    const { x, y } = stageRef.current?.absolutePosition()!
+    const absolutePosition = stageRef.current?.absolutePosition()
+    const { x, y } = absolutePosition || { x: 0, y: 0 }
     setStageLeftTopPosition({ x: -x / globalCurrentScale, y: -y / globalCurrentScale })
   }, [globalCurrentScale])
 

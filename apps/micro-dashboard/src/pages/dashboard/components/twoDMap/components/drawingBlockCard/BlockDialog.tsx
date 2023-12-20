@@ -1,3 +1,4 @@
+import { useVoerkaI18n } from '@voerkai18n/react'
 import { ITrafficBlock } from 'apis'
 import { Field, Form, Formik } from 'formik'
 import { fieldToTextField, TextFieldProps } from 'formik-mui'
@@ -69,7 +70,8 @@ const BlockDialogContent = styled(DialogContent)(() => ({
 
 // 添加区块弹窗
 const BlockDialog: FC<PropsWithChildren<IBlockDialogProps>> = (props) => {
-  const { initialValue, title = '新增区块信息', open = false, points = [], onClose, onSubmit } = props
+  const { t } = useVoerkaI18n()
+  const { initialValue, title = t('新增区块信息'), open = false, points = [], onClose, onSubmit } = props
   const dicts = useDictStore((state) => state.dicts)
   const trafficBlockTypes = useMemo(() => dicts.TrafficBlockTypes, [dicts])
 
@@ -92,9 +94,9 @@ const BlockDialog: FC<PropsWithChildren<IBlockDialogProps>> = (props) => {
         validate={(values) => {
           const errors: Partial<Record<keyof Omit<ITrafficBlock, 'points'>, string>> = {}
           if (!values.floor) {
-            errors.floor = '楼层不能为空'
+            errors.floor = t('楼层不能为空')
           } else if (!values.maxNumber) {
-            errors.maxNumber = '限制数量不能为空'
+            errors.maxNumber = t('限制数量不能为空')
           }
           return errors
         }}
@@ -104,7 +106,7 @@ const BlockDialog: FC<PropsWithChildren<IBlockDialogProps>> = (props) => {
             <BlockDialogContent>
               <Form>
                 {/* <Field component={Select} name="type" label="区块类型" variant="outlined">
-                  
+                 
                 </Field> */}
                 <TextField
                   inputProps={{
@@ -114,7 +116,7 @@ const BlockDialog: FC<PropsWithChildren<IBlockDialogProps>> = (props) => {
                   }}
                   select
                   value={values.type}
-                  label="区块类型"
+                  label={t('区块类型')}
                   variant="outlined"
                 >
                   {trafficBlockTypes?.map((type: any) => (
@@ -123,14 +125,20 @@ const BlockDialog: FC<PropsWithChildren<IBlockDialogProps>> = (props) => {
                     </MenuItem>
                   ))}
                 </TextField>
-                <Field component={CustomTextField} name="floor" type="number" label="楼层" variant="outlined" />
-                <Field component={CustomTextField} name="maxNumber" type="number" label="限制数量" variant="outlined" />
+                <Field component={CustomTextField} name="floor" type="number" label={t('楼层')} variant="outlined" />
+                <Field
+                  component={CustomTextField}
+                  name="maxNumber"
+                  type="number"
+                  label={t('限制数量')}
+                  variant="outlined"
+                />
               </Form>
 
               <Card sx={{ boxShadow: 'none', mt: 2, bgcolor: 'transparent' }}>
                 <CardContent sx={{ gap: 10 }}>
                   <Typography sx={{ fontSize: 14 }} color="text.secondary">
-                    区块点位
+                    {t('区块点位')}
                   </Typography>
                   <Box sx={{ position: 'relative' }}>
                     <List
@@ -171,9 +179,9 @@ const BlockDialog: FC<PropsWithChildren<IBlockDialogProps>> = (props) => {
             </BlockDialogContent>
 
             <DialogActions>
-              <Button onClick={() => onClose?.()}>取消</Button>
+              <Button onClick={() => onClose?.()}>{t('取消')}</Button>
               <Button variant="contained" color="primary" disabled={isSubmitting} onClick={submitForm}>
-                确定
+                {t('确定')}
               </Button>
             </DialogActions>
           </>

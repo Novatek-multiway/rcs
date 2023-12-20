@@ -1,3 +1,4 @@
+import { useVoerkaI18n } from '@voerkai18n/react'
 import { useAsyncEffect, useUpdateEffect } from 'ahooks'
 import { getTaskReport } from 'apis'
 import { echarts, useEcharts } from 'hooks'
@@ -11,61 +12,68 @@ import { TaskStatusWrapper } from './style'
 
 interface ITaskStatsProps {}
 
-const option: echarts.EChartsOption = {
-  backgroundColor: 'transparent',
-  title: {
-    text: `任务量：0个`,
-    left: 'center',
-    top: 'center',
-    textStyle: {
-      fontSize: 16
-    }
-  },
-  tooltip: {
-    trigger: 'item',
-    backgroundColor: 'rgba(164, 165, 166, 0.38)',
-    borderColor: 'transparent',
-    borderRadius: 10,
-    textStyle: {
-      color: '#fff',
-      fontSize: 12,
-      fontWeight: 700
-    }
-  },
-  series: [
-    {
-      name: '已完成',
-      type: 'pie',
-      radius: ['55%', '70%'],
-      avoidLabelOverlap: false,
-      label: {
-        show: true,
-        padding: -20,
-        fontSize: 10
-      },
-      labelLine: {
-        show: false
-      },
-      data: [],
-      tooltip: {
-        valueFormatter: (v) => v + ' 个'
-      }
-    }
-  ]
-}
-
 // 车辆任务统计
 const TaskStats: FC<PropsWithChildren<ITaskStatsProps>> = () => {
   const wsTaskStatsData = useWebsocketStore((state) => state['Report/GetJobSumByAgv'])
+  const { t } = useVoerkaI18n()
+  const option = useRef<echarts.EChartsOption>({
+    backgroundColor: 'transparent',
+    title: {
+      text: t('任务量：0个'),
+      left: 'center',
+      top: 'center',
+      textStyle: {
+        fontSize: 16
+      }
+    },
+    tooltip: {
+      trigger: 'item',
+      backgroundColor: 'rgba(164, 165, 166, 0.38)',
+      borderColor: 'transparent',
+      borderRadius: 10,
+      textStyle: {
+        color: '#fff',
+        fontSize: 12,
+        fontWeight: 700
+      }
+    },
+    series: [
+      {
+        name: t('已完成'),
+        type: 'pie',
+        radius: ['55%', '70%'],
+        avoidLabelOverlap: false,
+        label: {
+          show: true,
+          padding: -20,
+          fontSize: 10
+        },
+        labelLine: {
+          show: false
+        },
+        data: [],
+        tooltip: {
+          valueFormatter: (v) => v + t('个')
+        }
+      }
+    ]
+  })
   const el = useRef<HTMLDivElement | null>(null)
   // 传递元素给useEcharts
-  const { updateOption } = useEcharts(el, { echartsOption: option, theme: 'dark' })
+  const { updateOption } = useEcharts(el, {
+    echartsOption: option.current,
+    theme: 'dark'
+  })
 
   const [taskStatsData, setTaskStatsData] = useState<ReportAPI.AgvTaskRoot>()
   const taskStatsList = useMemo(
     () =>
       taskStatsData?.agvList
-        ?.map((item) => ({ id: item.id, finishedCount: item.taskQty, time: item.consumeTime }))
+        ?.map((item) => ({
+          id: item.id,
+          finishedCount: item.taskQty,
+          time: item.consumeTime
+        }))
         .sort((a, b) => b.finishedCount - a.finishedCount) || [],
     [taskStatsData]
   )
@@ -80,20 +88,23 @@ const TaskStats: FC<PropsWithChildren<ITaskStatsProps>> = () => {
     (taskStatsData: ReportAPI.AgvTaskRoot) => {
       updateOption({
         title: {
-          text: `任务量：${taskStatsData?.finished + taskStatsData?.notFinished}个`
+          text: t('任务量：{{BinaryExpression1}}个', {
+            BinaryExpression1: taskStatsData?.finished + taskStatsData?.notFinished
+          })
         },
         series: [
           {
             data: taskStatsData.agvList
               .filter((d) => !!d.taskQty)
               .map((d) => ({
-                name: '编号-' + d.id,
+                name: t('编号-') + d.id,
                 value: d.taskQty
               }))
           }
         ]
       })
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [updateOption]
   )
   useUpdateEffect(() => {
@@ -105,7 +116,7 @@ const TaskStats: FC<PropsWithChildren<ITaskStatsProps>> = () => {
   }, [wsTaskStatsData])
   return (
     <Panel
-      title="车辆任务统计"
+      title={t('车辆任务统计')}
       wrapperStyle={{
         height: '71.5%'
       }}
@@ -116,10 +127,14 @@ const TaskStats: FC<PropsWithChildren<ITaskStatsProps>> = () => {
       <TaskStatusWrapper>
         <div className="header">
           <div className="finished">
-            已完成<span>{Number(taskStatsData?.finished)}</span>个
+            {t('已完成')}
+            <span>{Number(taskStatsData?.finished)}</span>
+            {t('个')}
           </div>
           <div className="unfinished">
-            未完成<span>{taskStatsData?.notFinished}</span>个
+            {t('未完成')}
+            <span>{taskStatsData?.notFinished}</span>
+            {t('个')}
           </div>
         </div>
         <div style={{ width: '100%', height: '40%' }} ref={el}></div>

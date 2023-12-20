@@ -1,4 +1,5 @@
 import { Search } from '@mui/icons-material'
+import { useVoerkaI18n } from '@voerkai18n/react'
 import type { FC, PropsWithChildren } from 'react'
 import React, { memo, useCallback, useState } from 'react'
 import { Button, Divider, IconButton, InputBase, MenuItem, Paper, Select } from 'ui'
@@ -15,6 +16,7 @@ const SearchArea: FC<PropsWithChildren<ISearchAreaProps>> = () => {
     setLastCenter: state.setLastCenter,
     setSearchAreaVisible: state.setSearchAreaVisible
   }))
+  const { t } = useVoerkaI18n()
   const [type, setType] = useState<'point' | 'line'>('point')
   const [id, setId] = useState<number>()
   const handleSearch = useCallback(() => {
@@ -32,7 +34,13 @@ const SearchArea: FC<PropsWithChildren<ISearchAreaProps>> = () => {
     <SearchAreaWrapper>
       <Paper
         component="form"
-        sx={{ p: '2px 4px', display: 'flex', alignItems: 'center', width: 320, border: '1px solid #3d3b3b' }}
+        sx={{
+          p: '2px 4px',
+          display: 'flex',
+          alignItems: 'center',
+          width: 320,
+          border: '1px solid #3d3b3b'
+        }}
       >
         <Select
           size="small"
@@ -46,26 +54,27 @@ const SearchArea: FC<PropsWithChildren<ISearchAreaProps>> = () => {
             setType(e.target.value as typeof type)
           }}
         >
-          <MenuItem value={'point'}>点</MenuItem>
-          <MenuItem value={'line'}>线</MenuItem>
+          <MenuItem value={'point'}>{t('点')}</MenuItem>
+          <MenuItem value={'line'}>{t('线')}</MenuItem>
         </Select>
         <Divider sx={{ height: 28, m: 0.5 }} orientation="vertical" />
         <InputBase
           type="number"
           sx={{ ml: 1, flex: 1 }}
-          placeholder="请输入id"
+          placeholder={t('请输入id')}
           inputProps={{ color: 'white' }}
           value={id}
           onChange={(e) => {
             setId(parseInt(e.target.value))
           }}
         />
+
         <IconButton type="button" sx={{ p: '10px' }} aria-label="search" onClick={handleSearch}>
           <Search />
         </IconButton>
         <Divider sx={{ height: 28, m: 0.5 }} orientation="vertical" />
         <Button size="small" color="warning" onClick={() => setSearchAreaVisible(false)}>
-          关闭
+          {t('关闭')}
         </Button>
       </Paper>
     </SearchAreaWrapper>

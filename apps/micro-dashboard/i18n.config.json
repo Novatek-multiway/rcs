@@ -1,0 +1,23 @@
+{
+  "cliLang": "zh",
+  "projectType": "[react]",
+  "srcPath": "./src",
+  "fileExt": "js,ts,tsx",
+  "wrapCharacter": "[\u4e00-\u9fa5]",
+  "gitModel": false,
+  "wrapperFuncName": "t",
+  "excludeWrapperFuncName": "^console,indexOf,split",
+  "jsx2Trans": false,
+  "importStr": "import {useVoerkaI18n} from '@voerkai18n/react';\n",
+  "exclude": "node_modules,dist,.git,languages",
+  "format": "Prettier",
+  "localeDir": "./locales",
+  "languages": "zh,en",
+  "sourceLanguage": "zh",
+  "transFileName": "translation",
+  "transFileExt": "json",
+  "targetTransDir": "./translations",
+  "targetTransFile": "sourceTranslation.json",
+  "secretId": "",
+  "secretKey": ""
+}

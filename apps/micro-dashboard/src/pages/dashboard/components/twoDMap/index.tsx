@@ -1,3 +1,4 @@
+import { useVoerkaI18n } from '@voerkai18n/react'
 import { useAsyncEffect, useUpdateEffect } from 'ahooks'
 import { getInitStates, getMapFunction, getOnLineCarriers, updateMapFunction } from 'apis'
 import React, { FC, memo, PropsWithChildren, useState } from 'react'
@@ -23,6 +24,7 @@ interface ITwoDMapProps {
 // 2D地图
 const TwoDMap: FC<PropsWithChildren<ITwoDMapProps>> = (props) => {
   const { toolbarRight = 300 } = props
+  const { t } = useVoerkaI18n()
   const {
     isLoading,
     setIsLoading,
@@ -92,10 +94,16 @@ const TwoDMap: FC<PropsWithChildren<ITwoDMapProps>> = (props) => {
   useUpdateEffect(() => {
     if (!mapData) return
     const { DWGMaxX, DWGMinX, DWGMaxY, DWGMinY } = mapData.MapOption
-    const mapSize = { width: Math.abs(DWGMaxX - DWGMinX), height: Math.abs(DWGMaxY - DWGMinY) }
-    if (mapSize.width === 0 || mapSize.height === 0) return toastError('地图尺寸为0，请检查地图数据')
+    const mapSize = {
+      width: Math.abs(DWGMaxX - DWGMinX),
+      height: Math.abs(DWGMaxY - DWGMinY)
+    }
+    if (mapSize.width === 0 || mapSize.height === 0) return toastError(t('地图尺寸为0，请检查地图数据'))
     setMapSize(mapSize)
-    const mapCenterPosition = { x: DWGMinX + mapSize.width / 2, y: DWGMinY + mapSize.height / 2 }
+    const mapCenterPosition = {
+      x: DWGMinX + mapSize.width / 2,
+      y: DWGMinY + mapSize.height / 2
+    }
     setMapCenterPosition(mapCenterPosition)
   }, [setMapSize, setMapCenterPosition, mapData?.MapOption])
 
@@ -163,6 +171,7 @@ const TwoDMap: FC<PropsWithChildren<ITwoDMapProps>> = (props) => {
           }}
         />
       )}
+
       {searchAreaVisible && <SearchArea />}
     </TwoDMapWrapper>
   )

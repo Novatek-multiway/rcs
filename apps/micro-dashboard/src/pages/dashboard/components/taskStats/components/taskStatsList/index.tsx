@@ -1,4 +1,5 @@
 import ListItem from '@mui/material/ListItem'
+import { useVoerkaI18n } from '@voerkai18n/react'
 import type { FC, PropsWithChildren } from 'react'
 import React, { memo } from 'react'
 import AutoSizer from 'react-virtualized-auto-sizer'
@@ -14,28 +15,35 @@ interface ITaskStatsItemProps {
 
 const TaskStatsItem = (props: ListChildComponentProps & ITaskStatsItemProps) => {
   const { index, style, id, finishedCount, time } = props
+  const { t } = useVoerkaI18n()
 
   return (
     <ListItem style={style} key={index} component="div" disablePadding>
       <TaskStatsItemWrapper>
-        <div className="vehicle-id">车辆编号：{id}</div>
+        <div className="vehicle-id">
+          {t('车辆编号：')}
+          {id}
+        </div>
         <section>
           <div className="item finished">
-            <span>已完成</span>
+            <span>{t('已完成')}</span>
             <div>
-              <span className="value">{finishedCount}</span>个
+              <span className="value">{finishedCount}</span>
+              {t('个')}
             </div>
           </div>
           <div className="item time">
-            <span>消耗时间</span>
+            <span>{t('消耗时间')}</span>
             <div>
-              <span className="value">{time}</span>分钟
+              <span className="value">{time}</span>
+              {t('分钟')}
             </div>
           </div>
           <div className="item average">
-            <span>时均任务</span>
+            <span>{t('时均任务')}</span>
             <div>
-              <span className="value">{(time ? time / finishedCount : 0).toFixed(2)}</span>分钟/个
+              <span className="value">{(time ? time / finishedCount : 0).toFixed(2)}</span>
+              {t('分钟/个')}
             </div>
           </div>
         </section>

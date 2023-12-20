@@ -47,7 +47,10 @@
     "@types/react": "latest",
     "@types/react-dom": "latest",
     "@vitejs/plugin-react": "^4.0.3",
+    "@voerkai18n/react": "^2.0.30",
+    "@voerkai18n/runtime": "^2.0.30",
     "eslint-config-custom": "workspace:*",
+    "i18n-helper-cli": "^0.1.8",
     "typescript": "latest",
     "vite": "^4.4.5"
   }

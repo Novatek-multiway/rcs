@@ -1,5 +1,6 @@
 import { Close, Delete, Draw, Edit, OpenWith, PentagonOutlined, RectangleOutlined } from '@mui/icons-material'
 import { useSpring } from '@react-spring/web'
+import { useVoerkaI18n } from '@voerkai18n/react'
 import { useUpdateEffect } from 'ahooks'
 import { createTrafficBlock, delTrafficBlock, getTrafficBlock } from 'apis'
 import _ from 'lodash'
@@ -63,6 +64,7 @@ const DrawingBlockCard: FC<PropsWithChildren<IDrawingBlockCardProps>> = () => {
     setNewDrawingResult: state.setNewDrawingResult,
     stageMapRatio: state.stageMapRatio
   }))
+  const { t } = useVoerkaI18n()
 
   const drawResultList = useMemo(() => Object.values(drawingResultListMap).flat(), [drawingResultListMap])
 
@@ -194,22 +196,23 @@ const DrawingBlockCard: FC<PropsWithChildren<IDrawingBlockCardProps>> = () => {
   const renderStageMode = () => (
     <>
       <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
-        工具
+        {t('工具')}
       </Typography>
       <ToggleButtonGroup sx={{ mb: 2 }} value={stageMode} exclusive size="small" onChange={handleStageModeChange}>
         <ToggleButton value={EStageMode.DRAG} aria-label="drag">
-          <Tooltip title="拖拽">
+          <Tooltip title={t('拖拽')}>
             <OpenWith />
           </Tooltip>
         </ToggleButton>
         <ToggleButton value={EStageMode.DRAW} aria-label="draw">
-          <Tooltip title="绘图">
+          <Tooltip title={t('绘图')}>
             <Draw />
           </Tooltip>
         </ToggleButton>
       </ToggleButtonGroup>
     </>
   )
+
   /* -------------------------------- 舞台操作模式选择 -------------------------------- */
 
   /* --------------------------------- 绘图类型选择 --------------------------------- */
@@ -217,18 +220,19 @@ const DrawingBlockCard: FC<PropsWithChildren<IDrawingBlockCardProps>> = () => {
   const renderDrawingType = () => (
     <>
       <Typography sx={{ fontSize: 14 }} color="text.secondary">
-        区块类型
+        {t('区块类型')}
       </Typography>
       <ToggleButtonGroup sx={{ mb: 2 }} value={drawingType} exclusive size="small" onChange={handleDrawingTypeChange}>
         {/* <ToggleButton value={EDrawingType.RECT} aria-label="rect">
-          <Tooltip title="矩形">{DrawingTypeIconMap[EDrawingType.RECT]}</Tooltip>
+         <Tooltip title="矩形">{DrawingTypeIconMap[EDrawingType.RECT]}</Tooltip>
         </ToggleButton> */}
         <ToggleButton value={EDrawingType.POLYGON} aria-label="polygon">
-          <Tooltip title="多边形">{DrawingTypeIconMap[EDrawingType.POLYGON]}</Tooltip>
+          <Tooltip title={t('多边形')}>{DrawingTypeIconMap[EDrawingType.POLYGON]}</Tooltip>
         </ToggleButton>
       </ToggleButtonGroup>
     </>
   )
+
   const handleDrawingTypeChange = useCallback(
     (event: React.MouseEvent<HTMLElement>, newDrawingType: EDrawingType | null) => {
       if (!newDrawingType) return
@@ -263,7 +267,7 @@ const DrawingBlockCard: FC<PropsWithChildren<IDrawingBlockCardProps>> = () => {
   const renderDrawResult = () => (
     <>
       <Typography sx={{ fontSize: 14 }} color="text.secondary">
-        区块信息
+        {t('区块信息')}
       </Typography>
       <Card sx={{ bgcolor: 'transparent', position: 'relative' }}>
         <List
@@ -281,10 +285,10 @@ const DrawingBlockCard: FC<PropsWithChildren<IDrawingBlockCardProps>> = () => {
               // bgcolor: 'background.paper',
               zIndex: 1
             }}
-            secondaryAction={<div style={{ width: '80px', textAlign: 'center' }}>操作</div>}
+            secondaryAction={<div style={{ width: '80px', textAlign: 'center' }}>{t('操作')}</div>}
           >
             <ListItemIcon>
-              <span>类型</span>
+              <span>{t('类型')}</span>
             </ListItemIcon>
             <ListItemText primary="ID" />
           </ListItem>
@@ -315,6 +319,7 @@ const DrawingBlockCard: FC<PropsWithChildren<IDrawingBlockCardProps>> = () => {
       </Card>
     </>
   )
+
   /* ---------------------------------- 绘制结果 ---------------------------------- */
 
   return (
@@ -332,7 +337,7 @@ const DrawingBlockCard: FC<PropsWithChildren<IDrawingBlockCardProps>> = () => {
         </Card>
       </DrawingBlockCardWrapper>
       <BlockDialog
-        title={mode === 'add' ? '新增区块信息' : '编辑区块信息'}
+        title={mode === 'add' ? t('新增区块信息') : t('编辑区块信息')}
         initialValue={blockInitialValue}
         open={addBlockDialogOpen}
         points={reverseYPoints}

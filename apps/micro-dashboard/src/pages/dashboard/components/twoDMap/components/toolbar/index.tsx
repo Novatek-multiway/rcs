@@ -1,5 +1,6 @@
 import { Add, Remove, Search, Settings as SettingsIcon } from '@mui/icons-material'
 import { useSpring } from '@react-spring/web'
+import { useVoerkaI18n } from '@voerkai18n/react'
 import type { FC, PropsWithChildren } from 'react'
 import React, { memo, useCallback, useMemo, useState } from 'react'
 import { createTheme, SpeedDial, SpeedDialAction, SpeedDialIcon, ThemeProvider } from 'ui'
@@ -16,6 +17,7 @@ interface IToolbarProps {
 
 const Toolbar: FC<PropsWithChildren<IToolbarProps>> = (props) => {
   const { toolbarRight } = props
+  const { t } = useVoerkaI18n()
   const { currentScale, zoom, setSearchAreaVisible } = useTwoDMapStore((state) => ({
     currentScale: state.currentScale,
     zoom: state.zoom,
@@ -50,11 +52,21 @@ const Toolbar: FC<PropsWithChildren<IToolbarProps>> = (props) => {
 
   const actions = useMemo(
     () => [
-      { icon: <SettingsIcon />, name: '设置', onClick: handleSettingsClick },
-      { icon: <Search />, name: '搜索', onClick: handleSearchClick }, // TODO 搜索功能实现
-      { icon: <Remove />, name: '缩小', onClick: () => zoom?.(currentScale - 1) },
-      { icon: <Add />, name: '放大', onClick: () => zoom?.(currentScale + 1) }
+      { icon: <SettingsIcon />, name: t('设置'), onClick: handleSettingsClick },
+      { icon: <Search />, name: t('搜索'), onClick: handleSearchClick }, // TODO 搜索功能实现
+      {
+        icon: <Remove />,
+        name: t('缩小'),
+        onClick: () => zoom?.(currentScale - 1)
+      },
+      {
+        icon: <Add />,
+        name: t('放大'),
+        onClick: () => zoom?.(currentScale + 1)
+      }
     ],
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [handleSettingsClick, zoom, currentScale, handleSearchClick]
   )
 
