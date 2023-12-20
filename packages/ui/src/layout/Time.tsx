@@ -1,12 +1,12 @@
 import { styled } from '@mui/material'
 import type { FC } from 'react'
 import React, { memo, useEffect, useState } from 'react'
-import { formatDate, getTimeGreeting } from 'utils'
+import { formatDate, getTimeGreeting, TTimeGreetings } from 'utils'
 
-const getAllTimeInfo = () => {
+const getAllTimeInfo = (customTimeGreeting?: TTimeGreetings) => {
   const date = new Date()
   const timeStamp = date.getTime()
-  const timeGreeting = getTimeGreeting(date.getHours()) // 招呼语
+  const timeGreeting = getTimeGreeting(date.getHours(), customTimeGreeting) // 招呼语
   const hms = formatDate(timeStamp, 'HH:mm:ss') // 时分秒
   const ymd = formatDate(timeStamp, 'YYYY-MM-DD') // 年月日
   const week = formatDate(timeStamp, 'dddd') // 星期
@@ -18,7 +18,6 @@ const getAllTimeInfo = () => {
     week
   }
 }
-const initialTimeInfo = getAllTimeInfo()
 
 const TimeWrapper = styled('div')(() => ({
   display: 'flex',
@@ -40,10 +39,14 @@ const TimeWrapper = styled('div')(() => ({
   }
 }))
 
-const Time: FC = () => {
-  const [timeGreeting, setTimeGreeting] = useState(initialTimeInfo.timeGreeting)
-  const [time, setTime] = useState(initialTimeInfo.hms)
-  const [date, setDate] = useState(initialTimeInfo.ymd)
+export interface ITimeProps {
+  customTimeGreeting?: TTimeGreetings
+}
+const Time: FC<ITimeProps> = (props) => {
+  const { customTimeGreeting } = props
+  const [timeGreeting, setTimeGreeting] = useState('')
+  const [time, setTime] = useState('')
+  const [date, setDate] = useState('')
   // const [week, setWeek] = useState(initialTimeInfo.week)
   useEffect(() => {
     const timer = setInterval(() => {
@@ -52,7 +55,7 @@ const Time: FC = () => {
         hms,
         ymd
         // week
-      } = getAllTimeInfo()
+      } = getAllTimeInfo(customTimeGreeting)
       setTimeGreeting(timeGreeting)
       setTime(hms)
       setDate(ymd)

@@ -6,18 +6,21 @@ import React, { memo, useState } from 'react'
 import { theme } from 'theme'
 
 import logo from './assets/logo.png'
-import Nav from './Nav'
+import Nav, { INavProps } from './Nav'
 import Settings, { ISettingsProps } from './Settings'
-import Time from './Time'
+import Time, { ITimeProps } from './Time'
 
 export interface LayoutProps {
+  systemName: string
   children: React.ReactNode
-  onLogoTitleClick?: () => void
+  navProps: INavProps
   settingsProps?: ISettingsProps
+  timeProps?: ITimeProps
+  onLogoTitleClick?: () => void
 }
 
 const Layout: FC<LayoutProps> = (props) => {
-  const { onLogoTitleClick, settingsProps } = props
+  const { systemName = '', navProps, settingsProps, timeProps, onLogoTitleClick } = props
   const [collapsed, setCollapsed] = useState(false)
 
   return (
@@ -53,7 +56,7 @@ const Layout: FC<LayoutProps> = (props) => {
               }}
               onClick={onLogoTitleClick}
             >
-              调度监控系统
+              {systemName}
             </Typography>
             <MenuIcon
               fontSize="medium"
@@ -70,10 +73,10 @@ const Layout: FC<LayoutProps> = (props) => {
                   }
                 }}
               >
-                <Nav />
+                <Nav {...navProps} />
               </Box>
             </Collapse>
-            <Time />
+            <Time {...timeProps} />
             <Settings {...settingsProps} />
           </Toolbar>
         </AppBar>
