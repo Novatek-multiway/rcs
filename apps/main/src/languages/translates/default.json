@@ -2,109 +2,109 @@
   "监控": {
     "en": "Monitor",
     "$files": ["pages/home/index.tsx"],
-    "jp": "监控",
-    "kor": "监控"
+    "jp": "監視",
+    "kor": "모니터링"
   },
   "任务": {
-    "en": "任务",
+    "en": "Task",
     "$files": ["pages/home/index.tsx"],
-    "jp": "任务",
-    "kor": "任务"
+    "jp": "タスク＃タスク＃",
+    "kor": "작업"
   },
   "车辆": {
-    "en": "车辆",
+    "en": "Vehicle",
     "$files": ["pages/home/index.tsx"],
-    "jp": "车辆",
-    "kor": "车辆"
+    "jp": "しゃりょう",
+    "kor": "차량"
   },
   "统计": {
-    "en": "统计",
+    "en": "Statistics",
     "$files": ["pages/home/index.tsx"],
-    "jp": "统计",
-    "kor": "统计"
+    "jp": "統計＃トウケイ＃",
+    "kor": "통계"
   },
   "车辆运行数据统计": {
-    "en": "车辆运行数据统计",
+    "en": "Vehicle Operation Data Statistics",
     "$files": ["pages/home/index.tsx"],
-    "jp": "车辆运行数据统计",
-    "kor": "车辆运行数据统计"
+    "jp": "車両運行データ統計",
+    "kor": "차량 운행 데이터 통계"
   },
   "配置": {
-    "en": "配置",
+    "en": "Configuration",
     "$files": ["pages/home/index.tsx"],
-    "jp": "配置",
-    "kor": "配置"
+    "jp": "構成",
+    "kor": "구성"
   },
   "地图配置": {
-    "en": "地图配置",
+    "en": "Map Configuration",
     "$files": ["pages/home/index.tsx"],
-    "jp": "地图配置",
-    "kor": "地图配置"
+    "jp": "マップ設定",
+    "kor": "지도 설정"
   },
   "车型配置": {
-    "en": "车型配置",
+    "en": "Vehicle Configuration",
     "$files": ["pages/home/index.tsx"],
-    "jp": "车型配置",
-    "kor": "车型配置"
+    "jp": "車種配置",
+    "kor": "모델 구성"
   },
   "站点配置": {
-    "en": "站点配置",
+    "en": "Site Configuration",
     "$files": ["pages/home/index.tsx"],
-    "jp": "站点配置",
-    "kor": "站点配置"
+    "jp": "サイト構成",
+    "kor": "사이트 구성"
   },
   "事件配置": {
-    "en": "事件配置",
+    "en": "Event Configuration",
     "$files": ["pages/home/index.tsx"],
-    "jp": "事件配置",
-    "kor": "事件配置"
+    "jp": "イベント構成",
+    "kor": "이벤트 구성"
   },
   "充电配置": {
-    "en": "充电配置",
+    "en": "Charging Configuration",
     "$files": ["pages/home/index.tsx"],
-    "jp": "充电配置",
-    "kor": "充电配置"
+    "jp": "充電構成",
+    "kor": "충전 구성"
   },
   "待命点配置": {
-    "en": "待命点配置",
+    "en": "Standby Point Configuration",
     "$files": ["pages/home/index.tsx"],
-    "jp": "待命点配置",
-    "kor": "待命点配置"
+    "jp": "スタンバイポイント構成",
+    "kor": "대기 지점 구성"
   },
   "调度监控系统": {
-    "en": "调度监控系统",
+    "en": "Robot Control System",
     "$files": ["pages/home/index.tsx"],
-    "jp": "调度监控系统",
-    "kor": "调度监控系统"
+    "jp": "スケジューリング監視システム",
+    "kor": "스케줄링 모니터링 시스템"
   },
   "早上好": {
-    "en": "早上好",
+    "en": "Good morning",
     "$files": ["pages/home/index.tsx"],
-    "jp": "早上好",
-    "kor": "早上好"
+    "jp": "おはよう",
+    "kor": "좋은 아침"
   },
   "上午好": {
-    "en": "上午好",
+    "en": "Good morning",
     "$files": ["pages/home/index.tsx"],
-    "jp": "上午好",
-    "kor": "上午好"
+    "jp": "おはようございます",
+    "kor": "안녕하세요"
   },
   "中午好": {
-    "en": "中午好",
+    "en": "Good afternoon",
     "$files": ["pages/home/index.tsx"],
-    "jp": "中午好",
-    "kor": "中午好"
+    "jp": "こんにちは",
+    "kor": "안녕하세요"
   },
   "下午好": {
-    "en": "下午好",
+    "en": "Good afternoon",
     "$files": ["pages/home/index.tsx"],
-    "jp": "下午好",
-    "kor": "下午好"
+    "jp": "こんにちは",
+    "kor": "안녕하세요"
   },
   "晚上好": {
-    "en": "晚上好",
+    "en": "Good evening",
     "$files": ["pages/home/index.tsx"],
-    "jp": "晚上好",
-    "kor": "晚上好"
+    "jp": "こんばんは",
+    "kor": "안녕하세요"
   }
 }
