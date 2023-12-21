@@ -2,7 +2,7 @@ import { CloseOutlined } from '@mui/icons-material'
 import SettingIcon from '@mui/icons-material/Settings'
 import { Box, Divider, Drawer, ToggleButton, ToggleButtonGroup, ToggleButtonProps } from '@mui/material'
 import type { FC, PropsWithChildren, ReactNode } from 'react'
-import React, { memo, useRef, useState } from 'react'
+import React, { memo, useMemo, useState } from 'react'
 
 interface ISettingItemProps {
   title: string
@@ -48,6 +48,26 @@ const SettingItem: FC<ISettingItemProps> = (props) => {
 }
 
 type TSettingKeys = 'language'
+enum ESupportedLanguages {
+  zh = 'zh',
+  en = 'en',
+  jp = 'jp',
+  kor = 'kor'
+}
+const SettingTitleMessages: Record<string, Record<ESupportedLanguages, string>> = {
+  language: {
+    [ESupportedLanguages.zh]: '语言',
+    [ESupportedLanguages.en]: 'Language',
+    [ESupportedLanguages.jp]: '言語',
+    [ESupportedLanguages.kor]: '언어'
+  },
+  setting: {
+    [ESupportedLanguages.zh]: '设置',
+    [ESupportedLanguages.en]: 'Setting',
+    [ESupportedLanguages.jp]: '設定',
+    [ESupportedLanguages.kor]: '설정'
+  }
+}
 export interface ISettingsProps {
   defaultSettingsValue?: Record<TSettingKeys, any>
   onSettingChange?: (key: TSettingKeys, newValue: any) => void
@@ -55,36 +75,43 @@ export interface ISettingsProps {
 
 const Settings: FC<PropsWithChildren<ISettingsProps>> = (props) => {
   const { onSettingChange, defaultSettingsValue } = props
-  const toggleSettings = useRef<ISettingItemProps[]>([
-    {
-      title: '语言',
-      options: [
-        {
-          label: '中文',
-          value: 'zh'
+  const [currentLanguage, setCurrentLanguage] = useState<ESupportedLanguages>(defaultSettingsValue?.language || 'zh')
+  const toggleSettings = useMemo<ISettingItemProps[]>(
+    () => [
+      {
+        title: SettingTitleMessages['language'][currentLanguage],
+        options: [
+          {
+            label: '中文',
+            value: 'zh'
+          },
+          {
+            label: 'English',
+            value: 'en'
+          },
+          {
+            label: '日本語',
+            value: 'jp'
+          },
+          {
+            label: '한국어',
+            value: 'kor'
+          }
+        ],
+        defaultValue: defaultSettingsValue ? defaultSettingsValue['language'] : 'zh',
+        onChange: (newValue) => {
+          onSettingChange?.('language', newValue)
+          setCurrentLanguage(newValue)
         },
-        {
-          label: 'English',
-          value: 'en'
-        },
-        {
-          label: '日本語',
-          value: 'jp'
-        },
-        {
-          label: '한국어',
-          value: 'kor'
-        }
-      ],
-      defaultValue: defaultSettingsValue ? defaultSettingsValue['language'] : 'zh',
-      onChange: (newValue) => onSettingChange?.('language', newValue),
-      toggleButtonProps: {
-        sx: {
-          minWidth: '25%'
+        toggleButtonProps: {
+          sx: {
+            minWidth: '25%'
+          }
         }
       }
-    }
-  ])
+    ],
+    [currentLanguage]
+  )
   const [isSettingsDrawerOpen, setIsSettingsDrawerOpen] = useState(false)
   return (
     <div>
@@ -113,11 +140,11 @@ const Settings: FC<PropsWithChildren<ISettingsProps>> = (props) => {
             lineHeight: '2'
           }}
         >
-          <span>设置</span>
+          <span>{SettingTitleMessages['setting'][currentLanguage]}</span>
           <CloseOutlined sx={{ cursor: 'pointer' }} onClick={() => setIsSettingsDrawerOpen(false)} />
         </Box>
         <Divider />
-        {toggleSettings.current.map((setting) => (
+        {toggleSettings.map((setting) => (
           <Box
             sx={{
               padding: '16px',
