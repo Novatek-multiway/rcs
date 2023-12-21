@@ -29,7 +29,7 @@ const AVERAGE_COLOR = 'rgb(255, 180, 88)'
 
 const TimeStatsTable = memo((props: { data: TimeStatsItem[]; maxHeight?: number }) => {
   const { data, maxHeight = 218 } = props
-  const { t } = useVoerkaI18n()
+  const { t, activeLanguage } = useVoerkaI18n()
   //should be memoized or stable
   const columns = useMemo<MRT_ColumnDef<TimeStatsItem>[]>(
     () => [
@@ -65,7 +65,7 @@ const TimeStatsTable = memo((props: { data: TimeStatsItem[]; maxHeight?: number 
     ],
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    []
+    [activeLanguage]
   )
   const table = useMaterialReactTable({
     columns,
@@ -142,155 +142,193 @@ const TimeStatsTable = memo((props: { data: TimeStatsItem[]; maxHeight?: number 
 // 车辆时间统计
 const TimeStats: FC<PropsWithChildren<ITimeStatsProps>> = () => {
   const wsTaskStatsData = useWebsocketStore((state) => state['Report/GetTimeSum'])
-  const { t } = useVoerkaI18n()
-  const option = useRef<echarts.EChartsOption>({
-    backgroundColor: 'transparent',
-    tooltip: {
-      trigger: 'axis',
-      backgroundColor: 'rgba(164, 165, 166, 0.38)',
-      borderColor: 'transparent',
-      borderRadius: 10,
-      textStyle: {
-        color: '#fff',
-        fontSize: 12,
-        fontWeight: 700
-      }
-    },
-    legend: {
-      textStyle: {
-        fontSize: 10,
-        color: '#fff',
-        fontWeight: 700
-      },
-      itemWidth: 15
-    },
-    dataZoom: {
-      type: 'inside'
-    },
-    grid: {
-      right: 42,
-      left: 36,
-      bottom: 24
-    },
-    xAxis: [
-      {
-        type: 'category',
-        data: [],
-        axisPointer: {
-          type: 'shadow'
-        },
-        axisTick: {
-          show: false
-        },
-        axisLine: {
-          show: false
-        }
-      }
-    ],
-
-    yAxis: [
-      {
-        type: 'value',
-        name: t('时间'),
-        min: 0,
-        max: 24,
-        interval: 4,
-        axisLabel: {
-          formatter: '{value}h'
-        },
-        axisTick: {
-          show: false
-        },
-        splitLine: {
-          show: false
+  const { t, activeLanguage } = useVoerkaI18n()
+  const option = useMemo<echarts.EChartsOption>(
+    () => ({
+      backgroundColor: 'transparent',
+      tooltip: {
+        trigger: 'axis',
+        backgroundColor: 'rgba(164, 165, 166, 0.38)',
+        borderColor: 'transparent',
+        borderRadius: 10,
+        textStyle: {
+          color: '#fff',
+          fontSize: 12,
+          fontWeight: 700
         }
       },
-      {
-        type: 'value',
-        name: t('时均任务'),
-        axisLabel: {
-          formatter: t('{value}个')
+      legend: {
+        textStyle: {
+          fontSize: 10,
+          color: '#fff',
+          fontWeight: 700
         },
-        axisTick: {
-          show: false
-        },
-        splitLine: {
-          show: false
+        itemWidth: 15
+      },
+      dataZoom: {
+        type: 'inside'
+      },
+      grid: {
+        right: 42,
+        left: 36,
+        bottom: 24
+      },
+      xAxis: [
+        {
+          type: 'category',
+          data: [],
+          axisPointer: {
+            type: 'shadow'
+          },
+          axisTick: {
+            show: false
+          },
+          axisLine: {
+            show: false
+          }
         }
-      }
-    ],
+      ],
 
-    series: [
-      {
-        name: t('有效时间'),
-        type: 'bar',
-        stack: 'time',
-        tooltip: {
-          valueFormatter: function (value) {
-            return value + 'h'
+      yAxis: [
+        {
+          type: 'value',
+          name: t('时间'),
+          min: 0,
+          max: 24,
+          interval: 4,
+          axisLabel: {
+            formatter: '{value}h'
+          },
+          axisTick: {
+            show: false
+          },
+          splitLine: {
+            show: false
           }
         },
-        data: [],
-        itemStyle: {
-          color: WORK_COLOR,
-          borderRadius: [0, 0, 5, 5]
+        {
+          type: 'value',
+          name: t('时均任务'),
+          axisLabel: {
+            formatter: t('{value}个')
+          },
+          axisTick: {
+            show: false
+          },
+          splitLine: {
+            show: false
+          }
         }
-      },
-      {
-        name: t('空闲时间'),
-        type: 'bar',
-        stack: 'time',
-        tooltip: {
-          valueFormatter: function (value) {
-            return value + 'h'
+      ],
+
+      series: [
+        {
+          name: t('有效时间'),
+          type: 'bar',
+          stack: 'time',
+          tooltip: {
+            valueFormatter: function (value) {
+              return value + 'h'
+            }
+          },
+          data: [],
+          itemStyle: {
+            color: WORK_COLOR,
+            borderRadius: [0, 0, 5, 5]
           }
         },
-        data: [],
+        {
+          name: t('空闲时间'),
+          type: 'bar',
+          stack: 'time',
+          tooltip: {
+            valueFormatter: function (value) {
+              return value + 'h'
+            }
+          },
+          data: [],
 
-        itemStyle: {
-          color: FREE_COLOR,
-          borderRadius: [0, 0, 0, 0]
-        }
-      },
-      {
-        name: t('故障时间'),
-        type: 'bar',
-        stack: 'time',
-        tooltip: {
-          valueFormatter: function (value) {
-            return value + 'h'
+          itemStyle: {
+            color: FREE_COLOR,
+            borderRadius: [0, 0, 0, 0]
           }
         },
-        data: [],
+        {
+          name: t('故障时间'),
+          type: 'bar',
+          stack: 'time',
+          tooltip: {
+            valueFormatter: function (value) {
+              return value + 'h'
+            }
+          },
+          data: [],
 
-        itemStyle: {
-          color: ERROR_COLOR,
-          borderRadius: [5, 5, 0, 0]
-        }
-      },
-      {
-        name: t('时均任务'),
-        type: 'line',
-        yAxisIndex: 1,
-        tooltip: {
-          valueFormatter: function (value) {
-            return value + t('个')
+          itemStyle: {
+            color: ERROR_COLOR,
+            borderRadius: [5, 5, 0, 0]
           }
         },
-        data: [],
+        {
+          name: t('时均任务'),
+          type: 'line',
+          yAxisIndex: 1,
+          tooltip: {
+            valueFormatter: function (value) {
+              return value + t('个')
+            }
+          },
+          data: [],
 
-        itemStyle: {
-          color: AVERAGE_COLOR
+          itemStyle: {
+            color: AVERAGE_COLOR
+          }
         }
-      }
-    ]
-  })
+      ]
+    }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    []
+  )
+
   const el = useRef<HTMLDivElement | null>(null)
   // 传递元素给useEcharts
   const { updateOption } = useEcharts(el, {
-    echartsOption: option.current,
+    echartsOption: option,
     theme: 'dark'
   })
+  useUpdateEffect(() => {
+    updateOption({
+      yAxis: [
+        {
+          name: t('时间'),
+          axisLabel: {
+            formatter: '{value}h'
+          }
+        },
+        {
+          name: t('时均任务'),
+          axisLabel: {
+            formatter: t('{value}个')
+          }
+        }
+      ],
+
+      series: [
+        {
+          name: t('有效时间')
+        },
+        {
+          name: t('空闲时间')
+        },
+        {
+          name: t('故障时间')
+        },
+        {
+          name: t('时均任务')
+        }
+      ]
+    })
+  }, [activeLanguage])
 
   const [timeStatsData, setTimeStatsData] = useState<ReportAPI.TimeSumDatum[]>([])
 

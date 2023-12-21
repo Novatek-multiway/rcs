@@ -13,7 +13,7 @@ interface IUtilizationRateStatsProps {}
 // 稼动率统计
 const UtilizationRateStats: FC<PropsWithChildren<IUtilizationRateStatsProps>> = () => {
   const wsUtilizationRateStatsData = useWebsocketStore((state) => state['Report/GetAgvThroughs'])
-  const { t } = useVoerkaI18n()
+  const { t, activeLanguage } = useVoerkaI18n()
   const option = useRef<echarts.EChartsOption>({
     backgroundColor: 'transparent',
     tooltip: {
@@ -102,6 +102,16 @@ const UtilizationRateStats: FC<PropsWithChildren<IUtilizationRateStatsProps>> = 
     echartsOption: option.current,
     theme: 'dark'
   })
+
+  useUpdateEffect(() => {
+    updateOption({
+      series: [
+        {
+          name: t('稼动率')
+        }
+      ]
+    })
+  }, [activeLanguage])
 
   const [utilizationRateStatsData, setUtilizationRateStatsData] = useState<ReportAPI.Through>()
   useAsyncEffect(async () => {

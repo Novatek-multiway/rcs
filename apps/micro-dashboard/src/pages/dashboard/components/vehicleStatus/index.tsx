@@ -28,7 +28,7 @@ const ColorMap: Record<EVehicleStatus, string> = {
 // 车辆状态
 const VehicleStatus: FC<PropsWithChildren<IVehicleStatusProps>> = () => {
   const wsVehicleStatusData = useWebsocketStore((state) => state['Report/GetAgvStatus'])
-  const { t } = useVoerkaI18n()
+  const { t, activeLanguage } = useVoerkaI18n()
   const [vehicleStatusData, setVehicleStatusData] = useState<ReportAPI.CarrierStatus>()
   const vehicleStatusList = useMemo(
     () => [
@@ -55,7 +55,7 @@ const VehicleStatus: FC<PropsWithChildren<IVehicleStatusProps>> = () => {
     ],
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [vehicleStatusData]
+    [vehicleStatusData, activeLanguage]
   )
 
   useAsyncEffect(async () => {

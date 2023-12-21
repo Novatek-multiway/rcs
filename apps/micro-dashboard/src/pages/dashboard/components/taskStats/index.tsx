@@ -15,7 +15,7 @@ interface ITaskStatsProps {}
 // 车辆任务统计
 const TaskStats: FC<PropsWithChildren<ITaskStatsProps>> = () => {
   const wsTaskStatsData = useWebsocketStore((state) => state['Report/GetJobSumByAgv'])
-  const { t } = useVoerkaI18n()
+  const { t, activeLanguage } = useVoerkaI18n()
   const option = useRef<echarts.EChartsOption>({
     backgroundColor: 'transparent',
     title: {
@@ -65,6 +65,19 @@ const TaskStats: FC<PropsWithChildren<ITaskStatsProps>> = () => {
     theme: 'dark'
   })
 
+  useUpdateEffect(() => {
+    updateOption({
+      title: {
+        text: t('任务量：0个')
+      },
+      series: [
+        {
+          name: t('已完成')
+        }
+      ]
+    })
+  }, [activeLanguage])
+
   const [taskStatsData, setTaskStatsData] = useState<ReportAPI.AgvTaskRoot>()
   const taskStatsList = useMemo(
     () =>
@@ -88,7 +101,7 @@ const TaskStats: FC<PropsWithChildren<ITaskStatsProps>> = () => {
     (taskStatsData: ReportAPI.AgvTaskRoot) => {
       updateOption({
         title: {
-          text: t('任务量：{{BinaryExpression1}}个', {
+          text: t('任务量：{BinaryExpression1}个', {
             BinaryExpression1: taskStatsData?.finished + taskStatsData?.notFinished
           })
         },
