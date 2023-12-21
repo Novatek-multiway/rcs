@@ -63,7 +63,7 @@ const Time: FC<ITimeProps> = (props) => {
     }, 1000)
 
     return () => clearInterval(timer)
-  }, [])
+  }, [customTimeGreeting])
   return (
     <TimeWrapper>
       <div className="greeting">{timeGreeting}</div>
