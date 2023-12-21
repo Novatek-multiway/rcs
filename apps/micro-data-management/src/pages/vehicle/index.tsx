@@ -337,10 +337,13 @@ const Vehicle = () => {
     setLoading(true)
     const tableData = await Promise.all([postGetControlOptions({}), postGetControlStates({})]).then(
       ([controlOptionsRes, controlStateRes]) =>
-        controlOptionsRes.data.map((item: any, index: number) => ({
-          ...controlOptionsRes.data[index],
-          ...controlStateRes.data[index]
-        }))
+        controlStateRes.data.map((item: any, index: number) => {
+          const controlOption = controlOptionsRes.data.find((o: any) => o.id === item.id) || {}
+          return {
+            ...controlOption,
+            ...controlStateRes.data[index]
+          }
+        })
     )
     setRowCount(tableData.length)
     setLoading(false)
