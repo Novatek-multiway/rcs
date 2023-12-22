@@ -1,5 +1,6 @@
 import EditNoteIcon from '@mui/icons-material/EditNote'
 import EuroIcon from '@mui/icons-material/Euro'
+import { useVoerkaI18n } from '@voerkai18n/react'
 import { useRequest } from 'ahooks'
 import { postCarrierInfoPageList } from 'apis'
 import type { FC, ReactNode } from 'react'
@@ -18,6 +19,7 @@ interface IProps {
 
 // 车型配置
 const StandByPoint: FC<IProps> = () => {
+  const { t } = useVoerkaI18n()
   const [editOpen, setEditOpen] = React.useState(false)
   const [row, setRow] = React.useState({})
   const { data: chassisData, loading, run: getChass } = useRequest(() => postCarrierInfoPageList({ type: 0 }))
@@ -27,15 +29,15 @@ const StandByPoint: FC<IProps> = () => {
   const columns = [
     {
       accessorKey: 'id',
-      header: '车辆编号'
+      header: t('车辆编号')
     },
     {
       accessorKey: 'name',
-      header: '车体名称'
+      header: t('车体名称')
     },
     {
       accessorKey: 'type',
-      header: '车辆类型',
+      header: t('车辆类型'),
       Cell: ({ row }) => {
         const { original } = row
         const carrierType = dicts.CarrierType?.find((item) => item.value === original.type)
@@ -59,18 +61,18 @@ const StandByPoint: FC<IProps> = () => {
     },
     {
       accessorKey: 'homePoint',
-      header: '待命点位置'
+      header: t('待命点位置')
     },
     {
       accessorKey: 'isAutoReHome',
-      header: '是否回待命点',
+      header: t('是否回待命点'),
       Cell: ({ row }) => {
-        return row.original.isAutoReHome ? '是' : <span style={{ opacity: 0.5 }}>否</span>
+        return row.original.isAutoReHome ? t('是') : <span style={{ opacity: 0.5 }}>{t('否')}</span>
       }
     },
     {
       accessorKey: 'actions',
-      header: '操作',
+      header: t('操作'),
       enableColumnFilter: false,
       enableSorting: false,
       size: 50,
@@ -94,7 +96,7 @@ const StandByPoint: FC<IProps> = () => {
               }}
               startIcon={<EditNoteIcon />}
             >
-              配置
+              {t('配置')}
             </Button>
           </div>
         )
@@ -133,7 +135,7 @@ const StandByPoint: FC<IProps> = () => {
                 }}
               >
                 <Refresh loading={loading}></Refresh>
-                刷新
+                {t('刷新')}
               </Button>
             </Box>
           )
@@ -156,6 +158,7 @@ const StandByPoint: FC<IProps> = () => {
         enableColumnActions={false}
         enableColumnFilters={false}
       />
+
       <ConfigDialog
         open={editOpen}
         onClose={() => setEditOpen(false)}

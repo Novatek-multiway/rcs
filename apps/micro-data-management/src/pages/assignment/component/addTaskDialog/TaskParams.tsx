@@ -1,3 +1,4 @@
+import { useVoerkaI18n } from '@voerkai18n/react'
 import { useAsyncEffect } from 'ahooks'
 import { getControlStates } from 'apis'
 import type { FC, PropsWithChildren } from 'react'
@@ -15,6 +16,7 @@ interface ITaskParamsProps {
 
 const TaskParams: FC<PropsWithChildren<ITaskParamsProps>> = (props) => {
   const { taskParams, onChange } = props
+  const { t } = useVoerkaI18n()
   const [carrierOptions, setCarrierOptions] = useState<number[]>([])
 
   useAsyncEffect(async () => {
@@ -34,7 +36,7 @@ const TaskParams: FC<PropsWithChildren<ITaskParamsProps>> = (props) => {
       }}
     >
       <Typography variant="h6" fontSize={15} color={'#9ba0a6'}>
-        任务参数：
+        {t('任务参数：')}
       </Typography>
 
       <Autocomplete
@@ -52,7 +54,7 @@ const TaskParams: FC<PropsWithChildren<ITaskParamsProps>> = (props) => {
         renderInput={(params) => (
           <TextField
             {...params}
-            label="指定车辆"
+            label={t('指定车辆')}
             name="vehicleId"
             variant="outlined"
             size="small"
@@ -64,10 +66,11 @@ const TaskParams: FC<PropsWithChildren<ITaskParamsProps>> = (props) => {
           />
         )}
       />
+
       <TextField
         name="priority"
         type="number"
-        label="优先级"
+        label={t('优先级')}
         variant="outlined"
         size="small"
         required
@@ -88,6 +91,7 @@ const TaskParams: FC<PropsWithChildren<ITaskParamsProps>> = (props) => {
           min: 0
         }}
       />
+
       <FormControlLabel
         control={
           <Checkbox
@@ -105,7 +109,7 @@ const TaskParams: FC<PropsWithChildren<ITaskParamsProps>> = (props) => {
           />
         }
         name="isAutoCompleted"
-        label="是否自动结束任务"
+        label={t('是否自动结束任务')}
         sx={{
           ml: 'auto',
           '.MuiFormControlLabel-label': {

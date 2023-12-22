@@ -1,3 +1,4 @@
+import { useVoerkaI18n } from '@voerkai18n/react'
 import { useRequest } from 'ahooks'
 import { UpdateRule } from 'apis'
 import * as React from 'react'
@@ -35,6 +36,7 @@ const EditDialog: React.FC<{
   chargingPiles = [],
   row = {}
 }) => {
+  const { t } = useVoerkaI18n()
   const { runAsync: run } = useRequest(UpdateRule, {
     manual: true
   })
@@ -46,30 +48,31 @@ const EditDialog: React.FC<{
     const commonSchema = [
       {
         name: 'completeType',
-        label: '充电类型',
+        label: t('充电类型'),
         type: 'radioGroup',
         items: [
           {
             value: 3,
-            label: '时间'
+            label: t('时间')
           },
           {
             value: 1,
-            label: '百分比'
+            label: t('百分比')
           }
         ],
+
         required: true
       },
 
       {
         name: 'name',
-        label: '策略名称',
+        label: t('策略名称'),
         type: 'text',
         required: true
       },
       {
         name: 'planName',
-        label: '计划名称',
+        label: t('计划名称'),
         type: 'text',
         required: true
         // type: "select",
@@ -77,20 +80,20 @@ const EditDialog: React.FC<{
 
       {
         name: 'carrierKeys',
-        label: '车辆编号',
+        label: t('车辆编号'),
         type: 'autoComplete',
         multiple: true,
         items: controlStates
       },
       {
         name: 'carrierType',
-        label: '车辆类型',
+        label: t('车辆类型'),
         type: 'select',
         items: ruleCarrierData
       },
       {
         name: 'priority',
-        label: '任务优先级',
+        label: t('任务优先级'),
         type: 'number',
         inputProps: {
           min: 0,
@@ -101,7 +104,7 @@ const EditDialog: React.FC<{
       },
       {
         name: 'level',
-        label: '规则优先级',
+        label: t('规则优先级'),
         type: 'number',
         inputProps: {
           min: 0,
@@ -112,7 +115,7 @@ const EditDialog: React.FC<{
       },
       {
         name: 'startHour',
-        label: '开始小时',
+        label: t('开始小时'),
         type: 'number',
         inputProps: {
           min: 0,
@@ -126,7 +129,7 @@ const EditDialog: React.FC<{
       },
       {
         name: 'endHour',
-        label: '结束小时',
+        label: t('结束小时'),
         type: 'number',
         inputProps: {
           min: 0,
@@ -140,7 +143,7 @@ const EditDialog: React.FC<{
       },
       {
         name: 'startMinute',
-        label: '起始分钟',
+        label: t('起始分钟'),
         type: 'number',
         inputProps: {
           min: 0,
@@ -154,7 +157,7 @@ const EditDialog: React.FC<{
       },
       {
         name: 'endMinute',
-        label: '结束分钟',
+        label: t('结束分钟'),
         type: 'number',
         inputProps: {
           min: 0,
@@ -169,7 +172,7 @@ const EditDialog: React.FC<{
 
       {
         name: 'minLimitBattery',
-        label: '低电量百分比',
+        label: t('低电量百分比'),
         type: 'number',
         inputProps: {
           min: 0,
@@ -183,7 +186,7 @@ const EditDialog: React.FC<{
       },
       {
         name: 'maxLimitBattery',
-        label: '高电量百分比',
+        label: t('高电量百分比'),
         type: 'number',
         inputProps: {
           min: 0,
@@ -197,14 +200,14 @@ const EditDialog: React.FC<{
       },
       {
         name: 'pileKeys',
-        label: '充电桩',
+        label: t('充电桩'),
         type: 'autoComplete',
         multiple: true,
         items: chargingPiles
       },
       {
         name: 'timeLimit',
-        label: '空闲时间',
+        label: t('空闲时间'),
         type: 'number',
         inputProps: {
           min: 0,
@@ -215,11 +218,12 @@ const EditDialog: React.FC<{
         endAdornment: <InputAdornment position="start">m</InputAdornment>
       }
     ]
+
     const dynamicSchema =
       currentCompleteType === '3'
         ? {
             name: 'completeTime',
-            label: '充电时间',
+            label: t('充电时间'),
             type: 'number',
             required: true,
             inputProps: {
@@ -232,7 +236,7 @@ const EditDialog: React.FC<{
           }
         : {
             name: 'completePercent',
-            label: '充电百分比',
+            label: t('充电百分比'),
             type: 'number',
             required: true,
             inputProps: {
@@ -247,6 +251,7 @@ const EditDialog: React.FC<{
           }
     commonSchema.splice(1, 0, dynamicSchema)
     return commonSchema
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentCompleteType, chargingPiles, controlStates, ruleCarrierData])
 
   React.useEffect(() => {
@@ -255,7 +260,7 @@ const EditDialog: React.FC<{
 
   return (
     <Dialog maxWidth="md" open={open} onClose={onClose}>
-      <DialogTitle>修改充电策略</DialogTitle>
+      <DialogTitle>{t('修改充电策略')}</DialogTitle>
       <DialogContent
         sx={{
           py: `${theme.spacing(3.25)} !important`
@@ -301,10 +306,10 @@ const EditDialog: React.FC<{
             }
           }}
         >
-          保存
+          {t('保存')}
         </Button>
         <Button color="warning" onClick={onClose}>
-          关闭
+          {t('关闭')}
         </Button>
       </DialogActions>
     </Dialog>

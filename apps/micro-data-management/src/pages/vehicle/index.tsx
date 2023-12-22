@@ -1,4 +1,5 @@
 import AddIcon from '@mui/icons-material/Add'
+import { useVoerkaI18n } from '@voerkai18n/react'
 import { useAsyncEffect, useRequest } from 'ahooks'
 import {
   delCreateCarrier,
@@ -27,6 +28,7 @@ import InfoDialog from './components/info'
 // const isVehicleOnline = (row: any) => row.heart > 0 && row.errorCode === 0
 
 const Vehicle = () => {
+  const { t } = useVoerkaI18n()
   const [loading, setLoading] = useState(false)
   const [tableData, setTableData] = useState<any[]>([])
 
@@ -77,17 +79,17 @@ const Vehicle = () => {
     {
       accessorKey: 'loadWidth',
       id: 'loadWidth',
-      header: '状态',
+      header: t('状态'),
       Cell: ({ row }) => {
-        const { errorCode, heart } = row?.original
+        const { errorCode, heart } = row.original
         return (
           <div>
             {errorCode > 0 ? (
-              <span style={{ color: 'red' }}>异常</span>
+              <span style={{ color: 'red' }}>{t('异常')}</span>
             ) : heart > 0 ? (
-              <span style={{ color: 'white' }}>在线</span>
+              <span style={{ color: 'white' }}>{t('在线')}</span>
             ) : (
-              <span style={{ color: '#9d9c9c' }}>离线</span>
+              <span style={{ color: '#9d9c9c' }}>{t('离线')}</span>
             )}
           </div>
         )
@@ -97,37 +99,37 @@ const Vehicle = () => {
     {
       accessorKey: 'id',
       id: 'id',
-      header: '车辆编号',
+      header: t('车辆编号'),
       size: 50
     },
     {
       accessorKey: 'name',
       id: 'name',
-      header: '车体名称',
+      header: t('车体名称'),
       size: 50
     },
     {
       accessorKey: 'chassisType',
       id: 'chassisType',
-      header: '车辆类型',
+      header: t('车辆类型'),
       size: 50
     },
     {
       accessorKey: 'carrierPos',
       id: 'carrierPos',
-      header: '车辆位置',
+      header: t('车辆位置'),
       size: 220
     },
     {
       accessorKey: 'elecQuantity',
       id: 'elecQuantity',
-      header: '当前电量（%）',
+      header: t('当前电量（%）'),
       size: 50
     },
     {
       accessorKey: 'routeType',
       id: 'routeType',
-      header: '当前路径',
+      header: t('当前路径'),
       Cell: ({ cell, row }: any) => {
         return (
           <div>
@@ -141,7 +143,7 @@ const Vehicle = () => {
     {
       accessorKey: 'controlState',
       id: 'controlState',
-      header: '控制状态',
+      header: t('控制状态'),
       Cell: ({ cell }: any) => {
         return <div>{_Dict['ControlState'][cell.getValue()]}</div>
       },
@@ -150,7 +152,7 @@ const Vehicle = () => {
     {
       accessorKey: 'goodsStatus',
       id: 'goodsStatus',
-      header: '载货状态',
+      header: t('载货状态'),
       Cell: ({ cell }: any) => {
         return <div>{_Dict['GoodsState'][cell.getValue()]}</div>
       },
@@ -159,16 +161,16 @@ const Vehicle = () => {
     {
       accessorKey: 'ip',
       id: 'ip',
-      header: '交管车辆',
+      header: t('交管车辆'),
       Cell: ({ row }: any) => {
-        return <div>{row?.original?.trafficControlCar || '无'}</div>
+        return <div>{row?.original?.trafficControlCar || t('无')}</div>
       },
       size: 120
     },
     {
       accessorKey: 'currentTask',
       id: 'currentTask',
-      header: '当前任务',
+      header: t('当前任务'),
       size: 120,
       Cell: ({ row }) => {
         return (
@@ -190,16 +192,16 @@ const Vehicle = () => {
     {
       accessorKey: 'isLockdown',
       id: 'isLockdown',
-      header: '锁定状态',
+      header: t('锁定状态'),
       Cell: ({ cell }: any) => {
-        return <div>{!cell.getValue() ? '锁定' : '未锁定'}</div>
+        return <div>{!cell.getValue() ? t('锁定') : t('未锁定')}</div>
       },
       size: 50
     },
     {
       accessorKey: 'carrierState',
       id: 'carrierState',
-      header: '急停状态',
+      header: t('急停状态'),
       Cell: ({ cell }: any) => {
         return <div>{_Dict['DeviceState'][cell.getValue()]}</div>
       },
@@ -207,7 +209,7 @@ const Vehicle = () => {
     },
     {
       accessorKey: 'actions',
-      header: '操作',
+      header: t('操作'),
       enableColumnFilter: false,
       enableSorting: false,
       Cell: ({ row, table }) => {
@@ -227,7 +229,7 @@ const Vehicle = () => {
                 setRow(data)
               }}
             >
-              配置
+              {t('配置')}
             </Button>
             /
             <Button
@@ -245,7 +247,7 @@ const Vehicle = () => {
                 getTableDataNew()
               }}
             >
-              踢出
+              {t('踢出')}
             </Button>
             /
             <DelButton
@@ -265,7 +267,7 @@ const Vehicle = () => {
               }}
               startIcon={null}
             >
-              删除
+              {t('删除')}
             </DelButton>
             /
             <Button
@@ -283,7 +285,7 @@ const Vehicle = () => {
                 getTableDataNew()
               }}
             >
-              激活
+              {t('激活')}
             </Button>
           </div>
         )
@@ -299,7 +301,10 @@ const Vehicle = () => {
     return hash
   }
 
-  const [paginationState, setPaginationState] = useState<MRT_PaginationState>({ pageIndex: 0, pageSize: 10 })
+  const [paginationState, setPaginationState] = useState<MRT_PaginationState>({
+    pageIndex: 0,
+    pageSize: 10
+  })
   const [rowCount, setRowCount] = useState(0)
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const getTableData = async () => {
@@ -367,7 +372,7 @@ const Vehicle = () => {
 
   const RcsMessage = {
     success: (msg?: string) => {
-      toastSuccess(msg || `操作成功`)
+      toastSuccess(msg || t('操作成功'))
     }
   }
   const [rowSelection, setRowSelection] = useState<MRT_RowSelectionState>({})
@@ -375,7 +380,7 @@ const Vehicle = () => {
   const updateCarrierState = async (table: any, status: 0 | 1) => {
     const selectedVehicleIds = Object.keys(rowSelection)
     if (selectedVehicleIds.length === 0) {
-      toastWarn('请选择一条数据')
+      toastWarn(t('请选择一条数据'))
       return
     }
     const promises: (() => Promise<any>)[] = []
@@ -392,7 +397,7 @@ const Vehicle = () => {
   const sendRemoteStop = async (table: any, status: 0 | 1) => {
     const selectedVehicleIds = Object.keys(rowSelection)
     if (selectedVehicleIds.length === 0) {
-      toastWarn('请选择一条数据')
+      toastWarn(t('请选择一条数据'))
       return
     }
     const promises: (() => Promise<any>)[] = []
@@ -438,7 +443,7 @@ const Vehicle = () => {
                 }}
               >
                 <Refresh loading={loading}></Refresh>
-                刷新
+                {t('刷新')}
               </Button>
               <Button
                 variant="outlined"
@@ -449,7 +454,7 @@ const Vehicle = () => {
                 }}
               >
                 <AddIcon />
-                新增
+                {t('新增')}
               </Button>
               <ButtonGroup variant="outlined">
                 <Button
@@ -460,7 +465,7 @@ const Vehicle = () => {
                     updateCarrierState(table, 0)
                   }}
                 >
-                  {'锁定'}
+                  {t('锁定')}
                 </Button>
                 <Button
                   variant="outlined"
@@ -469,7 +474,7 @@ const Vehicle = () => {
                     updateCarrierState(table, 1)
                   }}
                 >
-                  {'解锁'}
+                  {t('解锁')}
                 </Button>
               </ButtonGroup>
               <ButtonGroup variant="outlined">
@@ -481,7 +486,7 @@ const Vehicle = () => {
                     sendRemoteStop(table, 1)
                   }}
                 >
-                  {'急停'}
+                  {t('急停')}
                 </Button>
                 <Button
                   variant="outlined"
@@ -490,7 +495,7 @@ const Vehicle = () => {
                     sendRemoteStop(table, 0)
                   }}
                 >
-                  {'解除'}
+                  {t('解除')}
                 </Button>
               </ButtonGroup>
             </Box>
@@ -538,9 +543,13 @@ const Vehicle = () => {
         manualPagination
         onRowSelectionChange={setRowSelection}
         renderToolbarAlertBannerContent={() => (
-          <span style={{ padding: ' 0.5rem 1rem' }}>已选择行：{`${Object.keys(rowSelection).length}/${rowCount}`}</span>
+          <span style={{ padding: ' 0.5rem 1rem' }}>
+            {t('已选择行：')}
+            {`${Object.keys(rowSelection).length}/${rowCount}`}
+          </span>
         )}
       />
+
       <AddDialog
         open={addOpen}
         onClose={() => setAddOpen(false)}
@@ -552,6 +561,7 @@ const Vehicle = () => {
         chassisData={chassisData?.data}
         areaInfosOptions={dictsTransform(areaInfos?.data, 'areaName', 'id')}
       />
+
       <EditDialog
         open={editOpen}
         row={row}
@@ -564,6 +574,7 @@ const Vehicle = () => {
         chassisData={chassisData?.data}
         areaInfosOptions={dictsTransform(areaInfos?.data, 'areaName', 'id')}
       />
+
       <InfoDialog open={infoOpen} row={row} onClose={() => setInfoOpen(false)}></InfoDialog>
     </>
   )

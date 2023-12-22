@@ -9,6 +9,7 @@ import { qiankunWindow } from 'vite-plugin-qiankun/dist/helper'
 
 import routerList from '@/router/router'
 
+import LanguageProvider from './component/LanguageProvider'
 import GlobalContext from './global'
 
 const { __POWERED_BY_QIANKUN__ } = qiankunWindow
@@ -28,16 +29,18 @@ export default function App() {
   return (
     <React.StrictMode>
       <ThemeProvider theme={theme}>
-        <CssBaseline />
-        <GlobalContext />
-        <ToastContainer />
-        <BrowserRouter
-          basename={__POWERED_BY_QIANKUN__ ? `/${import.meta.env.VITE_APP_NAME}` : import.meta.env.VITE_APP_BASE_PATH}
-        >
-          <React.Suspense fallback={'loading...'}>
-            <Routes>{renderRoutes(routerList)}</Routes>
-          </React.Suspense>
-        </BrowserRouter>
+        <LanguageProvider>
+          <CssBaseline />
+          <GlobalContext />
+          <ToastContainer />
+          <BrowserRouter
+            basename={__POWERED_BY_QIANKUN__ ? `/${import.meta.env.VITE_APP_NAME}` : import.meta.env.VITE_APP_BASE_PATH}
+          >
+            <React.Suspense fallback={'loading...'}>
+              <Routes>{renderRoutes(routerList)}</Routes>
+            </React.Suspense>
+          </BrowserRouter>
+        </LanguageProvider>
       </ThemeProvider>
     </React.StrictMode>
   )

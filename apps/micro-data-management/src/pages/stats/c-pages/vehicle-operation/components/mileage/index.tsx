@@ -1,3 +1,4 @@
+import { useVoerkaI18n } from '@voerkai18n/react'
 import { useUpdateEffect } from 'ahooks'
 import { useEcharts } from 'hooks'
 import type { FC, PropsWithChildren } from 'react'
@@ -48,6 +49,7 @@ const option: echarts.EChartsOption = {
       }
     }
   ],
+
   yAxis: [
     {
       type: 'value',
@@ -62,6 +64,7 @@ const option: echarts.EChartsOption = {
       }
     }
   ],
+
   dataZoom: {
     type: 'inside'
   },
@@ -71,7 +74,7 @@ const option: echarts.EChartsOption = {
 // 车辆运行公里数
 const Mileage: FC<PropsWithChildren<IMileageProps>> = (props) => {
   const { labels = [], values = [] } = props
-
+  const { t } = useVoerkaI18n()
   const el = useRef<HTMLDivElement | null>(null)
   // 传递元素给useEcharts
   const { updateOption } = useEcharts(el, {
@@ -91,7 +94,7 @@ const Mileage: FC<PropsWithChildren<IMileageProps>> = (props) => {
         color: '#fff'
       },
       tooltip: {
-        valueFormatter: (v) => v + '公里'
+        valueFormatter: (v) => v + t('公里')
       }
     }))
     const newOption: any = { ...option }
@@ -101,7 +104,7 @@ const Mileage: FC<PropsWithChildren<IMileageProps>> = (props) => {
   }, [updateOption, labels, values])
   return (
     <Panel
-      title="车辆运行公里数"
+      title={t('车辆运行公里数')}
       wrapperStyle={{
         height: '100%'
       }}

@@ -1,5 +1,6 @@
 import AddIcon from '@mui/icons-material/Add'
 import EditNoteIcon from '@mui/icons-material/EditNote'
+import { useVoerkaI18n } from '@voerkai18n/react'
 import { useRequest } from 'ahooks'
 import { DelEvent, GetCarrierOptions, GetChassisList, GetEventsPageList, getMapEdges, getVertexs } from 'apis'
 import type { FC, ReactNode } from 'react'
@@ -29,6 +30,7 @@ const dictsTransform = (arr: [], label: string, value: string) => {
 
 //事件配置
 const Event: FC<IProps> = () => {
+  const { t } = useVoerkaI18n()
   const { dicts } = useDictStore()
   const [open, setOpen] = React.useState(false)
   const [editOpen, setEditOpen] = React.useState(false)
@@ -50,12 +52,12 @@ const Event: FC<IProps> = () => {
   const columns = [
     {
       accessorKey: 'id',
-      header: '事件ID',
+      header: t('事件ID'),
       size: 60
     },
     {
       accessorKey: 'genus',
-      header: '元素类型',
+      header: t('元素类型'),
       Filter: ({ header }) => {
         return (
           <TextField
@@ -90,12 +92,12 @@ const Event: FC<IProps> = () => {
     },
     {
       accessorKey: 'routeKey',
-      header: '路径ID',
+      header: t('路径ID'),
       size: 60
     },
     {
       accessorKey: 'carrierType',
-      header: '车辆类型',
+      header: t('车辆类型'),
       Cell: ({ row }) => {
         const { original } = row
         const tyles = convertChassisList?.find((item) => item.value === original.carrierType)
@@ -106,7 +108,7 @@ const Event: FC<IProps> = () => {
     {
       accessorKey: 'doTime',
       enableFilters: true,
-      header: '执行阶段',
+      header: t('执行阶段'),
       Cell: ({ row }) => {
         return <>{dicts.EventTime[row.getValue('doTime')].label}</>
       },
@@ -114,7 +116,7 @@ const Event: FC<IProps> = () => {
     },
     {
       accessorKey: 'waitTime',
-      header: '等待阶段',
+      header: t('等待阶段'),
       Cell: ({ row }) => {
         return <>{dicts.EventTime[row.getValue('waitTime')].label}</>
       },
@@ -122,7 +124,7 @@ const Event: FC<IProps> = () => {
     },
     {
       accessorKey: 'eventType',
-      header: '事件类型',
+      header: t('事件类型'),
       Cell: ({ row }) => {
         const { original } = row
         const tyles = dicts.EventType?.find((item) => item.value === original.eventType)
@@ -132,23 +134,23 @@ const Event: FC<IProps> = () => {
     },
     {
       accessorKey: 'timeOut',
-      header: '超时(ms)',
+      header: t('超时(ms)'),
       size: 80
     },
     {
       accessorKey: 'delay',
-      header: '延时(ms)',
+      header: t('延时(ms)'),
       size: 80
     },
     {
       accessorKey: 'priority',
       enableColumnFilter: false,
-      header: '优先级',
+      header: t('优先级'),
       size: 60
     },
     {
       accessorKey: 'checkHasGoods',
-      header: '载货判断',
+      header: t('载货判断'),
       Cell: ({ row }) => {
         const { original } = row
 
@@ -159,12 +161,12 @@ const Event: FC<IProps> = () => {
     },
     {
       accessorKey: 'description',
-      header: '事件描述',
+      header: t('事件描述'),
       size: 120
     },
     {
       accessorKey: 'actions',
-      header: '操作',
+      header: t('操作'),
       enableColumnFilter: false,
       enableSorting: false,
       Cell: ({ row }) => {
@@ -187,7 +189,7 @@ const Event: FC<IProps> = () => {
               }}
               startIcon={<EditNoteIcon />}
             >
-              修改
+              {t('修改')}
             </Button>
             <DelButton
               delFn={async () => {
@@ -203,6 +205,7 @@ const Event: FC<IProps> = () => {
       size: 175
     }
   ]
+
   return (
     <>
       <BaseTable
@@ -234,11 +237,11 @@ const Event: FC<IProps> = () => {
                 }}
               >
                 <Refresh loading={loading}></Refresh>
-                刷新
+                {t('刷新')}
               </Button>
               <Button variant="outlined" size="small" color="primary" onClick={() => setOpen(true)}>
                 <AddIcon />
-                新增
+                {t('新增')}
               </Button>
             </Box>
           )
@@ -260,6 +263,7 @@ const Event: FC<IProps> = () => {
         enableDensityToggle={false}
         enableColumnActions={false}
       />
+
       <AddDialog
         open={open}
         onClose={() => setOpen(false)}
@@ -271,6 +275,7 @@ const Event: FC<IProps> = () => {
           getChass()
         }}
       />
+
       <EditDialog
         open={editOpen}
         row={row}

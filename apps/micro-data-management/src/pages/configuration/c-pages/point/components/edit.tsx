@@ -1,3 +1,4 @@
+import { useVoerkaI18n } from '@voerkai18n/react'
 import { useRequest, useUpdateEffect } from 'ahooks'
 import { UpdateStationInfos } from 'apis'
 import * as React from 'react'
@@ -24,6 +25,7 @@ const EditDialog: React.FC<{
   callback?: () => void
   row?: Record<string, any>
 }> = ({ open, onClose = () => {}, callback, areaInfos = [], vertexData = [], chassisList = [], row = {} }) => {
+  const { t } = useVoerkaI18n()
   const { runAsync: run } = useRequest(UpdateStationInfos, {
     manual: true
   })
@@ -41,14 +43,14 @@ const EditDialog: React.FC<{
     const commonSchema = [
       {
         name: 'PointKey',
-        label: '路径编号',
+        label: t('路径编号'),
         type: 'autoComplete',
         items: vertexData
         // type: "select",
       },
       {
         name: 'Priority',
-        label: '优先级',
+        label: t('优先级'),
         type: 'number',
         inputProps: {
           min: 0,
@@ -60,7 +62,7 @@ const EditDialog: React.FC<{
 
       {
         name: 'Type',
-        label: '站点类型',
+        label: t('站点类型'),
         type: 'select',
         items: dicts['StationType'],
         onChange: (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -69,21 +71,21 @@ const EditDialog: React.FC<{
       },
       {
         name: 'AreaID',
-        label: '区域',
+        label: t('区域'),
         type: 'autoComplete',
         multiple: true,
         items: areaInfos
       },
       {
         name: 'CarrierType',
-        label: '车辆类型',
+        label: t('车辆类型'),
         type: 'select',
-        items: [{ label: '全部', value: 0 }].concat(...chassisList)
+        items: [{ label: t('全部'), value: 0 }].concat(...chassisList)
       },
 
       {
         name: 'Name',
-        label: '名称',
+        label: t('名称'),
         type: 'text'
       }
     ]
@@ -93,28 +95,29 @@ const EditDialog: React.FC<{
         ? [
             {
               name: 'HomeGroup',
-              label: '待命点分组',
+              label: t('待命点分组'),
               type: 'number'
             },
             {
               name: 'HomeGroupType',
-              label: '待命点类型',
+              label: t('待命点类型'),
               type: 'number'
             },
             {
               name: 'HomeGroupPriority',
-              label: '待命点优先级',
+              label: t('待命点优先级'),
               type: 'number'
             }
           ]
         : []
 
     return [...commonSchema, ...dynamicSchema]
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [areaInfos, chassisList, dicts, vertexData, currentStationType])
 
   return (
     <Dialog maxWidth="md" open={open} onClose={onClose}>
-      <DialogTitle>修改站点</DialogTitle>
+      <DialogTitle>{t('修改站点')}</DialogTitle>
       <DialogContent
         sx={{
           py: `${theme.spacing(3.25)} !important`
@@ -141,7 +144,7 @@ const EditDialog: React.FC<{
             await formRef.current?.submitForm()
             const { isValid, values, errors } = formRef.current || {}
             if ((errors as Record<string, string>)['PointKey']) {
-              toastWarn('请输入路径编号')
+              toastWarn(t('请输入路径编号'))
             }
 
             if (isValid) {
@@ -161,10 +164,10 @@ const EditDialog: React.FC<{
             }
           }}
         >
-          保存
+          {t('保存')}
         </Button>
         <Button color="warning" onClick={onClose}>
-          关闭
+          {t('关闭')}
         </Button>
       </DialogActions>
     </Dialog>

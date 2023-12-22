@@ -1,3 +1,4 @@
+import { useVoerkaI18n } from '@voerkai18n/react'
 import { useUpdateEffect } from 'ahooks'
 import { useEcharts } from 'hooks'
 import type { FC, PropsWithChildren } from 'react'
@@ -52,6 +53,7 @@ const option: echarts.EChartsOption = {
       }
     }
   ],
+
   yAxis: [
     {
       type: 'value',
@@ -66,6 +68,7 @@ const option: echarts.EChartsOption = {
       }
     }
   ],
+
   dataZoom: {
     type: 'inside'
   },
@@ -75,6 +78,7 @@ const option: echarts.EChartsOption = {
 // 电量统计
 const Electricity: FC<PropsWithChildren<IElectricityProps>> = (props) => {
   const { count = 0, totalCount = 0, labels = [], values = [] } = props
+  const { t } = useVoerkaI18n()
   const el = useRef<HTMLDivElement | null>(null)
   // 传递元素给useEcharts
   const { updateOption } = useEcharts(el, {
@@ -116,7 +120,7 @@ const Electricity: FC<PropsWithChildren<IElectricityProps>> = (props) => {
   }, [updateOption, labels, values])
   return (
     <Panel
-      title="电量统计"
+      title={t('电量统计')}
       wrapperStyle={{
         height: '100%'
       }}
@@ -125,11 +129,11 @@ const Electricity: FC<PropsWithChildren<IElectricityProps>> = (props) => {
         <div className="stats-card">
           <div className="item">
             <span className="value">{count}</span>
-            <span className="label">充电次数</span>
+            <span className="label">{t('充电次数')}</span>
           </div>
           <div className="item">
             <span className="value">{totalCount}</span>
-            <span className="label">累计充满电次数</span>
+            <span className="label">{t('累计充满电次数')}</span>
           </div>
         </div>
         <div className="chart">

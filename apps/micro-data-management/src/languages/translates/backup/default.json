@@ -1,0 +1,1824 @@
+{
+    "删除": {
+        "en": "删除",
+        "jp": "删除",
+        "kor": "删除",
+        "$files": [
+            "component/delButton.tsx",
+            "pages/vehicle/index.tsx",
+            "pages/assignment/component/addTaskDialog/ActionPointList.tsx"
+        ]
+    },
+    "确定": {
+        "en": "确定",
+        "jp": "确定",
+        "kor": "确定",
+        "$files": [
+            "component/delButton.tsx"
+        ]
+    },
+    "取消": {
+        "en": "取消",
+        "jp": "取消",
+        "kor": "取消",
+        "$files": [
+            "component/delButton.tsx"
+        ]
+    },
+    "任务组ID": {
+        "en": "任务组ID",
+        "jp": "任务组ID",
+        "kor": "任务组ID",
+        "$files": [
+            "pages/assignment/columns.tsx"
+        ]
+    },
+    "分配小车": {
+        "en": "分配小车",
+        "jp": "分配小车",
+        "kor": "分配小车",
+        "$files": [
+            "pages/assignment/columns.tsx"
+        ]
+    },
+    "任务点": {
+        "en": "任务点",
+        "jp": "任务点",
+        "kor": "任务点",
+        "$files": [
+            "pages/assignment/columns.tsx",
+            "pages/assignment/component/addActionPointDialog/index.tsx",
+            "pages/assignment/component/addTaskDialog/ActionPointList.tsx",
+            "pages/assignment/component/addTaskDialog/ActionPointParams.tsx"
+        ]
+    },
+    "组Guid": {
+        "en": "组Guid",
+        "jp": "组Guid",
+        "kor": "组Guid",
+        "$files": [
+            "pages/assignment/columns.tsx"
+        ]
+    },
+    "是否循环任务": {
+        "en": "是否循环任务",
+        "jp": "是否循环任务",
+        "kor": "是否循环任务",
+        "$files": [
+            "pages/assignment/columns.tsx"
+        ]
+    },
+    "执行次数": {
+        "en": "执行次数",
+        "jp": "执行次数",
+        "kor": "执行次数",
+        "$files": [
+            "pages/assignment/columns.tsx"
+        ]
+    },
+    "已执行次数": {
+        "en": "已执行次数",
+        "jp": "已执行次数",
+        "kor": "已执行次数",
+        "$files": [
+            "pages/assignment/columns.tsx"
+        ]
+    },
+    "操作": {
+        "en": "操作",
+        "jp": "操作",
+        "kor": "操作",
+        "$files": [
+            "pages/assignment/columns.tsx",
+            "pages/vehicle/index.tsx",
+            "pages/configuration/c-pages/charge/index.tsx",
+            "pages/configuration/c-pages/event/index.tsx",
+            "pages/configuration/c-pages/point/index.tsx",
+            "pages/configuration/c-pages/map/index.tsx",
+            "pages/configuration/c-pages/standByPoint/index.tsx",
+            "pages/configuration/c-pages/vehicleType/index.tsx",
+            "pages/assignment/component/addTaskDialog/ActionPointList.tsx"
+        ]
+    },
+    "设置取消": {
+        "en": "设置取消",
+        "jp": "设置取消",
+        "kor": "设置取消",
+        "$files": [
+            "pages/assignment/columns.tsx"
+        ]
+    },
+    "任务ID": {
+        "en": "任务ID",
+        "jp": "任务ID",
+        "kor": "任务ID",
+        "$files": [
+            "pages/assignment/columns.tsx"
+        ]
+    },
+    "终点": {
+        "en": "终点",
+        "jp": "终点",
+        "kor": "终点",
+        "$files": [
+            "pages/assignment/columns.tsx"
+        ]
+    },
+    "优先级": {
+        "en": "优先级",
+        "jp": "优先级",
+        "kor": "优先级",
+        "$files": [
+            "pages/assignment/columns.tsx",
+            "pages/configuration/c-pages/event/index.tsx",
+            "pages/configuration/c-pages/point/index.tsx",
+            "pages/assignment/component/addTaskDialog/TaskParams.tsx",
+            "pages/configuration/c-pages/point/components/add.tsx",
+            "pages/configuration/c-pages/point/components/edit.tsx",
+            "pages/configuration/c-pages/event/components/add.tsx",
+            "pages/configuration/c-pages/event/components/edit.tsx"
+        ]
+    },
+    "任务GUID": {
+        "en": "任务GUID",
+        "jp": "任务GUID",
+        "kor": "任务GUID",
+        "$files": [
+            "pages/assignment/columns.tsx"
+        ]
+    },
+    "任务类型": {
+        "en": "任务类型",
+        "jp": "任务类型",
+        "kor": "任务类型",
+        "$files": [
+            "pages/assignment/columns.tsx"
+        ]
+    },
+    "状态": {
+        "en": "状态",
+        "jp": "状态",
+        "kor": "状态",
+        "$files": [
+            "pages/assignment/columns.tsx",
+            "pages/vehicle/index.tsx"
+        ]
+    },
+    "设置完成": {
+        "en": "设置完成",
+        "jp": "设置完成",
+        "kor": "设置完成",
+        "$files": [
+            "pages/assignment/columns.tsx"
+        ]
+    },
+    "路径点": {
+        "en": "路径点",
+        "jp": "路径点",
+        "kor": "路径点",
+        "$files": [
+            "pages/assignment/columns.tsx"
+        ]
+    },
+    "轴ID": {
+        "en": "轴ID",
+        "jp": "轴ID",
+        "kor": "轴ID",
+        "$files": [
+            "pages/assignment/columns.tsx",
+            "pages/assignment/component/addTaskDialog/ActionPointList.tsx"
+        ]
+    },
+    "动作类型": {
+        "en": "动作类型",
+        "jp": "动作类型",
+        "kor": "动作类型",
+        "$files": [
+            "pages/assignment/columns.tsx",
+            "pages/assignment/component/addActionPointDialog/index.tsx",
+            "pages/assignment/component/addTaskDialog/ActionPointList.tsx",
+            "pages/assignment/component/addTaskDialog/ActionPointParams.tsx"
+        ]
+    },
+    "参数信息": {
+        "en": "参数信息",
+        "jp": "参数信息",
+        "kor": "参数信息",
+        "$files": [
+            "pages/assignment/columns.tsx",
+            "pages/assignment/component/addTaskDialog/ActionPointList.tsx"
+        ]
+    },
+    "动作延迟": {
+        "en": "动作延迟",
+        "jp": "动作延迟",
+        "kor": "动作延迟",
+        "$files": [
+            "pages/assignment/columns.tsx",
+            "pages/assignment/component/addActionPointDialog/index.tsx"
+        ]
+    },
+    "刷新": {
+        "en": "刷新",
+        "jp": "刷新",
+        "kor": "刷新",
+        "$files": [
+            "pages/assignment/index.tsx",
+            "pages/vehicle/index.tsx",
+            "pages/configuration/c-pages/charge/index.tsx",
+            "pages/configuration/c-pages/event/index.tsx",
+            "pages/configuration/c-pages/point/index.tsx",
+            "pages/configuration/c-pages/map/index.tsx",
+            "pages/configuration/c-pages/standByPoint/index.tsx",
+            "pages/configuration/c-pages/vehicleType/index.tsx"
+        ]
+    },
+    "新增": {
+        "en": "新增",
+        "jp": "新增",
+        "kor": "新增",
+        "$files": [
+            "pages/assignment/index.tsx",
+            "pages/vehicle/index.tsx",
+            "pages/configuration/c-pages/charge/index.tsx",
+            "pages/configuration/c-pages/event/index.tsx",
+            "pages/configuration/c-pages/vehicleType/index.tsx"
+        ]
+    },
+    "添加任务点": {
+        "en": "添加任务点",
+        "jp": "添加任务点",
+        "kor": "添加任务点",
+        "$files": [
+            "pages/assignment/index.tsx",
+            "pages/assignment/component/addActionPointDialog/index.tsx"
+        ]
+    },
+    "抱歉，您访问的页面不存在.": {
+        "en": "抱歉，您访问的页面不存在.",
+        "jp": "抱歉，您访问的页面不存在.",
+        "kor": "抱歉，您访问的页面不存在.",
+        "$files": [
+            "pages/noFound/index.tsx"
+        ]
+    },
+    "返回到首页.": {
+        "en": "返回到首页.",
+        "jp": "返回到首页.",
+        "kor": "返回到首页.",
+        "$files": [
+            "pages/noFound/index.tsx"
+        ]
+    },
+    "异常": {
+        "en": "异常",
+        "jp": "异常",
+        "kor": "异常",
+        "$files": [
+            "pages/vehicle/index.tsx"
+        ]
+    },
+    "在线": {
+        "en": "在线",
+        "jp": "在线",
+        "kor": "在线",
+        "$files": [
+            "pages/vehicle/index.tsx"
+        ]
+    },
+    "离线": {
+        "en": "离线",
+        "jp": "离线",
+        "kor": "离线",
+        "$files": [
+            "pages/vehicle/index.tsx"
+        ]
+    },
+    "车辆编号": {
+        "en": "车辆编号",
+        "jp": "车辆编号",
+        "kor": "车辆编号",
+        "$files": [
+            "pages/vehicle/index.tsx",
+            "pages/vehicle/components/add.tsx",
+            "pages/vehicle/components/edit.tsx",
+            "pages/vehicle/components/info.tsx",
+            "pages/configuration/c-pages/charge/index.tsx",
+            "pages/configuration/c-pages/standByPoint/index.tsx",
+            "pages/configuration/c-pages/charge/components/add.tsx",
+            "pages/configuration/c-pages/charge/components/edit.tsx",
+            "pages/configuration/c-pages/standByPoint/components/config.tsx",
+            "pages/stats/c-pages/vehicle-operation/components/searchArea/index.tsx"
+        ]
+    },
+    "车体名称": {
+        "en": "车体名称",
+        "jp": "车体名称",
+        "kor": "车体名称",
+        "$files": [
+            "pages/vehicle/index.tsx",
+            "pages/vehicle/components/add.tsx",
+            "pages/vehicle/components/edit.tsx",
+            "pages/configuration/c-pages/standByPoint/index.tsx"
+        ]
+    },
+    "车辆类型": {
+        "en": "车辆类型",
+        "jp": "车辆类型",
+        "kor": "车辆类型",
+        "$files": [
+            "pages/vehicle/index.tsx",
+            "pages/vehicle/components/add.tsx",
+            "pages/vehicle/components/edit.tsx",
+            "pages/configuration/c-pages/charge/index.tsx",
+            "pages/configuration/c-pages/event/index.tsx",
+            "pages/configuration/c-pages/point/index.tsx",
+            "pages/configuration/c-pages/standByPoint/index.tsx",
+            "pages/configuration/c-pages/charge/components/add.tsx",
+            "pages/configuration/c-pages/charge/components/edit.tsx",
+            "pages/configuration/c-pages/point/components/add.tsx",
+            "pages/configuration/c-pages/point/components/edit.tsx",
+            "pages/configuration/c-pages/event/components/add.tsx",
+            "pages/configuration/c-pages/event/components/edit.tsx"
+        ]
+    },
+    "车辆位置": {
+        "en": "车辆位置",
+        "jp": "车辆位置",
+        "kor": "车辆位置",
+        "$files": [
+            "pages/vehicle/index.tsx",
+            "pages/vehicle/components/info.tsx"
+        ]
+    },
+    "当前电量（%）": {
+        "en": "当前电量（%）",
+        "jp": "当前电量（%）",
+        "kor": "当前电量（%）",
+        "$files": [
+            "pages/vehicle/index.tsx"
+        ]
+    },
+    "当前路径": {
+        "en": "当前路径",
+        "jp": "当前路径",
+        "kor": "当前路径",
+        "$files": [
+            "pages/vehicle/index.tsx"
+        ]
+    },
+    "控制状态": {
+        "en": "控制状态",
+        "jp": "控制状态",
+        "kor": "控制状态",
+        "$files": [
+            "pages/vehicle/index.tsx",
+            "pages/vehicle/components/info.tsx"
+        ]
+    },
+    "载货状态": {
+        "en": "载货状态",
+        "jp": "载货状态",
+        "kor": "载货状态",
+        "$files": [
+            "pages/vehicle/index.tsx"
+        ]
+    },
+    "交管车辆": {
+        "en": "交管车辆",
+        "jp": "交管车辆",
+        "kor": "交管车辆",
+        "$files": [
+            "pages/vehicle/index.tsx",
+            "pages/vehicle/components/info.tsx"
+        ]
+    },
+    "无": {
+        "en": "无",
+        "jp": "无",
+        "kor": "无",
+        "$files": [
+            "pages/vehicle/index.tsx"
+        ]
+    },
+    "当前任务": {
+        "en": "当前任务",
+        "jp": "当前任务",
+        "kor": "当前任务",
+        "$files": [
+            "pages/vehicle/index.tsx"
+        ]
+    },
+    "锁定状态": {
+        "en": "锁定状态",
+        "jp": "锁定状态",
+        "kor": "锁定状态",
+        "$files": [
+            "pages/vehicle/index.tsx"
+        ]
+    },
+    "锁定": {
+        "en": "锁定",
+        "jp": "锁定",
+        "kor": "锁定",
+        "$files": [
+            "pages/vehicle/index.tsx"
+        ]
+    },
+    "未锁定": {
+        "en": "未锁定",
+        "jp": "未锁定",
+        "kor": "未锁定",
+        "$files": [
+            "pages/vehicle/index.tsx"
+        ]
+    },
+    "急停状态": {
+        "en": "急停状态",
+        "jp": "急停状态",
+        "kor": "急停状态",
+        "$files": [
+            "pages/vehicle/index.tsx"
+        ]
+    },
+    "配置": {
+        "en": "配置",
+        "jp": "配置",
+        "kor": "配置",
+        "$files": [
+            "pages/vehicle/index.tsx",
+            "pages/configuration/c-pages/standByPoint/index.tsx"
+        ]
+    },
+    "踢出": {
+        "en": "踢出",
+        "jp": "踢出",
+        "kor": "踢出",
+        "$files": [
+            "pages/vehicle/index.tsx"
+        ]
+    },
+    "激活": {
+        "en": "激活",
+        "jp": "激活",
+        "kor": "激活",
+        "$files": [
+            "pages/vehicle/index.tsx"
+        ]
+    },
+    "操作成功": {
+        "en": "操作成功",
+        "jp": "操作成功",
+        "kor": "操作成功",
+        "$files": [
+            "pages/vehicle/index.tsx"
+        ]
+    },
+    "请选择一条数据": {
+        "en": "请选择一条数据",
+        "jp": "请选择一条数据",
+        "kor": "请选择一条数据",
+        "$files": [
+            "pages/vehicle/index.tsx"
+        ]
+    },
+    "解锁": {
+        "en": "解锁",
+        "jp": "解锁",
+        "kor": "解锁",
+        "$files": [
+            "pages/vehicle/index.tsx"
+        ]
+    },
+    "急停": {
+        "en": "急停",
+        "jp": "急停",
+        "kor": "急停",
+        "$files": [
+            "pages/vehicle/index.tsx"
+        ]
+    },
+    "解除": {
+        "en": "解除",
+        "jp": "解除",
+        "kor": "解除",
+        "$files": [
+            "pages/vehicle/index.tsx"
+        ]
+    },
+    "已选择行：": {
+        "en": "已选择行：",
+        "jp": "已选择行：",
+        "kor": "已选择行：",
+        "$files": [
+            "pages/vehicle/index.tsx"
+        ]
+    },
+    "添加车辆配置信息": {
+        "en": "添加车辆配置信息",
+        "jp": "添加车辆配置信息",
+        "kor": "添加车辆配置信息",
+        "$files": [
+            "pages/vehicle/components/add.tsx"
+        ]
+    },
+    "车辆IP": {
+        "en": "车辆IP",
+        "jp": "车辆IP",
+        "kor": "车辆IP",
+        "$files": [
+            "pages/vehicle/components/add.tsx",
+            "pages/vehicle/components/edit.tsx"
+        ]
+    },
+    "车辆分组": {
+        "en": "车辆分组",
+        "jp": "车辆分组",
+        "kor": "车辆分组",
+        "$files": [
+            "pages/vehicle/components/add.tsx",
+            "pages/vehicle/components/edit.tsx"
+        ]
+    },
+    "保存": {
+        "en": "保存",
+        "jp": "保存",
+        "kor": "保存",
+        "$files": [
+            "pages/vehicle/components/add.tsx",
+            "pages/vehicle/components/edit.tsx",
+            "pages/vehicle/components/info.tsx",
+            "pages/assignment/component/addTaskDialog/index.tsx",
+            "pages/configuration/c-pages/charge/components/add.tsx",
+            "pages/configuration/c-pages/charge/components/edit.tsx",
+            "pages/configuration/c-pages/point/components/add.tsx",
+            "pages/configuration/c-pages/point/components/edit.tsx",
+            "pages/configuration/c-pages/standByPoint/components/config.tsx",
+            "pages/configuration/c-pages/vehicleType/components/add.tsx",
+            "pages/configuration/c-pages/vehicleType/components/edit.tsx",
+            "pages/configuration/c-pages/event/components/add.tsx",
+            "pages/configuration/c-pages/event/components/edit.tsx",
+            "pages/configuration/c-pages/map/components/add.tsx",
+            "pages/configuration/c-pages/map/components/edit.tsx",
+            "pages/configuration/c-pages/map/components/import.tsx"
+        ]
+    },
+    "关闭": {
+        "en": "关闭",
+        "jp": "关闭",
+        "kor": "关闭",
+        "$files": [
+            "pages/vehicle/components/add.tsx",
+            "pages/vehicle/components/edit.tsx",
+            "pages/vehicle/components/info.tsx",
+            "pages/configuration/c-pages/charge/components/add.tsx",
+            "pages/configuration/c-pages/charge/components/edit.tsx",
+            "pages/configuration/c-pages/point/components/add.tsx",
+            "pages/configuration/c-pages/point/components/edit.tsx",
+            "pages/configuration/c-pages/standByPoint/components/config.tsx",
+            "pages/configuration/c-pages/vehicleType/components/add.tsx",
+            "pages/configuration/c-pages/vehicleType/components/edit.tsx",
+            "pages/configuration/c-pages/event/components/add.tsx",
+            "pages/configuration/c-pages/event/components/edit.tsx",
+            "pages/configuration/c-pages/map/components/add.tsx",
+            "pages/configuration/c-pages/map/components/edit.tsx",
+            "pages/configuration/c-pages/map/components/import.tsx"
+        ]
+    },
+    "修改车辆配置信息": {
+        "en": "修改车辆配置信息",
+        "jp": "修改车辆配置信息",
+        "kor": "修改车辆配置信息",
+        "$files": [
+            "pages/vehicle/components/edit.tsx"
+        ]
+    },
+    "路径类型": {
+        "en": "路径类型",
+        "jp": "路径类型",
+        "kor": "路径类型",
+        "$files": [
+            "pages/vehicle/components/info.tsx"
+        ]
+    },
+    "路径编号": {
+        "en": "路径编号",
+        "jp": "路径编号",
+        "kor": "路径编号",
+        "$files": [
+            "pages/vehicle/components/info.tsx",
+            "pages/configuration/c-pages/point/index.tsx",
+            "pages/configuration/c-pages/point/components/add.tsx",
+            "pages/configuration/c-pages/point/components/edit.tsx"
+        ]
+    },
+    "调度状态": {
+        "en": "调度状态",
+        "jp": "调度状态",
+        "kor": "调度状态",
+        "$files": [
+            "pages/vehicle/components/info.tsx"
+        ]
+    },
+    "路径状态": {
+        "en": "路径状态",
+        "jp": "路径状态",
+        "kor": "路径状态",
+        "$files": [
+            "pages/vehicle/components/info.tsx"
+        ]
+    },
+    "当前电量": {
+        "en": "当前电量",
+        "jp": "当前电量",
+        "kor": "当前电量",
+        "$files": [
+            "pages/vehicle/components/info.tsx"
+        ]
+    },
+    "车辆速度": {
+        "en": "车辆速度",
+        "jp": "车辆速度",
+        "kor": "车辆速度",
+        "$files": [
+            "pages/vehicle/components/info.tsx"
+        ]
+    },
+    "编号": {
+        "en": "编号",
+        "jp": "编号",
+        "kor": "编号",
+        "$files": [
+            "pages/configuration/c-pages/charge/index.tsx",
+            "pages/configuration/c-pages/map/index.tsx"
+        ]
+    },
+    "策略名称": {
+        "en": "策略名称",
+        "jp": "策略名称",
+        "kor": "策略名称",
+        "$files": [
+            "pages/configuration/c-pages/charge/index.tsx",
+            "pages/configuration/c-pages/charge/components/add.tsx",
+            "pages/configuration/c-pages/charge/components/edit.tsx"
+        ]
+    },
+    "计划名称": {
+        "en": "计划名称",
+        "jp": "计划名称",
+        "kor": "计划名称",
+        "$files": [
+            "pages/configuration/c-pages/charge/index.tsx",
+            "pages/configuration/c-pages/charge/components/add.tsx",
+            "pages/configuration/c-pages/charge/components/edit.tsx"
+        ]
+    },
+    "任务优先级": {
+        "en": "任务优先级",
+        "jp": "任务优先级",
+        "kor": "任务优先级",
+        "$files": [
+            "pages/configuration/c-pages/charge/index.tsx",
+            "pages/configuration/c-pages/charge/components/add.tsx",
+            "pages/configuration/c-pages/charge/components/edit.tsx"
+        ]
+    },
+    "规则优先级": {
+        "en": "规则优先级",
+        "jp": "规则优先级",
+        "kor": "规则优先级",
+        "$files": [
+            "pages/configuration/c-pages/charge/index.tsx",
+            "pages/configuration/c-pages/charge/components/add.tsx",
+            "pages/configuration/c-pages/charge/components/edit.tsx"
+        ]
+    },
+    "空闲时间（m）": {
+        "en": "空闲时间（m）",
+        "jp": "空闲时间（m）",
+        "kor": "空闲时间（m）",
+        "$files": [
+            "pages/configuration/c-pages/charge/index.tsx"
+        ]
+    },
+    "电量区间（%）": {
+        "en": "电量区间（%）",
+        "jp": "电量区间（%）",
+        "kor": "电量区间（%）",
+        "$files": [
+            "pages/configuration/c-pages/charge/index.tsx"
+        ]
+    },
+    "策略时间": {
+        "en": "策略时间",
+        "jp": "策略时间",
+        "kor": "策略时间",
+        "$files": [
+            "pages/configuration/c-pages/charge/index.tsx"
+        ]
+    },
+    "充电{{completeTime}}分钟": {
+        "en": "充电{{completeTime}}分钟",
+        "jp": "充电{{completeTime}}分钟",
+        "kor": "充电{{completeTime}}分钟",
+        "$files": [
+            "pages/configuration/c-pages/charge/index.tsx"
+        ]
+    },
+    "充至电量{{completePercent}}%": {
+        "en": "充至电量{{completePercent}}%",
+        "jp": "充至电量{{completePercent}}%",
+        "kor": "充至电量{{completePercent}}%",
+        "$files": [
+            "pages/configuration/c-pages/charge/index.tsx"
+        ]
+    },
+    "充电策略": {
+        "en": "充电策略",
+        "jp": "充电策略",
+        "kor": "充电策略",
+        "$files": [
+            "pages/configuration/c-pages/charge/index.tsx"
+        ]
+    },
+    "充电桩": {
+        "en": "充电桩",
+        "jp": "充电桩",
+        "kor": "充电桩",
+        "$files": [
+            "pages/configuration/c-pages/charge/index.tsx",
+            "pages/configuration/c-pages/charge/components/add.tsx",
+            "pages/configuration/c-pages/charge/components/edit.tsx"
+        ]
+    },
+    "修改": {
+        "en": "修改",
+        "jp": "修改",
+        "kor": "修改",
+        "$files": [
+            "pages/configuration/c-pages/charge/index.tsx",
+            "pages/configuration/c-pages/event/index.tsx",
+            "pages/configuration/c-pages/point/index.tsx",
+            "pages/configuration/c-pages/map/index.tsx",
+            "pages/configuration/c-pages/vehicleType/index.tsx"
+        ]
+    },
+    "事件ID": {
+        "en": "事件ID",
+        "jp": "事件ID",
+        "kor": "事件ID",
+        "$files": [
+            "pages/configuration/c-pages/event/index.tsx"
+        ]
+    },
+    "元素类型": {
+        "en": "元素类型",
+        "jp": "元素类型",
+        "kor": "元素类型",
+        "$files": [
+            "pages/configuration/c-pages/event/index.tsx",
+            "pages/configuration/c-pages/event/components/add.tsx",
+            "pages/configuration/c-pages/event/components/edit.tsx"
+        ]
+    },
+    "路径ID": {
+        "en": "路径ID",
+        "jp": "路径ID",
+        "kor": "路径ID",
+        "$files": [
+            "pages/configuration/c-pages/event/index.tsx",
+            "pages/configuration/c-pages/event/components/add.tsx",
+            "pages/configuration/c-pages/event/components/edit.tsx"
+        ]
+    },
+    "执行阶段": {
+        "en": "执行阶段",
+        "jp": "执行阶段",
+        "kor": "执行阶段",
+        "$files": [
+            "pages/configuration/c-pages/event/index.tsx",
+            "pages/configuration/c-pages/event/components/add.tsx",
+            "pages/configuration/c-pages/event/components/edit.tsx"
+        ]
+    },
+    "等待阶段": {
+        "en": "等待阶段",
+        "jp": "等待阶段",
+        "kor": "等待阶段",
+        "$files": [
+            "pages/configuration/c-pages/event/index.tsx",
+            "pages/configuration/c-pages/event/components/add.tsx",
+            "pages/configuration/c-pages/event/components/edit.tsx"
+        ]
+    },
+    "事件类型": {
+        "en": "事件类型",
+        "jp": "事件类型",
+        "kor": "事件类型",
+        "$files": [
+            "pages/configuration/c-pages/event/index.tsx",
+            "pages/configuration/c-pages/event/components/add.tsx",
+            "pages/configuration/c-pages/event/components/edit.tsx"
+        ]
+    },
+    "超时(ms)": {
+        "en": "超时(ms)",
+        "jp": "超时(ms)",
+        "kor": "超时(ms)",
+        "$files": [
+            "pages/configuration/c-pages/event/index.tsx"
+        ]
+    },
+    "延时(ms)": {
+        "en": "延时(ms)",
+        "jp": "延时(ms)",
+        "kor": "延时(ms)",
+        "$files": [
+            "pages/configuration/c-pages/event/index.tsx"
+        ]
+    },
+    "载货判断": {
+        "en": "载货判断",
+        "jp": "载货判断",
+        "kor": "载货判断",
+        "$files": [
+            "pages/configuration/c-pages/event/index.tsx",
+            "pages/configuration/c-pages/event/components/add.tsx",
+            "pages/configuration/c-pages/event/components/edit.tsx"
+        ]
+    },
+    "事件描述": {
+        "en": "事件描述",
+        "jp": "事件描述",
+        "kor": "事件描述",
+        "$files": [
+            "pages/configuration/c-pages/event/index.tsx",
+            "pages/configuration/c-pages/event/components/add.tsx",
+            "pages/configuration/c-pages/event/components/edit.tsx"
+        ]
+    },
+    "名称": {
+        "en": "名称",
+        "jp": "名称",
+        "kor": "名称",
+        "$files": [
+            "pages/configuration/c-pages/point/index.tsx",
+            "pages/configuration/c-pages/vehicleType/index.tsx",
+            "pages/configuration/c-pages/point/components/add.tsx",
+            "pages/configuration/c-pages/point/components/edit.tsx",
+            "pages/configuration/c-pages/vehicleType/components/add.tsx",
+            "pages/configuration/c-pages/vehicleType/components/edit.tsx"
+        ]
+    },
+    "站点类型": {
+        "en": "站点类型",
+        "jp": "站点类型",
+        "kor": "站点类型",
+        "$files": [
+            "pages/configuration/c-pages/point/index.tsx",
+            "pages/configuration/c-pages/point/components/add.tsx",
+            "pages/configuration/c-pages/point/components/edit.tsx"
+        ]
+    },
+    "全部": {
+        "en": "全部",
+        "jp": "全部",
+        "kor": "全部",
+        "$files": [
+            "pages/configuration/c-pages/point/index.tsx",
+            "pages/configuration/c-pages/map/index.tsx",
+            "pages/stats/c-pages/vehicle-operation/index.tsx",
+            "pages/configuration/c-pages/point/components/edit.tsx",
+            "pages/configuration/c-pages/event/components/add.tsx",
+            "pages/stats/c-pages/vehicle-operation/components/searchArea/index.tsx"
+        ]
+    },
+    "待命点分组": {
+        "en": "待命点分组",
+        "jp": "待命点分组",
+        "kor": "待命点分组",
+        "$files": [
+            "pages/configuration/c-pages/point/index.tsx",
+            "pages/configuration/c-pages/point/components/add.tsx",
+            "pages/configuration/c-pages/point/components/edit.tsx"
+        ]
+    },
+    "待命点优先级": {
+        "en": "待命点优先级",
+        "jp": "待命点优先级",
+        "kor": "待命点优先级",
+        "$files": [
+            "pages/configuration/c-pages/point/index.tsx",
+            "pages/configuration/c-pages/point/components/add.tsx",
+            "pages/configuration/c-pages/point/components/edit.tsx"
+        ]
+    },
+    "待命点类型": {
+        "en": "待命点类型",
+        "jp": "待命点类型",
+        "kor": "待命点类型",
+        "$files": [
+            "pages/configuration/c-pages/point/index.tsx",
+            "pages/configuration/c-pages/point/components/add.tsx",
+            "pages/configuration/c-pages/point/components/edit.tsx"
+        ]
+    },
+    "项目名称": {
+        "en": "项目名称",
+        "jp": "项目名称",
+        "kor": "项目名称",
+        "$files": [
+            "pages/configuration/c-pages/map/index.tsx",
+            "pages/configuration/c-pages/map/components/add.tsx",
+            "pages/configuration/c-pages/map/components/edit.tsx"
+        ]
+    },
+    "地图名称": {
+        "en": "地图名称",
+        "jp": "地图名称",
+        "kor": "地图名称",
+        "$files": [
+            "pages/configuration/c-pages/map/index.tsx",
+            "pages/configuration/c-pages/map/components/add.tsx",
+            "pages/configuration/c-pages/map/components/edit.tsx"
+        ]
+    },
+    "适用车辆": {
+        "en": "适用车辆",
+        "jp": "适用车辆",
+        "kor": "适用车辆",
+        "$files": [
+            "pages/configuration/c-pages/map/index.tsx",
+            "pages/configuration/c-pages/map/components/add.tsx",
+            "pages/configuration/c-pages/map/components/edit.tsx"
+        ]
+    },
+    "适用车型": {
+        "en": "适用车型",
+        "jp": "适用车型",
+        "kor": "适用车型",
+        "$files": [
+            "pages/configuration/c-pages/map/index.tsx",
+            "pages/configuration/c-pages/map/components/add.tsx",
+            "pages/configuration/c-pages/map/components/edit.tsx"
+        ]
+    },
+    "地图GUID": {
+        "en": "地图GUID",
+        "jp": "地图GUID",
+        "kor": "地图GUID",
+        "$files": [
+            "pages/configuration/c-pages/map/index.tsx",
+            "pages/configuration/c-pages/map/components/add.tsx",
+            "pages/configuration/c-pages/map/components/edit.tsx"
+        ]
+    },
+    "版本号": {
+        "en": "版本号",
+        "jp": "版本号",
+        "kor": "版本号",
+        "$files": [
+            "pages/configuration/c-pages/map/index.tsx",
+            "pages/configuration/c-pages/map/components/add.tsx",
+            "pages/configuration/c-pages/map/components/edit.tsx"
+        ]
+    },
+    "路径文件名称": {
+        "en": "路径文件名称",
+        "jp": "路径文件名称",
+        "kor": "路径文件名称",
+        "$files": [
+            "pages/configuration/c-pages/map/index.tsx"
+        ]
+    },
+    "地图Dxf文件名": {
+        "en": "地图Dxf文件名",
+        "jp": "地图Dxf文件名",
+        "kor": "地图Dxf文件名",
+        "$files": [
+            "pages/configuration/c-pages/map/index.tsx"
+        ]
+    },
+    "是否激活": {
+        "en": "是否激活",
+        "jp": "是否激活",
+        "kor": "是否激活",
+        "$files": [
+            "pages/configuration/c-pages/map/index.tsx"
+        ]
+    },
+    "新增路径文件": {
+        "en": "新增路径文件",
+        "jp": "新增路径文件",
+        "kor": "新增路径文件",
+        "$files": [
+            "pages/configuration/c-pages/map/index.tsx",
+            "pages/configuration/c-pages/map/components/add.tsx"
+        ]
+    },
+    "待命点位置": {
+        "en": "待命点位置",
+        "jp": "待命点位置",
+        "kor": "待命点位置",
+        "$files": [
+            "pages/configuration/c-pages/standByPoint/index.tsx"
+        ]
+    },
+    "是否回待命点": {
+        "en": "是否回待命点",
+        "jp": "是否回待命点",
+        "kor": "是否回待命点",
+        "$files": [
+            "pages/configuration/c-pages/standByPoint/index.tsx",
+            "pages/configuration/c-pages/standByPoint/components/config.tsx"
+        ]
+    },
+    "是": {
+        "en": "是",
+        "jp": "是",
+        "kor": "是",
+        "$files": [
+            "pages/configuration/c-pages/standByPoint/index.tsx",
+            "pages/assignment/component/addTaskDialog/ActionPointList.tsx"
+        ]
+    },
+    "否": {
+        "en": "否",
+        "jp": "否",
+        "kor": "否",
+        "$files": [
+            "pages/configuration/c-pages/standByPoint/index.tsx",
+            "pages/assignment/component/addTaskDialog/ActionPointList.tsx"
+        ]
+    },
+    "类型": {
+        "en": "类型",
+        "jp": "类型",
+        "kor": "类型",
+        "$files": [
+            "pages/configuration/c-pages/vehicleType/index.tsx",
+            "pages/configuration/c-pages/vehicleType/components/add.tsx",
+            "pages/configuration/c-pages/vehicleType/components/edit.tsx"
+        ]
+    },
+    "强制充电电量": {
+        "en": "强制充电电量",
+        "jp": "强制充电电量",
+        "kor": "强制充电电量",
+        "$files": [
+            "pages/configuration/c-pages/vehicleType/index.tsx",
+            "pages/configuration/c-pages/vehicleType/components/add.tsx",
+            "pages/configuration/c-pages/vehicleType/components/edit.tsx"
+        ]
+    },
+    "空载偏移X": {
+        "en": "空载偏移X",
+        "jp": "空载偏移X",
+        "kor": "空载偏移X",
+        "$files": [
+            "pages/configuration/c-pages/vehicleType/index.tsx"
+        ]
+    },
+    "空载偏移Y": {
+        "en": "空载偏移Y",
+        "jp": "空载偏移Y",
+        "kor": "空载偏移Y",
+        "$files": [
+            "pages/configuration/c-pages/vehicleType/index.tsx"
+        ]
+    },
+    "空载车宽": {
+        "en": "空载车宽",
+        "jp": "空载车宽",
+        "kor": "空载车宽",
+        "$files": [
+            "pages/configuration/c-pages/vehicleType/index.tsx"
+        ]
+    },
+    "空载车长": {
+        "en": "空载车长",
+        "jp": "空载车长",
+        "kor": "空载车长",
+        "$files": [
+            "pages/configuration/c-pages/vehicleType/index.tsx"
+        ]
+    },
+    "模型文件": {
+        "en": "模型文件",
+        "jp": "模型文件",
+        "kor": "模型文件",
+        "$files": [
+            "pages/configuration/c-pages/vehicleType/index.tsx",
+            "pages/configuration/c-pages/vehicleType/components/add.tsx",
+            "pages/configuration/c-pages/vehicleType/components/edit.tsx"
+        ]
+    },
+    "请选择任务点": {
+        "en": "请选择任务点",
+        "jp": "请选择任务点",
+        "kor": "请选择任务点",
+        "$files": [
+            "pages/assignment/component/addActionPointDialog/index.tsx",
+            "pages/assignment/component/addTaskDialog/ActionPointParams.tsx"
+        ]
+    },
+    "请选择动作类型": {
+        "en": "请选择动作类型",
+        "jp": "请选择动作类型",
+        "kor": "请选择动作类型",
+        "$files": [
+            "pages/assignment/component/addActionPointDialog/index.tsx",
+            "pages/assignment/component/addTaskDialog/ActionPointParams.tsx"
+        ]
+    },
+    "命令参数": {
+        "en": "命令参数",
+        "jp": "命令参数",
+        "kor": "命令参数",
+        "$files": [
+            "pages/assignment/component/addActionPointDialog/index.tsx",
+            "pages/assignment/component/addTaskDialog/ActionPointParams.tsx"
+        ]
+    },
+    "扩展参数": {
+        "en": "扩展参数",
+        "jp": "扩展参数",
+        "kor": "扩展参数",
+        "$files": [
+            "pages/assignment/component/addActionPointDialog/index.tsx",
+            "pages/assignment/component/addTaskDialog/ActionPointParams.tsx"
+        ]
+    },
+    "参数1": {
+        "en": "参数1",
+        "jp": "参数1",
+        "kor": "参数1",
+        "$files": [
+            "pages/assignment/component/addActionPointDialog/index.tsx",
+            "pages/assignment/component/addTaskDialog/ActionPointParams.tsx"
+        ]
+    },
+    "参数2": {
+        "en": "参数2",
+        "jp": "参数2",
+        "kor": "参数2",
+        "$files": [
+            "pages/assignment/component/addActionPointDialog/index.tsx",
+            "pages/assignment/component/addTaskDialog/ActionPointParams.tsx"
+        ]
+    },
+    "参数3": {
+        "en": "参数3",
+        "jp": "参数3",
+        "kor": "参数3",
+        "$files": [
+            "pages/assignment/component/addActionPointDialog/index.tsx",
+            "pages/assignment/component/addTaskDialog/ActionPointParams.tsx"
+        ]
+    },
+    "参数4": {
+        "en": "参数4",
+        "jp": "参数4",
+        "kor": "参数4",
+        "$files": [
+            "pages/assignment/component/addActionPointDialog/index.tsx",
+            "pages/assignment/component/addTaskDialog/ActionPointParams.tsx"
+        ]
+    },
+    "轴id": {
+        "en": "轴id",
+        "jp": "轴id",
+        "kor": "轴id",
+        "$files": [
+            "pages/assignment/component/addActionPointDialog/index.tsx",
+            "pages/assignment/component/addTaskDialog/ActionPointParams.tsx"
+        ]
+    },
+    "停止角度": {
+        "en": "停止角度",
+        "jp": "停止角度",
+        "kor": "停止角度",
+        "$files": [
+            "pages/assignment/component/addActionPointDialog/index.tsx"
+        ]
+    },
+    "单位: 秒": {
+        "en": "单位: 秒",
+        "jp": "单位: 秒",
+        "kor": "单位: 秒",
+        "$files": [
+            "pages/assignment/component/addActionPointDialog/index.tsx"
+        ]
+    },
+    "附加信息": {
+        "en": "附加信息",
+        "jp": "附加信息",
+        "kor": "附加信息",
+        "$files": [
+            "pages/assignment/component/addActionPointDialog/index.tsx"
+        ]
+    },
+    "添加": {
+        "en": "添加",
+        "jp": "添加",
+        "kor": "添加",
+        "$files": [
+            "pages/assignment/component/addActionPointDialog/index.tsx",
+            "pages/assignment/component/addTaskDialog/ActionPointParams.tsx"
+        ]
+    },
+    "自动结束": {
+        "en": "自动结束",
+        "jp": "自动结束",
+        "kor": "自动结束",
+        "$files": [
+            "pages/assignment/component/addTaskDialog/ActionPointList.tsx"
+        ]
+    },
+    "上移": {
+        "en": "上移",
+        "jp": "上移",
+        "kor": "上移",
+        "$files": [
+            "pages/assignment/component/addTaskDialog/ActionPointList.tsx"
+        ]
+    },
+    "任务参数：": {
+        "en": "任务参数：",
+        "jp": "任务参数：",
+        "kor": "任务参数：",
+        "$files": [
+            "pages/assignment/component/addTaskDialog/TaskParams.tsx"
+        ]
+    },
+    "指定车辆": {
+        "en": "指定车辆",
+        "jp": "指定车辆",
+        "kor": "指定车辆",
+        "$files": [
+            "pages/assignment/component/addTaskDialog/TaskParams.tsx"
+        ]
+    },
+    "是否自动结束任务": {
+        "en": "是否自动结束任务",
+        "jp": "是否自动结束任务",
+        "kor": "是否自动结束任务",
+        "$files": [
+            "pages/assignment/component/addTaskDialog/TaskParams.tsx"
+        ]
+    },
+    "请输入命令后再保存数据": {
+        "en": "请输入命令后再保存数据",
+        "jp": "请输入命令后再保存数据",
+        "kor": "请输入命令后再保存数据",
+        "$files": [
+            "pages/assignment/component/addTaskDialog/index.tsx"
+        ]
+    },
+    "新增任务": {
+        "en": "新增任务",
+        "jp": "新增任务",
+        "kor": "新增任务",
+        "$files": [
+            "pages/assignment/component/addTaskDialog/index.tsx"
+        ]
+    },
+    "循环次数：": {
+        "en": "循环次数：",
+        "jp": "循环次数：",
+        "kor": "循环次数：",
+        "$files": [
+            "pages/assignment/component/addTaskDialog/index.tsx"
+        ]
+    },
+    "清空": {
+        "en": "清空",
+        "jp": "清空",
+        "kor": "清空",
+        "$files": [
+            "pages/assignment/component/addTaskDialog/index.tsx"
+        ]
+    },
+    "充电类型": {
+        "en": "充电类型",
+        "jp": "充电类型",
+        "kor": "充电类型",
+        "$files": [
+            "pages/configuration/c-pages/charge/components/add.tsx",
+            "pages/configuration/c-pages/charge/components/edit.tsx"
+        ]
+    },
+    "时间": {
+        "en": "时间",
+        "jp": "时间",
+        "kor": "时间",
+        "$files": [
+            "pages/configuration/c-pages/charge/components/add.tsx",
+            "pages/configuration/c-pages/charge/components/edit.tsx"
+        ]
+    },
+    "百分比": {
+        "en": "百分比",
+        "jp": "百分比",
+        "kor": "百分比",
+        "$files": [
+            "pages/configuration/c-pages/charge/components/add.tsx",
+            "pages/configuration/c-pages/charge/components/edit.tsx"
+        ]
+    },
+    "开始小时": {
+        "en": "开始小时",
+        "jp": "开始小时",
+        "kor": "开始小时",
+        "$files": [
+            "pages/configuration/c-pages/charge/components/add.tsx",
+            "pages/configuration/c-pages/charge/components/edit.tsx"
+        ]
+    },
+    "结束小时": {
+        "en": "结束小时",
+        "jp": "结束小时",
+        "kor": "结束小时",
+        "$files": [
+            "pages/configuration/c-pages/charge/components/add.tsx",
+            "pages/configuration/c-pages/charge/components/edit.tsx"
+        ]
+    },
+    "起始分钟": {
+        "en": "起始分钟",
+        "jp": "起始分钟",
+        "kor": "起始分钟",
+        "$files": [
+            "pages/configuration/c-pages/charge/components/add.tsx",
+            "pages/configuration/c-pages/charge/components/edit.tsx"
+        ]
+    },
+    "结束分钟": {
+        "en": "结束分钟",
+        "jp": "结束分钟",
+        "kor": "结束分钟",
+        "$files": [
+            "pages/configuration/c-pages/charge/components/add.tsx",
+            "pages/configuration/c-pages/charge/components/edit.tsx"
+        ]
+    },
+    "低电量百分比": {
+        "en": "低电量百分比",
+        "jp": "低电量百分比",
+        "kor": "低电量百分比",
+        "$files": [
+            "pages/configuration/c-pages/charge/components/add.tsx",
+            "pages/configuration/c-pages/charge/components/edit.tsx"
+        ]
+    },
+    "高电量百分比": {
+        "en": "高电量百分比",
+        "jp": "高电量百分比",
+        "kor": "高电量百分比",
+        "$files": [
+            "pages/configuration/c-pages/charge/components/add.tsx",
+            "pages/configuration/c-pages/charge/components/edit.tsx"
+        ]
+    },
+    "空闲时间": {
+        "en": "空闲时间",
+        "jp": "空闲时间",
+        "kor": "空闲时间",
+        "$files": [
+            "pages/configuration/c-pages/charge/components/add.tsx",
+            "pages/configuration/c-pages/charge/components/edit.tsx"
+        ]
+    },
+    "充电时间": {
+        "en": "充电时间",
+        "jp": "充电时间",
+        "kor": "充电时间",
+        "$files": [
+            "pages/configuration/c-pages/charge/components/add.tsx",
+            "pages/configuration/c-pages/charge/components/edit.tsx"
+        ]
+    },
+    "充电百分比": {
+        "en": "充电百分比",
+        "jp": "充电百分比",
+        "kor": "充电百分比",
+        "$files": [
+            "pages/configuration/c-pages/charge/components/add.tsx",
+            "pages/configuration/c-pages/charge/components/edit.tsx"
+        ]
+    },
+    "新增充电策略": {
+        "en": "新增充电策略",
+        "jp": "新增充电策略",
+        "kor": "新增充电策略",
+        "$files": [
+            "pages/configuration/c-pages/charge/components/add.tsx"
+        ]
+    },
+    "“车辆编号与车辆类型必设置一个”（同时设置仅车辆编号生效）": {
+        "en": "“车辆编号与车辆类型必设置一个”（同时设置仅车辆编号生效）",
+        "jp": "“车辆编号与车辆类型必设置一个”（同时设置仅车辆编号生效）",
+        "kor": "“车辆编号与车辆类型必设置一个”（同时设置仅车辆编号生效）",
+        "$files": [
+            "pages/configuration/c-pages/charge/components/add.tsx"
+        ]
+    },
+    "修改充电策略": {
+        "en": "修改充电策略",
+        "jp": "修改充电策略",
+        "kor": "修改充电策略",
+        "$files": [
+            "pages/configuration/c-pages/charge/components/edit.tsx"
+        ]
+    },
+    "区域": {
+        "en": "区域",
+        "jp": "区域",
+        "kor": "区域",
+        "$files": [
+            "pages/configuration/c-pages/point/components/add.tsx",
+            "pages/configuration/c-pages/point/components/edit.tsx"
+        ]
+    },
+    "添加站点": {
+        "en": "添加站点",
+        "jp": "添加站点",
+        "kor": "添加站点",
+        "$files": [
+            "pages/configuration/c-pages/point/components/add.tsx"
+        ]
+    },
+    "修改站点": {
+        "en": "修改站点",
+        "jp": "修改站点",
+        "kor": "修改站点",
+        "$files": [
+            "pages/configuration/c-pages/point/components/edit.tsx"
+        ]
+    },
+    "请输入路径编号": {
+        "en": "请输入路径编号",
+        "jp": "请输入路径编号",
+        "kor": "请输入路径编号",
+        "$files": [
+            "pages/configuration/c-pages/point/components/edit.tsx"
+        ]
+    },
+    "待命点配置": {
+        "en": "待命点配置",
+        "jp": "待命点配置",
+        "kor": "待命点配置",
+        "$files": [
+            "pages/configuration/c-pages/standByPoint/components/config.tsx"
+        ]
+    },
+    "空闲间隔": {
+        "en": "空闲间隔",
+        "jp": "空闲间隔",
+        "kor": "空闲间隔",
+        "$files": [
+            "pages/configuration/c-pages/standByPoint/components/config.tsx"
+        ]
+    },
+    "待命点": {
+        "en": "待命点",
+        "jp": "待命点",
+        "kor": "待命点",
+        "$files": [
+            "pages/configuration/c-pages/standByPoint/components/config.tsx"
+        ]
+    },
+    "添加车型": {
+        "en": "添加车型",
+        "jp": "添加车型",
+        "kor": "添加车型",
+        "$files": [
+            "pages/configuration/c-pages/vehicleType/components/add.tsx"
+        ]
+    },
+    "修改车型": {
+        "en": "修改车型",
+        "jp": "修改车型",
+        "kor": "修改车型",
+        "$files": [
+            "pages/configuration/c-pages/vehicleType/components/edit.tsx"
+        ]
+    },
+    "超时": {
+        "en": "超时",
+        "jp": "超时",
+        "kor": "超时",
+        "$files": [
+            "pages/configuration/c-pages/event/components/add.tsx",
+            "pages/configuration/c-pages/event/components/edit.tsx"
+        ]
+    },
+    "延时": {
+        "en": "延时",
+        "jp": "延时",
+        "kor": "延时",
+        "$files": [
+            "pages/configuration/c-pages/event/components/add.tsx",
+            "pages/configuration/c-pages/event/components/edit.tsx"
+        ]
+    },
+    "添加事件": {
+        "en": "添加事件",
+        "jp": "添加事件",
+        "kor": "添加事件",
+        "$files": [
+            "pages/configuration/c-pages/event/components/add.tsx"
+        ]
+    },
+    "修改事件": {
+        "en": "修改事件",
+        "jp": "修改事件",
+        "kor": "修改事件",
+        "$files": [
+            "pages/configuration/c-pages/event/components/edit.tsx"
+        ]
+    },
+    "路径数据文件": {
+        "en": "路径数据文件",
+        "jp": "路径数据文件",
+        "kor": "路径数据文件",
+        "$files": [
+            "pages/configuration/c-pages/map/components/add.tsx",
+            "pages/configuration/c-pages/map/components/import.tsx"
+        ]
+    },
+    "地图XMin": {
+        "en": "地图XMin",
+        "jp": "地图XMin",
+        "kor": "地图XMin",
+        "$files": [
+            "pages/configuration/c-pages/map/components/add.tsx",
+            "pages/configuration/c-pages/map/components/edit.tsx"
+        ]
+    },
+    "地图XMax": {
+        "en": "地图XMax",
+        "jp": "地图XMax",
+        "kor": "地图XMax",
+        "$files": [
+            "pages/configuration/c-pages/map/components/add.tsx",
+            "pages/configuration/c-pages/map/components/edit.tsx"
+        ]
+    },
+    "地图YMin": {
+        "en": "地图YMin",
+        "jp": "地图YMin",
+        "kor": "地图YMin",
+        "$files": [
+            "pages/configuration/c-pages/map/components/add.tsx",
+            "pages/configuration/c-pages/map/components/edit.tsx"
+        ]
+    },
+    "地图YMax": {
+        "en": "地图YMax",
+        "jp": "地图YMax",
+        "kor": "地图YMax",
+        "$files": [
+            "pages/configuration/c-pages/map/components/add.tsx",
+            "pages/configuration/c-pages/map/components/edit.tsx"
+        ]
+    },
+    "地图缩放": {
+        "en": "地图缩放",
+        "jp": "地图缩放",
+        "kor": "地图缩放",
+        "$files": [
+            "pages/configuration/c-pages/map/components/add.tsx",
+            "pages/configuration/c-pages/map/components/edit.tsx"
+        ]
+    },
+    "路径Xmin": {
+        "en": "路径Xmin",
+        "jp": "路径Xmin",
+        "kor": "路径Xmin",
+        "$files": [
+            "pages/configuration/c-pages/map/components/add.tsx",
+            "pages/configuration/c-pages/map/components/edit.tsx"
+        ]
+    },
+    "路径XMax": {
+        "en": "路径XMax",
+        "jp": "路径XMax",
+        "kor": "路径XMax",
+        "$files": [
+            "pages/configuration/c-pages/map/components/add.tsx",
+            "pages/configuration/c-pages/map/components/edit.tsx"
+        ]
+    },
+    "路径YMin": {
+        "en": "路径YMin",
+        "jp": "路径YMin",
+        "kor": "路径YMin",
+        "$files": [
+            "pages/configuration/c-pages/map/components/add.tsx",
+            "pages/configuration/c-pages/map/components/edit.tsx"
+        ]
+    },
+    "路径YMax": {
+        "en": "路径YMax",
+        "jp": "路径YMax",
+        "kor": "路径YMax",
+        "$files": [
+            "pages/configuration/c-pages/map/components/add.tsx",
+            "pages/configuration/c-pages/map/components/edit.tsx"
+        ]
+    },
+    "请选择路径数据文件": {
+        "en": "请选择路径数据文件",
+        "jp": "请选择路径数据文件",
+        "kor": "请选择路径数据文件",
+        "$files": [
+            "pages/configuration/c-pages/map/components/add.tsx"
+        ]
+    },
+    "修改路径文件": {
+        "en": "修改路径文件",
+        "jp": "修改路径文件",
+        "kor": "修改路径文件",
+        "$files": [
+            "pages/configuration/c-pages/map/components/edit.tsx"
+        ]
+    },
+    "上传文件": {
+        "en": "上传文件",
+        "jp": "上传文件",
+        "kor": "上传文件",
+        "$files": [
+            "pages/configuration/c-pages/map/components/import.tsx"
+        ]
+    },
+    "电量统计": {
+        "en": "电量统计",
+        "jp": "电量统计",
+        "kor": "电量统计",
+        "$files": [
+            "pages/stats/c-pages/vehicle-operation/components/electricity/index.tsx"
+        ]
+    },
+    "充电次数": {
+        "en": "充电次数",
+        "jp": "充电次数",
+        "kor": "充电次数",
+        "$files": [
+            "pages/stats/c-pages/vehicle-operation/components/electricity/index.tsx"
+        ]
+    },
+    "累计充满电次数": {
+        "en": "累计充满电次数",
+        "jp": "累计充满电次数",
+        "kor": "累计充满电次数",
+        "$files": [
+            "pages/stats/c-pages/vehicle-operation/components/electricity/index.tsx"
+        ]
+    },
+    "个": {
+        "en": "个",
+        "jp": "个",
+        "kor": "个",
+        "$files": [
+            "pages/stats/c-pages/vehicle-operation/components/finishedTasks/index.tsx"
+        ]
+    },
+    "车辆完成任务数": {
+        "en": "车辆完成任务数",
+        "jp": "车辆完成任务数",
+        "kor": "车辆完成任务数",
+        "$files": [
+            "pages/stats/c-pages/vehicle-operation/components/finishedTasks/index.tsx"
+        ]
+    },
+    "车辆运行时间占比": {
+        "en": "车辆运行时间占比",
+        "jp": "车辆运行时间占比",
+        "kor": "车辆运行时间占比",
+        "$files": [
+            "pages/stats/c-pages/vehicle-operation/components/elapsedTimeRatio/index.tsx"
+        ]
+    },
+    "运行": {
+        "en": "运行",
+        "jp": "运行",
+        "kor": "运行",
+        "$files": [
+            "pages/stats/c-pages/vehicle-operation/components/elapsedTimeRatio/index.tsx"
+        ]
+    },
+    "充电": {
+        "en": "充电",
+        "jp": "充电",
+        "kor": "充电",
+        "$files": [
+            "pages/stats/c-pages/vehicle-operation/components/elapsedTimeRatio/index.tsx"
+        ]
+    },
+    "堵车": {
+        "en": "堵车",
+        "jp": "堵车",
+        "kor": "堵车",
+        "$files": [
+            "pages/stats/c-pages/vehicle-operation/components/elapsedTimeRatio/index.tsx"
+        ]
+    },
+    "待命": {
+        "en": "待命",
+        "jp": "待命",
+        "kor": "待命",
+        "$files": [
+            "pages/stats/c-pages/vehicle-operation/components/elapsedTimeRatio/index.tsx"
+        ]
+    },
+    "效率统计": {
+        "en": "效率统计",
+        "jp": "效率统计",
+        "kor": "效率统计",
+        "$files": [
+            "pages/stats/c-pages/vehicle-operation/components/efficiency/index.tsx"
+        ]
+    },
+    "车辆利用率": {
+        "en": "车辆利用率",
+        "jp": "车辆利用率",
+        "kor": "车辆利用率",
+        "$files": [
+            "pages/stats/c-pages/vehicle-operation/components/efficiency/index.tsx",
+            "pages/stats/c-pages/vehicle-operation/components/efficiency/components/percentagePieChart/index.tsx"
+        ]
+    },
+    "无故障率": {
+        "en": "无故障率",
+        "jp": "无故障率",
+        "kor": "无故障率",
+        "$files": [
+            "pages/stats/c-pages/vehicle-operation/components/efficiency/index.tsx"
+        ]
+    },
+    "交管占比": {
+        "en": "交管占比",
+        "jp": "交管占比",
+        "kor": "交管占比",
+        "$files": [
+            "pages/stats/c-pages/vehicle-operation/components/efficiency/index.tsx"
+        ]
+    },
+    "开始时间": {
+        "en": "开始时间",
+        "jp": "开始时间",
+        "kor": "开始时间",
+        "$files": [
+            "pages/stats/c-pages/vehicle-operation/components/searchArea/index.tsx"
+        ]
+    },
+    "结束时间": {
+        "en": "结束时间",
+        "jp": "结束时间",
+        "kor": "结束时间",
+        "$files": [
+            "pages/stats/c-pages/vehicle-operation/components/searchArea/index.tsx"
+        ]
+    },
+    "搜索": {
+        "en": "搜索",
+        "jp": "搜索",
+        "kor": "搜索",
+        "$files": [
+            "pages/stats/c-pages/vehicle-operation/components/searchArea/index.tsx"
+        ]
+    },
+    "公里": {
+        "en": "公里",
+        "jp": "公里",
+        "kor": "公里",
+        "$files": [
+            "pages/stats/c-pages/vehicle-operation/components/mileage/index.tsx"
+        ]
+    },
+    "车辆运行公里数": {
+        "en": "车辆运行公里数",
+        "jp": "车辆运行公里数",
+        "kor": "车辆运行公里数",
+        "$files": [
+            "pages/stats/c-pages/vehicle-operation/components/mileage/index.tsx"
+        ]
+    },
+    "无故障时间": {
+        "en": "无故障时间",
+        "jp": "无故障时间",
+        "kor": "无故障时间",
+        "$files": [
+            "pages/stats/c-pages/vehicle-operation/components/noFaultTime/index.tsx"
+        ]
+    },
+    "稼动率统计": {
+        "en": "稼动率统计",
+        "jp": "稼动率统计",
+        "kor": "稼动率统计",
+        "$files": [
+            "pages/stats/c-pages/vehicle-operation/components/utilizationRate/index.tsx"
+        ]
+    }
+}

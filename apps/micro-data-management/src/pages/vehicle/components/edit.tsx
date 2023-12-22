@@ -1,3 +1,4 @@
+import { useVoerkaI18n } from '@voerkai18n/react'
 import { postUpdateCarrier } from 'apis'
 import * as React from 'react'
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, MaterialForm, nygFormik, useTheme } from 'ui'
@@ -11,6 +12,7 @@ const EditDialog: React.FC<{
   callback?: () => void
   row?: Record<string, any>
 }> = ({ open, chassisData = [], areaInfosOptions = [], onClose = () => {}, callback, row = {} }) => {
+  const { t } = useVoerkaI18n()
   const theme = useTheme()
   const formRef = React.useRef<nygFormik>(null)
 
@@ -21,13 +23,17 @@ const EditDialog: React.FC<{
   }, [row, formRef, areaInfosOptions])
 
   const vehicleTypeOptions = React.useMemo(
-    () => dictsTransform(chassisData, 'model', 'id') as { label: string; value: string }[],
+    () =>
+      dictsTransform(chassisData, 'model', 'id') as {
+        label: string
+        value: string
+      }[],
     [chassisData]
   )
 
   return (
     <Dialog maxWidth="md" open={open} onClose={onClose}>
-      <DialogTitle>修改车辆配置信息</DialogTitle>
+      <DialogTitle>{t('修改车辆配置信息')}</DialogTitle>
       <DialogContent
         sx={{
           py: `${theme.spacing(3.25)} !important`
@@ -39,29 +45,29 @@ const EditDialog: React.FC<{
           schemaObject={[
             {
               name: 'ip',
-              label: '车辆IP',
+              label: t('车辆IP'),
               type: 'text'
             },
             {
               name: 'name',
-              label: '车体名称',
+              label: t('车体名称'),
               type: 'text'
             },
             {
               name: 'id',
-              label: '车辆编号',
+              label: t('车辆编号'),
               type: 'text',
               disabled: true
             },
             {
               name: 'chassisID',
-              label: '车辆类型',
+              label: t('车辆类型'),
               type: 'select',
               items: vehicleTypeOptions
             },
             {
               name: 'area',
-              label: '车辆分组',
+              label: t('车辆分组'),
               type: 'autoComplete',
               multiple: true,
               items: areaInfosOptions
@@ -89,10 +95,10 @@ const EditDialog: React.FC<{
             }
           }}
         >
-          保存
+          {t('保存')}
         </Button>
         <Button color="warning" onClick={onClose}>
-          关闭
+          {t('关闭')}
         </Button>
       </DialogActions>
     </Dialog>

@@ -1,4 +1,5 @@
 import DeleteIcon from '@mui/icons-material/Delete'
+import { useVoerkaI18n } from '@voerkai18n/react'
 import { bindMenu, bindTrigger, usePopupState } from 'material-ui-popup-state/hooks'
 import * as React from 'react'
 import { Box, Button, ButtonProps, Menu } from 'ui'
@@ -7,7 +8,8 @@ export interface IDelButtonProps extends ButtonProps {
   children?: React.ReactNode
 }
 const DelButton = (props: IDelButtonProps) => {
-  const { delFn, children = '删除', ...restProps } = props
+  const { t } = useVoerkaI18n()
+  const { delFn, children = t('删除'), ...restProps } = props
   const popupState = usePopupState({ variant: 'popover', popupId: 'demoMenu' })
   return (
     <div>
@@ -25,10 +27,10 @@ const DelButton = (props: IDelButtonProps) => {
               popupState.close()
             }}
           >
-            确定
+            {t('确定')}
           </Button>
           <Button size="small" variant="outlined" onClick={popupState.close}>
-            取消
+            {t('取消')}
           </Button>
         </Box>
       </Menu>

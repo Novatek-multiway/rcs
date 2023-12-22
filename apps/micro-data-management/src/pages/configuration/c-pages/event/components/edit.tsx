@@ -1,3 +1,4 @@
+import { useVoerkaI18n } from '@voerkai18n/react'
 import { useRequest } from 'ahooks'
 import { UpdateEvent } from 'apis'
 import * as React from 'react'
@@ -25,6 +26,7 @@ const EditDialog: React.FC<{
   callback?: () => void
   row?: Record<string, any>
 }> = ({ open, onClose = () => {}, callback, chassisList = [], vertexData = [], edgesData = [], row = {} }) => {
+  const { t } = useVoerkaI18n()
   const { runAsync: run } = useRequest(UpdateEvent, {
     manual: true
   })
@@ -43,14 +45,14 @@ const EditDialog: React.FC<{
   const schemaObject = [
     {
       name: 'description',
-      label: '事件描述',
+      label: t('事件描述'),
       type: 'text',
       required: true
       // type: "select",
     },
     {
       name: 'genus',
-      label: '元素类型',
+      label: t('元素类型'),
       type: 'select',
       items: dicts['GraphGenus'],
       onChange: (e: SelectChangeEvent) => {
@@ -60,39 +62,39 @@ const EditDialog: React.FC<{
     },
     {
       name: 'routeKey',
-      label: '路径ID',
+      label: t('路径ID'),
       type: 'autoComplete',
       items: routeKeyOptions
       // type: "select",
     },
     {
       name: 'carrierType',
-      label: '车辆类型',
+      label: t('车辆类型'),
       type: 'select',
       items: chassisList
     },
     {
       name: 'doTime',
-      label: '执行阶段',
+      label: t('执行阶段'),
       type: 'select',
       items: dicts['EventTime']
     },
     {
       name: 'waitTime',
-      label: '等待阶段',
+      label: t('等待阶段'),
       type: 'select',
       items: dicts['EventTime']
     },
 
     {
       name: 'eventType',
-      label: '事件类型',
+      label: t('事件类型'),
       type: 'select',
       items: dicts['EventType']
     },
     {
       name: 'timeOut',
-      label: '超时',
+      label: t('超时'),
       type: 'number',
       inputProps: {
         min: 0,
@@ -103,7 +105,7 @@ const EditDialog: React.FC<{
     },
     {
       name: 'delay',
-      label: '延时',
+      label: t('延时'),
       type: 'number',
       inputProps: {
         min: 0,
@@ -114,7 +116,7 @@ const EditDialog: React.FC<{
     },
     {
       name: 'priority',
-      label: '优先级',
+      label: t('优先级'),
       type: 'number',
       inputProps: {
         min: 0,
@@ -125,7 +127,7 @@ const EditDialog: React.FC<{
     },
     {
       name: 'checkHasGoods',
-      label: '载货判断',
+      label: t('载货判断'),
       type: 'select',
       items: dicts['CheckGoods']
     }
@@ -133,7 +135,7 @@ const EditDialog: React.FC<{
 
   return (
     <Dialog maxWidth="md" open={open} onClose={onClose}>
-      <DialogTitle>修改事件</DialogTitle>
+      <DialogTitle>{t('修改事件')}</DialogTitle>
       <DialogContent
         sx={{
           py: `${theme.spacing(3.25)} !important`
@@ -172,10 +174,10 @@ const EditDialog: React.FC<{
             }
           }}
         >
-          保存
+          {t('保存')}
         </Button>
         <Button color="warning" onClick={onClose}>
-          关闭
+          {t('关闭')}
         </Button>
       </DialogActions>
     </Dialog>

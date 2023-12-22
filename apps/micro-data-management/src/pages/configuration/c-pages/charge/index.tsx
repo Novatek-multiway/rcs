@@ -1,6 +1,7 @@
 import AddIcon from '@mui/icons-material/Add'
 import EditNoteIcon from '@mui/icons-material/EditNote'
 import EuroIcon from '@mui/icons-material/Euro'
+import { useVoerkaI18n } from '@voerkai18n/react'
 import { useRequest } from 'ahooks'
 import { DelRule, GetRuleChargingPiles, GetRuleChassisInfos, GetRuleControlStates, GetRules } from 'apis'
 import type { FC, ReactNode } from 'react'
@@ -21,6 +22,7 @@ interface IProps {
 
 // 车型配置
 const VehicleType: FC<IProps> = () => {
+  const { t } = useVoerkaI18n()
   const [open, setOpen] = React.useState(false)
   const [editOpen, setEditOpen] = React.useState(false)
   const [row, setRow] = React.useState({})
@@ -39,28 +41,28 @@ const VehicleType: FC<IProps> = () => {
   const columns = [
     {
       accessorKey: 'id',
-      header: '编号',
+      header: t('编号'),
       size: 50
     },
     {
       accessorKey: 'name',
-      header: '策略名称',
+      header: t('策略名称'),
       size: 150
     },
     {
       accessorKey: 'planName',
       enableFilters: true,
-      header: '计划名称',
+      header: t('计划名称'),
       size: 80
     },
     {
       accessorKey: 'carrierKeys',
-      header: '车辆编号',
+      header: t('车辆编号'),
       size: 50
     },
     {
       accessorKey: 'carrierType',
-      header: '车辆类型',
+      header: t('车辆类型'),
       Cell: ({ row }) => {
         const { original } = row
         const tyles = dictsTransform(ruleCarrierData?.data, 'model', 'id')?.find(
@@ -87,22 +89,22 @@ const VehicleType: FC<IProps> = () => {
     },
     {
       accessorKey: 'priority',
-      header: '任务优先级',
+      header: t('任务优先级'),
       size: 50
     },
     {
       accessorKey: 'level',
-      header: '规则优先级',
+      header: t('规则优先级'),
       size: 50
     },
     {
       accessorKey: 'timeLimit',
-      header: '空闲时间（m）',
+      header: t('空闲时间（m）'),
       size: 100
     },
     {
       accessorKey: 'limitBattery',
-      header: '电量区间（%）',
+      header: t('电量区间（%）'),
       Cell: ({ row }) => {
         const { minLimitBattery, maxLimitBattery } = row.original
         return (
@@ -115,7 +117,7 @@ const VehicleType: FC<IProps> = () => {
     },
     {
       accessorKey: 'strategyTime',
-      header: '策略时间',
+      header: t('策略时间'),
       Cell: ({ row }) => {
         const { startHour, startMinute, endHour, endMinute } = row.original
         const padZero = (n: number) => (n + '').padEnd(2, '0')
@@ -131,16 +133,22 @@ const VehicleType: FC<IProps> = () => {
       Cell: ({ row }) => {
         const { original } = row
         const isTime = original.completeType === 3
-        const message = isTime ? `充电 ${original.completeTime} 分钟` : `充至电量 ${original.completePercent} %`
+        const message = isTime
+          ? t('充电{{completeTime}}分钟', {
+              completeTime: original.completeTime
+            })
+          : t('充至电量{{completePercent}}%', {
+              completePercent: original.completePercent
+            })
         return <span>{message}</span>
       },
-      header: '充电策略',
+      header: t('充电策略'),
       size: 140
     },
 
     {
       accessorKey: 'pileKeys',
-      header: '充电桩',
+      header: t('充电桩'),
       Cell: ({ row }) => {
         const { original } = row
         const pileKeys = original.pileKeys
@@ -151,7 +159,7 @@ const VehicleType: FC<IProps> = () => {
     },
     {
       accessorKey: 'actions',
-      header: '操作',
+      header: t('操作'),
       enableColumnFilter: false,
       enableSorting: false,
       Cell: ({ row }) => {
@@ -174,7 +182,7 @@ const VehicleType: FC<IProps> = () => {
               }}
               startIcon={<EditNoteIcon />}
             >
-              修改
+              {t('修改')}
             </Button>
             <DelButton
               delFn={async () => {
@@ -221,11 +229,11 @@ const VehicleType: FC<IProps> = () => {
                 }}
               >
                 <Refresh loading={loading}></Refresh>
-                刷新
+                {t('刷新')}
               </Button>
               <Button variant="outlined" size="small" color="primary" onClick={() => setOpen(true)}>
                 <AddIcon />
-                新增
+                {t('新增')}
               </Button>
             </Box>
           )
@@ -248,6 +256,7 @@ const VehicleType: FC<IProps> = () => {
         enableColumnActions={false}
         enableColumnFilters={false}
       />
+
       <AddDialog
         open={open}
         onClose={() => setOpen(false)}
@@ -259,6 +268,7 @@ const VehicleType: FC<IProps> = () => {
           getChass()
         }}
       />
+
       <EditDialog
         open={editOpen}
         row={row}

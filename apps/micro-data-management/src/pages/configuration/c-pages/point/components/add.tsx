@@ -1,3 +1,4 @@
+import { useVoerkaI18n } from '@voerkai18n/react'
 import { useRequest } from 'ahooks'
 import { CreateStationInfos } from 'apis'
 import * as React from 'react'
@@ -14,24 +15,6 @@ import {
   useTheme
 } from 'ui'
 
-const standByPointSchema = [
-  {
-    name: 'HomeGroup',
-    label: '待命点分组',
-    type: 'number'
-  },
-  {
-    name: 'HomeGroupType',
-    label: '待命点类型',
-    type: 'number'
-  },
-  {
-    name: 'HomeGroupPriority',
-    label: '待命点优先级',
-    type: 'number'
-  }
-]
-
 const AddDialog: React.FC<{
   open: boolean
   vertexData?: any
@@ -40,6 +23,7 @@ const AddDialog: React.FC<{
   onClose?: () => void
   callback?: () => void
 }> = ({ open, onClose = () => {}, callback, vertexData = [], chassisList = [] }) => {
+  const { t } = useVoerkaI18n()
   const { runAsync: run } = useRequest(CreateStationInfos, {
     manual: true
   })
@@ -49,10 +33,27 @@ const AddDialog: React.FC<{
 
   const [isStandByPoint, setIsStandByPoint] = React.useState<boolean>(false)
 
+  const standByPointSchema = [
+    {
+      name: 'HomeGroup',
+      label: t('待命点分组'),
+      type: 'number'
+    },
+    {
+      name: 'HomeGroupType',
+      label: t('待命点类型'),
+      type: 'number'
+    },
+    {
+      name: 'HomeGroupPriority',
+      label: t('待命点优先级'),
+      type: 'number'
+    }
+  ]
   const commonSchema = [
     {
       name: 'PointKey',
-      label: '路径编号',
+      label: t('路径编号'),
       type: 'autoComplete',
       required: true,
       items: vertexData
@@ -60,7 +61,7 @@ const AddDialog: React.FC<{
     },
     {
       name: 'Priority',
-      label: '优先级',
+      label: t('优先级'),
       type: 'number',
       inputProps: {
         min: 0,
@@ -71,34 +72,34 @@ const AddDialog: React.FC<{
     },
     {
       name: 'Type',
-      label: '站点类型',
+      label: t('站点类型'),
       type: 'select',
       items: dicts['StationType'],
       onChange: (e: any) => setIsStandByPoint(e.target.value + '' === '2')
     },
     {
       name: 'AreaID',
-      label: '区域',
+      label: t('区域'),
       type: 'autoComplete',
       multiple: true,
       items: vertexData
     },
     {
       name: 'CarrierType',
-      label: '车辆类型',
+      label: t('车辆类型'),
       type: 'select',
       items: chassisList
     },
     {
       name: 'Name',
-      label: '名称',
+      label: t('名称'),
       type: 'text'
     }
   ]
 
   return (
     <Dialog maxWidth="md" open={open} onClose={onClose}>
-      <DialogTitle>添加站点</DialogTitle>
+      <DialogTitle>{t('添加站点')}</DialogTitle>
       <DialogContent
         sx={{
           py: `${theme.spacing(3.25)} !important`
@@ -155,10 +156,10 @@ const AddDialog: React.FC<{
             }
           }}
         >
-          保存
+          {t('保存')}
         </Button>
         <Button color="warning" onClick={onClose}>
-          关闭
+          {t('关闭')}
         </Button>
       </DialogActions>
     </Dialog>

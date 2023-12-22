@@ -1,6 +1,7 @@
 import './style.css'
 
 import ReactDOM from 'react-dom'
+import { useGlobalStore } from 'store'
 // import * as ReactDOM from "react-dom/client";
 import { qiankunWindow, renderWithQiankun } from 'vite-plugin-qiankun/dist/helper'
 
@@ -22,6 +23,9 @@ renderWithQiankun({
   },
   mount(props: any) {
     console.log(`[${appName}] mount`, props)
+    props.onGlobalStateChange((state: Record<string, any>) => {
+      state && useGlobalStore.getState().setGlobalState(state)
+    })
     start(props)
   },
   update(props: any) {

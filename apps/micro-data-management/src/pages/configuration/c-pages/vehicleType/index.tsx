@@ -1,5 +1,6 @@
 import AddIcon from '@mui/icons-material/Add'
 import EditNoteIcon from '@mui/icons-material/EditNote'
+import { useVoerkaI18n } from '@voerkai18n/react'
 import { useRequest, useUpdateEffect } from 'ahooks'
 import { delChassisInfos, getChassisInfos } from 'apis'
 import type { FC, ReactNode } from 'react'
@@ -19,6 +20,7 @@ interface IProps {
 
 // 车型配置
 const VehicleType: FC<IProps> = () => {
+  const { t } = useVoerkaI18n()
   const { dicts } = useDictStore()
   const [open, setOpen] = React.useState(false)
   const [editOpen, setEditOpen] = React.useState(false)
@@ -52,7 +54,7 @@ const VehicleType: FC<IProps> = () => {
     },
     {
       accessorKey: 'type',
-      header: '类型',
+      header: t('类型'),
       Cell: ({ row }) => {
         const { original } = row
         const tyles = dicts.CarrierType?.find((item) => item.value === original.type)
@@ -62,42 +64,42 @@ const VehicleType: FC<IProps> = () => {
     },
     {
       accessorKey: 'model',
-      header: '名称',
+      header: t('名称'),
       size: 120
     },
     {
       accessorKey: 'forcedCharge',
-      header: '强制充电电量',
+      header: t('强制充电电量'),
       size: 80
     },
     {
       accessorKey: 'noLoadOffsetX',
-      header: '空载偏移X',
+      header: t('空载偏移X'),
       size: 80
     },
     {
       accessorKey: 'noLoadOffsetY',
-      header: '空载偏移Y',
+      header: t('空载偏移Y'),
       size: 80
     },
     {
       accessorKey: 'noLoadWidth',
-      header: '空载车宽',
+      header: t('空载车宽'),
       size: 80
     },
     {
       accessorKey: 'noLoadLength',
-      header: '空载车长',
+      header: t('空载车长'),
       size: 80
     },
     {
       accessorKey: 'chassisModel',
-      header: '模型文件',
+      header: t('模型文件'),
       size: 140
     },
     {
       accessorKey: 'actions',
-      header: '操作',
+      header: t('操作'),
       enableSorting: false,
       Cell: ({ row }) => {
         return (
@@ -129,7 +131,7 @@ const VehicleType: FC<IProps> = () => {
               }}
               startIcon={<EditNoteIcon />}
             >
-              修改
+              {t('修改')}
             </Button>
             <DelButton
               delFn={async () => {
@@ -177,11 +179,11 @@ const VehicleType: FC<IProps> = () => {
                 }}
               >
                 <Refresh loading={loading}></Refresh>
-                刷新
+                {t('刷新')}
               </Button>
               <Button variant="outlined" size="small" color="primary" onClick={() => setOpen(true)}>
                 <AddIcon />
-                新增
+                {t('新增')}
               </Button>
             </Box>
           )
@@ -206,6 +208,7 @@ const VehicleType: FC<IProps> = () => {
         }}
         enableStickyHeader
       />
+
       <AddDialog
         open={open}
         onClose={() => setOpen(false)}
@@ -213,6 +216,7 @@ const VehicleType: FC<IProps> = () => {
           getChass()
         }}
       />
+
       <EditDialog open={editOpen} row={row} onClose={() => setEditOpen(false)} callback={() => getChass()} />
     </>
   )

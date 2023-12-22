@@ -17,6 +17,8 @@
     "@mui/icons-material": "latest",
     "@mui/lab": "5.0.0-alpha.142",
     "@types/lodash": "^4.14.200",
+    "@voerkai18n/react": "^2.0.30",
+    "@voerkai18n/runtime": "^2.0.30",
     "ahooks": "^3.7.8",
     "antd": "^5.10.3",
     "apis": "workspace:*",
@@ -40,6 +42,7 @@
     "@types/react": "latest",
     "@types/react-dom": "latest",
     "eslint-config-custom": "workspace:*",
+    "i18n-helper-cli": "^0.1.8",
     "typescript": "latest",
     "vite": "^4.4.5"
   }

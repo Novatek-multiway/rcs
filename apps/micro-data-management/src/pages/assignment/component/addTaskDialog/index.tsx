@@ -1,4 +1,5 @@
 import { Close } from '@mui/icons-material'
+import { useVoerkaI18n } from '@voerkai18n/react'
 import dayjs from 'dayjs'
 import { FC, memo, useCallback, useState } from 'react'
 import {
@@ -25,6 +26,7 @@ const AddTaskDialog: FC<{
   onClose?: () => void
   onSave?: (data: any) => void
 }> = ({ open, onClose = () => {}, onSave }) => {
+  const { t } = useVoerkaI18n()
   const [taskParams, setTaskParams] = useState<Pick<ITaskFormData, 'vehicleId' | 'priority' | 'isAutoCompleted'>>({
     vehicleId: null,
     priority: 1,
@@ -83,7 +85,7 @@ const AddTaskDialog: FC<{
 
   const handleSave = useCallback(async () => {
     if (!actionPointList.length) {
-      return toastWarn('请输入命令后再保存数据')
+      return toastWarn(t('请输入命令后再保存数据'))
     }
     const { isAutoCompleted, vehicleId, priority } = taskParams
     const taskGroupID = generateUUID()
@@ -125,6 +127,7 @@ const AddTaskDialog: FC<{
         completeTime: null
       }
     ]
+
     const createTaskData = {
       createTime: dayjs().format(),
       description: taskGroupID,
@@ -147,6 +150,7 @@ const AddTaskDialog: FC<{
       priority: 1,
       isAutoCompleted: true
     })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [actionPointList, loopCount, onSave, taskParams])
 
   return (
@@ -159,7 +163,7 @@ const AddTaskDialog: FC<{
           py: 0.5
         }}
       >
-        <span>新增任务</span>
+        <span>{t('新增任务')}</span>
         <IconButton onClick={onClose}>
           <Close />
         </IconButton>
@@ -195,7 +199,7 @@ const AddTaskDialog: FC<{
                   }}
                 >
                   <div className="count">
-                    <span>循环次数：</span>
+                    <span>{t('循环次数：')}</span>
                     <TextField
                       type="number"
                       size="small"
@@ -216,10 +220,10 @@ const AddTaskDialog: FC<{
                   </div>
                   <DialogActions>
                     <Button variant="contained" size="small" onClick={handleSave}>
-                      保存
+                      {t('保存')}
                     </Button>
                     <Button size="small" color="error" onClick={() => setActionPointList([])}>
-                      清空
+                      {t('清空')}
                     </Button>
                   </DialogActions>
                 </Paper>

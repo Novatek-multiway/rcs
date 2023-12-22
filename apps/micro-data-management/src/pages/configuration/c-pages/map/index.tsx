@@ -1,5 +1,6 @@
 import AddIcon from '@mui/icons-material/Add'
 import EditNoteIcon from '@mui/icons-material/EditNote'
+import { useVoerkaI18n } from '@voerkai18n/react'
 import { useRequest } from 'ahooks'
 import { ChangeActive, DeleteRouteFileInfo, GetChassisList, GetMapOptionPageList, GetRuleControlStates } from 'apis'
 import type { FC, ReactNode } from 'react'
@@ -29,6 +30,7 @@ const dictsTransform = (arr: [], label: string, value: string) => {
 
 //事件配置
 const MapPage: FC<IProps> = () => {
+  const { t } = useVoerkaI18n()
   const [open, setOpen] = React.useState(false)
   const [editOpen, setEditOpen] = React.useState(false)
   const [openImport, setOpenImport] = React.useState(false)
@@ -49,28 +51,30 @@ const MapPage: FC<IProps> = () => {
 
   const { data: chassisList } = useRequest(GetChassisList)
 
-  const convertChassisList = [{ label: '全部', value: 0 }].concat(...dictsTransform(chassisList?.data, 'model', 'id'))
-  const carsList = [{ label: '全部', value: 0 }].concat(dictsTransform(controlStates?.data, 'id', 'id'))
+  const convertChassisList = [{ label: t('全部'), value: 0 }].concat(
+    ...dictsTransform(chassisList?.data, 'model', 'id')
+  )
+  const carsList = [{ label: t('全部'), value: 0 }].concat(dictsTransform(controlStates?.data, 'id', 'id'))
 
   const columns = [
     {
       accessorKey: 'id',
-      header: '编号',
+      header: t('编号'),
       size: 55
     },
     {
       accessorKey: 'projectName',
-      header: '项目名称',
+      header: t('项目名称'),
       size: 100
     },
     {
       accessorKey: 'routeName',
-      header: '地图名称',
+      header: t('地图名称'),
       size: 100
     },
     {
       accessorKey: 'mapChassis',
-      header: '适用车辆',
+      header: t('适用车辆'),
       Cell: ({ row }) => {
         const { original } = row
         const tyles = carsList?.find((item) => item.value === original.mapChassis)
@@ -80,7 +84,7 @@ const MapPage: FC<IProps> = () => {
     },
     {
       accessorKey: 'mapCarrier',
-      header: '适用车型',
+      header: t('适用车型'),
       Cell: ({ row }) => {
         const { original } = row
         const tyles = convertChassisList?.find((item) => item.value === Number(original.mapCarrier))
@@ -90,7 +94,7 @@ const MapPage: FC<IProps> = () => {
     },
     {
       accessorKey: 'guid',
-      header: '地图GUID',
+      header: t('地图GUID'),
       size: 100,
       Cell: ({ row }) => {
         return (
@@ -112,22 +116,22 @@ const MapPage: FC<IProps> = () => {
     {
       accessorKey: 'revision',
       enableColumnFilter: false,
-      header: '版本号',
+      header: t('版本号'),
       size: 60
     },
     {
       accessorKey: 'routeFile',
-      header: '路径文件名称',
+      header: t('路径文件名称'),
       size: 120
     },
     {
       accessorKey: 'dwgFile',
-      header: '地图Dxf文件名',
+      header: t('地图Dxf文件名'),
       size: 120
     },
     {
       accessorKey: 'isActive',
-      header: '是否激活',
+      header: t('是否激活'),
       Cell: ({ row }) => {
         return (
           <>
@@ -147,7 +151,7 @@ const MapPage: FC<IProps> = () => {
     },
     {
       accessorKey: 'actions',
-      header: '操作',
+      header: t('操作'),
       enableColumnFilter: false,
       enableSorting: false,
       Cell: ({ row }) => {
@@ -170,7 +174,7 @@ const MapPage: FC<IProps> = () => {
               }}
               startIcon={<EditNoteIcon />}
             >
-              修改
+              {t('修改')}
             </Button>
             <DelButton
               delFn={async () => {
@@ -186,6 +190,7 @@ const MapPage: FC<IProps> = () => {
       size: 175
     }
   ]
+
   return (
     <>
       <BaseTable
@@ -217,16 +222,16 @@ const MapPage: FC<IProps> = () => {
                 }}
               >
                 <Refresh loading={loading}></Refresh>
-                刷新
+                {t('刷新')}
               </Button>
               <Button variant="outlined" size="small" color="primary" onClick={() => setOpen(true)}>
                 <AddIcon />
-                新增路径文件
+                {t('新增路径文件')}
               </Button>
               {/* <Button variant="outlined" size="small" color="success" onClick={() => setOpenImport(true)}>
-                <AddIcon />
-                上传底图文件
-              </Button> */}
+                 <AddIcon />
+                 上传底图文件
+                </Button> */}
             </Box>
           )
         }}
@@ -248,6 +253,7 @@ const MapPage: FC<IProps> = () => {
         enableColumnActions={false}
         enableColumnFilters={false}
       />
+
       <AddDialog
         open={open}
         onClose={() => setOpen(false)}
@@ -257,6 +263,7 @@ const MapPage: FC<IProps> = () => {
           getChass()
         }}
       />
+
       <EditDialog
         open={editOpen}
         row={row}
@@ -267,6 +274,7 @@ const MapPage: FC<IProps> = () => {
           getChass()
         }}
       />
+
       <ImportDialog open={openImport} onClose={() => setOpenImport(false)} />
     </>
   )

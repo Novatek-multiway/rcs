@@ -1,3 +1,4 @@
+import { useVoerkaI18n } from '@voerkai18n/react'
 import {
   getAgvCharge,
   getAgvEfficiency,
@@ -28,10 +29,11 @@ interface IProps {
 }
 
 const VehicleOperation: FC<IProps> = () => {
+  const { t, activeLanguage } = useVoerkaI18n()
   const [searchFormData, setSearchFormData] = useState<ISearchAreaProps['formData']>({
     startDate: dayjs().startOf('month'),
     endDate: dayjs().endOf('month'),
-    carrierID: '全部'
+    carrierID: t('全部')
   })
 
   const [electricityData, setElectricityData] = useState<ReportAPI.Electricity>() //电量统计数据
@@ -51,7 +53,7 @@ const VehicleOperation: FC<IProps> = () => {
       endTime: searchFormData.endDate!.format(format),
       type: isOneDay ? 0 : 1
     }
-    if (searchFormData.carrierID !== '全部') data['carrierID'] = searchFormData.carrierID
+    if (searchFormData.carrierID !== t('全部')) data['carrierID'] = searchFormData.carrierID
 
     const promisesWithHandle: [Promise<IResponse<any>>, React.Dispatch<React.SetStateAction<any | undefined>>][] = [
       [getAgvCharge(data), setElectricityData],
@@ -62,10 +64,12 @@ const VehicleOperation: FC<IProps> = () => {
       [getEquipmentTaskReport(data), setFinishedTasksData],
       [getAgvKilometers(data), setMileageData]
     ]
+
     Promise.all(promisesWithHandle.map(([promise]) => promise)).then((resultList) =>
       promisesWithHandle.map(([, handle], index) => handle(resultList[index].data))
     )
-  }, [searchFormData])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchFormData, activeLanguage])
 
   useEffect(() => {
     handleSearch()

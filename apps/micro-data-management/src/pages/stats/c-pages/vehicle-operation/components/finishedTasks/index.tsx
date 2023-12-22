@@ -1,3 +1,4 @@
+import { useVoerkaI18n } from '@voerkai18n/react'
 import { useUpdateEffect } from 'ahooks'
 import { useEcharts } from 'hooks'
 import type { FC, PropsWithChildren } from 'react'
@@ -48,6 +49,7 @@ const option: echarts.EChartsOption = {
       }
     }
   ],
+
   yAxis: [
     {
       type: 'value',
@@ -62,6 +64,7 @@ const option: echarts.EChartsOption = {
       }
     }
   ],
+
   dataZoom: {
     type: 'inside'
   },
@@ -71,6 +74,7 @@ const option: echarts.EChartsOption = {
 // 车辆完成任务数
 const FinishedTasks: FC<PropsWithChildren<IFinishedTasksProps>> = (props) => {
   const { labels = [], values = [] } = props
+  const { t } = useVoerkaI18n()
   const el = useRef<HTMLDivElement | null>(null)
   // 传递元素给useEcharts
   const { updateOption } = useEcharts(el, {
@@ -90,7 +94,7 @@ const FinishedTasks: FC<PropsWithChildren<IFinishedTasksProps>> = (props) => {
         color: '#fff'
       },
       tooltip: {
-        valueFormatter: (v) => v + '个'
+        valueFormatter: (v) => v + t('个')
       }
     }))
     const newOption: any = { ...option }
@@ -101,7 +105,7 @@ const FinishedTasks: FC<PropsWithChildren<IFinishedTasksProps>> = (props) => {
 
   return (
     <Panel
-      title="车辆完成任务数"
+      title={t('车辆完成任务数')}
       wrapperStyle={{
         height: '100%'
       }}

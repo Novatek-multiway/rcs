@@ -1,3 +1,4 @@
+import { useVoerkaI18n } from '@voerkai18n/react'
 import { useRequest } from 'ahooks'
 import { updateCarrier } from 'apis'
 import * as React from 'react'
@@ -19,6 +20,7 @@ const ConfigDialog: React.FC<{
   callback?: () => void
   rows?: Record<string, any>
 }> = ({ open, onClose = () => {}, callback, rows }) => {
+  const { t } = useVoerkaI18n()
   const { runAsync: run } = useRequest(updateCarrier, {
     manual: true
   })
@@ -29,7 +31,7 @@ const ConfigDialog: React.FC<{
 
   return (
     <Dialog maxWidth="xs" open={open} onClose={onClose}>
-      <DialogTitle>待命点配置</DialogTitle>
+      <DialogTitle>{t('待命点配置')}</DialogTitle>
       <DialogContent
         sx={{
           py: `${theme.spacing(3.25)} !important`
@@ -42,24 +44,24 @@ const ConfigDialog: React.FC<{
           schemaObject={[
             {
               name: 'id',
-              label: '车辆编号',
+              label: t('车辆编号'),
               disabled: true,
               type: 'number'
             },
             {
               name: 'reHomeWaitTime',
-              label: '空闲间隔',
+              label: t('空闲间隔'),
               endAdornment: 's',
               type: 'number'
             },
             {
               name: 'homePoint',
-              label: '待命点',
+              label: t('待命点'),
               type: 'text'
             },
             {
               name: 'isAutoReHome',
-              label: '是否回待命点',
+              label: t('是否回待命点'),
               type: 'checkbox'
             }
           ]}
@@ -78,10 +80,10 @@ const ConfigDialog: React.FC<{
             }
           }}
         >
-          保存
+          {t('保存')}
         </Button>
         <Button color="warning" onClick={onClose}>
-          关闭
+          {t('关闭')}
         </Button>
       </DialogActions>
     </Dialog>

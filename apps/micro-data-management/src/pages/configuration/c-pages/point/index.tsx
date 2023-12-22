@@ -1,5 +1,6 @@
 // import AddIcon from '@mui/icons-material/Add'
 import EditNoteIcon from '@mui/icons-material/EditNote'
+import { useVoerkaI18n } from '@voerkai18n/react'
 import { useRequest } from 'ahooks'
 import { getAreaInfos, GetCarrierOptions, GetChassisList, getStationInfoById, getStationInfos, getVertexs } from 'apis'
 import type { FC, ReactNode } from 'react'
@@ -30,6 +31,7 @@ const dictsTransform = (arr: [], label: string, value: string) => {
 
 // 车型配置
 const VehicleType: FC<IProps> = () => {
+  const { t } = useVoerkaI18n()
   const { dicts } = useDictStore()
   // const [open, setOpen] = React.useState(false)
   const [editOpen, setEditOpen] = React.useState(false)
@@ -54,18 +56,18 @@ const VehicleType: FC<IProps> = () => {
     },
     {
       accessorKey: 'pointKey',
-      header: '路径编号',
+      header: t('路径编号'),
       size: 100
     },
 
     {
       accessorKey: 'name',
-      header: '名称',
+      header: t('名称'),
       size: 100
     },
     {
       accessorKey: 'type',
-      header: '站点类型',
+      header: t('站点类型'),
       Filter: ({ header }) => {
         return (
           <TextField
@@ -97,38 +99,38 @@ const VehicleType: FC<IProps> = () => {
 
     {
       accessorKey: 'priority',
-      header: '优先级',
+      header: t('优先级'),
       size: 100
     },
 
     {
       accessorKey: 'carrierType',
-      header: '车辆类型',
+      header: t('车辆类型'),
       Cell: ({ row }) => {
         const { original } = row
         const tyles = chassisList?.data?.find((item: any) => item.id === original.carrierType)
-        return <>{tyles?.model || '全部'}</>
+        return <>{tyles?.model || t('全部')}</>
       }
     },
     {
       accessorKey: 'homeGroup',
-      header: '待命点分组',
+      header: t('待命点分组'),
       size: 100
     },
     {
       accessorKey: 'homeGroupPriority',
       enableColumnFilter: false,
-      header: '待命点优先级',
+      header: t('待命点优先级'),
       size: 100
     },
     {
       accessorKey: 'homeGroupType',
-      header: '待命点类型',
+      header: t('待命点类型'),
       size: 100
     },
     {
       accessorKey: 'actions',
-      header: '操作',
+      header: t('操作'),
       enableColumnFilter: false,
       enableSorting: false,
       Cell: ({ row }) => {
@@ -146,21 +148,23 @@ const VehicleType: FC<IProps> = () => {
               size="small"
               color="warning"
               onClick={async () => {
-                const stationInfos = await getStationInfoById({ id: row.original.id })
+                const stationInfos = await getStationInfoById({
+                  id: row.original.id
+                })
                 setRow(stationInfos.data)
                 setEditOpen(true)
               }}
               startIcon={<EditNoteIcon />}
             >
-              修改
+              {t('修改')}
             </Button>
             {/* <DelButton
-              delFn={async () => {
-                await delFn({
-                  id: row.original.id
-                })
-                getChass()
-              }}
+             delFn={async () => {
+               await delFn({
+                 id: row.original.id
+               })
+               getChass()
+             }}
             /> */}
           </div>
         )
@@ -200,12 +204,12 @@ const VehicleType: FC<IProps> = () => {
                 }}
               >
                 <Refresh loading={loading}></Refresh>
-                刷新
+                {t('刷新')}
               </Button>
               {/* <Button variant="outlined" size="small" color="primary" onClick={() => setOpen(true)}>
-                <AddIcon />
-                新增
-              </Button> */}
+                 <AddIcon />
+                 新增
+                </Button> */}
             </Box>
           )
         }}
@@ -226,16 +230,17 @@ const VehicleType: FC<IProps> = () => {
         enableDensityToggle={false}
         enableColumnActions={false}
       />
+
       {/* <AddDialog
-        open={open}
-        onClose={() => setOpen(false)}
-        vertexData={dictsTransform(vertexData?.data, 'id', 'id')}
-        carrierData={dictsTransform(carrierData?.data, 'name', 'id')}
-        chassisList={dictsTransform(chassisList?.data, 'model', 'id')}
-        callback={() => {
-          getChass()
-        }}
-      /> */}
+         open={open}
+         onClose={() => setOpen(false)}
+         vertexData={dictsTransform(vertexData?.data, 'id', 'id')}
+         carrierData={dictsTransform(carrierData?.data, 'name', 'id')}
+         chassisList={dictsTransform(chassisList?.data, 'model', 'id')}
+         callback={() => {
+           getChass()
+         }}
+        /> */}
       <EditDialog
         open={editOpen}
         row={getUpperCaseKeyObject(row)}

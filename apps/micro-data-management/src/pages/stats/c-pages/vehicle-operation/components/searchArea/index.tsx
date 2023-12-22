@@ -1,4 +1,5 @@
-import { useAsyncEffect } from 'ahooks'
+import { useVoerkaI18n } from '@voerkai18n/react'
+import { useAsyncEffect, useUpdateEffect } from 'ahooks'
 import { postGetControlOptions } from 'apis'
 import dayjs from 'dayjs'
 import type { FC, PropsWithChildren } from 'react'
@@ -19,12 +20,13 @@ export interface ISearchAreaProps {
 
 const SearchArea: FC<PropsWithChildren<ISearchAreaProps>> = (props) => {
   const { formData, onChange, onSearch } = props
+  const { t, activeLanguage } = useVoerkaI18n()
 
   const [carrierOptions, setCarrierOptions] = useState<{ label: string; value: number | string }[]>([])
 
   useAsyncEffect(async () => {
     const res = await postGetControlOptions({})
-    const carrierOptions = [{ label: '全部', value: '全部' }].concat(
+    const carrierOptions = [{ label: t('全部'), value: t('全部') }].concat(
       res.data.map((item: any) => ({
         label: item.id + '',
         value: item.id
@@ -32,6 +34,12 @@ const SearchArea: FC<PropsWithChildren<ISearchAreaProps>> = (props) => {
     )
     setCarrierOptions(carrierOptions)
   }, [])
+
+  useUpdateEffect(() => {
+    setCarrierOptions((prev) => {
+      return [{ label: t('全部'), value: t('全部') as string | number }].concat(prev.slice(1))
+    })
+  }, [activeLanguage])
 
   return (
     <SearchAreaWrapper>
@@ -48,7 +56,7 @@ const SearchArea: FC<PropsWithChildren<ISearchAreaProps>> = (props) => {
             },
             textField: {
               size: 'small',
-              label: '开始时间'
+              label: t('开始时间')
             }
           }}
           value={formData.startDate}
@@ -59,6 +67,7 @@ const SearchArea: FC<PropsWithChildren<ISearchAreaProps>> = (props) => {
             })
           }}
         />
+
         <DatePicker
           views={['year', 'month', 'day']}
           format="YYYY/MM/DD"
@@ -68,7 +77,7 @@ const SearchArea: FC<PropsWithChildren<ISearchAreaProps>> = (props) => {
             },
             textField: {
               size: 'small',
-              label: '结束时间'
+              label: t('结束时间')
             }
           }}
           value={formData.endDate}
@@ -82,7 +91,7 @@ const SearchArea: FC<PropsWithChildren<ISearchAreaProps>> = (props) => {
       </LocalizationProvider>
       <TextField
         select
-        label="车辆编号"
+        label={t('车辆编号')}
         size="small"
         sx={{ minWidth: 120 }}
         value={'10'}
@@ -110,7 +119,7 @@ const SearchArea: FC<PropsWithChildren<ISearchAreaProps>> = (props) => {
         size="small"
         onClick={onSearch}
       >
-        搜索
+        {t('搜索')}
       </Button>
     </SearchAreaWrapper>
   )

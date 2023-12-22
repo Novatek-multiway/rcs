@@ -1,4 +1,5 @@
 import { Close } from '@mui/icons-material'
+import { useVoerkaI18n } from '@voerkai18n/react'
 import { useAsyncEffect } from 'ahooks'
 import { getVertexs } from 'apis'
 import { Field, Form, Formik, FormikConfig } from 'formik'
@@ -69,6 +70,7 @@ const initialValues: IAddActionPointParams = {
 }
 const AddActionPointDialog: FC<PropsWithChildren<IAddActionPointDialogProps>> = (props) => {
   const { open, onClose, onSave } = props
+  const { t } = useVoerkaI18n()
   const orderActionOptions = useDictStore((state) => state.dicts.OrderActionType)
   const [vertexOptions, setVertexOptions] = useState<number[]>([])
   useAsyncEffect(async () => {
@@ -111,7 +113,7 @@ const AddActionPointDialog: FC<PropsWithChildren<IAddActionPointDialogProps>> = 
           py: 0.5
         }}
       >
-        <span>添加任务点</span>
+        <span>{t('添加任务点')}</span>
         <IconButton onClick={onClose}>
           <Close />
         </IconButton>
@@ -135,9 +137,9 @@ const AddActionPointDialog: FC<PropsWithChildren<IAddActionPointDialogProps>> = 
               validate={(values) => {
                 const errors: Partial<Record<keyof IAddActionPointParams, string>> = {}
                 if (isNil(values.taskPoint) || values.taskPoint + '' === '') {
-                  errors.taskPoint = '请选择任务点'
+                  errors.taskPoint = t('请选择任务点')
                 } else if (isNil(values.action) || values.action + '' === '') {
-                  errors.action = '请选择动作类型'
+                  errors.action = t('请选择动作类型')
                 }
                 return errors
               }}
@@ -145,7 +147,7 @@ const AddActionPointDialog: FC<PropsWithChildren<IAddActionPointDialogProps>> = 
               {({ isSubmitting, submitForm, setFieldValue, errors, resetForm, values, validateForm }) => (
                 <Form>
                   <Typography variant="h6" fontSize={15}>
-                    命令参数
+                    {t('命令参数')}
                   </Typography>
                   <Autocomplete
                     options={vertexOptions}
@@ -157,7 +159,7 @@ const AddActionPointDialog: FC<PropsWithChildren<IAddActionPointDialogProps>> = 
                     renderInput={(params) => (
                       <TextField
                         {...params}
-                        label="任务点"
+                        label={t('任务点')}
                         name="taskPoint"
                         variant="outlined"
                         size="small"
@@ -172,7 +174,7 @@ const AddActionPointDialog: FC<PropsWithChildren<IAddActionPointDialogProps>> = 
                     component={CustomTextField}
                     select
                     name="action"
-                    label="动作类型"
+                    label={t('动作类型')}
                     variant="outlined"
                     size="small"
                   >
@@ -183,72 +185,85 @@ const AddActionPointDialog: FC<PropsWithChildren<IAddActionPointDialogProps>> = 
                     ))}
                   </Field>
                   <Typography variant="h6" fontSize={15}>
-                    扩展参数
+                    {t('扩展参数')}
                   </Typography>
                   <Field
                     component={CustomTextField}
                     name="param1"
                     type="number"
-                    label="参数1"
+                    label={t('参数1')}
                     variant="outlined"
                     size="small"
                   />
+
                   <Field
                     component={CustomTextField}
                     name="param2"
                     type="number"
-                    label="参数2"
+                    label={t('参数2')}
                     variant="outlined"
                     size="small"
                   />
+
                   <Field
                     component={CustomTextField}
                     name="param3"
                     type="number"
-                    label="参数3"
+                    label={t('参数3')}
                     variant="outlined"
                     size="small"
                     inputProps={{
                       min: 0
                     }}
                   />
+
                   <Field
                     component={CustomTextField}
                     name="param4"
                     type="number"
-                    label="参数4"
+                    label={t('参数4')}
                     variant="outlined"
                     size="small"
                   />
+
                   <Field
                     component={CustomTextField}
                     name="id"
                     type="number"
-                    label="轴id"
+                    label={t('轴id')}
                     variant="outlined"
                     size="small"
                     inputProps={{
                       min: 0
                     }}
                   />
+
                   <Field
                     component={CustomTextField}
                     name="headingAngle"
                     type="number"
-                    label="停止角度"
+                    label={t('停止角度')}
                     variant="outlined"
                     size="small"
                   />
+
                   <Field
                     component={CustomTextField}
                     name="actionDelay"
                     type="number"
-                    label="动作延迟"
+                    label={t('动作延迟')}
                     variant="outlined"
                     size="small"
-                    helperText="单位: 秒"
+                    helperText={t('单位: 秒')}
                   />
-                  <Field component={CustomTextField} name="relevant" label="附加信息" variant="outlined" size="small" />
+
+                  <Field
+                    component={CustomTextField}
+                    name="relevant"
+                    label={t('附加信息')}
+                    variant="outlined"
+                    size="small"
+                  />
                   <Button
                     sx={{
                       margin: '0 auto'
@@ -265,7 +280,7 @@ const AddActionPointDialog: FC<PropsWithChildren<IAddActionPointDialogProps>> = 
                     }}
                     size="small"
                   >
-                    添加
+                    {t('添加')}
                   </Button>
                 </Form>
               )}

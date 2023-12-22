@@ -1,3 +1,4 @@
+import { useVoerkaI18n } from '@voerkai18n/react'
 import { useAsyncEffect } from 'ahooks'
 import { getVertexs } from 'apis'
 import { Field, Form, Formik } from 'formik'
@@ -48,6 +49,7 @@ const initialValues: TActionPointParams = {
 }
 const ActionPointParams: FC<IActionPointParamsProps> = (props) => {
   const { onSubmit } = props
+  const { t } = useVoerkaI18n()
   const orderActionOptions = useDictStore((state) => state.dicts.OrderActionType)
   const [vertexOptions, setVertexOptions] = useState<IOption[]>([])
   useAsyncEffect(async () => {
@@ -74,9 +76,9 @@ const ActionPointParams: FC<IActionPointParamsProps> = (props) => {
         validate={(values) => {
           const errors: Partial<Record<keyof ITaskFormData, string>> = {}
           if (isNil(values.taskPoint) || values.taskPoint + '' === '') {
-            errors.taskPoint = '请选择任务点'
+            errors.taskPoint = t('请选择任务点')
           } else if (isNil(values.action) || values.action + '' === '') {
-            errors.action = '请选择动作类型'
+            errors.action = t('请选择动作类型')
           }
           return errors
         }}
@@ -85,7 +87,7 @@ const ActionPointParams: FC<IActionPointParamsProps> = (props) => {
           <ActionPointParamsWrapper>
             <Form>
               <Typography variant="h6" fontSize={15}>
-                命令参数
+                {t('命令参数')}
               </Typography>
               <Autocomplete
                 options={vertexOptions.map((c) => Number(c.value))}
@@ -97,7 +99,7 @@ const ActionPointParams: FC<IActionPointParamsProps> = (props) => {
                 renderInput={(params) => (
                   <TextField
                     {...params}
-                    label="任务点"
+                    label={t('任务点')}
                     name="taskPoint"
                     variant="outlined"
                     size="small"
@@ -108,7 +110,14 @@ const ActionPointParams: FC<IActionPointParamsProps> = (props) => {
                 )}
               />
 
-              <Field component={CustomTextField} select name="action" label="动作类型" variant="outlined" size="small">
+              <Field
+                component={CustomTextField}
+                select
+                name="action"
+                label={t('动作类型')}
+                variant="outlined"
+                size="small"
+              >
                 {orderActionOptions.map((item: IOption) => (
                   <MenuItem key={item.value} value={item.value}>
                     {item.label}
@@ -116,51 +125,56 @@ const ActionPointParams: FC<IActionPointParamsProps> = (props) => {
                 ))}
               </Field>
               <Typography variant="h6" fontSize={15}>
-                扩展参数
+                {t('扩展参数')}
               </Typography>
               <Field
                 component={CustomTextField}
                 name="param1"
                 type="number"
-                label="参数1"
+                label={t('参数1')}
                 variant="outlined"
                 size="small"
               />
+
               <Field
                 component={CustomTextField}
                 name="param2"
                 type="number"
-                label="参数2"
+                label={t('参数2')}
                 variant="outlined"
                 size="small"
               />
+
               <Field
                 component={CustomTextField}
                 name="param3"
                 type="number"
-                label="参数3"
+                label={t('参数3')}
                 variant="outlined"
                 size="small"
               />
+
               <Field
                 component={CustomTextField}
                 name="param4"
                 type="number"
-                label="参数4"
+                label={t('参数4')}
                 variant="outlined"
                 size="small"
               />
+
               <Field
                 component={CustomTextField}
                 name="id"
                 type="number"
-                label="轴id"
+                label={t('轴id')}
                 variant="outlined"
                 size="small"
                 inputProps={{
                   min: 0
                 }}
               />
+
               <Button
                 sx={{
                   margin: '0 auto'
@@ -177,7 +191,7 @@ const ActionPointParams: FC<IActionPointParamsProps> = (props) => {
                 }}
                 size="small"
               >
-                添加
+                {t('添加')}
               </Button>
             </Form>
           </ActionPointParamsWrapper>

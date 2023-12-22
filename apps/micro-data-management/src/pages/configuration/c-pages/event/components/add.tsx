@@ -1,3 +1,4 @@
+import { useVoerkaI18n } from '@voerkai18n/react'
 import { useRequest } from 'ahooks'
 import { AddEvent } from 'apis'
 import * as React from 'react'
@@ -23,6 +24,7 @@ const AddDialog: React.FC<{
   onClose?: () => void
   callback?: () => void
 }> = ({ open, onClose = () => {}, callback, chassisList = [], vertexData = [], edgesData = [] }) => {
+  const { t } = useVoerkaI18n()
   const { runAsync: run } = useRequest(AddEvent, {
     manual: true
   })
@@ -42,14 +44,14 @@ const AddDialog: React.FC<{
     {
       name: 'description',
       required: true,
-      label: '事件描述',
+      label: t('事件描述'),
       type: 'text'
       // type: "select",
     },
     {
       name: 'genus',
       required: true,
-      label: '元素类型',
+      label: t('元素类型'),
       type: 'select',
       items: dicts['GraphGenus'],
       onChange: (e: SelectChangeEvent) => {
@@ -60,7 +62,7 @@ const AddDialog: React.FC<{
     {
       name: 'routeKey',
       required: true,
-      label: '路径ID',
+      label: t('路径ID'),
       type: 'autoComplete',
       items: routeKeyOptions
       // type: "select",
@@ -68,21 +70,21 @@ const AddDialog: React.FC<{
     {
       name: 'carrierType',
       required: true,
-      label: '车辆类型',
+      label: t('车辆类型'),
       type: 'select',
-      items: [{ label: '全部', value: 0 }].concat(...chassisList)
+      items: [{ label: t('全部'), value: 0 }].concat(...chassisList)
     },
     {
       name: 'doTime',
       required: true,
-      label: '执行阶段',
+      label: t('执行阶段'),
       type: 'select',
       items: dicts['EventTime']
     },
     {
       name: 'waitTime',
       required: true,
-      label: '等待阶段',
+      label: t('等待阶段'),
       type: 'select',
       items: dicts['EventTime']
     },
@@ -90,7 +92,7 @@ const AddDialog: React.FC<{
     {
       name: 'timeOut',
       required: true,
-      label: '超时',
+      label: t('超时'),
       type: 'number',
       inputProps: {
         min: 0,
@@ -102,7 +104,7 @@ const AddDialog: React.FC<{
     {
       name: 'delay',
       required: true,
-      label: '延时',
+      label: t('延时'),
       type: 'number',
       inputProps: {
         min: 0,
@@ -114,7 +116,7 @@ const AddDialog: React.FC<{
     {
       name: 'priority',
       required: true,
-      label: '优先级',
+      label: t('优先级'),
       type: 'number',
       inputProps: {
         min: 0,
@@ -126,14 +128,14 @@ const AddDialog: React.FC<{
     {
       name: 'checkHasGoods',
       required: true,
-      label: '载货判断',
+      label: t('载货判断'),
       type: 'select',
       items: dicts['CheckGoods']
     },
     {
       name: 'eventType',
       required: true,
-      label: '事件类型',
+      label: t('事件类型'),
       type: 'select',
       items: dicts['EventType']
     }
@@ -141,7 +143,7 @@ const AddDialog: React.FC<{
 
   return (
     <Dialog maxWidth="md" open={open} onClose={onClose}>
-      <DialogTitle>添加事件</DialogTitle>
+      <DialogTitle>{t('添加事件')}</DialogTitle>
       <DialogContent
         sx={{
           py: `${theme.spacing(3.25)} !important`
@@ -187,10 +189,10 @@ const AddDialog: React.FC<{
             }
           }}
         >
-          保存
+          {t('保存')}
         </Button>
         <Button color="warning" onClick={onClose}>
-          关闭
+          {t('关闭')}
         </Button>
       </DialogActions>
     </Dialog>

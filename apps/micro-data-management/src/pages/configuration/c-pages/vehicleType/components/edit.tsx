@@ -1,3 +1,4 @@
+import { useVoerkaI18n } from '@voerkai18n/react'
 import { useAsyncEffect, useRequest } from 'ahooks'
 import { UpdateChassisInfos } from 'apis'
 import * as React from 'react'
@@ -23,6 +24,7 @@ const EditDialog: React.FC<{
   callback?: () => void
   row?: Record<string, any>
 }> = ({ open, onClose = () => {}, callback, row }) => {
+  const { t } = useVoerkaI18n()
   const { runAsync: run } = useRequest(UpdateChassisInfos, {
     manual: true
   })
@@ -38,7 +40,7 @@ const EditDialog: React.FC<{
 
   return (
     <Dialog open={open} onClose={onClose}>
-      <DialogTitle>修改车型</DialogTitle>
+      <DialogTitle>{t('修改车型')}</DialogTitle>
       <DialogContent
         sx={{
           py: `${theme.spacing(3.25)} !important`
@@ -50,7 +52,7 @@ const EditDialog: React.FC<{
           schemaObject={[
             {
               name: 'type',
-              label: '类型',
+              label: t('类型'),
               type: 'select',
               required: true,
               items: dicts['CarrierType']
@@ -58,7 +60,7 @@ const EditDialog: React.FC<{
             },
             {
               name: 'model',
-              label: '名称',
+              label: t('名称'),
               type: 'text',
               required: true
               // type: "select",
@@ -89,7 +91,7 @@ const EditDialog: React.FC<{
             },
             {
               name: 'forcedCharge',
-              label: '强制充电电量',
+              label: t('强制充电电量'),
               type: 'number',
               inputProps: {
                 min: 0,
@@ -100,7 +102,7 @@ const EditDialog: React.FC<{
             },
             {
               name: 'chassisModel',
-              label: '模型文件',
+              label: t('模型文件'),
               type: 'select',
               items: VehicleTypeImageCommon,
               onChange: async (e) => {
@@ -112,7 +114,14 @@ const EditDialog: React.FC<{
         ></MaterialForm>
         <Grid container justifyContent={'center'}>
           {currentChassisModelUrl && (
-            <img src={currentChassisModelUrl} style={{ transform: 'rotate(90deg)', height: 100, objectFit: 'cover' }} />
+            <img
+              src={currentChassisModelUrl}
+              style={{
+                transform: 'rotate(90deg)',
+                height: 100,
+                objectFit: 'cover'
+              }}
+            />
           )}
         </Grid>
       </DialogContent>
@@ -162,10 +171,10 @@ const EditDialog: React.FC<{
             }
           }}
         >
-          保存
+          {t('保存')}
         </Button>
         <Button color="warning" onClick={onClose}>
-          关闭
+          {t('关闭')}
         </Button>
       </DialogActions>
     </Dialog>

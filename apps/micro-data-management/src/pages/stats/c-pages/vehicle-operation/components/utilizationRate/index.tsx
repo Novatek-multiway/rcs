@@ -1,3 +1,4 @@
+import { useVoerkaI18n } from '@voerkai18n/react'
 import { useUpdateEffect } from 'ahooks'
 import { useEcharts } from 'hooks'
 import type { FC, PropsWithChildren } from 'react'
@@ -48,6 +49,7 @@ const option: echarts.EChartsOption = {
       }
     }
   ],
+
   yAxis: [
     {
       type: 'value',
@@ -62,6 +64,7 @@ const option: echarts.EChartsOption = {
       }
     }
   ],
+
   dataZoom: {
     type: 'inside'
   },
@@ -71,6 +74,7 @@ const option: echarts.EChartsOption = {
 // 稼动率统计
 const UtilizationRate: FC<PropsWithChildren<IUtilizationRateProps>> = (props) => {
   const { labels = [], values = [] } = props
+  const { t } = useVoerkaI18n()
   const el = useRef<HTMLDivElement | null>(null)
   // 传递元素给useEcharts
   const { updateOption } = useEcharts(el, {
@@ -112,7 +116,7 @@ const UtilizationRate: FC<PropsWithChildren<IUtilizationRateProps>> = (props) =>
   }, [updateOption, labels, values])
   return (
     <Panel
-      title="稼动率统计"
+      title={t('稼动率统计')}
       wrapperStyle={{
         height: '100%'
       }}

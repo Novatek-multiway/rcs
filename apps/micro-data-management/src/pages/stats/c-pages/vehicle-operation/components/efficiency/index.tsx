@@ -1,3 +1,4 @@
+import { useVoerkaI18n } from '@voerkai18n/react'
 import type { FC, PropsWithChildren } from 'react'
 import React, { memo } from 'react'
 import { Panel } from 'ui'
@@ -14,9 +15,10 @@ interface IEfficiencyProps {
 // 效率统计
 const Efficiency: FC<PropsWithChildren<IEfficiencyProps>> = (props) => {
   const { useRatio = 0, troubleprool = 0, trafficControl = 0 } = props
+  const { t } = useVoerkaI18n()
   return (
     <Panel
-      title="效率统计"
+      title={t('效率统计')}
       wrapperStyle={{
         height: '100%'
       }}
@@ -26,13 +28,13 @@ const Efficiency: FC<PropsWithChildren<IEfficiencyProps>> = (props) => {
     >
       <EfficiencyWrapper>
         <div style={{ width: '33%' }}>
-          <PercentagePieChart label="车辆利用率" value={useRatio} />
+          <PercentagePieChart label={t('车辆利用率')} value={useRatio} />
         </div>
         <div style={{ width: '33%' }}>
-          <PercentagePieChart label="无故障率" value={troubleprool} />
+          <PercentagePieChart label={t('无故障率')} value={troubleprool} />
         </div>
         <div style={{ width: '33%' }}>
-          <PercentagePieChart label="交管占比" value={trafficControl} />
+          <PercentagePieChart label={t('交管占比')} value={trafficControl} />
         </div>
       </EfficiencyWrapper>
     </Panel>

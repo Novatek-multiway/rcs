@@ -1,3 +1,4 @@
+import { useVoerkaI18n } from '@voerkai18n/react'
 import { getControlStateById, getGetCarrierTrack } from 'apis'
 import * as React from 'react'
 import { useDictStore } from 'store'
@@ -9,6 +10,7 @@ const InfoDialog: React.FC<{
   callback?: () => void
   row?: Record<string, any>
 }> = ({ open, onClose = () => {}, callback, row = {} }) => {
+  const { t } = useVoerkaI18n()
   const [tableData, setTableData] = React.useState([])
   const theme = useTheme()
   const { dicts } = useDictStore()
@@ -50,7 +52,7 @@ const InfoDialog: React.FC<{
     {
       accessorKey: 'type',
       id: 'type',
-      header: '路径类型',
+      header: t('路径类型'),
       Cell: ({ cell }: any) => {
         return <div>{_Dict['GraphGenus'][cell.getValue()]}</div>
       }
@@ -58,12 +60,12 @@ const InfoDialog: React.FC<{
     {
       accessorKey: 'id',
       id: 'id',
-      header: '路径编号'
+      header: t('路径编号')
     },
     {
       accessorKey: 'state1',
       id: 'state1',
-      header: '调度状态',
+      header: t('调度状态'),
       Cell: ({ cell }: any) => {
         return (
           <div style={{ color: cell.getValue() === 5 ? '#00cbca' : '#fff' }}>
@@ -75,13 +77,13 @@ const InfoDialog: React.FC<{
     {
       accessorKey: 'state',
       id: 'state',
-      header: '路径状态'
+      header: t('路径状态')
     }
   ]
 
   return (
     <Dialog maxWidth="md" open={open} onClose={onClose}>
-      <DialogTitle>路径状态</DialogTitle>
+      <DialogTitle>{t('路径状态')}</DialogTitle>
       <DialogContent
         sx={{
           py: `${theme.spacing(3.25)} !important`
@@ -92,27 +94,29 @@ const InfoDialog: React.FC<{
             InputProps={{
               readOnly: true
             }}
-            label="车辆编号"
+            label={t('车辆编号')}
             variant="filled"
             focused
             value={carrierControlState.id}
             style={{ flex: 1 }}
           />
+
           <TextField
             InputProps={{
               readOnly: true
             }}
-            label="车辆位置"
+            label={t('车辆位置')}
             variant="filled"
             focused
             value={carrierControlState.x + '-' + carrierControlState.y + '-' + carrierControlState.z}
             style={{ flex: 1 }}
           />
+
           <TextField
             InputProps={{
               readOnly: true
             }}
-            label="当前电量"
+            label={t('当前电量')}
             variant="filled"
             focused
             value={carrierControlState.elecQuantity}
@@ -124,27 +128,29 @@ const InfoDialog: React.FC<{
             InputProps={{
               readOnly: true
             }}
-            label="车辆速度"
+            label={t('车辆速度')}
             variant="filled"
             focused
             value={carrierControlState.speed}
             style={{ flex: 1 }}
           />
+
           <TextField
             InputProps={{
               readOnly: true
             }}
-            label="控制状态"
+            label={t('控制状态')}
             variant="filled"
             focused
             style={{ flex: 1 }}
             value={_Dict['ControlState'] ? _Dict['ControlState'][carrierControlState.controlState] : '-'}
           />
+
           <TextField
             InputProps={{
               readOnly: true
             }}
-            label="交管车辆"
+            label={t('交管车辆')}
             variant="filled"
             focused
             style={{ flex: 1 }}
@@ -179,10 +185,10 @@ const InfoDialog: React.FC<{
             callback && callback()
           }}
         >
-          保存
+          {t('保存')}
         </Button>
         <Button color="warning" onClick={onClose}>
-          关闭
+          {t('关闭')}
         </Button>
       </DialogActions>
     </Dialog>

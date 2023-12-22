@@ -1,3 +1,4 @@
+import { useVoerkaI18n } from '@voerkai18n/react'
 import { useRequest } from 'ahooks'
 import { message } from 'antd'
 import { UpdateRouteFileInfo } from 'apis'
@@ -22,6 +23,7 @@ const EditDialog: React.FC<{
   callback?: () => void
   row?: Record<string, any>
 }> = ({ open, onClose = () => {}, callback, carrierData = [], controlStates = [], row = {} }) => {
+  const { t } = useVoerkaI18n()
   const { runAsync: run } = useRequest(UpdateRouteFileInfo, {
     manual: true
   })
@@ -31,24 +33,24 @@ const EditDialog: React.FC<{
   const schemaObject = [
     {
       name: 'projectName',
-      label: '项目名称',
+      label: t('项目名称'),
       type: 'text'
 
       // type: "select",
     },
     {
       name: 'routeName',
-      label: '地图名称',
+      label: t('地图名称'),
       type: 'text'
     },
     {
       name: 'guid',
-      label: '地图GUID',
+      label: t('地图GUID'),
       type: 'text'
     },
     {
       name: 'revision',
-      label: '版本号',
+      label: t('版本号'),
       type: 'number',
       inputProps: {
         min: 0,
@@ -59,67 +61,67 @@ const EditDialog: React.FC<{
     },
     {
       name: 'mapChassis',
-      label: '适用车辆',
+      label: t('适用车辆'),
       type: 'select',
       items: controlStates
     },
     {
       name: 'mapCarrier',
-      label: '适用车型',
+      label: t('适用车型'),
       type: 'select',
       items: carrierData
     },
     {
       name: 'dwgMinX',
-      label: '地图XMin',
+      label: t('地图XMin'),
       type: 'number',
       disabled: true
     },
     {
       name: 'dwgMaxX',
-      label: '地图XMax',
+      label: t('地图XMax'),
       type: 'number',
       disabled: true
     },
     {
       name: 'dwgMinY',
-      label: '地图YMin',
+      label: t('地图YMin'),
       type: 'number',
       disabled: true
     },
     {
       name: 'dwgMaxY',
-      label: '地图YMax',
+      label: t('地图YMax'),
       type: 'number',
       disabled: true
     },
     {
       name: 'dwgScale',
-      label: '地图缩放',
+      label: t('地图缩放'),
       type: 'number',
       disabled: true
     },
     {
       name: 'routeMinX',
-      label: '路径Xmin',
+      label: t('路径Xmin'),
       type: 'number',
       disabled: true
     },
     {
       name: 'routeMaxX',
-      label: '路径XMax',
+      label: t('路径XMax'),
       type: 'number',
       disabled: true
     },
     {
       name: 'routeMinY',
-      label: '路径YMin',
+      label: t('路径YMin'),
       type: 'number',
       disabled: true
     },
     {
       name: 'routeMaxY',
-      label: '路径YMax',
+      label: t('路径YMax'),
       type: 'number',
       disabled: true
     }
@@ -127,7 +129,7 @@ const EditDialog: React.FC<{
 
   return (
     <Dialog maxWidth="md" open={open} onClose={onClose}>
-      <DialogTitle>修改路径文件</DialogTitle>
+      <DialogTitle>{t('修改路径文件')}</DialogTitle>
       <DialogContent
         sx={{
           py: `${theme.spacing(3.25)} !important`
@@ -157,10 +159,10 @@ const EditDialog: React.FC<{
             }
           }}
         >
-          保存
+          {t('保存')}
         </Button>
         <Button color="warning" onClick={onClose}>
-          关闭
+          {t('关闭')}
         </Button>
       </DialogActions>
     </Dialog>
