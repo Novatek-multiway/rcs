@@ -1,158 +1,169 @@
-import _ from 'lodash'
-import React, { ElementRef, FC, memo, PropsWithChildren, useEffect, useMemo, useRef } from 'react'
-import { Layer, Rect } from 'react-konva'
+import { useAsyncEffect, useUpdateEffect } from 'ahooks'
+import { getInitStates, getMapFunction, getOnLineCarriers, updateMapFunction } from 'apis'
+import React, { FC, memo, PropsWithChildren, useState } from 'react'
+import { CircularProgress } from 'ui'
+import { toastError } from 'utils'
 
-import map from '@/mock/map.json'
-import vehicles from '@/mock/vehicles.json'
-
+import { useWebsocketStore } from '../../store/websocket'
 import AutoResizerStage from './components/autoResizerStage'
 import CursorPosition from './components/cursorPosition'
-import Lines, { LineDirections } from './components/lines'
-import { useLines } from './components/lines/useLines'
-import { useLinesInside } from './components/lines/useLinesInside'
+import DrawingBlockCard from './components/drawingBlockCard'
 import MeasuringScale from './components/measuringScale'
-import Points from './components/points'
-import ImagePoints from './components/points/ImagePoints'
-import LocationPoints from './components/points/LocationPoints'
-import { usePoints } from './components/points/usePoints'
+import SearchArea from './components/searchArea'
 import Toolbar from './components/toolbar'
-import Vehicles from './components/vehicles'
-import { useVehicles } from './components/vehicles/useVehicles'
-import { POINT_IMAGE_NAME_MAP } from './constants'
-import { useKonvaDrawing } from './hooks/useKonvaDrawing'
-import { useShapesInside } from './hooks/useShapesInside'
+import { Switches } from './components/toolbar/components/settings/constant'
+import { EMapSettingsKeys } from './constants'
 import { useTwoDMapStore } from './store'
 import { TwoDMapWrapper } from './style'
-
-const mapData = JSON.parse((map as any).data) as MapAPI.RootMapObject
-const vehiclesData = vehicles.data as ReportAPI.OnlineCarrier[]
 
 interface ITwoDMapProps {
   toolbarRight?: number
 }
 
-const SCALE_BOUNDARY = 6.5 // 缩放显示边界（低于一定缩放值，部分元素不显示，提升初始化渲染性能）
 // 2D地图
 const TwoDMap: FC<PropsWithChildren<ITwoDMapProps>> = (props) => {
   const { toolbarRight = 300 } = props
-
-  const { currentScale, settings, setMapSize, setMapCenterPosition } = useTwoDMapStore((state) => ({
-    currentScale: state.currentScale,
-    settings: state.settings,
+  const {
+    isLoading,
+    setIsLoading,
+    setMapSize,
+    setMapCenterPosition,
+    setSettingSwitches,
+    setSettings,
+    currentChangedSwitch,
+    isDrawingBlockCardOpen,
+    searchAreaVisible
+  } = useTwoDMapStore((state) => ({
+    isLoading: state.isLoading,
+    setIsLoading: state.setIsLoading,
     setMapSize: state.setMapSize,
-    setMapCenterPosition: state.setMapCenterPosition
+    setMapCenterPosition: state.setMapCenterPosition,
+    setSettingSwitches: state.setSettingSwitches,
+    setSettings: state.setSettings,
+    currentChangedSwitch: state.currentChangedSwitch,
+    isDrawingBlockCardOpen: state.isDrawingBlockCardOpen,
+    searchAreaVisible: state.searchAreaVisible
+  }))
+  const { onlineCarriers, homeChargeGoodsStations } = useWebsocketStore((state) => ({
+    onlineCarriers: state['Report/GetOnLineCarriers'],
+    homeChargeGoodsStations: state['Report/GetHomeChargeGoodsStations']
   }))
 
-  useEffect(() => {
+  const [mapData, setMapData] = useState<MapAPI.RootMapObject | null>(null)
+  const [vehiclesData, setVehiclesData] = useState<ReportAPI.OnlineCarrier[]>([])
+
+  useAsyncEffect(async () => {
+    setIsLoading(true)
+
+    /* ---------------------------------- 地图数据 ---------------------------------- */
+    const mapRes = await getInitStates()
+    const mapData: MapAPI.RootMapObject = JSON.parse(mapRes.data)
+    setMapData(mapData)
+    /* ---------------------------------- 地图数据 ---------------------------------- */
+
+    /* ---------------------------------- 车辆数据 ---------------------------------- */
+    const vehiclesRes = await getOnLineCarriers()
+    const vehiclesData: ReportAPI.OnlineCarrier[] = vehiclesRes.data
+    setVehiclesData(vehiclesData)
+    /* ---------------------------------- 车辆数据 ---------------------------------- */
+
+    /* ---------------------------------- 开关设置 ---------------------------------- */
+    const settingSwitchesRes = await getMapFunction()
+    const mapFunctionData: MapAPI.MapFunction = settingSwitchesRes.data
+    const settingSwitchesData = JSON.parse(mapFunctionData.functionValue) as MapAPI.MapFunctionItem[]
+    const settingSwitches = settingSwitchesData
+      .map((item) => ({
+        id: item.Id,
+        label: item.FunctionName,
+        sort: item.FunctionSort,
+        showed: item.Showed,
+        enabled: item.Enabled,
+        key: Switches.find((s) => s.label === item.FunctionName)?.key as EMapSettingsKeys
+      }))
+      .filter((item) => item.key)
+    setSettingSwitches(settingSwitches) // 存储后端开关数据
+    const settings = Object.fromEntries(settingSwitches.map((switchItem) => [switchItem.key, switchItem.enabled]))
+    setSettings(settings)
+    /* ---------------------------------- 开关设置 ---------------------------------- */
+
+    setIsLoading(false)
+  }, [])
+
+  useUpdateEffect(() => {
+    if (!mapData) return
     const { DWGMaxX, DWGMinX, DWGMaxY, DWGMinY } = mapData.MapOption
     const mapSize = { width: Math.abs(DWGMaxX - DWGMinX), height: Math.abs(DWGMaxY - DWGMinY) }
+    if (mapSize.width === 0 || mapSize.height === 0) return toastError('地图尺寸为0，请检查地图数据')
     setMapSize(mapSize)
     const mapCenterPosition = { x: DWGMinX + mapSize.width / 2, y: DWGMinY + mapSize.height / 2 }
     setMapCenterPosition(mapCenterPosition)
-  }, [setMapSize, setMapCenterPosition])
+  }, [setMapSize, setMapCenterPosition, mapData?.MapOption])
 
-  /* ----------------------------------- 点位 ----------------------------------- */
-  const points = usePoints(mapData.Vertexs)
-  const insidePoints = useShapesInside(points)
-  // 停车点、充点电
-  const imagePoints = useMemo(
-    () =>
-      insidePoints
-        .filter((p) => !!POINT_IMAGE_NAME_MAP[p.type])
-        .map((p) => ({ ...p, pointImageName: POINT_IMAGE_NAME_MAP[p.type] })),
-    [insidePoints]
-  )
-  // 库位点
-  const locationPoint = useMemo(() => insidePoints.filter((p) => p.type === 1 || p.type === 4), [insidePoints])
-  /* ----------------------------------- 点位 ----------------------------------- */
-
-  /* ----------------------------------- 边 ----------------------------------- */
-  const lines = useLines(mapData.Edges)
-  const insideLines = useLinesInside(lines)
-  const lineDirections = insideLines.flatMap((line) => line.directions)
-  /* ----------------------------------- 边 ----------------------------------- */
-
-  /* ----------------------------------- 车辆 ----------------------------------- */
-  const vehicles = useVehicles(vehiclesData, {
-    carrierPlanningFilter: (planning) => (settings.isDevMode ? true : planning.state1 === 0)
-  })
-  const insideVehicles = useShapesInside(vehicles, (originInsideFilter) => {
-    // 车或车的路径在可见范围，则要显示当前车辆
-    return (vehicle) => {
-      // 如果 isFaultyVehicleVisible为false, 不显示异常车辆,
-      if (!settings.isFaultyVehicleVisible && vehicle.statusName === '异常') {
-        return false
-      }
-      // 没有规划路线的车辆，只需要判断车辆是否在可见范围内，不需要判断线路是否在可见范围内
-      if (!vehicle.lines?.length) {
-        return originInsideFilter(vehicle)
-      }
-      // 如果isVehicleOnWorkVisible为false, 不显示带规划路线的工作车辆, 也可理解成工作车辆不能在可见范围
-      if (!settings.isVehicleOnWorkVisible) return false
-
-      return (
-        originInsideFilter(vehicle) ||
-        vehicle.lines
-          .flatMap((line) => _.chunk(line.points, 2).map((point) => ({ x: point[0], y: point[1] })))
-          .some(originInsideFilter)
-      )
+  /* ---------------------------------- 更新开关 ---------------------------------- */
+  useUpdateEffect(() => {
+    if (!currentChangedSwitch) return
+    const _updateMapFunction = async () => {
+      const { id, label, showed, enabled, sort } = currentChangedSwitch
+      await updateMapFunction({
+        id: id,
+        functionName: label,
+        enabled,
+        showed,
+        functionSort: sort
+      })
     }
-  })
-  /* ----------------------------------- 车辆 ----------------------------------- */
+    _updateMapFunction()
+  }, [currentChangedSwitch])
+  /* ---------------------------------- 更新开关 ---------------------------------- */
 
-  /* ---------------------------------- 绘制区域 ---------------------------------- */
-  const drawLayerRef = useRef<ElementRef<typeof Layer>>(null)
-  const result = useKonvaDrawing(drawLayerRef, { type: 'rect' })
-  console.log('🚀 ~ file: index.tsx ~ line 106 ~ result', result)
-  /* ---------------------------------- 绘制区域 ---------------------------------- */
+  /* ---------------------------------- 实时推送 ---------------------------------- */
+  // 车辆状态更新
+  useUpdateEffect(() => {
+    if (!mapData) return // 等待地图加载完毕再接收数据推送
+    setVehiclesData(onlineCarriers)
+  }, [onlineCarriers])
+  // 库位点状态更新
+  useUpdateEffect(() => {
+    if (!mapData) return // 等待地图加载完毕再接收数据推送
+    const newMapData = { ...mapData }
+    const newVertexes = [...newMapData.Vertexs]
+    const locations = homeChargeGoodsStations.filter((d) => d.type === 1 || d.type === 4)
+    locations.forEach((l) => {
+      const vertex = newVertexes?.find((v) => v.ID === l.pointKey)
+      // 修改对应点的库位状态
+      if (vertex) {
+        vertex.LocationState = l.state
+      }
+    })
+    newMapData.Vertexs = newVertexes
+    setMapData(newMapData)
+  }, [homeChargeGoodsStations])
+  /* ---------------------------------- 实时推送 ---------------------------------- */
 
   return (
     <TwoDMapWrapper>
-      <AutoResizerStage>
-        {/* 不需要改变的层 */}
-        <Layer listening={false}>
-          <Lines
-            lines={insideLines}
-            stroke={settings.isVehiclePlanningSingleColor ? settings.lineColor : undefined}
-            strokeWidth={currentScale >= SCALE_BOUNDARY ? 0.1 : 3 / currentScale}
-          />
-        </Layer>
-
-        {/* 改变频率低的层
-        缩放值小于边界时隐藏， 提升显示元素多时的性能
-        */}
-        {currentScale >= SCALE_BOUNDARY && (
-          <Layer listening={false}>
-            {settings.isLocationVisible && <LocationPoints points={locationPoint} />}
-            {settings.isPointVisible && <Points points={insidePoints} />}
-            {settings.isStationVisible && <ImagePoints points={imagePoints} />}
-            {settings.isDirectionVisible && <LineDirections directions={lineDirections} />}
-          </Layer>
-        )}
-
-        {/* 改变频率高的层 */}
-        <Layer ref={drawLayerRef}>
-          <Vehicles
-            vehicles={insideVehicles}
-            stroke={settings.isVehiclePlanningSingleColor ? settings.planningLineColor : undefined}
-            strokeWidth={currentScale >= SCALE_BOUNDARY ? 0.1 : 3 / currentScale}
-            showImage={settings.isVehicleImageVisible}
-            showOutline={settings.isVehicleOutlineVisible}
-            showLines={settings.isVehiclePlanningVisible}
-            showTooltip={settings.isVehicleDetailVisible}
-          />
-        </Layer>
-        {/* 绘制层 */}
-        <Layer>
-          <Rect fill="red" width={2} height={2} x={10} y={10}></Rect>
-        </Layer>
-      </AutoResizerStage>
+      <AutoResizerStage mapData={mapData} vehiclesData={vehiclesData}></AutoResizerStage>
       {/* 光标位置 */}
       <CursorPosition />
       {/* 比例尺 */}
       <MeasuringScale />
       {/* 工具栏 */}
       <Toolbar toolbarRight={toolbarRight} />
+      {/* 绘制区块窗口 */}
+      {isDrawingBlockCardOpen && <DrawingBlockCard />}
+      {/* loading */}
+      {isLoading && (
+        <CircularProgress
+          color="inherit"
+          sx={{
+            position: 'fixed',
+            left: '50%',
+            top: '50%',
+            transform: 'translate(-50%, -50%)'
+          }}
+        />
+      )}
+      {searchAreaVisible && <SearchArea />}
     </TwoDMapWrapper>
   )
 }

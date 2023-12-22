@@ -1,37 +1,47 @@
-import { useRequest } from "ahooks";
-import { UpdateChassisInfos } from "apis";
-import * as React from "react";
-import { useDictStore } from "store";
+import { useAsyncEffect, useRequest } from 'ahooks'
+import { UpdateChassisInfos } from 'apis'
+import * as React from 'react'
+import { useDictStore } from 'store'
 import {
   Button,
   Dialog,
   DialogActions,
   DialogContent,
   DialogTitle,
+  Grid,
   //   FormikContext,
   MaterialForm,
   nygFormik,
-  useTheme,
-} from "ui";
+  useTheme
+} from 'ui'
+
+import { VehicleTypeImageCommon } from '../common'
+import { getVehicleImage } from '../utils'
 const EditDialog: React.FC<{
-  open: boolean;
-  onClose?: () => void;
-  callback?: () => void;
-  row?: Record<string, any>;
+  open: boolean
+  onClose?: () => void
+  callback?: () => void
+  row?: Record<string, any>
 }> = ({ open, onClose = () => {}, callback, row }) => {
   const { runAsync: run } = useRequest(UpdateChassisInfos, {
-    manual: true,
-  });
-  const theme = useTheme();
-  const formRef = React.useRef<nygFormik>(null);
-  const { dicts } = useDictStore();
+    manual: true
+  })
+  const theme = useTheme()
+  const formRef = React.useRef<nygFormik>(null)
+  const { dicts } = useDictStore()
+
+  const [currentChassisModelUrl, setCurrentChassisModelUrl] = React.useState<string>()
+  useAsyncEffect(async () => {
+    const url = await getVehicleImage(row?.chassisModel)
+    setCurrentChassisModelUrl(url)
+  }, [row?.chassisModel])
 
   return (
     <Dialog open={open} onClose={onClose}>
       <DialogTitle>修改车型</DialogTitle>
       <DialogContent
         sx={{
-          py: `${theme.spacing(3.25)} !important`,
+          py: `${theme.spacing(3.25)} !important`
         }}
       >
         <MaterialForm
@@ -39,100 +49,116 @@ const EditDialog: React.FC<{
           defaultValue={row}
           schemaObject={[
             {
-              name: "Type",
-              label: "类型",
-              type: "select",
+              name: 'type',
+              label: '类型',
+              type: 'select',
               required: true,
-              items: dicts["CarrierType"],
+              items: dicts['CarrierType']
               // type: "select",
             },
             {
-              name: "Model",
-              label: "名称",
-              type: "text",
-              required: true,
+              name: 'model',
+              label: '名称',
+              type: 'text',
+              required: true
               // type: "select",
             },
             {
-              name: "X1",
-              label: "X1",
-              type: "number",
-              required: true,
+              name: 'x1',
+              label: 'X1',
+              type: 'number',
+              required: true
             },
             {
-              name: "X2",
-              label: "X2",
-              type: "number",
-              required: true,
+              name: 'x2',
+              label: 'X2',
+              type: 'number',
+              required: true
             },
             {
-              name: "Y1",
-              label: "Y1",
-              type: "number",
-              required: true,
+              name: 'y1',
+              label: 'Y1',
+              type: 'number',
+              required: true
             },
             {
-              name: "Y2",
-              label: "Y2",
-              type: "number",
-              required: true,
+              name: 'y2',
+              label: 'Y2',
+              type: 'number',
+              required: true
             },
             {
-              name: "ForcedCharge",
-              label: "强制充电电量",
-              type: "number",
+              name: 'forcedCharge',
+              label: '强制充电电量',
+              type: 'number',
+              inputProps: {
+                min: 0,
+                onChange: (e: any) => {
+                  if (e.target.value < 0) e.target.value = 0
+                }
+              }
             },
             {
-              name: "ChassisModel",
-              label: "模型文件",
-              type: "text",
-            },
+              name: 'chassisModel',
+              label: '模型文件',
+              type: 'select',
+              items: VehicleTypeImageCommon,
+              onChange: async (e) => {
+                const url = await getVehicleImage(e.target.value)
+                setCurrentChassisModelUrl(url)
+              }
+            }
           ]}
         ></MaterialForm>
+        <Grid container justifyContent={'center'}>
+          {currentChassisModelUrl && (
+            <img src={currentChassisModelUrl} style={{ transform: 'rotate(90deg)', height: 100, objectFit: 'cover' }} />
+          )}
+        </Grid>
       </DialogContent>
       <DialogActions>
         <Button
           color="primary"
           onClick={async () => {
-            await formRef.current?.submitForm();
-            const { isValid, values } = formRef.current || {};
+            await formRef.current?.submitForm()
+            const { isValid, values } = formRef.current || {}
             if (isValid) {
               const baseData = {
-                BrakingAcceleration: 300,
-                FreeSecond: 0,
-                FullChargeDay: 7,
-                ID: 0,
-                IsControlFront: false,
-                Length: 100,
-                MaxAcc: 300,
-                MaxDec: 300,
-                NoLoadLength: 100,
-                NoLoadOffsetX: 0,
-                NoLoadOffsetY: 0,
-                NoLoadRadius: 0,
-                NoLoadSpeed: 3000,
-                NoLoadWidth: 100,
-                SafeX: 10,
-                SafeY: 10,
-                Shutdown: 100,
-                SpeedMax: 3000,
-                TimeOut: 10,
-                Type: 1,
-                Width: 100,
+                brakingAcceleration: 300,
+                freeSecond: 0,
+                fullChargeDay: 7,
+                id: 0,
+                isControlFront: false,
+                length: 100,
+                maxAcc: 300,
+                maxDec: 300,
+                noLoadRadius: 0,
+                noLoadSpeed: 3000,
+                safeX: 10,
+                safeY: 10,
+                shutdown: 100,
+                speedMax: 3000,
+                timeOut: 10,
+                type: 1,
+                width: 100,
                 noLoadLength: 0,
                 noLoadOffsetX: 0,
                 noLoadOffsetY: 0,
-                noLoadWidth: 0,
-              };
+                noLoadWidth: 0
+              }
               const sendData = {
                 ...baseData,
-                ...(typeof values === "object" ? values : {}),
-                Type: Number(values.Type),
-                ForcedCharge: Number(values.ForcedCharge),
-              };
-              await run(sendData);
-              onClose();
-              callback && callback();
+                ...(typeof values === 'object' ? values : {}),
+                type: Number(values.type),
+                forcedCharge: Number(values.forcedCharge),
+                noLoadLength: -values.x1 + values.x2,
+                noLoadWidth: -values.y1 + values.y2,
+                noLoadOffsetX: (values.x1 + values.x2) / 2,
+                noLoadOffsetY: (values.y1 + values.y2) / 2
+              }
+              await run(sendData)
+              onClose()
+              callback && callback()
             }
           }}
         >
@@ -143,6 +169,6 @@ const EditDialog: React.FC<{
         </Button>
       </DialogActions>
     </Dialog>
-  );
-};
-export default EditDialog;
+  )
+}
+export default EditDialog

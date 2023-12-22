@@ -1,3 +1,5 @@
 export * from './array'
 export * from './date'
+export * from './helper'
+export * from './message'
 export * from './object'

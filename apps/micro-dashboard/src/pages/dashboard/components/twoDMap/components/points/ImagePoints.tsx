@@ -14,11 +14,12 @@ export interface IImagePointProps {
   x: number
   y: number
   pointImageName: string
+  imageSize?: number
 }
 
-const IMAGE_SIZE = 5
+const IMAGE_SIZE = 2.5
 const ImagePoint: FC<IImagePointProps> = memo((props) => {
-  const { x, y, pointImageName } = props
+  const { x, y, pointImageName, imageSize = IMAGE_SIZE } = props
   const [pointImagePath, setPointImagePath] = useState<string>('')
   const image = useImage(pointImagePath)
   useEffect(() => {
@@ -34,21 +35,22 @@ const ImagePoint: FC<IImagePointProps> = memo((props) => {
       x={x}
       y={y}
       image={image}
-      width={IMAGE_SIZE}
-      height={IMAGE_SIZE}
-      offsetX={IMAGE_SIZE / 2}
-      offsetY={IMAGE_SIZE / 2}
+      width={imageSize}
+      height={imageSize}
+      offsetX={imageSize / 2}
+      offsetY={imageSize / 2}
     ></KonvaImage>
   )
 })
 
 interface IImagePointsProps {
   points: IImagePointProps[]
+  imageSize?: number
 }
 
 const ImagePoints: FC<PropsWithChildren<IImagePointsProps>> = (props) => {
-  const { points } = props
-  return points.map((points) => <ImagePoint key={points.id} {...points} />)
+  const { points, imageSize } = props
+  return points.map((points) => <ImagePoint key={points.id} imageSize={imageSize} {...points} />)
 }
 
 export default memo(ImagePoints)

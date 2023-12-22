@@ -2,6 +2,7 @@
   "extends": "tsconfig/base.json",
   "compilerOptions": {
     // "baseUrl": "."
+    "lib": ["ESNext", "DOM"]
   },
   // "include": ["./**/*.ts", "./**/*.d.ts"],
   "exclude": ["node_modules"]

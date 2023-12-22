@@ -1,7 +1,8 @@
-import { useRequest } from "ahooks";
-import { AddEvent } from "apis";
-import * as React from "react";
-import { useDictStore } from "store";
+import { useRequest } from 'ahooks'
+import { UpdateEvent } from 'apis'
+import * as React from 'react'
+import { memo } from 'react'
+import { useDictStore } from 'store'
 import {
   Button,
   Dialog,
@@ -11,110 +12,140 @@ import {
   //   FormikContext,
   MaterialForm,
   nygFormik,
-  useTheme,
-} from "ui";
-const AddDialog: React.FC<{
-  open: boolean;
-  vertexData?: any;
-  carrierData?: any;
-  chassisList?: any;
-  onClose?: () => void;
-  callback?: () => void;
-}> = ({
-  open,
-  onClose = () => {},
-  callback,
-  chassisList = [],
-  vertexData = [],
-}) => {
-  const { runAsync: run } = useRequest(AddEvent, {
-    manual: true,
-  });
-  const theme = useTheme();
-  const formRef = React.useRef<nygFormik>(null);
-  const { dicts } = useDictStore();
+  SelectChangeEvent,
+  useTheme
+} from 'ui'
+const EditDialog: React.FC<{
+  open: boolean
+  vertexData?: any
+  edgesData?: any
+  carrierData?: any
+  chassisList?: any
+  onClose?: () => void
+  callback?: () => void
+  row?: Record<string, any>
+}> = ({ open, onClose = () => {}, callback, chassisList = [], vertexData = [], edgesData = [], row = {} }) => {
+  const { runAsync: run } = useRequest(UpdateEvent, {
+    manual: true
+  })
+  const theme = useTheme()
+  const formRef = React.useRef<nygFormik>(null)
+  const { dicts } = useDictStore()
+  const [currentGenus, setCurrentGenus] = React.useState(row.genus)
+  const routeKeyOptions = React.useMemo(() => {
+    if (currentGenus === 1) {
+      return vertexData
+    } else if (currentGenus === 2) {
+      return edgesData
+    }
+    return []
+  }, [currentGenus, vertexData, edgesData])
   const schemaObject = [
     {
-      name: "description",
-      label: "事件描述",
-      type: "text",
-      required: true,
+      name: 'description',
+      label: '事件描述',
+      type: 'text',
+      required: true
       // type: "select",
     },
     {
-      name: "genus",
-      label: "元素类型",
-      type: "select",
-      items: dicts["GraphGenus"],
+      name: 'genus',
+      label: '元素类型',
+      type: 'select',
+      items: dicts['GraphGenus'],
+      onChange: (e: SelectChangeEvent) => {
+        setCurrentGenus(e.target.value)
+      }
       // type: "select",
     },
     {
-      name: "routeKey",
-      label: "路径ID",
-      type: "autoComplete",
-      items: vertexData,
+      name: 'routeKey',
+      label: '路径ID',
+      type: 'autoComplete',
+      items: routeKeyOptions
       // type: "select",
     },
     {
-      name: "carrierType",
-      label: "车辆类型",
-      type: "select",
-      items: chassisList,
+      name: 'carrierType',
+      label: '车辆类型',
+      type: 'select',
+      items: chassisList
     },
     {
-      name: "doTime",
-      label: "执行阶段",
-      type: "select",
-      items: dicts["EventTime"],
+      name: 'doTime',
+      label: '执行阶段',
+      type: 'select',
+      items: dicts['EventTime']
     },
     {
-      name: "waitTime",
-      label: "等待阶段",
-      type: "select",
-      items: dicts["EventTime"],
+      name: 'waitTime',
+      label: '等待阶段',
+      type: 'select',
+      items: dicts['EventTime']
     },
 
     {
-      name: "eventType",
-      label: "事件类型",
-      type: "select",
-      items: dicts["EventType"],
+      name: 'eventType',
+      label: '事件类型',
+      type: 'select',
+      items: dicts['EventType']
     },
     {
-      name: "timeOut",
-      label: "超时",
-      type: "number",
+      name: 'timeOut',
+      label: '超时',
+      type: 'number',
+      inputProps: {
+        min: 0,
+        onChange: (e: any) => {
+          if (e.target.value < 0) e.target.value = 0
+        }
+      }
     },
     {
-      name: "delay",
-      label: "延时",
-      type: "number",
+      name: 'delay',
+      label: '延时',
+      type: 'number',
+      inputProps: {
+        min: 0,
+        onChange: (e: any) => {
+          if (e.target.value < 0) e.target.value = 0
+        }
+      }
     },
     {
-      name: "priority",
-      label: "优先级",
-      type: "number",
+      name: 'priority',
+      label: '优先级',
+      type: 'number',
+      inputProps: {
+        min: 0,
+        onChange: (e: any) => {
+          if (e.target.value < 0) e.target.value = 0
+        }
+      }
     },
     {
-      name: "checkHasGoods",
-      label: "载货判断",
-      type: "select",
-      items: dicts["CheckGoods"],
-    },
-  ];
+      name: 'checkHasGoods',
+      label: '载货判断',
+      type: 'select',
+      items: dicts['CheckGoods']
+    }
+  ]
 
   return (
     <Dialog maxWidth="md" open={open} onClose={onClose}>
       <DialogTitle>修改事件</DialogTitle>
       <DialogContent
         sx={{
-          py: `${theme.spacing(3.25)} !important`,
+          py: `${theme.spacing(3.25)} !important`
         }}
       >
         <MaterialForm
           columns={3}
           ref={formRef}
-          defaultValue={{}}
+          defaultValue={{
+            ...row,
+            routeKey: { value: Number(row.routeKey), label: row.routeKey }
+          }}
           schemaObject={schemaObject}
         ></MaterialForm>
       </DialogContent>
@@ -122,21 +153,22 @@ const AddDialog: React.FC<{
         <Button
           color="primary"
           onClick={async () => {
-            await formRef.current?.submitForm();
-            const { isValid, values } = formRef.current;
+            await formRef.current?.submitForm()
+            const { isValid, values } = formRef.current
             schemaObject.map((item) => {
-              if (item.type === "select") {
-                values[item.name] = Number(values[item.name]);
+              if (item.type === 'select') {
+                values[item.name] = Number(values[item.name])
               }
-            });
+            })
+
             if (isValid) {
               const sendData = {
                 ...values,
-                routeKey: values.routeKey.value,
-              };
-              await run(sendData);
-              onClose();
-              callback && callback();
+                routeKey: values.routeKey.value
+              }
+              await run(sendData)
+              onClose()
+              callback && callback()
             }
           }}
         >
@@ -147,6 +179,6 @@ const AddDialog: React.FC<{
         </Button>
       </DialogActions>
     </Dialog>
-  );
-};
-export default AddDialog;
+  )
+}
+export default memo(EditDialog)

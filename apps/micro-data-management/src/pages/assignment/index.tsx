@@ -1,80 +1,114 @@
-import AddIcon from "@mui/icons-material/Add";
-import { useAsyncEffect, useRequest } from "ahooks";
-import { postGTaskList } from "apis";
-import { useCallback, useState } from "react";
-import * as React from "react";
-import { Box, Button, Grid, MuiTable } from "ui";
+import AddIcon from '@mui/icons-material/Add'
+import { useRequest, useUpdateEffect } from 'ahooks'
+import { addTaskPoint, createTask, getTaskByGuid, postGTaskList } from 'apis'
+import { useCallback, useEffect, useMemo, useState } from 'react'
+import { Box, Button, Grid, MuiTable } from 'ui'
 
-import Refresh from "@/component/refreshIcon";
+import Refresh from '@/component/refreshIcon'
 
-import { ChildTaskColumn, TaskColumn, TaskPointsColumn } from "./columns";
-import AddTaskDialog from "./componen/addTaskDialog";
+import { ChildTaskColumn, TaskColumn, TaskPointsColumn } from './columns'
+import AddActionPointDialog from './component/addActionPointDialog'
+import AddTaskDialog from './component/addTaskDialog'
 
 const DataTable = () => {
   const { loading, runAsync } = useRequest(postGTaskList, {
-    manual: true,
-  });
+    manual: true
+  })
 
   const [page, setPage] = useState({
     pageIndex: 0,
-    pageSize: 10,
-  });
-  const [rowCount, setRowCount] = useState(0);
-  const [tableData, setTableData] = useState([]);
-  const [rowData, setRowData] = useState({}) as any;
-  const [rowTask, setRowTask] = useState([]) as any;
-  const [open, setOpen] = useState(false);
+    pageSize: 10
+  })
+  const [rowCount, setRowCount] = useState(0)
+  const [taskGroupsData, setTaskGroupsData] = useState([])
+  const [selectedTaskGroupData, setSelectedTaskGroupData] = useState({}) as any
+  const [selectedTaskData, setSelectedTaskData] = useState({}) as any
 
-  useAsyncEffect(async () => {
-    const res = await runAsync({ ...page, pageIndex: page.pageIndex + 1 });
+  const fetchTaskGroups = useCallback(async () => {
+    const res = await runAsync({ ...page, pageIndex: page.pageIndex + 1, sortBy: 'CreateTime', order: 'desc' })
     if (res) {
-      setTableData(res.data.data);
-      setRowCount(res.data.total);
+      setTaskGroupsData(res.data.data)
+      setRowCount(res.data.total)
     }
-  }, [page]);
+  }, [page, runAsync])
 
-  const actionPoints = useCallback(() => {
-    if (!rowData.tasks) {
-      return [];
-    }
-    if (rowTask.actionPoint?.length) {
-      return rowTask.actionPoint;
-    }
+  useEffect(() => {
+    fetchTaskGroups()
+  }, [fetchTaskGroups])
 
-    if (rowData?.tasks.length) {
-      return rowData.tasks[0].actionPoint;
-    }
-    return [];
-  }, [rowData, rowTask]);
+  const [tasks, setTasks] = useState([])
+  const fetchTasks = useCallback(
+    async (taskGroupId: string) => {
+      const res = await getTaskByGuid(taskGroupId)
+      const tasks = res.data || []
+      setTasks(tasks)
+      const { taskCode } = selectedTaskData
+      const newSelectedTaskData = tasks.find((item: any) => item.taskCode === taskCode)
+      setSelectedTaskData(newSelectedTaskData)
+    },
+    [selectedTaskData]
+  )
+
+  useUpdateEffect(() => {
+    fetchTasks(selectedTaskGroupData.orderCode)
+  }, [selectedTaskGroupData])
+
+  const taskActionPoints = useMemo(() => selectedTaskData?.actionPoint || [], [selectedTaskData])
+
+  /* -------------------------------- 添加任务组的任务 -------------------------------- */
+  const [addTaskDialogOpen, setAddTaskDialogOpen] = useState(false)
+  const handleSaveTask = useCallback(
+    async (data: any) => {
+      await createTask(data)
+      fetchTaskGroups()
+      setAddTaskDialogOpen(false)
+    },
+    [fetchTaskGroups]
+  )
+  /* -------------------------------- 添加任务组的任务 -------------------------------- */
+
+  /* -------------------------------- 给任务添加任务点 -------------------------------- */
+  const [addActionPointDialogOpen, setAddActionPointDialogOpen] = useState(false)
+  const handleSaveActionPoint = useCallback(
+    async (data: any) => {
+      await addTaskPoint({
+        Guid: selectedTaskData.taskCode,
+        Points: [data]
+      })
+      fetchTaskGroups()
+      fetchTasks(selectedTaskGroupData.orderCode)
+      setAddActionPointDialogOpen(false)
+    },
+    [selectedTaskData, fetchTasks, selectedTaskGroupData.orderCode, fetchTaskGroups]
+  )
+  /* -------------------------------- 给任务添加任务点 -------------------------------- */
 
   return (
-    <Grid
-      container
-      rowSpacing={2}
-      columnSpacing={{ xs: 1, sm: 2, md: 2 }}
-      sx={{ height: "100%" }}
-    >
+    <Grid container rowSpacing={2} columnSpacing={{ xs: 1, sm: 2, md: 2 }} sx={{ height: '100%', marginTop: 0 }}>
       <Grid
         xs={6}
         item
         sx={{
-          overflow: "auto",
+          overflow: 'auto'
         }}
       >
-        {/* {tableData.length && ( */}
         <MuiTable
-          columns={TaskColumn}
-          data={tableData}
+          columns={TaskColumn({
+            refreshTable: () => {
+              fetchTaskGroups()
+              fetchTasks(selectedTaskGroupData.orderCode)
+            }
+          })}
+          data={taskGroupsData}
           pageChange={(pages) => {
-            setPage(pages);
-            setRowData({});
+            setPage(pages)
+            setSelectedTaskGroupData({})
           }}
           rowCount={rowCount}
-          // enableColumnResizing
           defaultColumn={{
-            minSize: 100,
+            minSize: 80,
             size: 100,
-            maxSize: 200,
+            maxSize: 200
           }}
           enableToolbarInternalActions={false}
           enableColumnActions={false}
@@ -82,48 +116,59 @@ const DataTable = () => {
           muiTableBodyRowProps={({ row }) => {
             return {
               sx: {
-                cursor: "pointer",
-                backgroundColor:
-                  row.getValue("id") === rowData.id ? "#1e4141" : "",
+                cursor: 'pointer',
+                backgroundColor: row.getValue('id') === selectedTaskGroupData.id ? '#1e4141' : '',
+                opacity: row.original.isCancel || row.original.tasks?.[0]?.state === 0 ? 0.5 : 1
               },
               onClick: () => {
-                setRowData(row.original);
-              },
-            };
+                setSelectedTaskGroupData(row.original)
+                setSelectedTaskData(row.original.tasks[0])
+              }
+            }
           }}
           initialState={{
             columnPinning: {
-              right: ["actions"],
-            },
+              right: ['actions']
+            }
           }}
           state={{
             isLoading: loading,
             showLoadingOverlay: false,
             showProgressBars: loading,
             pagination: { ...page },
+            density: 'compact'
           }}
           muiTablePaperProps={{
             sx: {
-              height: "100%",
-              padding: 2,
-            },
-          }}
-          muiTableProps={{
-            sx: {},
+              height: '100%',
+              padding: 2
+            }
           }}
           muiTableBodyProps={{
             sx: {
-              overflow: "auto",
-            },
+              overflow: 'auto'
+            }
+          }}
+          muiTableHeadCellProps={{
+            align: 'center'
+          }}
+          muiTableBodyCellProps={{
+            align: 'center'
+          }}
+          muiTableContainerProps={{
+            sx: {
+              maxHeight: '72vh',
+              overflow: 'scroll'
+            }
           }}
           renderTopToolbarCustomActions={() => {
             return (
               <Box
                 sx={{
-                  display: "flex",
-                  alignItems: "center",
+                  display: 'flex',
+                  alignItems: 'center',
                   gap: 1,
-                  p: "4px",
+                  p: '4px'
                 }}
               >
                 <Button
@@ -133,98 +178,95 @@ const DataTable = () => {
                   onClick={() => {
                     setPage({
                       pageIndex: 0,
-                      pageSize: 10,
-                    });
-                    setRowData({});
+                      pageSize: 10
+                    })
+                    setSelectedTaskGroupData({})
                   }}
                 >
                   <Refresh loading={loading}></Refresh>
                   刷新
                 </Button>
-                <Button
-                  variant="outlined"
-                  size="small"
-                  color="primary"
-                  onClick={() => setOpen(true)}
-                >
+                <Button variant="outlined" size="small" color="primary" onClick={() => setAddTaskDialogOpen(true)}>
                   <AddIcon />
                   新增
                 </Button>
               </Box>
-            );
+            )
           }}
         ></MuiTable>
         {/* )} */}
       </Grid>
-      <Grid xs={6} item container rowSpacing={2}>
-        <Grid item xs={12}>
-          {/* {tableData.length && ( */}
+      <Grid xs={6} item flexDirection={'column'} flexWrap={'nowrap'} container rowSpacing={2}>
+        <Grid item xs={6} sx={{ width: '100%', maxWidth: '100% !important' }}>
           <MuiTable
-            columns={ChildTaskColumn}
-            data={rowData?.tasks || []}
-            // enableColumnResizing
+            columns={ChildTaskColumn({ refreshTable: () => fetchTasks(selectedTaskGroupData.orderCode) })}
+            data={tasks || []}
             defaultColumn={{
               minSize: 100,
               size: 100,
-              maxSize: 300,
+              maxSize: 300
             }}
             enableRowSelection={false}
             enablePagination={false}
             enableColumnActions={false}
             enableTopToolbar={false}
+            enableSorting={false}
             muiTableBodyRowProps={({ row }) => {
               return {
                 sx: {
-                  cursor: "pointer",
+                  cursor: 'pointer',
+                  opacity: row.original.state === 5 || row.original.state === 0 ? 0.5 : 1
                 },
                 onClick: () => {
-                  setRowTask(row.original);
-                },
-              };
+                  setSelectedTaskData(row.original)
+                }
+              }
             }}
             initialState={{
               columnPinning: {
-                right: ["actions"],
-              },
+                right: ['actions']
+              }
             }}
             state={{
               isLoading: loading,
               showLoadingOverlay: false,
               showProgressBars: loading,
+              density: 'compact'
             }}
             muiTablePaperProps={{
               sx: {
-                height: "100%",
-                padding: 2,
-              },
+                height: '100%',
+                padding: 2
+              }
             }}
             muiTableProps={{
               sx: {
-                height: "100%",
-              },
+                height: '100%'
+              }
             }}
             muiTableBodyProps={{
               sx: {
-                height: "100%",
-                overflow: "auto",
-              },
+                height: '100%',
+                overflow: 'auto'
+              }
+            }}
+            muiTableContainerProps={{
+              sx: {
+                maxHeight: '30vh',
+                overflow: 'scroll'
+              }
             }}
           ></MuiTable>
-          {/* )} */}
           {/* 新增区域 */}
-          <AddTaskDialog open={open} onClose={() => setOpen(false)} />
         </Grid>
-        <Grid item xs={12}>
-          {/* {tableData.length && ( */}
+        <Grid item xs={6} sx={{ width: '100%', maxWidth: '100% !important' }}>
           <MuiTable
             columns={TaskPointsColumn}
-            data={actionPoints()}
-            // enableColumnResizing
-            // enableColumnResizing
+            data={taskActionPoints}
             defaultColumn={{
               minSize: 100,
               size: 100,
-              maxSize: 300,
+              maxSize: 300
             }}
             enableRowSelection={false}
             enablePagination={false}
@@ -232,54 +274,80 @@ const DataTable = () => {
             enableColumnActions={false}
             initialState={{
               columnPinning: {
-                right: ["actions"],
-              },
+                right: ['actions']
+              }
             }}
             state={{
               isLoading: loading,
               showLoadingOverlay: false,
               showProgressBars: loading,
+              density: 'compact'
             }}
             muiTablePaperProps={{
               sx: {
-                height: "100%",
-                padding: 2,
-              },
+                height: '100%',
+                padding: 2
+              }
             }}
             muiTableProps={{
               sx: {
-                height: "100%",
-              },
+                height: '100%'
+              }
             }}
             muiTableBodyProps={{
               sx: {
-                height: "100%",
-                overflow: "auto",
-              },
+                height: '100%',
+                overflow: 'auto'
+              }
+            }}
+            muiTableContainerProps={{
+              sx: {
+                maxHeight: '40vh',
+                overflow: 'scroll'
+              }
             }}
             renderTopToolbarCustomActions={() => {
               return (
                 <Box
                   sx={{
-                    display: "flex",
-                    alignItems: "center",
+                    display: 'flex',
+                    alignItems: 'center',
                     gap: 1,
-                    p: "4px",
+                    p: '4px'
                   }}
                 >
-                  <Button variant="outlined" size="small" color="primary">
+                  <Button
+                    variant="outlined"
+                    size="small"
+                    color="primary"
+                    disabled={taskActionPoints.length === 0}
+                    sx={{
+                      lineHeight: 1
+                    }}
+                    onClick={() => setAddActionPointDialogOpen(true)}
+                  >
                     <AddIcon />
                     添加任务点
                   </Button>
                 </Box>
-              );
+              )
             }}
           ></MuiTable>
           {/* )} */}
         </Grid>
       </Grid>
+      {addTaskDialogOpen && (
+        <AddTaskDialog open={addTaskDialogOpen} onClose={() => setAddTaskDialogOpen(false)} onSave={handleSaveTask} />
+      )}
+      {addActionPointDialogOpen && (
+        <AddActionPointDialog
+          open={addActionPointDialogOpen}
+          onClose={() => setAddActionPointDialogOpen(false)}
+          onSave={handleSaveActionPoint}
+        />
+      )}
     </Grid>
-  );
-};
+  )
+}
 
-export default DataTable;
+export default DataTable

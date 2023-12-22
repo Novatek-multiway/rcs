@@ -18,7 +18,7 @@ export const PanelBackdrop = styled.div`
   --inset: ${inset};
   position: absolute;
   inset: 0;
-  z-index: -1;
+  /* z-index: -1; */
   transform: translate(var(--inset), var(--inset));
   border: 1px solid #272f3c;
   background: transparent;
@@ -37,6 +37,7 @@ export const PanelContentWrapper = styled.div`
   --decoration-width: 2px;
   flex: 1;
   position: relative;
+  min-height: 0;
   border: 1px solid #272f3c;
   background-origin: content-box;
   background-color: rgba(0, 0, 0, 0.8);

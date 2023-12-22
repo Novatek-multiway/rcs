@@ -1,18 +1,14 @@
-import FormControl, { FormControlProps } from "@mui/material/FormControl";
-import FormHelperText, {
-  FormHelperTextProps,
-} from "@mui/material/FormHelperText";
-import InputLabel, { InputLabelProps } from "@mui/material/InputLabel";
-import MuiSelect, { SelectProps as MuiSelectProps } from "@mui/material/Select";
-import { FieldProps, getIn } from "formik";
-import * as React from "react";
+import FormControl, { FormControlProps } from '@mui/material/FormControl'
+import { FormHelperTextProps } from '@mui/material/FormHelperText'
+import InputLabel, { InputLabelProps } from '@mui/material/InputLabel'
+import MuiSelect, { SelectProps as MuiSelectProps } from '@mui/material/Select'
+import { FieldProps, getIn } from 'formik'
+import * as React from 'react'
 
-export interface SelectProps
-  extends FieldProps,
-    Omit<MuiSelectProps, "name" | "value"> {
-  formControl?: FormControlProps;
-  formHelperText?: FormHelperTextProps;
-  inputLabel?: InputLabelProps;
+export interface SelectProps extends FieldProps, Omit<MuiSelectProps, 'name' | 'value'> {
+  formControl?: FormControlProps
+  formHelperText?: FormHelperTextProps
+  inputLabel?: InputLabelProps
 }
 
 export function fieldToSelect({
@@ -23,11 +19,11 @@ export function fieldToSelect({
   ...props
 }: Omit<
   SelectProps,
-  "formControl" | "formHelperText" | "inputLabel"
+  'formControl' | 'formHelperText' | 'inputLabel'
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
 >): MuiSelectProps & { formError: any } {
-  const fieldError = getIn(errors, field.name);
-  const showError = getIn(touched, field.name) && !!fieldError;
+  const fieldError = getIn(errors, field.name)
+  const showError = getIn(touched, field.name) && !!fieldError
 
   return {
     disabled: disabled ?? isSubmitting,
@@ -46,44 +42,35 @@ export function fieldToSelect({
       onClose ??
       (async (e: React.SyntheticEvent) => {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const dataset = (e.target as any).dataset as DOMStringMap;
+        const dataset = (e.target as any).dataset as DOMStringMap
         if (dataset && dataset.value) {
           // out-of-sync issue since November 2019: https://github.com/formium/formik/issues/2059#issuecomment-890613538
           // without the await, formik validates with the former value
-          await setFieldValue(field.name, dataset.value, false);
+          await setFieldValue(field.name, dataset.value, false)
         }
-        setFieldTouched(field.name, true, true);
+        setFieldTouched(field.name, true, true)
       }),
     ...field,
-    ...props,
-  };
+    ...props
+  }
 }
 
-export function Select({
-  formControl,
-  inputLabel,
-  formHelperText,
-  ...selectProps
-}: SelectProps) {
-  const { error, formError, disabled, ...selectFieldProps } =
-    fieldToSelect(selectProps);
-  const { children: formHelperTextChildren, ...formHelperTextProps } =
-    formHelperText || {};
-  const shouldDisplayFormHelperText = error || formHelperTextChildren;
+export function Select({ formControl, inputLabel, ...selectProps }: SelectProps) {
+  const { error, disabled, ...selectFieldProps } = fieldToSelect(selectProps)
+  // const { children: formHelperTextChildren, ...formHelperTextProps } = formHelperText || {}
+  // const shouldDisplayFormHelperText = error || formHelperTextChildren
 
   return (
     <FormControl disabled={disabled} error={error} {...formControl}>
-      <InputLabel id={selectFieldProps.labelId} {...inputLabel}>
+      <InputLabel id={selectFieldProps.labelId} size={selectProps.size} {...inputLabel}>
         {selectFieldProps.label}
       </InputLabel>
       <MuiSelect {...selectFieldProps} />
-      {shouldDisplayFormHelperText && (
-        <FormHelperText {...formHelperTextProps}>
-          {error ? formError : formHelperTextChildren}
-        </FormHelperText>
-      )}
+      {/* {shouldDisplayFormHelperText && (
+        <FormHelperText {...formHelperTextProps}>{error ? formError : formHelperTextChildren}</FormHelperText>
+      )} */}
     </FormControl>
-  );
+  )
 }
 
-Select.displayName = "FormikMaterialUISelect";
+Select.displayName = 'FormikMaterialUISelect'

@@ -1,81 +1,70 @@
-import AddIcon from "@mui/icons-material/Add";
-import EditNoteIcon from "@mui/icons-material/EditNote";
-import { useRequest } from "ahooks";
-import {
-  delStationInfos,
-  GetCarrierOptions,
-  GetChassisList,
-  GetEventsPageList,
-  getVertexs,
-} from "apis";
-import type { FC, ReactNode } from "react";
-import React, { memo } from "react";
-import { useDictStore } from "store";
-import { BaseTable, Box, Button, MenuItem, TextField } from "ui";
-import { getUpperCaseKeyObject } from "utils";
+import AddIcon from '@mui/icons-material/Add'
+import EditNoteIcon from '@mui/icons-material/EditNote'
+import { useRequest } from 'ahooks'
+import { DelEvent, GetCarrierOptions, GetChassisList, GetEventsPageList, getMapEdges, getVertexs } from 'apis'
+import type { FC, ReactNode } from 'react'
+import React, { memo } from 'react'
+import { useDictStore } from 'store'
+import { BaseTable, Box, Button, MenuItem, TextField } from 'ui'
 
-import DelButton from "@/component/delButton";
-import Refresh from "@/component/refreshIcon";
+import DelButton from '@/component/delButton'
+import Refresh from '@/component/refreshIcon'
 
-import AddDialog from "./components/add";
-import EditDialog from "./components/edit";
+import AddDialog from './components/add'
+import EditDialog from './components/edit'
 
 interface IProps {
-  children?: ReactNode;
+  children?: ReactNode
 }
 
 const dictsTransform = (arr: [], label: string, value: string) => {
   if (!arr) {
-    return [];
+    return []
   }
   return arr.map((item) => ({
     label: String(item[label]),
-    value: item[value],
-  }));
-};
+    value: item[value]
+  }))
+}
 
 //事件配置
 const Event: FC<IProps> = () => {
-  const { dicts } = useDictStore();
-  const [open, setOpen] = React.useState(false);
-  const [editOpen, setEditOpen] = React.useState(false);
-  const [row, setRow] = React.useState({});
-  const {
-    data: chassisData,
-    loading,
-    run: getChass,
-  } = useRequest(() => GetEventsPageList({ id: 0 }));
+  const { dicts } = useDictStore()
+  const [open, setOpen] = React.useState(false)
+  const [editOpen, setEditOpen] = React.useState(false)
+  const [row, setRow] = React.useState({})
+  const { data: chassisData, loading, run: getChass } = useRequest(() => GetEventsPageList({ id: 0 }))
 
-  const { runAsync: delFn } = useRequest(delStationInfos, {
-    manual: true,
-  });
+  const { runAsync: delFn } = useRequest(DelEvent, {
+    manual: true
+  })
 
-  const { data: vertexData } = useRequest(() => getVertexs());
+  const { data: vertexData } = useRequest(() => getVertexs())
+  const { data: edgesData } = useRequest(() => getMapEdges())
 
-  const { data: carrierData } = useRequest(GetCarrierOptions);
-  const { data: chassisList } = useRequest(GetChassisList);
+  const { data: carrierData } = useRequest(GetCarrierOptions)
+  const { data: chassisList } = useRequest(GetChassisList)
 
-  const convertChassisList = dictsTransform(chassisList?.data, "model", "id");
+  const convertChassisList = dictsTransform(chassisList?.data, 'model', 'id')
 
   const columns = [
     {
-      accessorKey: "id",
-      header: "事件ID",
+      accessorKey: 'id',
+      header: '事件ID',
+      size: 60
     },
     {
-      accessorKey: "genus",
-      header: "元素类型",
+      accessorKey: 'genus',
+      header: '元素类型',
       Filter: ({ header }) => {
         return (
           <TextField
             fullWidth
             margin="none"
-            onChange={(e) =>
-              header.column.setFilterValue(e.target.value || undefined)
-            }
+            onChange={(e) => header.column.setFilterValue(e.target.value || undefined)}
             placeholder="Filter"
             select
-            value={header.column.getFilterValue() ?? ""}
+            value={header.column.getFilterValue() ?? ''}
             variant="standard"
           >
             {/*@ts-ignore*/}
@@ -84,105 +73,108 @@ const Event: FC<IProps> = () => {
             <MenuItem value="Female">Female</MenuItem>
             <MenuItem value="Other">Other</MenuItem>
             {dicts.GraphGenus?.map((item) => {
-              return <MenuItem value={item.value}>{item.label}</MenuItem>;
+              return <MenuItem value={item.value}>{item.label}</MenuItem>
             })}
           </TextField>
-        );
+        )
       },
       filterFn: (row, _columnIds, filterValue) => {
-        return row.getValue<string>("genus") === filterValue;
+        return row.getValue<string>('genus') === filterValue
       },
       Cell: ({ row }) => {
-        const { original } = row;
-        const tyles = dicts.GraphGenus?.find(
-          (item) => item.value === original.genus
-        );
-        return <>{tyles?.label || ""}</>;
+        const { original } = row
+        const tyles = dicts.GraphGenus?.find((item) => item.value === original.genus)
+        return <>{tyles?.label || ''}</>
       },
+      size: 60
     },
     {
-      accessorKey: "routeKey",
-      header: "路径ID",
+      accessorKey: 'routeKey',
+      header: '路径ID',
+      size: 60
     },
     {
-      accessorKey: "carrierType",
-      header: "车辆类型",
+      accessorKey: 'carrierType',
+      header: '车辆类型',
       Cell: ({ row }) => {
-        const { original } = row;
-        const tyles = convertChassisList?.find(
-          (item) => item.value === original.carrierType
-        );
-        return <>{tyles?.label || ""}</>;
+        const { original } = row
+        const tyles = convertChassisList?.find((item) => item.value === original.carrierType)
+        return <>{tyles?.label || ''}</>
       },
+      size: 80
     },
     {
-      accessorKey: "doTime",
+      accessorKey: 'doTime',
       enableFilters: true,
-      header: "执行阶段",
+      header: '执行阶段',
       Cell: ({ row }) => {
-        return <>{dicts.EventTime[row.getValue("doTime")].label}</>;
+        return <>{dicts.EventTime[row.getValue('doTime')].label}</>
       },
+      size: 80
     },
     {
-      accessorKey: "waitTime",
-      header: "等待阶段",
+      accessorKey: 'waitTime',
+      header: '等待阶段',
       Cell: ({ row }) => {
-        return <>{dicts.EventTime[row.getValue("waitTime")].label}</>;
+        return <>{dicts.EventTime[row.getValue('waitTime')].label}</>
       },
+      size: 80
     },
     {
-      accessorKey: "eventType",
-      header: "事件类型",
+      accessorKey: 'eventType',
+      header: '事件类型',
       Cell: ({ row }) => {
-        const { original } = row;
-        const tyles = dicts.EventType?.find(
-          (item) => item.value === original.eventType
-        );
-        return <>{tyles?.label || ""}</>;
+        const { original } = row
+        const tyles = dicts.EventType?.find((item) => item.value === original.eventType)
+        return <>{tyles?.label || ''}</>
       },
+      size: 60
     },
     {
-      accessorKey: "timeOut",
-      header: "超时(ms)",
+      accessorKey: 'timeOut',
+      header: '超时(ms)',
+      size: 80
     },
     {
-      accessorKey: "delay",
-      header: "延时(ms)",
+      accessorKey: 'delay',
+      header: '延时(ms)',
+      size: 80
     },
     {
-      accessorKey: "priority",
+      accessorKey: 'priority',
       enableColumnFilter: false,
-      header: "优先级",
+      header: '优先级',
+      size: 60
     },
     {
-      accessorKey: "checkHasGoods",
-      header: "载货判断",
+      accessorKey: 'checkHasGoods',
+      header: '载货判断',
       Cell: ({ row }) => {
-        const { original } = row;
+        const { original } = row
 
-        const tyles = dicts.CheckGoods?.find(
-          (item) => item.value === original.checkHasGoods
-        );
-        return <>{tyles?.label || ""}</>;
+        const tyles = dicts.CheckGoods?.find((item) => item.value === original.checkHasGoods)
+        return <>{tyles?.label || ''}</>
       },
+      size: 80
     },
     {
-      accessorKey: "description",
-      header: "事件描述",
+      accessorKey: 'description',
+      header: '事件描述',
+      size: 120
     },
     {
-      accessorKey: "actions",
-      header: "操作",
+      accessorKey: 'actions',
+      header: '操作',
       enableColumnFilter: false,
       enableSorting: false,
       Cell: ({ row }) => {
         return (
           <div
             style={{
-              display: "flex",
-              flexWrap: "nowrap",
-              gap: "0.5rem",
-              width: "100px",
+              display: 'flex',
+              flexWrap: 'nowrap',
+              gap: '0.5rem',
+              width: '100px'
             }}
           >
             <Button
@@ -190,8 +182,8 @@ const Event: FC<IProps> = () => {
               size="small"
               color="warning"
               onClick={() => {
-                setEditOpen(true);
-                setRow(row.original);
+                setEditOpen(true)
+                setRow(row.original)
               }}
               startIcon={<EditNoteIcon />}
             >
@@ -200,17 +192,17 @@ const Event: FC<IProps> = () => {
             <DelButton
               delFn={async () => {
                 await delFn({
-                  id: row.original.id,
-                });
-                getChass();
+                  id: row.original.id
+                })
+                getChass()
               }}
             />
           </div>
-        );
+        )
       },
-    },
-  ];
-
+      size: 175
+    }
+  ]
   return (
     <>
       <BaseTable
@@ -218,19 +210,19 @@ const Event: FC<IProps> = () => {
         data={chassisData?.data.data || []}
         muiTablePaperProps={{
           sx: {
-            height: "100%",
-            padding: 2,
-          },
+            height: '100%',
+            padding: 2
+          }
         }}
         loading={loading}
         renderTopToolbarCustomActions={() => {
           return (
             <Box
               sx={{
-                display: "flex",
-                alignItems: "center",
+                display: 'flex',
+                alignItems: 'center',
                 gap: 1,
-                p: "4px",
+                p: '4px'
               }}
             >
               <Button
@@ -238,29 +230,30 @@ const Event: FC<IProps> = () => {
                 size="small"
                 color="warning"
                 onClick={() => {
-                  getChass();
+                  getChass()
                 }}
               >
                 <Refresh loading={loading}></Refresh>
                 刷新
               </Button>
-              <Button
-                variant="outlined"
-                size="small"
-                color="primary"
-                onClick={() => setOpen(true)}
-              >
+              <Button variant="outlined" size="small" color="primary" onClick={() => setOpen(true)}>
                 <AddIcon />
                 新增
               </Button>
             </Box>
-          );
+          )
         }}
         initialState={{
           columnPinning: {
-            right: ["actions"],
-          },
+            right: ['actions']
+          }
         }}
+        muiTableContainerProps={{
+          sx: {
+            maxHeight: '85%'
+          }
+        }}
+        enableStickyHeader
         enableToolbarInternalActions={true}
         enableFullScreenToggle={false}
         enableHiding={false}
@@ -270,24 +263,26 @@ const Event: FC<IProps> = () => {
       <AddDialog
         open={open}
         onClose={() => setOpen(false)}
-        vertexData={dictsTransform(vertexData?.data, "id", "id")}
-        carrierData={dictsTransform(carrierData?.data, "name", "id")}
-        chassisList={dictsTransform(convertChassisList)}
+        vertexData={dictsTransform(vertexData?.data, 'id', 'id')}
+        edgesData={dictsTransform(edgesData?.data, 'id', 'id')}
+        carrierData={dictsTransform(carrierData?.data, 'name', 'id')}
+        chassisList={convertChassisList}
         callback={() => {
-          getChass();
+          getChass()
         }}
       />
       <EditDialog
         open={editOpen}
-        row={getUpperCaseKeyObject(row)}
+        row={row}
         onClose={() => setEditOpen(false)}
-        vertexData={dictsTransform(vertexData?.data, "id", "id")}
-        carrierData={dictsTransform(carrierData?.data, "name", "id")}
-        chassisList={dictsTransform(chassisList?.data, "model", "id")}
+        vertexData={dictsTransform(vertexData?.data, 'id', 'id')}
+        edgesData={dictsTransform(edgesData?.data, 'id', 'id')}
+        carrierData={dictsTransform(carrierData?.data, 'name', 'id')}
+        chassisList={dictsTransform(chassisList?.data, 'model', 'id')}
         callback={() => getChass()}
       />
     </>
-  );
-};
+  )
+}
 
-export default memo(Event);
+export default memo(Event)

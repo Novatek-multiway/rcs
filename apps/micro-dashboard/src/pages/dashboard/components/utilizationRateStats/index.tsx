@@ -1,44 +1,14 @@
+import { useAsyncEffect, useUpdateEffect } from 'ahooks'
+import { getThroughReport } from 'apis'
 import { echarts, useEcharts } from 'hooks'
 import type { FC, PropsWithChildren } from 'react'
-import React, { memo, useRef } from 'react'
+import React, { memo, useCallback, useRef, useState } from 'react'
 import { Panel } from 'ui'
+
+import { useWebsocketStore } from '../../store/websocket'
 
 interface IUtilizationRateStatsProps {}
 
-const data = [
-  {
-    time: '10-18',
-    value: 0
-  },
-  {
-    time: '10-19',
-    value: 14
-  },
-  {
-    time: '10-20',
-    value: 23
-  },
-  {
-    time: '10-21',
-    value: 20
-  },
-  {
-    time: '10-22',
-    value: 0
-  },
-  {
-    time: '10-23',
-    value: 20
-  },
-  {
-    time: '10-24',
-    value: 0
-  },
-  {
-    time: '10-25',
-    value: 0
-  }
-]
 const option: echarts.EChartsOption = {
   backgroundColor: 'transparent',
   tooltip: {
@@ -62,7 +32,7 @@ const option: echarts.EChartsOption = {
     {
       type: 'category',
       boundaryGap: false,
-      data: data.map((d) => d.time),
+      data: [],
       splitLine: {
         show: false
       },
@@ -111,7 +81,7 @@ const option: echarts.EChartsOption = {
       emphasis: {
         focus: 'series'
       },
-      data: data.map((d) => d.value),
+      data: [],
       label: {
         show: true,
         color: '#fff'
@@ -122,9 +92,44 @@ const option: echarts.EChartsOption = {
 
 // 稼动率统计
 const UtilizationRateStats: FC<PropsWithChildren<IUtilizationRateStatsProps>> = () => {
+  const wsUtilizationRateStatsData = useWebsocketStore((state) => state['Report/GetAgvThroughs'])
   const el = useRef<HTMLDivElement | null>(null)
   // 传递元素给useEcharts
-  useEcharts(el, { echartsOption: option, theme: 'dark' })
+  const { updateOption } = useEcharts(el, { echartsOption: option, theme: 'dark' })
+
+  const [utilizationRateStatsData, setUtilizationRateStatsData] = useState<ReportAPI.Through>()
+  useAsyncEffect(async () => {
+    const res = await getThroughReport()
+    const utilizationRateData = res.data as ReportAPI.Through
+    setUtilizationRateStatsData(utilizationRateData)
+  }, [])
+
+  const updateOptionCallback = useCallback(
+    (utilizationRateStatsData: ReportAPI.Through) => {
+      const data = utilizationRateStatsData?.labels.reduce((acc: number[], cur, index) => {
+        const utilizationRate = utilizationRateStatsData.values?.reduce((total, item) => total + item.list[index], 0)
+        return acc.concat([utilizationRate / utilizationRateStatsData.values.length])
+      }, [])
+      updateOption({
+        xAxis: {
+          data: utilizationRateStatsData?.labels || []
+        },
+        series: [
+          {
+            data
+          }
+        ]
+      })
+    },
+    [updateOption]
+  )
+  useUpdateEffect(() => {
+    utilizationRateStatsData && updateOptionCallback(utilizationRateStatsData)
+  }, [utilizationRateStatsData])
+
+  useUpdateEffect(() => {
+    wsUtilizationRateStatsData && setUtilizationRateStatsData(wsUtilizationRateStatsData)
+  }, [wsUtilizationRateStatsData])
   return (
     <Panel
       title="稼动率统计"
@@ -132,7 +137,7 @@ const UtilizationRateStats: FC<PropsWithChildren<IUtilizationRateStatsProps>> = 
         height: '40%'
       }}
     >
-      <div ref={el} style={{ width: '100%', height: '100%' }}></div>
+      <div ref={el} style={{ width: '100%', height: '32vh' }}></div>
     </Panel>
   )
 }

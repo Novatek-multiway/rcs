@@ -1,7 +1,7 @@
 import type { EChartsOption, EChartsType, ResizeOpts } from 'echarts'
 import * as echarts from 'echarts'
 import type { RendererType } from 'echarts/types/src/util/types'
-import { MutableRefObject, useEffect, useState } from 'react'
+import { MutableRefObject, useCallback, useEffect, useState } from 'react'
 import { bind, clear } from 'size-sensor'
 
 export interface UseEchartsOption {
@@ -11,6 +11,9 @@ export interface UseEchartsOption {
   width?: number | 'auto'
   height?: number | 'auto'
   echartsOption?: EChartsOption
+  updateOptionConfig?: {
+    notMerge?: boolean
+  }
 }
 
 const defaultResizeOpt = {
@@ -25,10 +28,13 @@ export default function useEcharts(el: MutableRefObject<HTMLElement | null>, opt
     return dispose
   }, [])
 
-  const updateOption = (option: EChartsOption) => {
-    hideLoading()
-    instance?.setOption(option)
-  }
+  const updateOption = useCallback(
+    (option: EChartsOption) => {
+      hideLoading()
+      instance?.setOption(option, opt.updateOptionConfig?.notMerge)
+    },
+    [instance]
+  )
 
   const showLoading = () => {
     // if (!instance) initChart(el.current!)

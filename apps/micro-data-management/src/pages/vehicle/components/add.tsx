@@ -1,37 +1,35 @@
-import { postCreateCarrier } from "apis";
-import * as React from "react";
-import {
-  Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  MaterialForm,
-  nygFormik,
-  useTheme,
-} from "ui";
-
-let count = 0;
-const initAry: any[] = [];
-while (count < 9999) {
-  count++;
-  initAry.push({ label: "" + count, value: "" + count });
-}
+import { postCreateCarrier } from 'apis'
+import * as React from 'react'
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, MaterialForm, nygFormik, useTheme } from 'ui'
+import { dictsTransform } from 'utils'
 
 const AddDialog: React.FC<{
-  open: boolean;
-  onClose?: () => void;
-  callback?: () => void;
-}> = ({ open, onClose = () => {}, callback }) => {
-  const theme = useTheme();
-  const formRef = React.useRef<nygFormik>(null);
+  open: boolean
+  chassisData: any
+  areaInfosOptions: any[]
+  onClose?: () => void
+  callback?: () => void
+}> = ({ open, chassisData = [], areaInfosOptions = [], onClose = () => {}, callback }) => {
+  const theme = useTheme()
+  const formRef = React.useRef<nygFormik>(null)
+
+  React.useEffect(() => {
+    setTimeout(() => {
+      formRef.current?.setFieldValue('area', [areaInfosOptions[0]])
+    })
+  }, [open, areaInfosOptions])
+
+  const vehicleTypeOptions = React.useMemo(
+    () => dictsTransform(chassisData, 'model', 'id') as { label: string; value: string }[],
+    [chassisData]
+  )
 
   return (
     <Dialog maxWidth="md" open={open} onClose={onClose}>
       <DialogTitle>添加车辆配置信息</DialogTitle>
       <DialogContent
         sx={{
-          py: `${theme.spacing(3.25)} !important`,
+          py: `${theme.spacing(3.25)} !important`
         }}
       >
         <MaterialForm
@@ -39,32 +37,37 @@ const AddDialog: React.FC<{
           ref={formRef}
           schemaObject={[
             {
-              name: "ip",
-              label: "车辆IP",
-              type: "text",
+              name: 'ip',
+              label: '车辆IP',
+              type: 'text',
+              required: true
             },
             {
-              name: "name",
-              label: "车体名称",
-              type: "text",
+              name: 'name',
+              label: '车体名称',
+              type: 'text',
+              required: true
             },
             {
-              name: "id",
-              label: "车辆编号",
-              type: "text",
+              name: 'id',
+              label: '车辆编号',
+              type: 'text',
+              required: true
             },
             {
-              name: "type",
-              label: "车辆类型",
-              type: "text",
+              name: 'chassisID',
+              label: '车辆类型',
+              type: 'select',
+              items: vehicleTypeOptions,
+              required: true
             },
             {
-              name: "area",
-              label: "车辆分组",
-              type: "autoComplete",
+              name: 'area',
+              label: '车辆分组',
+              type: 'autoComplete',
               multiple: true,
-              items: initAry,
-            },
+              items: areaInfosOptions
+            }
           ]}
         ></MaterialForm>
       </DialogContent>
@@ -72,16 +75,18 @@ const AddDialog: React.FC<{
         <Button
           color="primary"
           onClick={async () => {
-            await formRef?.current?.submitForm();
-            const { isValid, values }: any = formRef.current || {};
-            console.log(values, isValid);
+            await formRef?.current?.submitForm()
+            const { isValid, values }: any = formRef.current || {}
 
             if (isValid) {
-              const params = { ...values };
-              params.area = params?.area.map((obj: any) => Number(obj.value));
-              await postCreateCarrier(params);
-              onClose();
-              callback && callback();
+              const params = {
+                ...values,
+                type: chassisData.find((item: any) => item.id + '' === values.chassisID)?.type
+              }
+              params.area = params?.area.map((obj: any) => Number(obj.value))
+              await postCreateCarrier(params)
+              onClose()
+              callback && callback()
             }
           }}
         >
@@ -92,6 +97,6 @@ const AddDialog: React.FC<{
         </Button>
       </DialogActions>
     </Dialog>
-  );
-};
-export default AddDialog;
+  )
+}
+export default AddDialog

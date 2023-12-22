@@ -1,8 +1,15 @@
+import { ThemeProvider } from '@mui/material'
+import { useAsyncEffect, useUpdateEffect } from 'ahooks'
+import { getTimeSum } from 'apis'
 import { echarts, useEcharts } from 'hooks'
 import { MaterialReactTable, type MRT_ColumnDef, useMaterialReactTable } from 'material-react-table'
 import type { FC, PropsWithChildren } from 'react'
-import React, { memo, useMemo, useRef } from 'react'
+import React, { memo, useCallback, useMemo, useRef, useState } from 'react'
+import AutoSizer from 'react-virtualized-auto-sizer'
+import { theme } from 'theme'
 import { Panel } from 'ui'
+
+import { useWebsocketStore } from '../../store/websocket'
 
 interface ITimeStatsProps {}
 
@@ -11,47 +18,8 @@ type TimeStatsItem = {
   workTime: number
   freeTime: number
   errorTime: number
-  averageTaskByTime: number
+  average: number
 }
-
-//nested data is ok, see accessorKeys in ColumnDef below
-const data: TimeStatsItem[] = [
-  {
-    id: 10,
-    workTime: 3,
-    freeTime: 21,
-    errorTime: 0,
-    averageTaskByTime: 12
-  },
-  {
-    id: 11,
-    workTime: 12,
-    freeTime: 11,
-    errorTime: 1,
-    averageTaskByTime: 12.2
-  },
-  {
-    id: 12,
-    workTime: 5,
-    freeTime: 16,
-    errorTime: 3,
-    averageTaskByTime: 13.3
-  },
-  {
-    id: 13,
-    workTime: 12,
-    freeTime: 12,
-    errorTime: 0,
-    averageTaskByTime: 12
-  },
-  {
-    id: 14,
-    workTime: 4,
-    freeTime: 18,
-    errorTime: 2,
-    averageTaskByTime: 12.3
-  }
-]
 
 const WORK_COLOR = 'rgba(64, 211, 124, 0.7)'
 const FREE_COLOR = 'rgba(65, 67, 68, 0.7)'
@@ -83,14 +51,14 @@ const option: echarts.EChartsOption = {
     type: 'inside'
   },
   grid: {
-    right: 36,
+    right: 42,
     left: 36,
     bottom: 24
   },
   xAxis: [
     {
       type: 'category',
-      data: data.map((d) => d.id),
+      data: [],
       axisPointer: {
         type: 'shadow'
       },
@@ -143,7 +111,7 @@ const option: echarts.EChartsOption = {
           return value + 'h'
         }
       },
-      data: data.map((d) => d.workTime),
+      data: [],
       itemStyle: {
         color: WORK_COLOR,
         borderRadius: [0, 0, 5, 5]
@@ -158,7 +126,7 @@ const option: echarts.EChartsOption = {
           return value + 'h'
         }
       },
-      data: data.map((d) => d.freeTime),
+      data: [],
 
       itemStyle: {
         color: FREE_COLOR,
@@ -174,7 +142,7 @@ const option: echarts.EChartsOption = {
           return value + 'h'
         }
       },
-      data: data.map((d) => d.errorTime),
+      data: [],
 
       itemStyle: {
         color: ERROR_COLOR,
@@ -190,7 +158,7 @@ const option: echarts.EChartsOption = {
           return value + '个'
         }
       },
-      data: data.map((d) => d.averageTaskByTime),
+      data: [],
 
       itemStyle: {
         color: AVERAGE_COLOR
@@ -199,12 +167,8 @@ const option: echarts.EChartsOption = {
   ]
 }
 
-// 车辆时间统计
-const TimeStats: FC<PropsWithChildren<ITimeStatsProps>> = () => {
-  const el = useRef<HTMLDivElement | null>(null)
-  // 传递元素给useEcharts
-  useEcharts(el, { echartsOption: option, theme: 'dark' })
-
+const TimeStatsTable = memo((props: { data: TimeStatsItem[]; maxHeight?: number }) => {
+  const { data, maxHeight = 218 } = props
   //should be memoized or stable
   const columns = useMemo<MRT_ColumnDef<TimeStatsItem>[]>(
     () => [
@@ -214,7 +178,7 @@ const TimeStats: FC<PropsWithChildren<ITimeStatsProps>> = () => {
         size: 50
       },
       {
-        accessorKey: 'id',
+        accessorKey: 'workTime',
         header: '有效时间',
         size: 50,
         Cell: ({ cell }) => cell.getValue() + ' h'
@@ -232,7 +196,7 @@ const TimeStats: FC<PropsWithChildren<ITimeStatsProps>> = () => {
         Cell: ({ cell }) => cell.getValue() + ' h'
       },
       {
-        accessorKey: 'averageTaskByTime',
+        accessorKey: 'averageTask',
         header: '时均任务',
         size: 50,
         Cell: ({ cell }) => cell.getValue() + ' 个'
@@ -240,7 +204,6 @@ const TimeStats: FC<PropsWithChildren<ITimeStatsProps>> = () => {
     ],
     []
   )
-
   const table = useMaterialReactTable({
     columns,
     data,
@@ -259,7 +222,7 @@ const TimeStats: FC<PropsWithChildren<ITimeStatsProps>> = () => {
     },
     muiTableContainerProps: {
       sx: {
-        maxHeight: '235px',
+        maxHeight: maxHeight + 'px',
         height: '100%'
       }
     },
@@ -306,6 +269,59 @@ const TimeStats: FC<PropsWithChildren<ITimeStatsProps>> = () => {
       }
     }
   })
+  return (
+    <ThemeProvider theme={theme}>
+      <MaterialReactTable table={table} />
+    </ThemeProvider>
+  )
+})
+
+// 车辆时间统计
+const TimeStats: FC<PropsWithChildren<ITimeStatsProps>> = () => {
+  const wsTaskStatsData = useWebsocketStore((state) => state['Report/GetTimeSum'])
+  const el = useRef<HTMLDivElement | null>(null)
+  // 传递元素给useEcharts
+  const { updateOption } = useEcharts(el, { echartsOption: option, theme: 'dark' })
+
+  const [timeStatsData, setTimeStatsData] = useState<ReportAPI.TimeSumDatum[]>([])
+
+  useAsyncEffect(async () => {
+    const res = await getTimeSum()
+    const newTaskStatsData = res.data as ReportAPI.TimeSumDatum[]
+    setTimeStatsData(newTaskStatsData.sort((a, b) => b.taskQty - a.taskQty))
+  }, [])
+
+  const updateOptionCallback = useCallback(
+    (timeStatsData: ReportAPI.TimeSumDatum[]) => {
+      updateOption({
+        xAxis: {
+          data: timeStatsData.map((item) => item.id)
+        },
+        series: [
+          {
+            data: timeStatsData.map((item) => item.workTime)
+          },
+          {
+            data: timeStatsData.map((item) => item.freeTime)
+          },
+          {
+            data: timeStatsData.map((item) => item.errorTime)
+          },
+          {
+            data: timeStatsData.map((item) => item.averageTask)
+          }
+        ]
+      })
+    },
+    [updateOption]
+  )
+  useUpdateEffect(() => {
+    updateOptionCallback(timeStatsData)
+  }, [timeStatsData])
+
+  useUpdateEffect(() => {
+    setTimeStatsData(wsTaskStatsData.sort((a, b) => b.taskQty - a.taskQty))
+  }, [wsTaskStatsData])
 
   return (
     <Panel
@@ -316,7 +332,14 @@ const TimeStats: FC<PropsWithChildren<ITimeStatsProps>> = () => {
     >
       <div ref={el} style={{ width: '100%', height: '55%' }}></div>
       <div style={{ height: '45%' }}>
-        <MaterialReactTable table={table} />
+        <AutoSizer defaultHeight={218}>
+          {({ width, height }) => (
+            <div style={{ width, height }}>
+              <TimeStatsTable data={timeStatsData} maxHeight={height} />
+            </div>
+          )}
+        </AutoSizer>
+        {/* <MaterialReactTable table={table} /> */}
       </div>
     </Panel>
   )

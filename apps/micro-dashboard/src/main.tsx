@@ -4,7 +4,7 @@ import createCache from '@emotion/cache'
 import { CacheProvider } from '@emotion/react'
 import * as ReactDOM from 'react-dom/client'
 import { useGlobalStore } from 'store'
-import { renderWithQiankun } from 'vite-plugin-qiankun/dist/helper'
+import { qiankunWindow, renderWithQiankun } from 'vite-plugin-qiankun/dist/helper'
 
 import App from './App'
 
@@ -23,7 +23,8 @@ export default function start(props: any = {}) {
     key: appName,
     container: isRenderByQiankun ? container.querySelector('qiankun-head') : rootContainer
   })
-  root = ReactDOM.createRoot(rootContainer)
+
+  if (!root) root = ReactDOM.createRoot(rootContainer)
   root.render(
     <CacheProvider value={myCache}>
       <App />
@@ -48,15 +49,17 @@ renderWithQiankun({
   unmount(props: any) {
     console.log(`[${appName}] unmount`, props)
     root?.unmount?.()
+    root = null
   }
 })
 
-// @ts-ignore
-if (!window.__POWERED_BY_QIANKUN__) {
+if (!qiankunWindow.__POWERED_BY_QIANKUN__) {
+  console.log('Not __POWERED_BY_QIANKUN__ start')
   start()
 }
 
 // @ts-ignore
 if (process.env.NODE_ENV === 'development') {
+  // @ts-ignore
   import('@/hmr.fix')
 }

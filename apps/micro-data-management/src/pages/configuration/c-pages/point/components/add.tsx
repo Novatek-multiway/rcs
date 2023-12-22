@@ -1,7 +1,7 @@
-import { useRequest } from "ahooks";
-import { CreateStationInfos } from "apis";
-import * as React from "react";
-import { useDictStore } from "store";
+import { useRequest } from 'ahooks'
+import { CreateStationInfos } from 'apis'
+import * as React from 'react'
+import { useDictStore } from 'store'
 import {
   Button,
   Dialog,
@@ -11,36 +11,97 @@ import {
   //   FormikContext,
   MaterialForm,
   nygFormik,
-  useTheme,
-} from "ui";
+  useTheme
+} from 'ui'
+
+const standByPointSchema = [
+  {
+    name: 'HomeGroup',
+    label: '待命点分组',
+    type: 'number'
+  },
+  {
+    name: 'HomeGroupType',
+    label: '待命点类型',
+    type: 'number'
+  },
+  {
+    name: 'HomeGroupPriority',
+    label: '待命点优先级',
+    type: 'number'
+  }
+]
+
 const AddDialog: React.FC<{
-  open: boolean;
-  vertexData?: any;
-  carrierData?: any;
-  chassisList?: any;
-  onClose?: () => void;
-  callback?: () => void;
-}> = ({
-  open,
-  onClose = () => {},
-  callback,
-  vertexData = [],
-  carrierData = [],
-  chassisList = [],
-}) => {
+  open: boolean
+  vertexData?: any
+  carrierData?: any
+  chassisList?: any
+  onClose?: () => void
+  callback?: () => void
+}> = ({ open, onClose = () => {}, callback, vertexData = [], chassisList = [] }) => {
   const { runAsync: run } = useRequest(CreateStationInfos, {
-    manual: true,
-  });
-  const theme = useTheme();
-  const formRef = React.useRef<nygFormik>(null);
-  const { dicts } = useDictStore();
+    manual: true
+  })
+  const theme = useTheme()
+  const formRef = React.useRef<nygFormik>(null)
+  const { dicts } = useDictStore()
+
+  const [isStandByPoint, setIsStandByPoint] = React.useState<boolean>(false)
+
+  const commonSchema = [
+    {
+      name: 'PointKey',
+      label: '路径编号',
+      type: 'autoComplete',
+      required: true,
+      items: vertexData
+      // type: "select",
+    },
+    {
+      name: 'Priority',
+      label: '优先级',
+      type: 'number',
+      inputProps: {
+        min: 0,
+        onChange: (e: any) => {
+          if (e.target.value < 0) e.target.value = 0
+        }
+      }
+    },
+    {
+      name: 'Type',
+      label: '站点类型',
+      type: 'select',
+      items: dicts['StationType'],
+      onChange: (e: any) => setIsStandByPoint(e.target.value + '' === '2')
+    },
+    {
+      name: 'AreaID',
+      label: '区域',
+      type: 'autoComplete',
+      multiple: true,
+      items: vertexData
+    },
+    {
+      name: 'CarrierType',
+      label: '车辆类型',
+      type: 'select',
+      items: chassisList
+    },
+    {
+      name: 'Name',
+      label: '名称',
+      type: 'text'
+    }
+  ]
 
   return (
     <Dialog maxWidth="md" open={open} onClose={onClose}>
-      <DialogTitle>添加车型</DialogTitle>
+      <DialogTitle>添加站点</DialogTitle>
       <DialogContent
         sx={{
-          py: `${theme.spacing(3.25)} !important`,
+          py: `${theme.spacing(3.25)} !important`
         }}
       >
         <MaterialForm
@@ -49,148 +110,36 @@ const AddDialog: React.FC<{
           defaultValue={{
             Angle: 0,
             AreaID: [],
-            BackGroundColor: "",
+            BackGroundColor: '',
             Carrier: 0,
             CarrierType: 0,
             DisPlayLength: 0,
-            DisPlayModel: "",
+            DisPlayModel: '',
             DisPlayWidth: 0,
-            DisplayFontColor: "",
-            DisplayName: "",
+            DisplayFontColor: '',
+            DisplayName: '',
             HomeGroup: 0,
             HomeGroupPriority: 0,
             HomeGroupType: 0,
             ID: 0,
-            Name: "",
+            Name: '',
             Number: 0,
-            PointKey: 0,
             Priority: 0,
             State: 0,
             Type: 0,
             UsageCount: 0,
-            WorkAreaTypeStr: "",
+            WorkAreaTypeStr: ''
           }}
-          schemaObject={[
-            {
-              name: "PointKey",
-              label: "路径编号",
-              type: "autoComplete",
-              required: true,
-              items: vertexData,
-              // type: "select",
-            },
-            {
-              name: "Carrier",
-              label: "车号",
-              type: "select",
-              items: carrierData,
-              // type: "select",
-            },
-            {
-              name: "CarrierType",
-              label: "车型",
-              type: "select",
-              items: chassisList,
-            },
-            {
-              name: "Number",
-              label: "车数",
-              type: "number",
-            },
-            {
-              name: "Priority",
-              label: "优先级",
-              type: "number",
-            },
-            {
-              name: "Type",
-              label: "站点类型",
-              type: "select",
-              items: dicts["StationType"],
-            },
-            {
-              name: "State",
-              label: "状态",
-              type: "select",
-              items: dicts["LocationState"],
-            },
-            {
-              name: "Name",
-              label: "名称",
-              type: "text",
-            },
-            {
-              name: "DisplayName",
-              label: "显示名称",
-              type: "text",
-            },
-            {
-              name: "DisplayFontColor",
-              label: "显示颜色",
-              type: "text",
-            },
-            {
-              name: "DisPlayWidth",
-              label: "宽度",
-              type: "number",
-            },
-            {
-              name: "DisPlayLength",
-              label: "长度",
-              type: "number",
-            },
-            {
-              name: "Angle",
-              label: "角度",
-              type: "number",
-            },
-            {
-              name: "HomeGroup",
-              label: "待命点分组",
-              type: "number",
-            },
-            {
-              name: "HomeGroupType",
-              label: "待命点类型",
-              type: "number",
-            },
-            {
-              name: "HomeGroupPriority",
-              label: "待命点优先级",
-              type: "number",
-            },
-            {
-              name: "BackGroundColor",
-              label: "背景颜色",
-              type: "text",
-            },
-            {
-              name: "WorkAreaTypeStr",
-              label: "标注",
-              type: "text",
-            },
-            {
-              name: "DisPlayModel",
-              label: "模型",
-              type: "text",
-            },
-            {
-              name: "AreaID",
-              label: "区域ID",
-              type: "autoComplete",
-              multiple: true,
-              items: vertexData,
-            },
-          ]}
+          schemaObject={isStandByPoint ? commonSchema.concat(...standByPointSchema) : commonSchema}
         ></MaterialForm>
       </DialogContent>
       <DialogActions>
         <Button
           color="primary"
           onClick={async () => {
-            await formRef.current?.submitForm();
-            const { isValid, values } = formRef.current || {};
-            console.log(values);
+            await formRef.current?.submitForm()
+            const { isValid, values } = formRef.current || {}
+            console.log(values)
 
             if (isValid) {
               const sendData = {
@@ -198,11 +147,11 @@ const AddDialog: React.FC<{
                 // Genus: 3,
                 AreaID: values.AreaID.map((item) => Number(item.value)),
                 PointKey: Number(values.PointKey.value),
-                Type: Number(values.Type),
-              };
-              await run(sendData);
-              onClose();
-              callback && callback();
+                Type: Number(values.Type)
+              }
+              await run(sendData)
+              onClose()
+              callback && callback()
             }
           }}
         >
@@ -213,6 +162,6 @@ const AddDialog: React.FC<{
         </Button>
       </DialogActions>
     </Dialog>
-  );
-};
-export default AddDialog;
+  )
+}
+export default AddDialog

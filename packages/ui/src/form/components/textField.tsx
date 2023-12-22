@@ -1,14 +1,10 @@
-import { FormControl, Input, InputLabel } from "@mui/material";
-import MuiTextField, {
-  TextFieldProps as MuiTextFieldProps,
-} from "@mui/material/TextField";
-import { FieldProps, getIn } from "formik";
-import * as React from "react";
+import { FormControl, InputLabel, OutlinedInput } from '@mui/material'
+import MuiTextField, { TextFieldProps as MuiTextFieldProps } from '@mui/material/TextField'
+import { FieldProps, getIn } from 'formik'
+import * as React from 'react'
 
-export interface TextFieldProps
-  extends FieldProps,
-    Omit<MuiTextFieldProps, "name" | "value" | "error"> {
-  formControl?: any;
+export interface TextFieldProps extends FieldProps, Omit<MuiTextFieldProps, 'name' | 'value' | 'error'> {
+  formControl?: any
 }
 
 export function fieldToTextField({
@@ -19,8 +15,8 @@ export function fieldToTextField({
   helperText,
   ...props
 }: TextFieldProps): MuiTextFieldProps {
-  const fieldError = getIn(errors, field.name);
-  const showError = getIn(touched, field.name) && !!fieldError;
+  const fieldError = getIn(errors, field.name)
+  const showError = getIn(touched, field.name) && !!fieldError
 
   return {
     error: showError,
@@ -29,11 +25,11 @@ export function fieldToTextField({
     onBlur:
       onBlur ??
       function (e) {
-        fieldOnBlur(e ?? field.name);
+        fieldOnBlur(e ?? field.name)
       },
     ...field,
-    ...props,
-  };
+    ...props
+  }
 }
 
 export function TextField({ formControl, ...props }: TextFieldProps) {
@@ -45,18 +41,16 @@ export function TextField({ formControl, ...props }: TextFieldProps) {
     // >
     //   {children}
     // </MuiTextField>
-    <FormControl {...formControl}>
-      <InputLabel htmlFor="standard-adornment-password">
-        {props.label}
-      </InputLabel>
-      <Input
+    <FormControl size={props.size} {...formControl}>
+      <InputLabel htmlFor="standard-adornment-password">{props.label}</InputLabel>
+      <OutlinedInput
         id="standard-adornment-password"
         {...fieldToTextField(props)}
-        type={props.type || "text"}
+        type={props.type || 'text'}
         endAdornment={props.endAdornment || null}
       />
     </FormControl>
-  );
+  )
 }
 
-TextField.displayName = "FormikMaterialUITextField";
+TextField.displayName = 'FormikMaterialUITextField'

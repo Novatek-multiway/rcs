@@ -3,51 +3,16 @@ import type { FC, PropsWithChildren } from 'react'
 import React, { memo } from 'react'
 import AutoSizer from 'react-virtualized-auto-sizer'
 import { FixedSizeList, ListChildComponentProps } from 'react-window'
-import { Box } from 'ui'
 
 import { TaskStatsItemWrapper } from './style'
 
-interface ITaskStatsListProps {}
+interface ITaskStatsItemProps {
+  id: number
+  finishedCount: number
+  time: number
+}
 
-const data = [
-  {
-    id: 11,
-    finishedCount: 1,
-    time: 0.32
-  },
-  {
-    id: 12,
-    finishedCount: 0,
-    time: 0
-  },
-  {
-    id: 13,
-    finishedCount: 0,
-    time: 0
-  },
-  {
-    id: 14,
-    finishedCount: 0,
-    time: 0
-  },
-  {
-    id: 15,
-    finishedCount: 0,
-    time: 0
-  },
-  {
-    id: 16,
-    finishedCount: 0,
-    time: 0
-  },
-  {
-    id: 17,
-    finishedCount: 0,
-    time: 0
-  }
-]
-
-const TaskStatsItem = (props: ListChildComponentProps & (typeof data)[0]) => {
+const TaskStatsItem = (props: ListChildComponentProps & ITaskStatsItemProps) => {
   const { index, style, id, finishedCount, time } = props
 
   return (
@@ -79,17 +44,20 @@ const TaskStatsItem = (props: ListChildComponentProps & (typeof data)[0]) => {
   )
 }
 
-const TaskStatsList: FC<PropsWithChildren<ITaskStatsListProps>> = () => {
+interface ITaskStatsListProps {
+  data: ITaskStatsItemProps[]
+}
+
+const TaskStatsList: FC<PropsWithChildren<ITaskStatsListProps>> = (props) => {
+  const { data } = props
   return (
-    <Box sx={{ width: '100%', height: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
-      <AutoSizer>
-        {({ width, height }) => (
-          <FixedSizeList height={height} width={width} itemSize={height / 3} itemCount={data.length}>
-            {(props) => <TaskStatsItem {...props} {...data[props.index]} />}
-          </FixedSizeList>
-        )}
-      </AutoSizer>
-    </Box>
+    <AutoSizer>
+      {({ width, height }) => (
+        <FixedSizeList height={height} width={width} itemSize={110} itemCount={data.length}>
+          {(props) => <TaskStatsItem {...props} {...data[props.index]} />}
+        </FixedSizeList>
+      )}
+    </AutoSizer>
   )
 }
 
