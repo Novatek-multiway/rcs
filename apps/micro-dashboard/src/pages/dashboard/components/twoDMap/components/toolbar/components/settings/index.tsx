@@ -11,9 +11,9 @@ import { Button, Panel, Switch } from 'ui'
 
 import { EMapSettingsKeys, EStageMode } from '../../../../constants'
 import { TTwoDMapState, useTwoDMapStore } from '../../../../store'
-import { Lights, Switches } from './constant'
 import LineColorPicker from './LineColorPicker'
 import { SettingsWrapper } from './style'
+import { useConstants } from './useContants'
 
 interface ISettingsProps {
   open?: boolean
@@ -41,6 +41,7 @@ const Settings: FC<PropsWithChildren<ISettingsProps>> = (props) => {
   }))
   const { setItem } = useStorage()
   const { t } = useVoerkaI18n()
+  const { Lights, Switches } = useConstants()
 
   const [isSettingsOpen, setIsSettingsOpen] = useState(open)
   const [settingsSpring, settingsApi] = useSpring(() => ({

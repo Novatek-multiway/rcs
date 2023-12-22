@@ -12,7 +12,7 @@ import DrawingBlockCard from './components/drawingBlockCard'
 import MeasuringScale from './components/measuringScale'
 import SearchArea from './components/searchArea'
 import Toolbar from './components/toolbar'
-import { Switches } from './components/toolbar/components/settings/constant'
+import { useConstants } from './components/toolbar/components/settings/useContants'
 import { EMapSettingsKeys } from './constants'
 import { useTwoDMapStore } from './store'
 import { TwoDMapWrapper } from './style'
@@ -50,6 +50,7 @@ const TwoDMap: FC<PropsWithChildren<ITwoDMapProps>> = (props) => {
     onlineCarriers: state['Report/GetOnLineCarriers'],
     homeChargeGoodsStations: state['Report/GetHomeChargeGoodsStations']
   }))
+  const { Switches } = useConstants()
 
   const [mapData, setMapData] = useState<MapAPI.RootMapObject | null>(null)
   const [vehiclesData, setVehiclesData] = useState<ReportAPI.OnlineCarrier[]>([])
