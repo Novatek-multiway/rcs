@@ -1,5 +1,6 @@
 import { RequestOptionsInit, extend } from 'umi-request'
 import { toastError } from 'utils'
+import { languageAdapter } from './adapter'
 
 //全局请求参数设置
 const PREFIX = '/api'
@@ -21,6 +22,7 @@ request.interceptors.request.use((url, options) => {
   const headers: any = options.headers
 
   headers['Authorization'] = userInfo.jwtToken
+  headers['language'] = languageAdapter(localStorage.getItem('language') || 'zh')
   return {
     url,
     options: {
