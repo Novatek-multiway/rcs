@@ -26,6 +26,7 @@ const dictsTransform = (obj: Record<string, any[]>) => {
   return newDicts
 }
 
+const env = import.meta.env
 export default function App() {
   const { setDicts } = useDictStore()
   useRequest(() => getDicts({}), {
@@ -45,8 +46,8 @@ export default function App() {
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <ToastContainer />
-      <SystemConfig systemConfigPath={import.meta.env.VITE_APP_HOST}>
-        <BrowserRouter basename={__POWERED_BY_QIANKUN__ ? `/${import.meta.env.VITE_APP_NAME}` : '/'}>
+      <SystemConfig systemConfigPath={env.DEV ? env.VITE_APP_HOST : env.VITE_APP_BASE_PATH}>
+        <BrowserRouter basename={__POWERED_BY_QIANKUN__ ? `/${env.VITE_APP_NAME}` : env.VITE_APP_BASE_PATH}>
           <Routes>
             {routerList.map((item) => (
               <Route key={item.path} path={item.path} element={item.element}></Route>

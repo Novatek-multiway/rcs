@@ -39,7 +39,7 @@ FROM cym1102/nginxwebui:latest
 # ARG APP=main
 # COPY --from=builder /source/apps/${APP}/dist/ /usr/share/nginx/html/${APP}/
 COPY --from=builder /source/apps/main/dist/ /usr/share/nginx/html/main/
-COPY --from=builder /source/apps/micro-dashboard/dist/ /usr/share/nginx/html/micro-dashboard/
-COPY --from=builder /source/apps/micro-data-management/dist/ /usr/share/nginx/html/micro-data-management/
+COPY --from=builder /source/apps/micro-dashboard/dist/ /usr/share/nginx/html/module/micro-dashboard/
+COPY --from=builder /source/apps/micro-data-management/dist/ /usr/share/nginx/html/module/micro-data-management/
 # COPY ./default.conf /etc/nginx/conf.d/default.conf
 COPY ./default.conf /home/nginxWebUI/nginx.conf

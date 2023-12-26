@@ -7,7 +7,7 @@ exec('sudo pnpm build', () => {
   apps.forEach((app) =>
     cp(
       `./apps/${app}/dist/`,
-      `./dist/${app}/`,
+      app.includes('micro') ? `./dist/module/${app}/` : `./dist/${app}/`,
       {
         recursive: true
       },
