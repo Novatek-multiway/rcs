@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 
-export const ElectricityWrapper = styled.div`
+export const ElectricityWrapper = styled.div<{ itemFontSize?: string }>`
   display: flex;
   flex-direction: column;
   gap: 6px;
@@ -17,7 +17,8 @@ export const ElectricityWrapper = styled.div`
       align-items: center;
       background-color: #1d1e25;
       border-radius: 5px;
-      font-size: 16px;
+      font-size: ${(props) => props.itemFontSize || '16px'};
+      text-align: center;
       .value {
         font-size: 24px;
         font-weight: bold;

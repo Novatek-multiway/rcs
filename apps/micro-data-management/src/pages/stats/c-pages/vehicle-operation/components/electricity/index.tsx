@@ -1,6 +1,6 @@
 import { useVoerkaI18n } from '@voerkai18n/react'
 import { useUpdateEffect } from 'ahooks'
-import { useEcharts } from 'hooks'
+import { useEcharts, useIsLongLengthLanguage } from 'hooks'
 import type { FC, PropsWithChildren } from 'react'
 import React, { memo, useRef } from 'react'
 import { Panel } from 'ui'
@@ -79,6 +79,7 @@ const option: echarts.EChartsOption = {
 const Electricity: FC<PropsWithChildren<IElectricityProps>> = (props) => {
   const { count = 0, totalCount = 0, labels = [], values = [] } = props
   const { t } = useVoerkaI18n()
+  const isLongLengthLanguage = useIsLongLengthLanguage()
   const el = useRef<HTMLDivElement | null>(null)
   // 传递元素给useEcharts
   const { updateOption } = useEcharts(el, {
@@ -125,7 +126,7 @@ const Electricity: FC<PropsWithChildren<IElectricityProps>> = (props) => {
         height: '100%'
       }}
     >
-      <ElectricityWrapper>
+      <ElectricityWrapper itemFontSize={isLongLengthLanguage ? '12px' : '16px'}>
         <div className="stats-card">
           <div className="item">
             <span className="value">{count}</span>

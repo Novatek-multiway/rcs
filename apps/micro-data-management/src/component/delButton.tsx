@@ -13,7 +13,16 @@ const DelButton = (props: IDelButtonProps) => {
   const popupState = usePopupState({ variant: 'popover', popupId: 'demoMenu' })
   return (
     <div>
-      <Button component="label" size="small" startIcon={<DeleteIcon />} {...bindTrigger(popupState)} {...restProps}>
+      <Button
+        component="label"
+        size="small"
+        startIcon={<DeleteIcon />}
+        sx={{
+          whiteSpace: 'nowrap'
+        }}
+        {...bindTrigger(popupState)}
+        {...restProps}
+      >
         {children}
       </Button>
       <Menu {...bindMenu(popupState)} id="demoMenu">

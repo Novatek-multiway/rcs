@@ -28,7 +28,26 @@ import InfoDialog from './components/info'
 // const isVehicleOnline = (row: any) => row.heart > 0 && row.errorCode === 0
 
 const Vehicle = () => {
-  const { t } = useVoerkaI18n()
+  const { t, activeLanguage } = useVoerkaI18n()
+  const actionsButtonSx = useMemo(() => {
+    if (activeLanguage === 'en') {
+      return {
+        paddingX: 0.5,
+        minWidth: 36,
+        width: '45%',
+        whiteSpace: 'nowrap'
+      }
+    } else if (activeLanguage === 'jp') {
+      return {
+        paddingX: 0.5,
+        width: '100%'
+      }
+    }
+    return {
+      paddingX: 0.5,
+      minWidth: 36
+    }
+  }, [activeLanguage])
   const [loading, setLoading] = useState(false)
   const [tableData, setTableData] = useState<any[]>([])
 
@@ -214,14 +233,11 @@ const Vehicle = () => {
       enableSorting: false,
       Cell: ({ row, table }) => {
         return (
-          <div style={{ display: 'flex', alignItems: 'center' }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-around', flexWrap: 'wrap' }}>
             <Button
               variant="text"
               size="small"
-              sx={{
-                paddingX: 0.5,
-                minWidth: 36
-              }}
+              sx={actionsButtonSx}
               onClick={async () => {
                 setEditOpen(true)
                 const id = row?.original?.id
@@ -231,15 +247,11 @@ const Vehicle = () => {
             >
               {t('配置')}
             </Button>
-            /
             <Button
               color="warning"
               variant="text"
               size="small"
-              sx={{
-                paddingX: 0.5,
-                minWidth: 36
-              }}
+              sx={actionsButtonSx}
               onClick={async () => {
                 const id = row?.original?.id
                 const { msg } = await postRemoveCarrier({ id })
@@ -249,15 +261,11 @@ const Vehicle = () => {
             >
               {t('踢出')}
             </Button>
-            /
             <DelButton
               color="error"
               variant="text"
               size="small"
-              sx={{
-                paddingX: 0.5,
-                minWidth: 36
-              }}
+              sx={actionsButtonSx}
               delFn={async () => {
                 const id = row?.original?.id
                 await delCreateCarrier(id)
@@ -269,15 +277,11 @@ const Vehicle = () => {
             >
               {t('删除')}
             </DelButton>
-            /
             <Button
               color="success"
               variant="text"
               size="small"
-              sx={{
-                paddingX: 0.5,
-                minWidth: 36
-              }}
+              sx={actionsButtonSx}
               onClick={async () => {
                 const id = row?.original?.id
                 const { msg } = await getSimulationCarrierLogin(id)

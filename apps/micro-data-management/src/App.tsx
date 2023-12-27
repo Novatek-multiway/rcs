@@ -1,5 +1,5 @@
 import { useAsyncEffect } from 'ahooks'
-import { useAuth } from 'hooks'
+import { useAuth, useIsLongLengthLanguage } from 'hooks'
 import * as React from 'react'
 import { BrowserRouter, Route, RouteObject, Routes } from 'react-router-dom'
 import { theme } from 'theme'
@@ -21,6 +21,40 @@ const renderRoutes = (routes: RouteObject[]) =>
     </Route>
   ))
 
+const ExternalThemeProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
+  const isLongLengthLanguage = useIsLongLengthLanguage()
+  return (
+    <ThemeProvider
+      theme={{
+        ...theme,
+        components: {
+          ...theme.components,
+          MuiTableHead: {
+            styleOverrides: {
+              root: {
+                '.Mui-TableHeadCell-Content': {
+                  fontSize: isLongLengthLanguage ? '0.75rem' : '0.875rem'
+                }
+              }
+            }
+          },
+          MuiTableBody: {
+            styleOverrides: {
+              root: {
+                '.MuiButton-root': {
+                  fontSize: isLongLengthLanguage ? '0.75rem' : '0.8125rem'
+                }
+              }
+            }
+          }
+        }
+      }}
+    >
+      {children}
+    </ThemeProvider>
+  )
+}
+
 export default function App() {
   const { globalLogin } = useAuth()
   useAsyncEffect(async () => {
@@ -28,8 +62,8 @@ export default function App() {
   }, [])
   return (
     <React.StrictMode>
-      <ThemeProvider theme={theme}>
-        <LanguageProvider>
+      <LanguageProvider>
+        <ExternalThemeProvider>
           <CssBaseline />
           <GlobalContext />
           <ToastContainer />
@@ -40,8 +74,8 @@ export default function App() {
               <Routes>{renderRoutes(routerList)}</Routes>
             </React.Suspense>
           </BrowserRouter>
-        </LanguageProvider>
-      </ThemeProvider>
+        </ExternalThemeProvider>
+      </LanguageProvider>
     </React.StrictMode>
   )
 }
