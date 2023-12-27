@@ -1,7 +1,7 @@
 import { useVoerkaI18n } from '@voerkai18n/react'
 import { useAsyncEffect, useUpdateEffect } from 'ahooks'
 import { getTaskReport } from 'apis'
-import { echarts, useEcharts } from 'hooks'
+import { echarts, useEcharts, useIsLongLengthLanguage } from 'hooks'
 import type { FC, PropsWithChildren } from 'react'
 import React, { memo, useCallback, useMemo, useRef, useState } from 'react'
 import { Panel } from 'ui'
@@ -16,6 +16,7 @@ interface ITaskStatsProps {}
 const TaskStats: FC<PropsWithChildren<ITaskStatsProps>> = () => {
   const wsTaskStatsData = useWebsocketStore((state) => state['Report/GetJobSumByAgv'])
   const { t, activeLanguage } = useVoerkaI18n()
+  const isLongLengthLanguage = useIsLongLengthLanguage()
   const option = useRef<echarts.EChartsOption>({
     backgroundColor: 'transparent',
     title: {
@@ -23,7 +24,7 @@ const TaskStats: FC<PropsWithChildren<ITaskStatsProps>> = () => {
       left: 'center',
       top: 'center',
       textStyle: {
-        fontSize: 16
+        fontSize: isLongLengthLanguage ? 12 : 16
       }
     },
     tooltip: {
@@ -77,6 +78,16 @@ const TaskStats: FC<PropsWithChildren<ITaskStatsProps>> = () => {
       ]
     })
   }, [activeLanguage])
+
+  useUpdateEffect(() => {
+    updateOption({
+      title: {
+        textStyle: {
+          fontSize: isLongLengthLanguage ? 12 : 16
+        }
+      }
+    })
+  }, [isLongLengthLanguage])
 
   const [taskStatsData, setTaskStatsData] = useState<ReportAPI.AgvTaskRoot>()
   const taskStatsList = useMemo(

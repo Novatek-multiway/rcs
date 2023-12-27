@@ -1,6 +1,6 @@
 import MenuIcon from '@mui/icons-material/Menu'
 import { AppBar, Box, Collapse, CssBaseline, Toolbar, Typography } from '@mui/material'
-import { ThemeProvider } from '@mui/material/styles'
+import { SxProps, ThemeProvider } from '@mui/material/styles'
 import type { FC } from 'react'
 import React, { memo, useState } from 'react'
 import { theme } from 'theme'
@@ -16,11 +16,12 @@ export interface LayoutProps {
   navProps: INavProps
   settingsProps?: ISettingsProps
   timeProps?: ITimeProps
+  sx?: SxProps
   onLogoTitleClick?: () => void
 }
 
 const Layout: FC<LayoutProps> = (props) => {
-  const { systemName = '', navProps, settingsProps, timeProps, onLogoTitleClick } = props
+  const { systemName = '', navProps, settingsProps, timeProps, sx, onLogoTitleClick } = props
   const [collapsed, setCollapsed] = useState(false)
 
   return (
@@ -31,7 +32,8 @@ const Layout: FC<LayoutProps> = (props) => {
           height: '100%',
           overflow: 'auto',
           flexDirection: 'column',
-          userSelect: 'none'
+          userSelect: 'none',
+          ...sx
         }}
       >
         <CssBaseline />

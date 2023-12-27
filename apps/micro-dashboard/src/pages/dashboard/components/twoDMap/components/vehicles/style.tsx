@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 
-export const TooltipWrapper = styled.div`
+export const TooltipWrapper = styled.div<{ itemWidth?: string }>`
   display: flex;
   justify-content: center;
   align-items: center;
@@ -40,7 +40,7 @@ export const TooltipWrapper = styled.div`
     & > div {
       display: flex;
       justify-content: space-between;
-      min-width: 32px;
+      min-width: ${(props) => props.itemWidth || '32px'};
     }
   }
 `

@@ -1,5 +1,7 @@
 import { Assignment, Event, ModeStandby, Monitor, Place, Power, Warehouse } from '@mui/icons-material'
 import { useVoerkaI18n } from '@voerkai18n/react'
+import { useIsLongLengthLanguage } from 'hooks'
+import { useMemo } from 'react'
 import { useGlobalStore } from 'store'
 import { Box, CircularProgress, Layout, styled, SvgIcon } from 'ui'
 import { LayoutProps } from 'ui/src/layout/Layout'
@@ -10,6 +12,7 @@ import { globalState, updateMicroAppState } from '@/qiankun'
 export default function Home() {
   const { GlobalLoading } = useGlobalStore()
   const { t } = useVoerkaI18n()
+  const isLongLengthLanguage = useIsLongLengthLanguage()
   const navItems: NavItem[] = [
     {
       name: t('监控'),
@@ -198,6 +201,38 @@ export default function Home() {
     width: '100vw',
     backgroundColor: theme.palette.background.default
   }))
+  const layoutLongLengthLanguageSx = useMemo(
+    () => ({
+      // 系统标题
+      '.css-1a9ibkc-MuiTypography-root': {
+        fontSize: isLongLengthLanguage ? '1rem' : '1.25rem'
+      },
+      // 导航栏
+      '.css-heg063-MuiTabs-flexContainer .MuiTab-root': {
+        fontSize: isLongLengthLanguage ? '0.75rem' : '0.875rem'
+      },
+      // 导航栏二级菜单
+      '.MuiMenu-paper .MuiTypography-root': {
+        fontSize: isLongLengthLanguage ? '0.75rem' : '0.875rem'
+      },
+      // 系统时间
+      '.css-sn35kh': {
+        '.greeting': {
+          fontSize: isLongLengthLanguage ? '14px' : '16px'
+        },
+        '.time': {
+          fontSize: isLongLengthLanguage ? '14px' : '16px'
+        },
+        '.date': {
+          fontSize: isLongLengthLanguage ? '12px' : '14px'
+        },
+        '.week': {
+          fontSize: isLongLengthLanguage ? '12px' : '14px'
+        }
+      }
+    }),
+    [isLongLengthLanguage]
+  )
   return (
     <Layout
       systemName={t('调度监控系统')}
@@ -213,6 +248,7 @@ export default function Home() {
       timeProps={{
         customTimeGreeting: [t('早上好'), t('上午好'), t('中午好'), t('下午好'), t('晚上好')]
       }}
+      sx={isLongLengthLanguage ? layoutLongLengthLanguageSx : {}}
       onLogoTitleClick={handleOnLogoTitleClick}
     >
       {/* <Card>主应用</Card> */}

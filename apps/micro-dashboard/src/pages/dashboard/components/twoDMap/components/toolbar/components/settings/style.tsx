@@ -1,11 +1,11 @@
 import styled from '@emotion/styled'
 import { animated } from '@react-spring/web'
 
-export const SettingsWrapper = styled(animated.div)`
+export const SettingsWrapper = styled(animated.div)<{ settingWidth?: string }>`
   position: fixed;
   bottom: 0;
   left: 1vw;
-  width: 70vw;
+  width: ${(props) => props.settingWidth ?? '70vw'};
   height: fit-content;
   color: #fff;
   .header {
@@ -33,7 +33,7 @@ export const SettingsWrapper = styled(animated.div)`
       }
     }
     .lines {
-      flex: 1.5;
+      flex: 2;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -46,8 +46,11 @@ export const SettingsWrapper = styled(animated.div)`
         justify-content: center;
         align-items: center;
         margin-bottom: 12px;
+        width: 100%;
         .label {
+          flex: 1;
           margin-right: 8px;
+          text-align: center;
         }
         .marker {
           width: 48px;
@@ -56,7 +59,7 @@ export const SettingsWrapper = styled(animated.div)`
       }
     }
     .lights {
-      flex: 2.5;
+      flex: 3.5;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -69,6 +72,10 @@ export const SettingsWrapper = styled(animated.div)`
         align-items: center;
         width: 40%;
         font-size: 12px;
+        span {
+          flex: 1;
+          text-align: right;
+        }
         img {
           width: 54px;
         }

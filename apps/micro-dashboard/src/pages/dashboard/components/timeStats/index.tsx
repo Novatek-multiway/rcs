@@ -2,7 +2,7 @@ import { ThemeProvider } from '@mui/material'
 import { useVoerkaI18n } from '@voerkai18n/react'
 import { useAsyncEffect, useUpdateEffect } from 'ahooks'
 import { getTimeSum } from 'apis'
-import { echarts, useEcharts } from 'hooks'
+import { echarts, useEcharts, useIsLongLengthLanguage } from 'hooks'
 import { MaterialReactTable, type MRT_ColumnDef, useMaterialReactTable } from 'material-react-table'
 import type { FC, PropsWithChildren } from 'react'
 import React, { memo, useCallback, useMemo, useRef, useState } from 'react'
@@ -67,6 +67,7 @@ const TimeStatsTable = memo((props: { data: TimeStatsItem[]; maxHeight?: number 
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [activeLanguage]
   )
+  const isLongLengthLanguage = useIsLongLengthLanguage()
   const table = useMaterialReactTable({
     columns,
     data,
@@ -115,7 +116,7 @@ const TimeStatsTable = memo((props: { data: TimeStatsItem[]; maxHeight?: number 
       sx: {
         border: 'none',
         padding: '6px 2px !important',
-        fontSize: '13px',
+        fontSize: isLongLengthLanguage ? '10px' : '13px',
         background: 'rgb(36, 38, 47)',
         textAlign: 'center',
         '.Mui-TableHeadCell-Content-Labels, .Mui-TableHeadCell-Content-Wrapper': {
@@ -143,6 +144,7 @@ const TimeStatsTable = memo((props: { data: TimeStatsItem[]; maxHeight?: number 
 const TimeStats: FC<PropsWithChildren<ITimeStatsProps>> = () => {
   const wsTaskStatsData = useWebsocketStore((state) => state['Report/GetTimeSum'])
   const { t, activeLanguage } = useVoerkaI18n()
+  const isLongLengthLanguage = useIsLongLengthLanguage()
   const option = useMemo<echarts.EChartsOption>(
     () => ({
       backgroundColor: 'transparent',
@@ -170,7 +172,6 @@ const TimeStats: FC<PropsWithChildren<ITimeStatsProps>> = () => {
       },
       grid: {
         right: 42,
-        left: 36,
         bottom: 24
       },
       xAxis: [
@@ -193,6 +194,9 @@ const TimeStats: FC<PropsWithChildren<ITimeStatsProps>> = () => {
         {
           type: 'value',
           name: t('时间'),
+          nameTextStyle: {
+            padding: [0, 40, 0, 0]
+          },
           min: 0,
           max: 24,
           interval: 4,
@@ -209,6 +213,9 @@ const TimeStats: FC<PropsWithChildren<ITimeStatsProps>> = () => {
         {
           type: 'value',
           name: t('时均任务'),
+          nameTextStyle: {
+            padding: [0, 40, 0, 0]
+          },
           axisLabel: {
             formatter: t('{value}个')
           },
@@ -329,6 +336,11 @@ const TimeStats: FC<PropsWithChildren<ITimeStatsProps>> = () => {
       ]
     })
   }, [activeLanguage])
+  useUpdateEffect(() => {
+    updateOption({
+      grid: {}
+    })
+  }, [isLongLengthLanguage])
 
   const [timeStatsData, setTimeStatsData] = useState<ReportAPI.TimeSumDatum[]>([])
 

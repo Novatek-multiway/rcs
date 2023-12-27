@@ -1,4 +1,5 @@
 import { useVoerkaI18n } from '@voerkai18n/react'
+import { useIsLongLengthLanguage } from 'hooks'
 import Konva from 'konva'
 import type { FC, PropsWithChildren } from 'react'
 import React, { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
@@ -37,6 +38,7 @@ export interface IVehicleProps {
 
 const Vehicle: FC<IVehicleProps> = memo((props) => {
   const { t } = useVoerkaI18n()
+  const isLongLengthLanguage = useIsLongLengthLanguage(['en'])
   const {
     id,
     x,
@@ -255,7 +257,12 @@ const Vehicle: FC<IVehicleProps> = memo((props) => {
               }
             }}
           >
-            <TooltipWrapper>
+            <TooltipWrapper
+              itemWidth={isLongLengthLanguage ? '48px' : '32px'}
+              style={{
+                fontSize: isLongLengthLanguage ? '4px' : '5px'
+              }}
+            >
               <div className="tooltip">
                 <div>
                   {t('编号:')}

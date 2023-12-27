@@ -2,7 +2,7 @@ import { Close } from '@mui/icons-material'
 import { useSpring } from '@react-spring/web'
 import { useVoerkaI18n } from '@voerkai18n/react'
 import { useUpdateEffect } from 'ahooks'
-import { useStorage } from 'hooks'
+import { useIsLongLengthLanguage, useStorage } from 'hooks'
 import { TAppStorageKey } from 'hooks/modules/useStorage'
 import type { FC, PropsWithChildren } from 'react'
 import React, { memo, useCallback, useEffect, useMemo, useState } from 'react'
@@ -42,6 +42,7 @@ const Settings: FC<PropsWithChildren<ISettingsProps>> = (props) => {
   const { setItem } = useStorage()
   const { t } = useVoerkaI18n()
   const { Lights, Switches } = useConstants()
+  const isLongLengthLanguage = useIsLongLengthLanguage()
 
   const [isSettingsOpen, setIsSettingsOpen] = useState(open)
   const [settingsSpring, settingsApi] = useSpring(() => ({
@@ -139,7 +140,7 @@ const Settings: FC<PropsWithChildren<ISettingsProps>> = (props) => {
   )
 
   return (
-    <SettingsWrapper style={settingsSpring}>
+    <SettingsWrapper style={settingsSpring} settingWidth={isLongLengthLanguage ? '80vw' : '70vw'}>
       <Panel title="">
         <div className="header">
           <Button variant="text" sx={{ minWidth: 'auto' }} disableRipple onClick={handleClose} size="small">
