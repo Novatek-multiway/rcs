@@ -199,7 +199,7 @@ const AddDialog: React.FC<{
           onClick={async () => {
             await formRef.current?.submitForm()
             const { isValid, values, errors } = formRef.current
-            if (!sendFile.fileContent) toastWarn(t('请选择路径数据文件'))
+            if (!sendFile.fileContent) return toastWarn(t('请选择路径数据文件'))
 
             if (errors[''])
               schemaObject.map((item) => {
