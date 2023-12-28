@@ -9,7 +9,8 @@ interface FormFieldLabelInputProps extends InputProps, Partial<SimpleFileUploadP
   onChange?: any
 }
 
-export const FormFieldLabelFile = ({ label, name, onChange, accept }: FormFieldLabelInputProps) => {
+export const FormFieldLabelFile = ({ label, name, onChange, accept, placeholder }: FormFieldLabelInputProps) => {
+  console.log('🚀 ~ file: labelUpload.tsx ~ line 13 ~ FormFieldLabelFile ~ placeholder', placeholder)
   const sxFormControl = {
     m: 1,
     minWidth: 140,
@@ -25,6 +26,7 @@ export const FormFieldLabelFile = ({ label, name, onChange, accept }: FormFieldL
       InputProps={{
         onChange: onChange
       }}
+      placeholder={placeholder}
     />
   )
 }

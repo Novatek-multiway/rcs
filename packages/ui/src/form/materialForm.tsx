@@ -129,6 +129,7 @@ export const MaterialForm = forwardRef<any, MaterialFormProps>((props, ref) => {
                 name={field.name}
                 onChange={field.onChange}
                 accept={field.accept}
+                placeholder={field.placeholder}
               />
             )}
           </Grid>

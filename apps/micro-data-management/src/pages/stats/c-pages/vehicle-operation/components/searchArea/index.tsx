@@ -1,10 +1,15 @@
+import 'dayjs/locale/en'
+import 'dayjs/locale/ja'
+import 'dayjs/locale/ko'
+import 'dayjs/locale/zh'
+
 import { useVoerkaI18n } from '@voerkai18n/react'
 import { useAsyncEffect, useUpdateEffect } from 'ahooks'
 import { postGetControlOptions } from 'apis'
 import dayjs from 'dayjs'
 import type { FC, PropsWithChildren } from 'react'
 import React, { memo, useState } from 'react'
-import { AdapterDayjs, Button, DatePicker, LocalizationProvider, MenuItem, TextField, zhCN } from 'ui'
+import { AdapterDayjs, Button, DatePicker, LocalizationProvider, MenuItem, TextField } from 'ui'
 
 import { SearchAreaWrapper } from './style'
 
@@ -16,6 +21,13 @@ export interface ISearchAreaProps {
   }
   onChange?: (newFormData: ISearchAreaProps['formData']) => void
   onSearch?: () => void
+}
+
+const voerkaI18nToDayjsLocaleMap = {
+  zh: 'zh',
+  en: 'en',
+  jp: 'ja',
+  kor: 'ko'
 }
 
 const SearchArea: FC<PropsWithChildren<ISearchAreaProps>> = (props) => {
@@ -45,11 +57,12 @@ const SearchArea: FC<PropsWithChildren<ISearchAreaProps>> = (props) => {
     <SearchAreaWrapper>
       <LocalizationProvider
         dateAdapter={AdapterDayjs}
-        localeText={zhCN.components.MuiLocalizationProvider.defaultProps.localeText}
+        adapterLocale={voerkaI18nToDayjsLocaleMap[activeLanguage as keyof typeof voerkaI18nToDayjsLocaleMap]}
+        // localeText={enUS.components.MuiLocalizationProvider.defaultProps.localeText}
       >
         <DatePicker
           views={['year', 'month', 'day']}
-          format="YYYY/MM/DD"
+          // format="YYYY/MM/DD"
           slotProps={{
             field: {
               clearable: true
@@ -70,7 +83,7 @@ const SearchArea: FC<PropsWithChildren<ISearchAreaProps>> = (props) => {
 
         <DatePicker
           views={['year', 'month', 'day']}
-          format="YYYY/MM/DD"
+          // format="YYYY/MM/DD"
           slotProps={{
             field: {
               clearable: true

@@ -1,17 +1,19 @@
+import Source from '@mui/icons-material/Source'
+import { InputBaseComponentProps } from '@mui/material'
 import FormControl, { FormControlProps } from '@mui/material/FormControl'
-import FormHelperText from '@mui/material/FormHelperText'
-import Input, { InputProps } from '@mui/material/Input'
-import InputLabel, { InputLabelProps } from '@mui/material/InputLabel'
+import { InputLabelProps } from '@mui/material/InputLabel'
 import { FieldProps, getIn } from 'formik'
+import { MuiFileInput } from 'mui-file-input'
 import * as React from 'react'
 
 export interface SimpleFileUploadProps extends FieldProps {
   label?: string
   accept: string
   disabled?: boolean
-  InputProps?: Omit<InputProps, 'name' | 'type' | 'label'>
+  InputProps?: InputBaseComponentProps
   InputLabelProps?: InputLabelProps
   formControl?: FormControlProps
+  placeholder?: string
 }
 
 export const SimpleFileUpload = ({
@@ -20,36 +22,36 @@ export const SimpleFileUpload = ({
   label,
   accept,
   disabled = false,
+  formControl,
   InputProps: inputProps,
-  InputLabelProps: inputLabelProps,
-  formControl
+  placeholder
 }: SimpleFileUploadProps) => {
+  console.log('🚀 ~ file: simpleUpload.tsx ~ line 29 ~ placeholder', placeholder)
   const error = getIn(touched, field.name) && getIn(errors, field.name)
+  const [value, setValue] = React.useState<File | null>(null)
+
+  const handleChange = (newValue: File | null) => {
+    setValue(newValue)
+    setFieldValue(field.name, newValue)
+  }
+
   return (
     <FormControl {...formControl}>
-      {label && (
-        <InputLabel shrink error={!!error} {...inputLabelProps}>
-          {label}
-        </InputLabel>
-      )}
-      <Input
+      <MuiFileInput
+        value={value}
+        onChange={handleChange}
         error={!!error}
-        inputProps={{
-          type: 'file',
-          accept,
-          disabled: disabled || isSubmitting,
-          name: field.name,
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          onChange: (event: React.ChangeEvent<any>) => {
-            if (inputProps?.onChange) {
-              inputProps.onChange(event)
-            } else {
-              const file = event.currentTarget.files[0]
-              setFieldValue(field.name, file)
-            }
-          }
+        label={label}
+        size="small"
+        placeholder={placeholder || 'Insert a file'}
+        InputProps={{
+          inputProps: {
+            accept,
+            ...inputProps
+          },
+          startAdornment: <Source />
         }}
-        {...inputProps}
+        disabled={disabled || isSubmitting}
       />
       {/* {error && <FormHelperText error>{error}</FormHelperText>} */}
     </FormControl>

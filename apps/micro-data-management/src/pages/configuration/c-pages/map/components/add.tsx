@@ -74,6 +74,7 @@ const AddDialog: React.FC<{
           })
         }
       },
+      placeholder: t('请选择'),
       type: 'file',
       accept: '.zar'
       // type: "select",

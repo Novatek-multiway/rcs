@@ -184,7 +184,7 @@ export default {
   '182': 'Electricity statistics',
   '183': 'Charging frequency',
   '184': 'Accumulated number of fully charged times',
-  '185': ' ',
+  '185': 'individual',
   '186': 'Number of tasks completed by vehicles',
   '187': 'The proportion of vehicle operating time',
   '188': 'working',
@@ -201,5 +201,6 @@ export default {
   '199': 'km',
   '200': 'Vehicle operating kilometers',
   '201': 'Fault free time',
-  '202': 'Crop growth rate statistics'
+  '202': 'Crop growth rate statistics',
+  '203': 'Please select'
 }
