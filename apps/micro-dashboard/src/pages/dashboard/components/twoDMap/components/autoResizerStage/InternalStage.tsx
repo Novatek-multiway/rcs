@@ -1,12 +1,24 @@
 import { useUpdateEffect } from 'ahooks'
 import _ from 'lodash'
-import React, { type ElementRef, FC, memo, PropsWithChildren, useCallback, useEffect, useMemo, useRef } from 'react'
+import React, {
+  type ElementRef,
+  FC,
+  memo,
+  PropsWithChildren,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState
+} from 'react'
 import { Group, KonvaNodeEvents, Layer, Line, Rect, Stage } from 'react-konva'
 
 // import map from '@/mock/map.json'
 // import vehicles from '@/mock/vehicles.json'
 import { EStageMode, POINT_IMAGE_NAME_MAP } from '../../constants'
 import { EDrawingType, TPolygonResult, TRectResult, TResultWrapper, useKonvaDrawing } from '../../hooks/useKonvaDrawing'
+import useLayerCache from '../../hooks/useLayerCache'
+import useScaleLevel from '../../hooks/useScaleLevel'
 import { useShapesInside } from '../../hooks/useShapesInside'
 import { useZoom } from '../../hooks/useZoom'
 import { useTwoDMapStore } from '../../store'
@@ -30,11 +42,12 @@ export interface IInternalStageProps {
 // const vehiclesData = vehicles.data as ReportAPI.OnlineCarrier[]
 
 const SCALE_BOUNDARY = 6.5 // 缩放显示边界（低于一定缩放值，部分元素不显示，提升初始化渲染性能）
+const MAX_SCALE = 40 // 最大缩放值
 const SELECTED_FILL_COLOR = 'rgba(0, 203, 202, 0.2)'
 const InternalStage: FC<PropsWithChildren<IInternalStageProps>> = (props) => {
   const { width, height, mapData, vehiclesData = [] } = props
   const stageRef = useRef<ElementRef<typeof Stage>>(null)
-  const { currentScale, zoom } = useZoom(stageRef)
+  const { currentScale, zoom } = useZoom(stageRef, { min: 1, max: MAX_SCALE })
   const {
     settings,
     setInsidePoints,
@@ -77,7 +90,7 @@ const InternalStage: FC<PropsWithChildren<IInternalStageProps>> = (props) => {
     mapSize: state.mapSize
   }))
 
-  useUpdateEffect(() => {
+  useEffect(() => {
     // 同步scale\zoom方法到全局
     setCurrentScale(currentScale)
     setZoom(zoom)
@@ -274,6 +287,26 @@ const InternalStage: FC<PropsWithChildren<IInternalStageProps>> = (props) => {
     setLastCenter(null)
   }, [lastCenter, currentScale, setLastCenter, setStageLeftTopPosition])
   /* ---------------------------------- 搜索居中 ---------------------------------- */
+
+  /* ---------------------------------- 缓存路线 ---------------------------------- */
+  const { scaleLevel } = useScaleLevel(currentScale, SCALE_BOUNDARY / 2)
+  const [isNeedReCache, setIsNeedReCache] = useState(true)
+  const needReCacheLevels = [1, 2, 3, 6]
+  useUpdateEffect(() => {
+    setIsNeedReCache(needReCacheLevels.includes(scaleLevel))
+  }, [scaleLevel])
+  const { layerRef } = useLayerCache(
+    edges,
+    isNeedReCache,
+    {
+      pixelRatio: Math.min(20, scaleLevel * 5)
+    },
+    () => {
+      setIsNeedReCache(false)
+    }
+  )
+  /* ---------------------------------- 缓存路线 ---------------------------------- */
+
   return (
     <Stage
       ref={stageRef}
@@ -284,9 +317,9 @@ const InternalStage: FC<PropsWithChildren<IInternalStageProps>> = (props) => {
       onDragEnd={handleDragEnd}
     >
       {/* 不需要改变的层 */}
-      <Layer listening={false}>
+      <Layer listening={false} ref={layerRef}>
         <Lines
-          lines={insideLines}
+          lines={lines}
           stroke={settings.isVehiclePlanningSingleColor ? settings.lineColor : undefined}
           strokeWidth={currentScale >= SCALE_BOUNDARY ? 0.1 : 3 / currentScale}
         />

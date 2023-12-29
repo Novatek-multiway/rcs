@@ -2,7 +2,8 @@ import { type ElementRef, useCallback, useEffect, useState } from 'react'
 import { Stage } from 'react-konva'
 
 const scaleBy = 1.05
-export function useZoom(stageRef: React.RefObject<ElementRef<typeof Stage>>) {
+export function useZoom(stageRef: React.RefObject<ElementRef<typeof Stage>>, options?: { min?: number; max?: number }) {
+  const { min, max } = options || {}
   const [currentScale, setCurrentScale] = useState(2)
   /**
    * @description: 根据target的位置进行缩放
@@ -17,6 +18,9 @@ export function useZoom(stageRef: React.RefObject<ElementRef<typeof Stage>>) {
         center?: boolean
       }
     ) => {
+      if (min && newScale < min) newScale = min
+      if (max && newScale > max) newScale = max
+
       const stage = stageRef.current
       if (!stage) return
       const { targetPosition, center = true } = options || {}
@@ -43,7 +47,7 @@ export function useZoom(stageRef: React.RefObject<ElementRef<typeof Stage>>) {
 
       setCurrentScale(newScale)
     },
-    [stageRef]
+    [stageRef, min, max]
   )
   useEffect(() => {
     const stage = stageRef.current
@@ -64,7 +68,6 @@ export function useZoom(stageRef: React.RefObject<ElementRef<typeof Stage>>) {
       const oldScale = stage.scaleX()
 
       const newScale = direction > 0 ? oldScale * scaleBy : oldScale / scaleBy
-
       handleZoom(newScale, {
         targetPosition: pointer
       })
