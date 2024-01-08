@@ -8,8 +8,8 @@ import React, {
   useCallback,
   useEffect,
   useMemo,
-  useRef,
-  useState
+  useRef
+  // useState
 } from 'react'
 import { Group, KonvaNodeEvents, Layer, Line, Rect, Stage } from 'react-konva'
 
@@ -17,8 +17,8 @@ import { Group, KonvaNodeEvents, Layer, Line, Rect, Stage } from 'react-konva'
 // import vehicles from '@/mock/vehicles.json'
 import { EStageMode, POINT_IMAGE_NAME_MAP } from '../../constants'
 import { EDrawingType, TPolygonResult, TRectResult, TResultWrapper, useKonvaDrawing } from '../../hooks/useKonvaDrawing'
-import useLayerCache from '../../hooks/useLayerCache'
-import useScaleLevel from '../../hooks/useScaleLevel'
+// import useLayerCache from '../../hooks/useLayerCache'
+// import useScaleLevel from '../../hooks/useScaleLevel'
 import { useShapesInside } from '../../hooks/useShapesInside'
 import { useZoom } from '../../hooks/useZoom'
 import { useTwoDMapStore } from '../../store'
@@ -289,22 +289,22 @@ const InternalStage: FC<PropsWithChildren<IInternalStageProps>> = (props) => {
   /* ---------------------------------- 搜索居中 ---------------------------------- */
 
   /* ---------------------------------- 缓存路线 ---------------------------------- */
-  const { scaleLevel } = useScaleLevel(currentScale, SCALE_BOUNDARY / 2)
-  const [isNeedReCache, setIsNeedReCache] = useState(true)
-  const needReCacheLevels = [1, 2, 3, 6]
-  useUpdateEffect(() => {
-    setIsNeedReCache(needReCacheLevels.includes(scaleLevel))
-  }, [scaleLevel])
-  const { layerRef } = useLayerCache(
-    edges,
-    isNeedReCache,
-    {
-      pixelRatio: Math.min(20, scaleLevel * 5)
-    },
-    () => {
-      setIsNeedReCache(false)
-    }
-  )
+  // const { scaleLevel } = useScaleLevel(currentScale, SCALE_BOUNDARY / 2)
+  // const [isNeedReCache, setIsNeedReCache] = useState(true)
+  // const needReCacheLevels = [1, 2, 3, 6]
+  // useUpdateEffect(() => {
+  //   setIsNeedReCache(needReCacheLevels.includes(scaleLevel))
+  // }, [scaleLevel])
+  // const { layerRef } = useLayerCache(
+  //   edges,
+  //   isNeedReCache,
+  //   {
+  //     pixelRatio: Math.min(20, scaleLevel * 5)
+  //   },
+  //   () => {
+  //     setIsNeedReCache(false)
+  //   }
+  // )
   /* ---------------------------------- 缓存路线 ---------------------------------- */
 
   return (
@@ -317,9 +317,12 @@ const InternalStage: FC<PropsWithChildren<IInternalStageProps>> = (props) => {
       onDragEnd={handleDragEnd}
     >
       {/* 不需要改变的层 */}
-      <Layer listening={false} ref={layerRef}>
+      <Layer
+        listening={false}
+        // ref={layerRef}
+      >
         <Lines
-          lines={lines}
+          lines={insideLines}
           stroke={settings.isVehiclePlanningSingleColor ? settings.lineColor : undefined}
           strokeWidth={currentScale >= SCALE_BOUNDARY ? 0.1 : 3 / currentScale}
         />

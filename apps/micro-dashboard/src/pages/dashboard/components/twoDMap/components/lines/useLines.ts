@@ -2,6 +2,7 @@ import { useMemo } from 'react'
 
 import { useTwoDMapStore } from '../../store'
 import { ILineDirectionsProps, ILineProps } from '.'
+import { BSpline, SplinePoint } from './spline'
 
 // 边处理：删除反方向边、生成方向
 const processLine = (edges: MapAPI.Edge[]) => {
@@ -65,20 +66,51 @@ const processLine = (edges: MapAPI.Edge[]) => {
 }
 
 // 采样起点、终点和中间两个控制点作为konva的三次贝塞尔曲线的点（只需要四个点）
-const SEGMENTS = 4
-const sampleControlPoints = (controlPoints: number[][]) => {
-  const result = []
-  const length = controlPoints.length
-  for (let i = 0; i < SEGMENTS; i++) {
-    const index = i === SEGMENTS - 1 ? length - 1 : Math.ceil(length / SEGMENTS) * i
-    result.push(controlPoints[index])
+// const SEGMENTS = 4
+// const sampleControlPoints = (controlPoints: number[][]) => {
+//   const result = []
+//   const length = controlPoints.length
+//   for (let i = 0; i < SEGMENTS; i++) {
+//     const index = i === SEGMENTS - 1 ? length - 1 : Math.ceil(length / SEGMENTS) * i
+//     result.push(controlPoints[index])
+//   }
+
+//   return result.flat()
+// }
+
+// 获取根据控制点计算的贝塞尔曲线的采样点
+const getSplinePoints = (
+  edge: Pick<MapAPI.Edge, 'Type' | 'Length' | 'ID' | 'ControlPoint'> & {
+    startPoint?: { x: number; y: number }
+    endPoint?: { x: number; y: number }
+  },
+  stageMapRatio: number
+) => {
+  const result: number[] = []
+  // Type: 1-直线，2-曲线，3-圆弧
+  if (edge.Type === 1) {
+    if (!edge.startPoint || !edge.endPoint) return result
+    result.push(edge.startPoint.x, edge.startPoint.y, edge.endPoint.x, edge.endPoint.y)
+  } else {
+    const t = edge.Length / 20
+    const points = edge.ControlPoint.map(function (p) {
+      return SplinePoint.CreateSplinePoint(p.X, p.Y)
+    })
+
+    const bSpline = new BSpline(points, t)
+    if (edge.ID === 5529) {
+      console.log(edge, bSpline)
+    }
+    bSpline.PlotPoints().forEach((point) => {
+      result.push(point.X * stageMapRatio, point.Y * stageMapRatio)
+    })
   }
 
-  return result.flat()
+  return result
 }
 
 export const useLines = (edges: MapAPI.Edge[]) => {
-  const { setIdLineMap, stageMapRatio } = useTwoDMapStore((state) => ({
+  const { setIdLineMap, stageMapRatio, idPointMap } = useTwoDMapStore((state) => ({
     stageMapRatio: state.stageMapRatio,
     idPointMap: state.idPointMap,
     setIdLineMap: state.setIdLineMap
@@ -91,12 +123,22 @@ export const useLines = (edges: MapAPI.Edge[]) => {
     const line = deduplicatedEdges.map((edge) => {
       const directions =
         edge.CustomDirection?.map((d) => ({ ...d, x: d.x * stageMapRatio, y: d.y * stageMapRatio })) || []
-      const controlPoints = edge.ControlPoint.map((cPoint) => [cPoint.X * stageMapRatio, cPoint.Y * stageMapRatio])
+      // const controlPoints = edge.ControlPoint.map((cPoint) => [cPoint.X * stageMapRatio, cPoint.Y * stageMapRatio])
 
       const line = {
         id: edge.ID,
-        points: sampleControlPoints(controlPoints),
-        bezier: !!edge.ControlPoint.length,
+        points: getSplinePoints(
+          {
+            Type: edge.Type,
+            startPoint: idPointMap.get(edge.Start),
+            endPoint: idPointMap.get(edge.End),
+            ControlPoint: edge.ControlPoint,
+            Length: edge.Length,
+            ID: edge.ID
+          },
+          stageMapRatio
+        ),
+        bezier: false,
         directions
       }
       // 将重复的两条边都存到映射
@@ -105,7 +147,7 @@ export const useLines = (edges: MapAPI.Edge[]) => {
     })
     setIdLineMap(idLineMap)
     return line
-  }, [stageMapRatio, setIdLineMap, deduplicatedEdges])
+  }, [stageMapRatio, setIdLineMap, deduplicatedEdges, idPointMap])
 
   return lines
 }

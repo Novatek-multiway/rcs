@@ -134,6 +134,7 @@ const TwoDMap: FC<PropsWithChildren<ITwoDMapProps>> = (props) => {
   // 库位点状态更新
   useUpdateEffect(() => {
     if (!mapData) return // 等待地图加载完毕再接收数据推送
+    // TODO 优化：库位状态更新不应该更新整个地图数据，应该只更新对应点的状态
     const newMapData = { ...mapData }
     const newVertexes = [...newMapData.Vertexs]
     const locations = homeChargeGoodsStations.filter((d) => d.type === 1 || d.type === 4)

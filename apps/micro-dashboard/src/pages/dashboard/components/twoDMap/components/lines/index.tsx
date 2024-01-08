@@ -56,6 +56,7 @@ export const Line: FC<ILineProps> = memo((props) => {
       strokeWidth={strokeWidth || LINE_SIZE}
       bezier={bezier}
       points={points}
+      tension={1}
     />
   )
 })

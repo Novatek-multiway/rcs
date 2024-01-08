@@ -2,6 +2,7 @@ import { useUpdateEffect, useWebSocket } from 'ahooks'
 import { ReadyState } from 'ahooks/lib/useWebSocket'
 import { ElementRef, memo, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react'
 import { useGlobalStore } from 'store'
+import { toastError } from 'utils'
 
 import { SystemConfigContext } from '@/components/SystemConfig'
 
@@ -74,6 +75,7 @@ const Dashboard = () => {
   const { sendMessage, disconnect, readyState } = useWebSocket(systemConfig.network?.ws_url || WS_URL, {
     onMessage: (params: any) => {
       const data = JSON.parse(params.data)
+      if (data.Code !== 0) return toastError(data.Message)
       const path = data.Path as EWebsocketMessagePath
       RECEIVE_MESSAGE_STRATEGY[path](data)
     },
