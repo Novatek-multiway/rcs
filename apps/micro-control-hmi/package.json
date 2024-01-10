@@ -1,0 +1,35 @@
+{
+  "name": "micro-control-hmi",
+  "description": "四向穿控制系统",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0"
+  },
+  "dependencies": {
+    "@emotion/cache": "latest",
+    "@emotion/react": "latest",
+    "@emotion/styled": "latest",
+    "@mui/icons-material": "latest",
+    "@mui/material": "latest",
+    "@react-spring/web": "^9.7.3",
+    "react": "latest",
+    "react-dom": "latest",
+    "react-router-dom": "^6.17.0",
+    "theme": "workspace:*",
+    "vite-plugin-qiankun": "^1.0.15",
+    "zustand": "^4.4.7"
+  },
+  "devDependencies": {
+    "@packages/build": "workspace:^",
+    "@types/react": "latest",
+    "@types/react-dom": "latest",
+    "eslint-config-custom": "workspace:*",
+    "typescript": "latest",
+    "vite": "^4.4.5"
+  }
+}
