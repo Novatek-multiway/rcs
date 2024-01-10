@@ -5,8 +5,8 @@ import {
   styled,
   Typography,
 } from "@mui/material";
+import { animated,useSpring } from "@react-spring/web";
 import { memo, useState } from "react";
-import { useSpring, animated } from "@react-spring/web";
 interface IAppBoxProps extends BoxProps {
   title?: string;
   color?: "primary" | "secondary" | "error" | "info" | "success" | "warning";

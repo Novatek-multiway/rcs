@@ -114,6 +114,7 @@ const About = () => {
         </Box>
       );
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   const [open, setOpen] = React.useState(false);
   const [startAnimate, setStartAnimate] = React.useState(false);

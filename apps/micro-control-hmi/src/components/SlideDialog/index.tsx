@@ -1,6 +1,7 @@
-import { useSpring, animated } from "@react-spring/web";
 import { Box, BoxProps, styled } from "@mui/material";
+import { animated,useSpring } from "@react-spring/web";
 import { memo } from "react";
+
 import { useGlobaltore } from "../../store/global";
 
 const SlideBox = styled(animated(Box))(({ theme }) => ({

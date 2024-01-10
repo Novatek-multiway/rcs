@@ -1,8 +1,8 @@
-import React from "react";
-import { Box } from "@mui/material";
-import { styled } from "@mui/material/styles";
-import LinearProgress from "@mui/material/LinearProgress";
 import { keyframes } from "@emotion/react";
+import { Box } from "@mui/material";
+import LinearProgress from "@mui/material/LinearProgress";
+import { styled } from "@mui/material/styles";
+import React from "react";
 
 // 修改LinearProgress主题色
 const StyledLinearProgress = styled(LinearProgress)(({ theme }) => ({

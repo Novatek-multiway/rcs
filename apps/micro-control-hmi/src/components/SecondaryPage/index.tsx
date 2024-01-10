@@ -1,8 +1,9 @@
-import { useSpring, animated } from "@react-spring/web";
-import { Box, BoxProps, styled, IconButton } from "@mui/material";
-import { memo, useEffect, useState } from "react";
-import { useGlobaltore } from "../../store/global";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
+import { Box, BoxProps, IconButton,styled } from "@mui/material";
+import { animated,useSpring } from "@react-spring/web";
+import { memo, useEffect, useState } from "react";
+
+import { useGlobaltore } from "../../store/global";
 
 const SlideBox = styled(animated(Box))(({ theme }) => ({
   position: "absolute",
