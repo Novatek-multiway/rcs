@@ -9,9 +9,9 @@ export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '')
 
   const matches = env.VITE_APP_HOST.match(ipRegex)
-  const ip = parseInt(matches[0].slice(1).replace('/', ''))
+  const ip = matches ? parseInt(matches[0].slice(1).replace('/', '')) : ''
   return {
-    base: mode === 'development' ? '/' : env.VITE_APP_HOST,
+    base: env.VITE_APP_BASE_PATH,
     define: {
       qiankunMainAppHost: `'http://localhost:8000'`
     },

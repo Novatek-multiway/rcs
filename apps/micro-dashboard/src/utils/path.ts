@@ -3,5 +3,8 @@
  * @param {string} assetsPath
  * @return {*}
  */
-export const getAssetsRightPath = (assetsPath: string) =>
-  assetsPath.startsWith('http') ? assetsPath : import.meta.env.VITE_APP_HOST + assetsPath
+
+export const getAssetsRightPath = (assetsPath: string) => {
+  if (import.meta.env.PROD) return assetsPath
+  else return assetsPath.startsWith('http') ? assetsPath : import.meta.env.VITE_APP_HOST + assetsPath
+}

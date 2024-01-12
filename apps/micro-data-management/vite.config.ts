@@ -7,7 +7,7 @@ export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '')
 
   const matches = env.VITE_APP_HOST.match(ipRegex)
-  const ip = matches[0].slice(1).replace('/', '')
+  const ip = matches ? matches[0].slice(1).replace('/', '') : ''
 
   const sharedConfig = getConfig({
     type: 'react',
@@ -44,6 +44,6 @@ export default defineConfig(({ mode }) => {
 
   return {
     ...mergeConfig(sharedConfig, mode === 'production' ? productionConfig : developmentConfig),
-    base: mode === 'development' ? '/' : env.VITE_APP_HOST
+    base: env.VITE_APP_BASE_PATH
   }
 })

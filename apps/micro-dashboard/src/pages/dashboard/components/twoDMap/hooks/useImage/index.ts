@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react'
 
+import { getAssetsRightPath } from '@/utils/path'
+
 const POINT_IMAGE_MAP: Record<string, HTMLImageElement> = {}
 /**
  * @description: 使用图片，供Konva Image使用
@@ -16,7 +18,7 @@ export function useImage(path: string) {
       } else {
         const image = new Image()
         POINT_IMAGE_MAP[path] = image
-        image.src = path.startsWith('http') ? path : import.meta.env.VITE_APP_HOST + path
+        image.src = getAssetsRightPath(path)
         image.onload = () => {
           setImage(image)
         }

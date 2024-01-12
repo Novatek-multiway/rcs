@@ -13,19 +13,20 @@ export const updateMicroAppState = (getNewState: (oldState: Record<string, any>)
   actions.setGlobalState(newState)
 }
 
+const env = import.meta.env
 function qiankunInit() {
   registerMicroApps(
     [
       {
         name: 'micro-dashboard',
-        entry: import.meta.env.DEV ? 'http://localhost:8001' : 'http://127.0.0.1:6991',
+        entry: env.DEV ? env.VITE_MODULE_DASHBOARD_ENTRY : env.VITE_MODULE_DASHBOARD_ENTRY,
         container: '#app',
         activeRule: getActiveRule('/micro-dashboard'),
         props: {}
       },
       {
         name: 'micro-data-management',
-        entry: import.meta.env.DEV ? 'http://localhost:8002' : 'http://127.0.0.1:6992',
+        entry: env.DEV ? env.VITE_MODULE_DATA_MANAGEMENT_ENTRY : env.VITE_MODULE_DATA_MANAGEMENT_ENTRY,
         container: '#app',
         activeRule: getActiveRule('/micro-data-management'),
         props: {}

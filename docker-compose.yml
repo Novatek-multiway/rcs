@@ -4,8 +4,8 @@ services: # 集合
     restart: always # 重启方式
     ports:
       - 6990:80
-      - 6991:8001
-      - 6992:8002
+      # - 6991:6991
+      # - 6992:6992
       - 6993:8080
     build:
       # args:
@@ -13,7 +13,7 @@ services: # 集合
       context: .
       dockerfile: Dockerfile
     container_name: rcs-web # 容器名称
-    image: rcs-web-image
+    image: registry.cn-shenzhen.aliyuncs.com/multiway/rcs_web:latest
     # volumes: # 卷挂载路径
     #   - /Users/luyao/works/mw/wcs/wcs-monorepo-frontend/dist/:/source/dist/
 
