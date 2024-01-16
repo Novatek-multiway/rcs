@@ -8,7 +8,8 @@ import React, {
   useCallback,
   useEffect,
   useMemo,
-  useRef
+  useRef,
+  useState
   // useState
 } from 'react'
 import { Group, KonvaNodeEvents, Layer, Line, Rect, Stage } from 'react-konva'
@@ -67,7 +68,8 @@ const InternalStage: FC<PropsWithChildren<IInternalStageProps>> = (props) => {
     setDrawingSelectedId,
     lastCenter,
     setLastCenter,
-    mapSize
+    mapSize,
+    mapCenterPosition
   } = useTwoDMapStore((state) => ({
     settings: state.settings,
     setInsidePoints: state.setInsidePoints,
@@ -87,7 +89,8 @@ const InternalStage: FC<PropsWithChildren<IInternalStageProps>> = (props) => {
     setDrawingSelectedId: state.setDrawingSelectedId,
     lastCenter: state.lastCenter,
     setLastCenter: state.setLastCenter,
-    mapSize: state.mapSize
+    mapSize: state.mapSize,
+    mapCenterPosition: state.mapCenterPosition
   }))
 
   useEffect(() => {
@@ -306,6 +309,19 @@ const InternalStage: FC<PropsWithChildren<IInternalStageProps>> = (props) => {
   //   }
   // )
   /* ---------------------------------- 缓存路线 ---------------------------------- */
+  /* ---------------------------------- 初始化居中 ---------------------------------- */
+  const [isFirst, setIsFirst] = useState(true)
+  useUpdateEffect(() => {
+    if (mapCenterPosition.x && mapCenterPosition.y && isFirst) {
+      const center = {
+        x: mapCenterPosition.x * stageMapRatio,
+        y: -mapCenterPosition.y * stageMapRatio
+      }
+      setIsFirst(false)
+      setLastCenter(center)
+    }
+  }, [mapCenterPosition, stageMapRatio])
+  /* ---------------------------------- 初始化居中 ---------------------------------- */
 
   return (
     <Stage

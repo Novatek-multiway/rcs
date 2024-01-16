@@ -4,7 +4,7 @@ import { Stage } from 'react-konva'
 const scaleBy = 1.05
 export function useZoom(stageRef: React.RefObject<ElementRef<typeof Stage>>, options?: { min?: number; max?: number }) {
   const { min, max } = options || {}
-  const [currentScale, setCurrentScale] = useState(2)
+  const [currentScale, setCurrentScale] = useState(1)
   /**
    * @description: 根据target的位置进行缩放
    * @param {*} useCallback
