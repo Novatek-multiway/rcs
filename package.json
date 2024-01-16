@@ -14,7 +14,9 @@
     "clean:node-modules": "find . -name 'node_modules' -type d -prune -exec rm -rf '{}' +",
     "clean:turbo-cache": "rm -rf ./node_modules/.cache",
     "reinstall": "pnpm run clean && rm -rf node_modules && rm -rf pnpm-lock.yaml && pnpm run bootstrap",
-    "create:app": "plop app"
+    "create:app": "plop app",
+    "collect:word": "node scripts/json-to-excel.js",
+    "write:word": "node scripts/excel-to-json.js"
   },
   "devDependencies": {
     "@commitlint/cli": "^17.7.1",
@@ -41,6 +43,7 @@
   },
   "dependencies": {
     "@faker-js/faker": "^8.2.0",
+    "convert-excel-to-json": "^1.7.0",
     "plop": "^4.0.0"
   }
 }

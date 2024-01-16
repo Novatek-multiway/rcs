@@ -1,12 +1,7 @@
 import fs from 'fs'
 import path from 'path'
 import json2xls from 'json2xls'
-
-const jsonPaths = [
-  '/apps/main/src/languages/translates/default.json',
-  '/apps/micro-dashboard/src/languages/translates/default.json',
-  '/apps/micro-data-management/src/languages/translates/default.json'
-]
+import { jsonPaths } from './common.js'
 
 // Process each JSON file
 jsonPaths.forEach((jsonPath) => {
@@ -36,7 +31,7 @@ jsonPaths.forEach((jsonPath) => {
     const filename = jsonPath.match(/\/apps\/(.*)\/src/)[1] + '.xlsx'
 
     // Save Excel file with the extracted filename
-    const excelPath = path.join(process.cwd(), filename)
+    const excelPath = path.join(process.cwd(), './scripts/', filename)
     fs.writeFileSync(excelPath, xls, 'binary')
 
     console.log('JSON file converted to Excel:', excelPath)
