@@ -148,12 +148,11 @@ const InternalStage: FC<PropsWithChildren<IInternalStageProps>> = (props) => {
     return vertexes
   }, [mapData])
   const edges = useMemo(() => {
-    const edges = mapData?.Edges || []
-    if (edges.length > 0) {
-      edges.forEach((edge) => {
-        edge.ControlPoint = edge.ControlPoint.map((cp) => ({ ...cp, Y: -cp.Y }))
-      })
-    }
+    const edges =
+      mapData?.Edges.map((edge) => ({
+        ...edge,
+        ControlPoint: edge.ControlPoint.map((cp) => ({ ...cp, Y: -cp.Y }))
+      })) || []
     return edges
   }, [mapData])
   /* ---------------------------------- 地图信息 ---------------------------------- */
