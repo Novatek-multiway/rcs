@@ -37,8 +37,8 @@ export interface IVehicleProps {
 }
 
 const Vehicle: FC<IVehicleProps> = memo((props) => {
-  const { t } = useVoerkaI18n()
-  const isLongLengthLanguage = useIsLongLengthLanguage(['en'])
+  const { t, activeLanguage } = useVoerkaI18n()
+  const isLongLengthLanguage = useIsLongLengthLanguage(activeLanguage, ['en'])
   const {
     id,
     x,

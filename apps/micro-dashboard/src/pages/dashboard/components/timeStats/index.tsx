@@ -67,7 +67,7 @@ const TimeStatsTable = memo((props: { data: TimeStatsItem[]; maxHeight?: number 
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [activeLanguage]
   )
-  const isLongLengthLanguage = useIsLongLengthLanguage()
+  const isLongLengthLanguage = useIsLongLengthLanguage(activeLanguage)
   const table = useMaterialReactTable({
     columns,
     data,
@@ -144,7 +144,7 @@ const TimeStatsTable = memo((props: { data: TimeStatsItem[]; maxHeight?: number 
 const TimeStats: FC<PropsWithChildren<ITimeStatsProps>> = () => {
   const wsTaskStatsData = useWebsocketStore((state) => state['Report/GetTimeSum'])
   const { t, activeLanguage } = useVoerkaI18n()
-  const isLongLengthLanguage = useIsLongLengthLanguage()
+  const isLongLengthLanguage = useIsLongLengthLanguage(activeLanguage)
   const option = useMemo<echarts.EChartsOption>(
     () => ({
       backgroundColor: 'transparent',

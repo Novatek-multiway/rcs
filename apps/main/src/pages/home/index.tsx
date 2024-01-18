@@ -11,8 +11,8 @@ import { globalState, updateMicroAppState } from '@/qiankun'
 
 export default function Home() {
   const { GlobalLoading } = useGlobalStore()
-  const { t } = useVoerkaI18n()
-  const isLongLengthLanguage = useIsLongLengthLanguage()
+  const { t, activeLanguage } = useVoerkaI18n()
+  const isLongLengthLanguage = useIsLongLengthLanguage(activeLanguage)
   const navItems: NavItem[] = [
     {
       name: t('监控'),

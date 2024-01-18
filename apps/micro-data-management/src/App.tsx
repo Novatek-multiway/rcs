@@ -1,3 +1,4 @@
+import { useVoerkaI18n } from '@voerkai18n/react'
 import { useAsyncEffect } from 'ahooks'
 import { useAuth, useIsLongLengthLanguage } from 'hooks'
 import * as React from 'react'
@@ -22,7 +23,8 @@ const renderRoutes = (routes: RouteObject[]) =>
   ))
 
 const ExternalThemeProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
-  const isLongLengthLanguage = useIsLongLengthLanguage()
+  const { activeLanguage } = useVoerkaI18n()
+  const isLongLengthLanguage = useIsLongLengthLanguage(activeLanguage)
   return (
     <ThemeProvider
       theme={{

@@ -40,9 +40,9 @@ const Settings: FC<PropsWithChildren<ISettingsProps>> = (props) => {
     setCurrentChangedSwitch: state.setCurrentChangedSwitch
   }))
   const { setItem } = useStorage()
-  const { t } = useVoerkaI18n()
+  const { t, activeLanguage } = useVoerkaI18n()
   const { Lights, Switches } = useConstants()
-  const isLongLengthLanguage = useIsLongLengthLanguage()
+  const isLongLengthLanguage = useIsLongLengthLanguage(activeLanguage)
 
   const [isSettingsOpen, setIsSettingsOpen] = useState(open)
   const [settingsSpring, settingsApi] = useSpring(() => ({

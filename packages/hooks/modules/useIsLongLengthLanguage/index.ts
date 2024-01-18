@@ -1,9 +1,8 @@
-import { useVoerkaI18n } from '@voerkai18n/react'
 import { useMemo } from 'react'
 
+type TLanguages = 'zh' | 'en' | 'jp' | 'kor'
 const longLengthLanguages = ['en', 'jp']
-export default function useIsLongLengthLanguage(customLongLengthLanguages?: ('zh' | 'en' | 'jp' | 'kor')[]) {
-  const { activeLanguage } = useVoerkaI18n()
+export default function useIsLongLengthLanguage(activeLanguage?: string, customLongLengthLanguages?: TLanguages[]) {
   const isLongLengthLanguage = useMemo(() => {
     return activeLanguage && (customLongLengthLanguages || longLengthLanguages).includes(activeLanguage)
   }, [activeLanguage, customLongLengthLanguages])

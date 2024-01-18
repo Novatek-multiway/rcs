@@ -16,7 +16,7 @@ interface ITaskStatsProps {}
 const TaskStats: FC<PropsWithChildren<ITaskStatsProps>> = () => {
   const wsTaskStatsData = useWebsocketStore((state) => state['Report/GetJobSumByAgv'])
   const { t, activeLanguage } = useVoerkaI18n()
-  const isLongLengthLanguage = useIsLongLengthLanguage()
+  const isLongLengthLanguage = useIsLongLengthLanguage(activeLanguage)
   const option = useRef<echarts.EChartsOption>({
     backgroundColor: 'transparent',
     title: {

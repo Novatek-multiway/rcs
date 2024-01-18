@@ -78,8 +78,8 @@ const option: echarts.EChartsOption = {
 // 电量统计
 const Electricity: FC<PropsWithChildren<IElectricityProps>> = (props) => {
   const { count = 0, totalCount = 0, labels = [], values = [] } = props
-  const { t } = useVoerkaI18n()
-  const isLongLengthLanguage = useIsLongLengthLanguage()
+  const { t, activeLanguage } = useVoerkaI18n()
+  const isLongLengthLanguage = useIsLongLengthLanguage(activeLanguage)
   const el = useRef<HTMLDivElement | null>(null)
   // 传递元素给useEcharts
   const { updateOption } = useEcharts(el, {
