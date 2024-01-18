@@ -1,57 +1,43 @@
 {
   "显示库位": {
     "en": "Display Storage Location",
-    "$files": [
-      "pages/dashboard/components/twoDMap/components/toolbar/components/settings/constant.ts"
-    ],
+    "$files": ["pages/dashboard/components/twoDMap/components/toolbar/components/settings/constant.ts"],
     "jp": "保管場所を表示",
     "kor": "창고 위치 표시"
   },
   "显示点位": {
     "en": "Display Waypoint",
-    "$files": [
-      "pages/dashboard/components/twoDMap/components/toolbar/components/settings/constant.ts"
-    ],
+    "$files": ["pages/dashboard/components/twoDMap/components/toolbar/components/settings/constant.ts"],
     "jp": "ウェイポイントを表示",
     "kor": "위치 표시"
   },
   "显示方向": {
     "en": "Display Direction",
-    "$files": [
-      "pages/dashboard/components/twoDMap/components/toolbar/components/settings/constant.ts"
-    ],
+    "$files": ["pages/dashboard/components/twoDMap/components/toolbar/components/settings/constant.ts"],
     "jp": "方向を表示",
     "kor": "방향 표시"
   },
   "车辆轮廓": {
     "en": "Vehicle Contour",
-    "$files": [
-      "pages/dashboard/components/twoDMap/components/toolbar/components/settings/constant.ts"
-    ],
+    "$files": ["pages/dashboard/components/twoDMap/components/toolbar/components/settings/constant.ts"],
     "jp": "車両輪郭",
     "kor": "차량 프로필"
   },
   "车辆图片": {
     "en": "Vehicle Images",
-    "$files": [
-      "pages/dashboard/components/twoDMap/components/toolbar/components/settings/constant.ts"
-    ],
+    "$files": ["pages/dashboard/components/twoDMap/components/toolbar/components/settings/constant.ts"],
     "jp": "車両画像",
     "kor": "차량 사진"
   },
   "基准点": {
     "en": "Benchmark",
-    "$files": [
-      "pages/dashboard/components/twoDMap/components/toolbar/components/settings/constant.ts"
-    ],
+    "$files": ["pages/dashboard/components/twoDMap/components/toolbar/components/settings/constant.ts"],
     "jp": "基準点",
     "kor": "기준점"
   },
   "工作车辆": {
     "en": "Work Vehicle",
-    "$files": [
-      "pages/dashboard/components/twoDMap/components/toolbar/components/settings/constant.ts"
-    ],
+    "$files": ["pages/dashboard/components/twoDMap/components/toolbar/components/settings/constant.ts"],
     "jp": "作業車両",
     "kor": "작업 차량"
   },
@@ -66,65 +52,49 @@
   },
   "故障车辆": {
     "en": "Faulty Vehicle",
-    "$files": [
-      "pages/dashboard/components/twoDMap/components/toolbar/components/settings/constant.ts"
-    ],
+    "$files": ["pages/dashboard/components/twoDMap/components/toolbar/components/settings/constant.ts"],
     "jp": "故障車両",
     "kor": "고장 차량"
   },
   "车辆详情": {
     "en": "Vehicle Details",
-    "$files": [
-      "pages/dashboard/components/twoDMap/components/toolbar/components/settings/constant.ts"
-    ],
+    "$files": ["pages/dashboard/components/twoDMap/components/toolbar/components/settings/constant.ts"],
     "jp": "車両詳細",
     "kor": "차량 상세 정보"
   },
   "单一颜色": {
     "en": "Single Color",
-    "$files": [
-      "pages/dashboard/components/twoDMap/components/toolbar/components/settings/constant.ts"
-    ],
+    "$files": ["pages/dashboard/components/twoDMap/components/toolbar/components/settings/constant.ts"],
     "jp": "単一カラー",
     "kor": "단일 색상"
   },
   "开发模式": {
     "en": "Development Mode",
-    "$files": [
-      "pages/dashboard/components/twoDMap/components/toolbar/components/settings/constant.ts"
-    ],
+    "$files": ["pages/dashboard/components/twoDMap/components/toolbar/components/settings/constant.ts"],
     "jp": "開発モデル",
     "kor": "개발 모델"
   },
   "显示站点": {
     "en": "Display Station",
-    "$files": [
-      "pages/dashboard/components/twoDMap/components/toolbar/components/settings/constant.ts"
-    ],
+    "$files": ["pages/dashboard/components/twoDMap/components/toolbar/components/settings/constant.ts"],
     "jp": "ステーションの表示",
     "kor": "스테이션 표시"
   },
   "正常": {
     "en": "Normal",
-    "$files": [
-      "pages/dashboard/components/twoDMap/components/toolbar/components/settings/constant.ts"
-    ],
+    "$files": ["pages/dashboard/components/twoDMap/components/toolbar/components/settings/constant.ts"],
     "jp": "通常",
     "kor": "정상"
   },
   "手动": {
     "en": "Manual",
-    "$files": [
-      "pages/dashboard/components/twoDMap/components/toolbar/components/settings/constant.ts"
-    ],
+    "$files": ["pages/dashboard/components/twoDMap/components/toolbar/components/settings/constant.ts"],
     "jp": "手動",
     "kor": "수동"
   },
   "交管": {
     "en": "Traffic Control",
-    "$files": [
-      "pages/dashboard/components/twoDMap/components/toolbar/components/settings/constant.ts"
-    ],
+    "$files": ["pages/dashboard/components/twoDMap/components/toolbar/components/settings/constant.ts"],
     "jp": "交通規制",
     "kor": "교통 제어"
   },
@@ -139,25 +109,19 @@
   },
   "抱歉，您访问的页面不存在.": {
     "en": "Sorry, the page you requested cannot be found.",
-    "$files": [
-      "pages/noFound/index.tsx"
-    ],
+    "$files": ["pages/noFound/index.tsx"],
     "jp": "申し訳ありませんが、アクセスしたページは存在しません。",
     "kor": "죄송합니다. 요청하신 페이지가 존재하지 않습니다."
   },
   "返回到首页.": {
     "en": "Return to the homepage",
-    "$files": [
-      "pages/noFound/index.tsx"
-    ],
+    "$files": ["pages/noFound/index.tsx"],
     "jp": "トップページに戻る",
     "kor": "메인 화면으로 돌아갑니다."
   },
   "任务量：0个": {
     "en": "Task Quantity: 0",
-    "$files": [
-      "pages/dashboard/components/taskStats/index.tsx"
-    ],
+    "$files": ["pages/dashboard/components/taskStats/index.tsx"],
     "jp": "タスク量：0個",
     "kor": "작업량: 0건"
   },
@@ -171,7 +135,7 @@
     "kor": "완료"
   },
   "个": {
-    "en": "",
+    "en": " ",
     "$files": [
       "pages/dashboard/components/taskStats/index.tsx",
       "pages/dashboard/components/timeStats/index.tsx",
@@ -182,65 +146,49 @@
   },
   "任务量：{BinaryExpression1}个": {
     "en": "Task Quantity: {BinaryExpression1}",
-    "$files": [
-      "pages/dashboard/components/taskStats/index.tsx"
-    ],
+    "$files": ["pages/dashboard/components/taskStats/index.tsx"],
     "jp": "タスク量：{BinaryExpression1}個",
     "kor": "작업량: {BinaryExpression1}건"
   },
   "编号-": {
     "en": "ID-",
-    "$files": [
-      "pages/dashboard/components/taskStats/index.tsx"
-    ],
+    "$files": ["pages/dashboard/components/taskStats/index.tsx"],
     "jp": "ID-",
     "kor": "번호 -"
   },
   "车辆任务统计": {
     "en": "Vehicle Task Statistics",
-    "$files": [
-      "pages/dashboard/components/taskStats/index.tsx"
-    ],
+    "$files": ["pages/dashboard/components/taskStats/index.tsx"],
     "jp": "車両タスク統計",
     "kor": "차량 작업 통계"
   },
   "未完成": {
     "en": "Not Completed",
-    "$files": [
-      "pages/dashboard/components/taskStats/index.tsx"
-    ],
+    "$files": ["pages/dashboard/components/taskStats/index.tsx"],
     "jp": "未完了",
     "kor": "미완성"
   },
   "编号": {
     "en": "ID",
-    "$files": [
-      "pages/dashboard/components/timeStats/index.tsx"
-    ],
+    "$files": ["pages/dashboard/components/timeStats/index.tsx"],
     "jp": "ID",
     "kor": "번호"
   },
   "有效时间": {
     "en": "Valid Time",
-    "$files": [
-      "pages/dashboard/components/timeStats/index.tsx"
-    ],
+    "$files": ["pages/dashboard/components/timeStats/index.tsx"],
     "jp": "有効時間",
     "kor": "유효 시간"
   },
   "空闲时间": {
     "en": "Idle Time",
-    "$files": [
-      "pages/dashboard/components/timeStats/index.tsx"
-    ],
+    "$files": ["pages/dashboard/components/timeStats/index.tsx"],
     "jp": "アイドル時間",
     "kor": "유휴 시간"
   },
   "故障时间": {
     "en": "Downtime",
-    "$files": [
-      "pages/dashboard/components/timeStats/index.tsx"
-    ],
+    "$files": ["pages/dashboard/components/timeStats/index.tsx"],
     "jp": "故障時間",
     "kor": "고장 시간"
   },
@@ -255,49 +203,37 @@
   },
   "时间": {
     "en": "Time",
-    "$files": [
-      "pages/dashboard/components/timeStats/index.tsx"
-    ],
+    "$files": ["pages/dashboard/components/timeStats/index.tsx"],
     "jp": "時間",
     "kor": "시간"
   },
   "{value}个": {
-    "en": "{Value}",
-    "$files": [
-      "pages/dashboard/components/timeStats/index.tsx"
-    ],
+    "en": "{value}",
+    "$files": ["pages/dashboard/components/timeStats/index.tsx"],
     "jp": "{value}個",
     "kor": "{value} 건"
   },
   "车辆时间统计": {
     "en": "Vehicle Time Statistics",
-    "$files": [
-      "pages/dashboard/components/timeStats/index.tsx"
-    ],
+    "$files": ["pages/dashboard/components/timeStats/index.tsx"],
     "jp": "車両時間統計",
     "kor": "차량 시간 통계"
   },
   "稼动率": {
     "en": "Utilization",
-    "$files": [
-      "pages/dashboard/components/utilizationRateStats/index.tsx"
-    ],
+    "$files": ["pages/dashboard/components/utilizationRateStats/index.tsx"],
     "jp": "稼働率",
     "kor": "가동률"
   },
   "稼动率统计": {
     "en": "Utilization Statistics",
-    "$files": [
-      "pages/dashboard/components/utilizationRateStats/index.tsx"
-    ],
+    "$files": ["pages/dashboard/components/utilizationRateStats/index.tsx"],
     "jp": "稼働率統計",
     "kor": "가동률 통계"
   },
   "地图尺寸为0，请检查地图数据": {
     "en": "The map size is 0. Please check the map data",
-    "$files": [
-      "pages/dashboard/components/twoDMap/index.tsx"
-    ],
+    "$files": ["pages/dashboard/components/twoDMap/index.tsx"],
     "jp": "マップサイズが0なので、マップデータをチェックしてください",
     "kor": "지도 크기가 0입니다. 지도 데이터를 확인하십시오."
   },
@@ -321,105 +257,79 @@
   },
   "空闲": {
     "en": "Idle",
-    "$files": [
-      "pages/dashboard/components/vehicleStatus/index.tsx"
-    ],
+    "$files": ["pages/dashboard/components/vehicleStatus/index.tsx"],
     "jp": "アイドル状態",
     "kor": "유휴"
   },
   "车辆状态": {
     "en": "Vehicle Status",
-    "$files": [
-      "pages/dashboard/components/vehicleStatus/index.tsx"
-    ],
+    "$files": ["pages/dashboard/components/vehicleStatus/index.tsx"],
     "jp": "車両状態",
     "kor": "차량 상태"
   },
   "车辆编号：": {
     "en": "Vehicle ID:",
-    "$files": [
-      "pages/dashboard/components/taskStats/components/taskStatsList/index.tsx"
-    ],
+    "$files": ["pages/dashboard/components/taskStats/components/taskStatsList/index.tsx"],
     "jp": "車両ID：",
     "kor": "차량 번호:"
   },
   "消耗时间": {
     "en": "Consumed Time",
-    "$files": [
-      "pages/dashboard/components/taskStats/components/taskStatsList/index.tsx"
-    ],
+    "$files": ["pages/dashboard/components/taskStats/components/taskStatsList/index.tsx"],
     "jp": "消費時間",
     "kor": "소요 시간"
   },
   "分钟": {
     "en": "Minutes",
-    "$files": [
-      "pages/dashboard/components/taskStats/components/taskStatsList/index.tsx"
-    ],
+    "$files": ["pages/dashboard/components/taskStats/components/taskStatsList/index.tsx"],
     "jp": "分",
     "kor": "분"
   },
   "分钟/个": {
     "en": "Minutes/Units",
-    "$files": [
-      "pages/dashboard/components/taskStats/components/taskStatsList/index.tsx"
-    ],
+    "$files": ["pages/dashboard/components/taskStats/components/taskStatsList/index.tsx"],
     "jp": "分/個",
     "kor": "분 / 건"
   },
   "设置": {
     "en": "Settings",
-    "$files": [
-      "pages/dashboard/components/twoDMap/components/toolbar/index.tsx"
-    ],
+    "$files": ["pages/dashboard/components/twoDMap/components/toolbar/index.tsx"],
     "jp": "設定",
     "kor": "설치"
   },
   "搜索": {
     "en": "Search",
-    "$files": [
-      "pages/dashboard/components/twoDMap/components/toolbar/index.tsx"
-    ],
+    "$files": ["pages/dashboard/components/twoDMap/components/toolbar/index.tsx"],
     "jp": "検索",
     "kor": "검색"
   },
   "缩小": {
     "en": "Zoom Out",
-    "$files": [
-      "pages/dashboard/components/twoDMap/components/toolbar/index.tsx"
-    ],
+    "$files": ["pages/dashboard/components/twoDMap/components/toolbar/index.tsx"],
     "jp": "縮小",
     "kor": "축소"
   },
   "放大": {
     "en": "Zoom In",
-    "$files": [
-      "pages/dashboard/components/twoDMap/components/toolbar/index.tsx"
-    ],
+    "$files": ["pages/dashboard/components/twoDMap/components/toolbar/index.tsx"],
     "jp": "拡大",
     "kor": "확대"
   },
   "编号:": {
     "en": "ID:",
-    "$files": [
-      "pages/dashboard/components/twoDMap/components/vehicles/index.tsx"
-    ],
+    "$files": ["pages/dashboard/components/twoDMap/components/vehicles/index.tsx"],
     "jp": "ID：",
     "kor": "번호:"
   },
   "状态:": {
     "en": "Status:",
-    "$files": [
-      "pages/dashboard/components/twoDMap/components/vehicles/index.tsx"
-    ],
+    "$files": ["pages/dashboard/components/twoDMap/components/vehicles/index.tsx"],
     "jp": "状態：",
     "kor": "상태:"
   },
   "电量:": {
     "en": "Battery Level:",
-    "$files": [
-      "pages/dashboard/components/twoDMap/components/vehicles/index.tsx"
-    ],
+    "$files": ["pages/dashboard/components/twoDMap/components/vehicles/index.tsx"],
     "jp": "バッテリー残量：",
     "kor": "전력:"
   },
@@ -434,17 +344,13 @@
   },
   "楼层不能为空": {
     "en": "The floor cannot be empty",
-    "$files": [
-      "pages/dashboard/components/twoDMap/components/drawingBlockCard/BlockDialog.tsx"
-    ],
+    "$files": ["pages/dashboard/components/twoDMap/components/drawingBlockCard/BlockDialog.tsx"],
     "jp": "フロアを空にすることはできません",
     "kor": "층수는 비워둘 수 없습니다."
   },
   "限制数量不能为空": {
     "en": "The limit quantity cannot be empty",
-    "$files": [
-      "pages/dashboard/components/twoDMap/components/drawingBlockCard/BlockDialog.tsx"
-    ],
+    "$files": ["pages/dashboard/components/twoDMap/components/drawingBlockCard/BlockDialog.tsx"],
     "jp": "制限数量は空にすることはできません",
     "kor": "제한 수량은 비워둘 수 없습니다."
   },
@@ -459,161 +365,121 @@
   },
   "楼层": {
     "en": "Floor",
-    "$files": [
-      "pages/dashboard/components/twoDMap/components/drawingBlockCard/BlockDialog.tsx"
-    ],
+    "$files": ["pages/dashboard/components/twoDMap/components/drawingBlockCard/BlockDialog.tsx"],
     "jp": "フロア",
     "kor": "층수"
   },
   "限制数量": {
     "en": "Limit Quantity",
-    "$files": [
-      "pages/dashboard/components/twoDMap/components/drawingBlockCard/BlockDialog.tsx"
-    ],
+    "$files": ["pages/dashboard/components/twoDMap/components/drawingBlockCard/BlockDialog.tsx"],
     "jp": "数量の制限",
     "kor": "제한 수량"
   },
   "区块点位": {
     "en": "Block Waypoint",
-    "$files": [
-      "pages/dashboard/components/twoDMap/components/drawingBlockCard/BlockDialog.tsx"
-    ],
+    "$files": ["pages/dashboard/components/twoDMap/components/drawingBlockCard/BlockDialog.tsx"],
     "jp": "ブロックウェイポイント",
     "kor": "블록 위치"
   },
   "取消": {
     "en": "Cancel",
-    "$files": [
-      "pages/dashboard/components/twoDMap/components/drawingBlockCard/BlockDialog.tsx"
-    ],
+    "$files": ["pages/dashboard/components/twoDMap/components/drawingBlockCard/BlockDialog.tsx"],
     "jp": "キャンセル",
     "kor": "취소"
   },
   "确定": {
     "en": "OK",
-    "$files": [
-      "pages/dashboard/components/twoDMap/components/drawingBlockCard/BlockDialog.tsx"
-    ],
+    "$files": ["pages/dashboard/components/twoDMap/components/drawingBlockCard/BlockDialog.tsx"],
     "jp": "OK",
     "kor": "확인"
   },
   "工具": {
     "en": "Tool",
-    "$files": [
-      "pages/dashboard/components/twoDMap/components/drawingBlockCard/index.tsx"
-    ],
+    "$files": ["pages/dashboard/components/twoDMap/components/drawingBlockCard/index.tsx"],
     "jp": "ツール",
     "kor": "도구"
   },
   "拖拽": {
     "en": "Drag and Drop",
-    "$files": [
-      "pages/dashboard/components/twoDMap/components/drawingBlockCard/index.tsx"
-    ],
+    "$files": ["pages/dashboard/components/twoDMap/components/drawingBlockCard/index.tsx"],
     "jp": "ドラッグアンドドロップ",
     "kor": "드래그"
   },
   "绘图": {
     "en": "Drawing",
-    "$files": [
-      "pages/dashboard/components/twoDMap/components/drawingBlockCard/index.tsx"
-    ],
+    "$files": ["pages/dashboard/components/twoDMap/components/drawingBlockCard/index.tsx"],
     "jp": "描画",
     "kor": "매핑"
   },
   "多边形": {
     "en": "Polygon",
-    "$files": [
-      "pages/dashboard/components/twoDMap/components/drawingBlockCard/index.tsx"
-    ],
+    "$files": ["pages/dashboard/components/twoDMap/components/drawingBlockCard/index.tsx"],
     "jp": "多角形",
     "kor": "다각형"
   },
   "区块信息": {
     "en": "Block Information",
-    "$files": [
-      "pages/dashboard/components/twoDMap/components/drawingBlockCard/index.tsx"
-    ],
+    "$files": ["pages/dashboard/components/twoDMap/components/drawingBlockCard/index.tsx"],
     "jp": "ブロック情報",
     "kor": "블록 정보"
   },
   "操作": {
     "en": "Action",
-    "$files": [
-      "pages/dashboard/components/twoDMap/components/drawingBlockCard/index.tsx"
-    ],
+    "$files": ["pages/dashboard/components/twoDMap/components/drawingBlockCard/index.tsx"],
     "jp": "操作",
     "kor": "조작"
   },
   "类型": {
     "en": "Type",
-    "$files": [
-      "pages/dashboard/components/twoDMap/components/drawingBlockCard/index.tsx"
-    ],
+    "$files": ["pages/dashboard/components/twoDMap/components/drawingBlockCard/index.tsx"],
     "jp": "タイプ",
     "kor": "유형"
   },
   "编辑区块信息": {
     "en": "Edit Block Information",
-    "$files": [
-      "pages/dashboard/components/twoDMap/components/drawingBlockCard/index.tsx"
-    ],
+    "$files": ["pages/dashboard/components/twoDMap/components/drawingBlockCard/index.tsx"],
     "jp": "ブロック情報の編集",
     "kor": "블록 정보 편집"
   },
   "点": {
     "en": "Point",
-    "$files": [
-      "pages/dashboard/components/twoDMap/components/searchArea/index.tsx"
-    ],
+    "$files": ["pages/dashboard/components/twoDMap/components/searchArea/index.tsx"],
     "jp": "ポイント",
     "kor": "점"
   },
   "线": {
     "en": "Line",
-    "$files": [
-      "pages/dashboard/components/twoDMap/components/searchArea/index.tsx"
-    ],
+    "$files": ["pages/dashboard/components/twoDMap/components/searchArea/index.tsx"],
     "jp": "線",
     "kor": "선"
   },
   "请输入id": {
     "en": "Please enter the ID",
-    "$files": [
-      "pages/dashboard/components/twoDMap/components/searchArea/index.tsx"
-    ],
+    "$files": ["pages/dashboard/components/twoDMap/components/searchArea/index.tsx"],
     "jp": "IDを入力してください",
     "kor": "ID를 입력하십시오."
   },
   "关闭": {
     "en": "Close",
-    "$files": [
-      "pages/dashboard/components/twoDMap/components/searchArea/index.tsx"
-    ],
+    "$files": ["pages/dashboard/components/twoDMap/components/searchArea/index.tsx"],
     "jp": "閉じる",
     "kor": "닫기"
   },
   "台": {
     "en": "Units",
-    "$files": [
-      "pages/dashboard/components/vehicleStatus/components/vehicleStatusItem/index.tsx"
-    ],
+    "$files": ["pages/dashboard/components/vehicleStatus/components/vehicleStatusItem/index.tsx"],
     "jp": "単位",
     "kor": "대"
   },
   "地图路线": {
     "en": "Map Route",
-    "$files": [
-      "pages/dashboard/components/twoDMap/components/toolbar/components/settings/index.tsx"
-    ],
+    "$files": ["pages/dashboard/components/twoDMap/components/toolbar/components/settings/index.tsx"],
     "jp": "マップの経路",
     "kor": "지도 경로"
   },
   "绘制区块": {
     "en": "Draw Blocks",
-    "$files": [
-      "pages/dashboard/components/twoDMap/components/toolbar/components/settings/index.tsx"
-    ],
+    "$files": ["pages/dashboard/components/twoDMap/components/toolbar/components/settings/index.tsx"],
     "jp": "ブロックの描画",
     "kor": "블록 매핑"
   }
