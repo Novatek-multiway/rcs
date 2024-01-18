@@ -75,14 +75,17 @@ const TwoDMap: FC<PropsWithChildren<ITwoDMapProps>> = (props) => {
     const mapFunctionData: MapAPI.MapFunction = settingSwitchesRes.data
     const settingSwitchesData = JSON.parse(mapFunctionData.functionValue) as MapAPI.MapFunctionItem[]
     const settingSwitches = settingSwitchesData
-      .map((item) => ({
-        id: item.Id,
-        label: item.FunctionName,
-        sort: item.FunctionSort,
-        showed: item.Showed,
-        enabled: item.Enabled,
-        key: Switches.find((s) => s.label === item.FunctionName)?.key as EMapSettingsKeys
-      }))
+      .map((item) => {
+        const switchItem = Switches.find((s) => s.zhLabel === item.FunctionName)
+        return {
+          id: item.Id,
+          label: switchItem?.label as string,
+          sort: item.FunctionSort,
+          showed: item.Showed,
+          enabled: item.Enabled,
+          key: switchItem?.key as EMapSettingsKeys
+        }
+      })
       .filter((item) => item.key)
     setSettingSwitches(settingSwitches) // 存储后端开关数据
     const settings = Object.fromEntries(settingSwitches.map((switchItem) => [switchItem.key, switchItem.enabled]))

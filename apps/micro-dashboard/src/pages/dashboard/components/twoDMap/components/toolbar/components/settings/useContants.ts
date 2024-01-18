@@ -13,55 +13,68 @@ export const useConstants = () => {
   const Switches = [
     {
       key: EMapSettingsKeys.IS_LOCATION_VISIBLE,
-      label: t('显示库位')
+      label: t('显示库位'),
+      zhLabel: '显示库位'
     },
     {
       key: EMapSettingsKeys.IS_POINT_VISIBLE,
-      label: t('显示点位')
+      label: t('显示点位'),
+      zhLabel: '显示点位'
     },
     {
       key: EMapSettingsKeys.IS_DIRECTION_VISIBLE,
-      label: t('显示方向')
+      label: t('显示方向'),
+      zhLabel: '显示方向'
     },
     {
       key: EMapSettingsKeys.IS_VEHICLE_OUTLINE_VISIBLE,
-      label: t('车辆轮廓')
+      label: t('车辆轮廓'),
+      zhLabel: '车辆轮廓'
     },
     {
       key: EMapSettingsKeys.IS_VEHICLE_IMAGE_VISIBLE,
-      label: t('车辆图片')
+      label: t('车辆图片'),
+      zhLabel: '车辆图片'
     },
     {
       key: EMapSettingsKeys.IS_VEHICLE_BENCHMARK_VISIBLE,
-      label: t('基准点')
+      label: t('基准点'),
+      zhLabel: '基准点'
     },
     {
       key: EMapSettingsKeys.IS_VEHICLE_ON_WORK_VISIBLE,
-      label: t('工作车辆')
+      label: t('工作车辆'),
+      zhLabel: '工作车辆'
     },
     {
       key: EMapSettingsKeys.IS_VEHICLE_PLANNING_VISIBLE,
-      label: t('规划路线')
+      label: t('规划路线'),
+      zhLabel: '规划路线'
     },
     {
       key: EMapSettingsKeys.IS_FAULTY_VEHICLE_VISIBLE,
-      label: t('故障车辆')
+      label: t('故障车辆'),
+      zhLabel: '故障车辆'
     },
     {
       key: EMapSettingsKeys.IS_VEHICLE_DETAIL_VISIBLE,
-      label: t('车辆详情')
+      label: t('车辆详情'),
+      zhLabel: '车辆详情'
     },
     {
       key: EMapSettingsKeys.IS_VEHICLE_PLANNING_SINGLE_COLOR,
-      label: t('单一颜色')
+      label: t('单一颜色'),
+      zhLabel: '单一颜色'
     },
     {
       key: EMapSettingsKeys.IS_DEV_MODE,
-      label: t('开发模式')
+      label: t('开发模式'),
+      zhLabel: '开发模式'
     },
     {
       key: EMapSettingsKeys.IS_STATION_VISIBLE,
-      label: t('显示站点')
+      label: t('显示站点'),
+      zhLabel: '显示站点'
     }
     // {
     //   key: '',
