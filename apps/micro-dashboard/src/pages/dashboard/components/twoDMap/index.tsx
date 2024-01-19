@@ -24,7 +24,7 @@ interface ITwoDMapProps {
 // 2D地图
 const TwoDMap: FC<PropsWithChildren<ITwoDMapProps>> = (props) => {
   const { toolbarRight = 300 } = props
-  const { t } = useVoerkaI18n()
+  const { t, activeLanguage } = useVoerkaI18n()
   const {
     isLoading,
     setIsLoading,
@@ -70,6 +70,10 @@ const TwoDMap: FC<PropsWithChildren<ITwoDMapProps>> = (props) => {
     setVehiclesData(vehiclesData)
     /* ---------------------------------- 车辆数据 ---------------------------------- */
 
+    setIsLoading(false)
+  }, [])
+
+  useAsyncEffect(async () => {
     /* ---------------------------------- 开关设置 ---------------------------------- */
     const settingSwitchesRes = await getMapFunction()
     const mapFunctionData: MapAPI.MapFunction = settingSwitchesRes.data
@@ -91,9 +95,7 @@ const TwoDMap: FC<PropsWithChildren<ITwoDMapProps>> = (props) => {
     const settings = Object.fromEntries(settingSwitches.map((switchItem) => [switchItem.key, switchItem.enabled]))
     setSettings(settings)
     /* ---------------------------------- 开关设置 ---------------------------------- */
-
-    setIsLoading(false)
-  }, [])
+  }, [activeLanguage])
 
   useUpdateEffect(() => {
     if (!mapData) return
