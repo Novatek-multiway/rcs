@@ -1,5 +1,7 @@
+import { useVoerkaI18n } from '@voerkai18n/react'
 import { useUpdateEffect, useWebSocket } from 'ahooks'
 import { ReadyState } from 'ahooks/lib/useWebSocket'
+import { languageAdapter } from 'apis/adapter'
 import { ElementRef, memo, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react'
 import { useGlobalStore } from 'store'
 import { toastError } from 'utils'
@@ -49,6 +51,7 @@ const Dashboard = () => {
     setReportGetAgvStatus: state.setReportGetAgvStatus,
     setReportGetJobSumByAgv: state.setReportGetJobSumByAgv
   }))
+  const { activeLanguage } = useVoerkaI18n()
 
   const RECEIVE_MESSAGE_STRATEGY = useMemo<Record<EWebsocketMessagePath, (data: any) => void>>(
     () => ({
@@ -89,12 +92,14 @@ const Dashboard = () => {
       Object.values(EWebsocketMessagePath).forEach((p) => {
         const message = JSON.stringify({
           Path: p,
-          Interval: MESSAGE_INTERVAL_MAP[p]
+          Interval: MESSAGE_INTERVAL_MAP[p],
+          Language: languageAdapter(activeLanguage || 'zh')
         })
+
         sendMessage && sendMessage(message)
       })
     }
-  }, [readyState, sendMessage])
+  }, [readyState, sendMessage, activeLanguage])
 
   useEffect(() => {
     return () => disconnect && disconnect()

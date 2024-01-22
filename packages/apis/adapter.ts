@@ -9,7 +9,7 @@ export const languageAdapter = (language: string) => {
     kor: 'ko',
     en: 'en',
     zh: 'zh',
-    ja: 'ja'
+    jp: 'ja'
   }
   return languageMap[language] || 'zh'
 }
