@@ -24,7 +24,7 @@
     "kor": "차량"
   },
   "统计": {
-    "en": "Statistics",
+    "en": "Report",
     "$files": [
       "pages/home/index.tsx"
     ],
@@ -32,7 +32,7 @@
     "kor": "통계"
   },
   "车辆运行数据统计": {
-    "en": "Vehicle Running Data Statistics",
+    "en": "Vehicle Data Report",
     "$files": [
       "pages/home/index.tsx"
     ],
@@ -40,7 +40,7 @@
     "kor": "차량 운행 데이터 통계"
   },
   "配置": {
-    "en": "Configuration",
+    "en": "Settings",
     "$files": [
       "pages/home/index.tsx"
     ],
@@ -48,7 +48,7 @@
     "kor": "설정"
   },
   "地图配置": {
-    "en": "Map Configuration",
+    "en": "Map Editor",
     "$files": [
       "pages/home/index.tsx"
     ],
@@ -56,7 +56,7 @@
     "kor": "지도 설정"
   },
   "车型配置": {
-    "en": "Vehicle Type Configuration",
+    "en": "AGV Type",
     "$files": [
       "pages/home/index.tsx"
     ],
@@ -64,7 +64,7 @@
     "kor": "차종 배치"
   },
   "站点配置": {
-    "en": "Station Configuration",
+    "en": "Station",
     "$files": [
       "pages/home/index.tsx"
     ],
@@ -72,7 +72,7 @@
     "kor": "스테이션 설정"
   },
   "事件配置": {
-    "en": "Event Configuration",
+    "en": "Event",
     "$files": [
       "pages/home/index.tsx"
     ],
@@ -80,7 +80,7 @@
     "kor": "이벤트 설정"
   },
   "充电配置": {
-    "en": "Charging Configuration",
+    "en": "Charging",
     "$files": [
       "pages/home/index.tsx"
     ],
@@ -88,7 +88,7 @@
     "kor": "충전 설정"
   },
   "待命点配置": {
-    "en": "Standby Point Configuration",
+    "en": "Standby Point",
     "$files": [
       "pages/home/index.tsx"
     ],
@@ -96,7 +96,7 @@
     "kor": "명령 대기 지점 설정"
   },
   "调度监控系统": {
-    "en": "Robot Control System",
+    "en": "RCS",
     "$files": [
       "pages/home/index.tsx"
     ],

@@ -18,7 +18,7 @@
     "@mui/lab": "5.0.0-alpha.142",
     "@types/lodash": "^4.14.200",
     "@voerkai18n/react": "^2.0.30",
-    "@voerkai18n/runtime": "^2.0.30",
+    "@voerkai18n/runtime": "^2.1.4",
     "ahooks": "^3.7.8",
     "antd": "^5.10.3",
     "apis": "workspace:*",
