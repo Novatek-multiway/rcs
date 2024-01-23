@@ -217,7 +217,7 @@ const TimeStats: FC<PropsWithChildren<ITimeStatsProps>> = () => {
             padding: [0, 40, 0, 0]
           },
           axisLabel: {
-            formatter: t('{value}个')
+            formatter: (value: number) => value + `${t('个')}`
           },
           axisTick: {
             show: false
@@ -315,7 +315,7 @@ const TimeStats: FC<PropsWithChildren<ITimeStatsProps>> = () => {
         {
           name: t('时均任务'),
           axisLabel: {
-            formatter: t('{value}个')
+            formatter: (value: number) => value + `${t('个')}`
           }
         }
       ],
