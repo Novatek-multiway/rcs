@@ -35,7 +35,7 @@ const ExternalThemeProvider: React.FC<React.PropsWithChildren> = ({ children }) 
             styleOverrides: {
               root: {
                 '.Mui-TableHeadCell-Content': {
-                  fontSize: isLongLengthLanguage ? '0.75rem' : '0.875rem'
+                  fontSize: isLongLengthLanguage ? '0.72rem' : '0.875rem'
                 }
               }
             }

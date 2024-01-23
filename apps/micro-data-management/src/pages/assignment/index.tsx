@@ -114,7 +114,7 @@ const DataTable = () => {
           }}
           rowCount={rowCount}
           defaultColumn={{
-            minSize: 80,
+            minSize: 75,
             size: 100,
             maxSize: 200
           }}

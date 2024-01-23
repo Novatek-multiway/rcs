@@ -106,7 +106,7 @@ export const TaskColumn: (props: { refreshTable: () => void }) => MRT_ColumnDef<
               display: 'flex',
               flexWrap: 'nowrap',
               gap: '0.5rem',
-              width: '100px'
+              width: '80px'
             }}
             onClick={(e) => {
               e.stopPropagation()
