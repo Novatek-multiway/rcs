@@ -2,7 +2,7 @@ import 'normalize.css'
 import './style.css'
 
 import { useAsyncEffect } from 'ahooks'
-import { useAuth } from 'hooks'
+import { useAuth, useResponsiveAdapter } from 'hooks'
 import { RouterProvider } from 'react-router-dom'
 
 import LanguageProvider from './components/LanguageProvider'
@@ -13,13 +13,15 @@ function App() {
   useAsyncEffect(async () => {
     await globalLogin()
   }, [])
-
+  const { isAutoFitted } = useResponsiveAdapter()
   return (
-    <>
-      <LanguageProvider>
-        <RouterProvider router={RouterConfig}></RouterProvider>
-      </LanguageProvider>
-    </>
+    isAutoFitted && (
+      <>
+        <LanguageProvider>
+          <RouterProvider router={RouterConfig}></RouterProvider>
+        </LanguageProvider>
+      </>
+    )
   )
 }
 

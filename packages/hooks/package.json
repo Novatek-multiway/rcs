@@ -9,6 +9,7 @@
   "dependencies": {
     "@voerkai18n/react": "^2.0.30",
     "ahooks": "^3.7.8",
+    "autofit.js": "^3.0.7",
     "crypto-js": "^4.1.1",
     "echarts": "^5.4.3",
     "eslint-config-custom": "workspace:*",

@@ -1,6 +1,6 @@
 import { useVoerkaI18n } from '@voerkai18n/react'
 import { useAsyncEffect } from 'ahooks'
-import { useAuth, useIsLongLengthLanguage } from 'hooks'
+import { useAuth, useIsLongLengthLanguage, useResponsiveAdapter } from 'hooks'
 import * as React from 'react'
 import { BrowserRouter, Route, RouteObject, Routes } from 'react-router-dom'
 import { theme } from 'theme'
@@ -62,22 +62,28 @@ export default function App() {
   useAsyncEffect(async () => {
     await globalLogin()
   }, [])
+
+  const { isAutoFitted } = useResponsiveAdapter('body', __POWERED_BY_QIANKUN__)
   return (
-    <React.StrictMode>
-      <LanguageProvider>
-        <ExternalThemeProvider>
-          <CssBaseline />
-          <GlobalContext />
-          <ToastContainer />
-          <BrowserRouter
-            basename={__POWERED_BY_QIANKUN__ ? `/${import.meta.env.VITE_APP_NAME}` : import.meta.env.VITE_APP_BASE_PATH}
-          >
-            <React.Suspense fallback={'loading...'}>
-              <Routes>{renderRoutes(routerList)}</Routes>
-            </React.Suspense>
-          </BrowserRouter>
-        </ExternalThemeProvider>
-      </LanguageProvider>
-    </React.StrictMode>
+    (isAutoFitted || __POWERED_BY_QIANKUN__) && (
+      <React.StrictMode>
+        <LanguageProvider>
+          <ExternalThemeProvider>
+            <CssBaseline />
+            <GlobalContext />
+            <ToastContainer />
+            <BrowserRouter
+              basename={
+                __POWERED_BY_QIANKUN__ ? `/${import.meta.env.VITE_APP_NAME}` : import.meta.env.VITE_APP_BASE_PATH
+              }
+            >
+              <React.Suspense fallback={'loading...'}>
+                <Routes>{renderRoutes(routerList)}</Routes>
+              </React.Suspense>
+            </BrowserRouter>
+          </ExternalThemeProvider>
+        </LanguageProvider>
+      </React.StrictMode>
+    )
   )
 }

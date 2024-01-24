@@ -1,7 +1,5 @@
 import { useSpring } from '@react-spring/web'
-import { useVoerkaI18n } from '@voerkai18n/react'
 import { useSize, useUpdateEffect } from 'ahooks'
-import { useIsLongLengthLanguage } from 'hooks'
 import type { ElementRef, PropsWithChildren, ReactNode } from 'react'
 import React, { forwardRef, memo, useEffect, useImperativeHandle, useRef, useState } from 'react'
 
@@ -69,16 +67,12 @@ const Aside = forwardRef<
     asideOpen: open
   }))
 
-  const { activeLanguage } = useVoerkaI18n()
-  const isLongLengthLanguage = useIsLongLengthLanguage(activeLanguage)
   return (
     <>
-      <AsideLeftWrapper ref={asideRef} style={asideLeftSprings} asideWidth={isLongLengthLanguage ? '25vw' : '18.75vw'}>
+      <AsideLeftWrapper ref={asideRef} style={asideLeftSprings}>
         {left}
       </AsideLeftWrapper>
-      <AsideRightWrapper style={asideRightSprings} asideWidth={isLongLengthLanguage ? '25vw' : '18.75vw'}>
-        {right}
-      </AsideRightWrapper>
+      <AsideRightWrapper style={asideRightSprings}>{right}</AsideRightWrapper>
     </>
   )
 })

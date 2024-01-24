@@ -64,6 +64,8 @@ const Nav: FC<INavProps> = (props) => {
     }
   }, [anchorEl])
 
+  const [anchorPosition, setAnchorPosition] = useState({ top: 0, left: 0 })
+
   return (
     <>
       <Tabs value={activeTabIndex} onChange={handleChange}>
@@ -81,6 +83,8 @@ const Nav: FC<INavProps> = (props) => {
             onMouseEnter={(e) => {
               if (tab.children?.length) {
                 setAnchorEl(e.currentTarget)
+                const { top, left, height } = e.currentTarget.getBoundingClientRect()
+                setAnchorPosition({ top: top + height, left })
                 setMenuList(tab.children)
                 setMenuOpenedTabIndex(index)
               } else {
@@ -96,15 +100,21 @@ const Nav: FC<INavProps> = (props) => {
         open={menuOpen}
         disablePortal
         hideBackdrop
-        anchorEl={anchorEl}
+        anchorReference="anchorPosition"
+        anchorPosition={{ top: 0, left: 1394 }}
+        // anchorEl={anchorEl}
         onClose={handleCloseMenu}
-        anchorOrigin={{
-          vertical: 'bottom',
-          horizontal: 'left'
-        }}
+        // anchorOrigin={{
+        //   vertical: 'bottom',
+        //   horizontal: 'left'
+        // }}
         sx={{
           '&.MuiModal-root': {
-            zIndex: -1
+            zIndex: -1,
+            '& .MuiPaper-root': {
+              left: anchorPosition.left + 'px !important',
+              top: anchorPosition.top + 'px !important'
+            }
           }
         }}
       >

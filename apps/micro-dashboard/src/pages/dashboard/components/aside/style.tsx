@@ -8,7 +8,7 @@ const AsideBase = styled(animated.div)<{ asideWidth?: string }>`
   display: flex;
   flex-direction: column;
   height: 100%;
-  width: ${(props) => props.asideWidth || '18.75vw'};
+  width: ${(props) => props.asideWidth || '360px'};
   min-width: 300px;
 `
 

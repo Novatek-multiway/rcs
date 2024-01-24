@@ -555,6 +555,9 @@ importers:
       ahooks:
         specifier: ^3.7.8
         version: 3.7.8(react@18.2.0)
+      autofit.js:
+        specifier: ^3.0.7
+        version: 3.0.7
       crypto-js:
         specifier: ^4.1.1
         version: 4.2.0
@@ -8479,6 +8482,10 @@ packages:
   /attr-accept@2.2.2:
     resolution: {integrity: sha512-7prDjvt9HmqiZ0cl5CRjtS84sEyhsHP2coDkaZKRKVfCDo9s7iw7ChVmar78Gu9pC4SoR/28wFu/G5JJhTnqEg==}
     engines: {node: '>=4'}
+    dev: false
+
+  /autofit.js@3.0.7:
+    resolution: {integrity: sha512-Mu6ormG85X8vG99R/66wtiOc8roRJBrwsuDVb16Bia7NqYuf0+0SRyfh9jTbyL0mtK7JRFHVDyfxq93Yajndnw==}
     dev: false
 
   /available-typed-arrays@1.0.5:
