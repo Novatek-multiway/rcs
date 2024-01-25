@@ -10,7 +10,7 @@
     "kor": "삭제"
   },
   "确定": {
-    "en": "OK",
+    "en": "Confirm",
     "$files": ["component/delButton.tsx"],
     "jp": "OK",
     "kor": "확인"
@@ -312,13 +312,13 @@
     "kor": "제어 상태"
   },
   "载货状态": {
-    "en": "Carrying Status",
+    "en": "Load(yes or no)",
     "$files": ["pages/vehicle/index.tsx"],
     "jp": "積載状態",
     "kor": "적재 상태"
   },
   "交管车辆": {
-    "en": "Traffic AGVs",
+    "en": "Traffic",
     "$files": ["pages/vehicle/index.tsx", "pages/vehicle/components/info.tsx"],
     "jp": "交通規制車両",
     "kor": "차량 교통 제어"
@@ -336,7 +336,7 @@
     "kor": "현재 작업"
   },
   "锁定状态": {
-    "en": "Locked State",
+    "en": "Lock",
     "$files": ["pages/vehicle/index.tsx"],
     "jp": "ロック状態",
     "kor": "잠금 상태"
@@ -354,13 +354,13 @@
     "kor": "잠기지 않음"
   },
   "急停状态": {
-    "en": "Emergency Stop Status",
+    "en": "Emergency",
     "$files": ["pages/vehicle/index.tsx"],
     "jp": "急停止状態",
     "kor": "비상 정지 상태"
   },
   "配置": {
-    "en": "Configure",
+    "en": "Edit",
     "$files": ["pages/vehicle/index.tsx", "pages/configuration/c-pages/standByPoint/index.tsx"],
     "jp": "設定",
     "kor": "설정"
@@ -455,7 +455,7 @@
     "kor": "저장"
   },
   "关闭": {
-    "en": "Close",
+    "en": "Cancel",
     "$files": [
       "pages/vehicle/components/add.tsx",
       "pages/vehicle/components/edit.tsx",
@@ -530,7 +530,7 @@
     "kor": "번호"
   },
   "策略名称": {
-    "en": "Strategy Name",
+    "en": "Strategy",
     "$files": [
       "pages/configuration/c-pages/charge/index.tsx",
       "pages/configuration/c-pages/charge/components/add.tsx",
@@ -616,7 +616,7 @@
     "kor": "충전소"
   },
   "修改": {
-    "en": "Modify",
+    "en": "Edit",
     "$files": [
       "pages/configuration/c-pages/charge/index.tsx",
       "pages/configuration/c-pages/event/index.tsx",
@@ -772,7 +772,7 @@
     "kor": "명령 대기 지점 우선 순위"
   },
   "待命点类型": {
-    "en": "Type of Standby Point",
+    "en": "Standby Point",
     "$files": [
       "pages/configuration/c-pages/point/index.tsx",
       "pages/configuration/c-pages/point/components/add.tsx",
@@ -812,7 +812,7 @@
     "kor": "적용 차량"
   },
   "适用车型": {
-    "en": "Applicable AGV Type",
+    "en": "AGV Type",
     "$files": [
       "pages/configuration/c-pages/map/index.tsx",
       "pages/configuration/c-pages/map/components/add.tsx",
@@ -909,7 +909,7 @@
     "kor": "유형"
   },
   "强制充电电量": {
-    "en": "Forced Charging Capacity",
+    "en": "Battery Charging(%)",
     "$files": [
       "pages/configuration/c-pages/vehicleType/index.tsx",
       "pages/configuration/c-pages/vehicleType/components/add.tsx",
@@ -1235,7 +1235,7 @@
     "kor": "차량번호 또는 차종 중 하나를 설정해야 하며, 둘 다 설정하면 차량번호만 적용됩니다."
   },
   "修改充电策略": {
-    "en": "Modify Charging Strategy",
+    "en": "Edit Charging Strategy",
     "$files": ["pages/configuration/c-pages/charge/components/edit.tsx"],
     "jp": "充電戦略の変更",
     "kor": "충전 전략 수정"
@@ -1256,7 +1256,7 @@
     "kor": "스테이션 추가"
   },
   "修改站点": {
-    "en": "Modify Station",
+    "en": "Edit Station",
     "$files": ["pages/configuration/c-pages/point/components/edit.tsx"],
     "jp": "ステーションの変更",
     "kor": "스테이션 수정"
@@ -1292,7 +1292,7 @@
     "kor": "차종 추가"
   },
   "修改车型": {
-    "en": "Modify AGV Type",
+    "en": "Edit AGV Type",
     "$files": ["pages/configuration/c-pages/vehicleType/components/edit.tsx"],
     "jp": "車種の変更",
     "kor": "차종 수정"
@@ -1322,7 +1322,7 @@
     "kor": "이벤트 추가"
   },
   "修改事件": {
-    "en": "Modify Event",
+    "en": "Edit Event",
     "$files": ["pages/configuration/c-pages/event/components/edit.tsx"],
     "jp": "イベントの変更",
     "kor": "이벤트 수정"
@@ -1424,7 +1424,7 @@
     "kor": "경로 데이터 파일을 선택하십시오."
   },
   "修改路径文件": {
-    "en": "Modify Route File",
+    "en": "Edit Route File",
     "$files": ["pages/configuration/c-pages/map/components/edit.tsx"],
     "jp": "経路ファイルの変更",
     "kor": "경로 파일 수정"
@@ -1484,7 +1484,7 @@
     "kor": "충전"
   },
   "堵车": {
-    "en": "Traffic Congestion",
+    "en": "Traffic",
     "$files": ["pages/stats/c-pages/vehicle-operation/components/elapsedTimeRatio/index.tsx"],
     "jp": "渋滞",
     "kor": "이동 지연"
@@ -1517,7 +1517,7 @@
     "kor": "무고장률"
   },
   "交管占比": {
-    "en": "Traffic Control Proportion",
+    "en": "Traffic Control",
     "$files": ["pages/stats/c-pages/vehicle-operation/components/efficiency/index.tsx"],
     "jp": "交通規制の比率",
     "kor": "교통 제어율"
@@ -1553,7 +1553,7 @@
     "kor": "차량 운행 거리"
   },
   "无故障时间": {
-    "en": "Time Between Failure",
+    "en": "TBF",
     "$files": ["pages/stats/c-pages/vehicle-operation/components/noFaultTime/index.tsx"],
     "jp": "無故障時間",
     "kor": "무고장 시간"
