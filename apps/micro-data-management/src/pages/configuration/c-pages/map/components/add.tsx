@@ -194,6 +194,9 @@ const AddDialog: React.FC<{
         ></MaterialForm>
       </DialogContent>
       <DialogActions>
+        <Button color="warning" onClick={onClose}>
+          {t('取消')}
+        </Button>
         <Button
           color="primary"
           onClick={async () => {
@@ -226,9 +229,6 @@ const AddDialog: React.FC<{
           }}
         >
           {t('保存')}
-        </Button>
-        <Button color="warning" onClick={onClose}>
-          {t('关闭')}
         </Button>
       </DialogActions>
     </Dialog>

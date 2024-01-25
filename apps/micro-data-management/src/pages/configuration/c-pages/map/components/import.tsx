@@ -63,6 +63,9 @@ const ImportDialog = ({ open, onClose = () => {}, callback }: Props) => {
         <MaterialForm columns={1} ref={formRef} defaultValue={{}} schemaObject={schemaObject}></MaterialForm>
       </DialogContent>
       <DialogActions>
+        <Button color="warning" onClick={onClose}>
+          {t('取消')}
+        </Button>
         <Button
           color="primary"
           onClick={async () => {
@@ -83,9 +86,6 @@ const ImportDialog = ({ open, onClose = () => {}, callback }: Props) => {
           }}
         >
           {t('保存')}
-        </Button>
-        <Button color="warning" onClick={onClose}>
-          {t('关闭')}
         </Button>
       </DialogActions>
     </Dialog>

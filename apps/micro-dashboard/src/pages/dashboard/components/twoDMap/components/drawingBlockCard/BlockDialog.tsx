@@ -179,7 +179,9 @@ const BlockDialog: FC<PropsWithChildren<IBlockDialogProps>> = (props) => {
             </BlockDialogContent>
 
             <DialogActions>
-              <Button onClick={() => onClose?.()}>{t('取消')}</Button>
+              <Button color="warning" onClick={() => onClose?.()}>
+                {t('取消')}
+              </Button>
               <Button variant="contained" color="primary" disabled={isSubmitting} onClick={submitForm}>
                 {t('确定')}
               </Button>

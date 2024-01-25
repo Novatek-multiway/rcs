@@ -178,6 +178,9 @@ const InfoDialog: React.FC<{
         ></BaseTable>
       </DialogContent>
       <DialogActions>
+        <Button color="warning" onClick={onClose}>
+          {t('取消')}
+        </Button>
         <Button
           color="primary"
           onClick={async () => {
@@ -186,9 +189,6 @@ const InfoDialog: React.FC<{
           }}
         >
           {t('保存')}
-        </Button>
-        <Button color="warning" onClick={onClose}>
-          {t('关闭')}
         </Button>
       </DialogActions>
     </Dialog>

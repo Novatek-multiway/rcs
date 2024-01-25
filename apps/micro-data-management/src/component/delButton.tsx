@@ -12,7 +12,7 @@ const DelButton = (props: IDelButtonProps) => {
   const { delFn, children = t('删除'), ...restProps } = props
   const popupState = usePopupState({ variant: 'popover', popupId: 'demoMenu' })
   return (
-    <div>
+    <>
       <Button
         component="label"
         size="small"
@@ -43,7 +43,7 @@ const DelButton = (props: IDelButtonProps) => {
           </Button>
         </Box>
       </Menu>
-    </div>
+    </>
   )
 }
 

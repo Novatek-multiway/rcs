@@ -74,7 +74,7 @@ const SearchArea: FC<PropsWithChildren<ISearchAreaProps>> = () => {
         </IconButton>
         <Divider sx={{ height: 28, m: 0.5 }} orientation="vertical" />
         <Button size="small" color="warning" onClick={() => setSearchAreaVisible(false)}>
-          {t('关闭')}
+          {t('取消')}
         </Button>
       </Paper>
     </SearchAreaWrapper>

@@ -34,7 +34,7 @@ const Vehicle = () => {
       return {
         paddingX: 0.5,
         minWidth: 36,
-        width: '45%',
+        width: '50%',
         whiteSpace: 'nowrap'
       }
     } else if (activeLanguage === 'jp') {

@@ -219,11 +219,11 @@ const AddTaskDialog: FC<{
                     ></TextField>
                   </div>
                   <DialogActions>
-                    <Button variant="contained" size="small" onClick={handleSave}>
-                      {t('保存')}
-                    </Button>
                     <Button size="small" color="error" onClick={() => setActionPointList([])}>
                       {t('清空')}
+                    </Button>
+                    <Button variant="contained" size="small" onClick={handleSave}>
+                      {t('保存')}
                     </Button>
                   </DialogActions>
                 </Paper>
