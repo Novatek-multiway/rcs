@@ -59,7 +59,7 @@ export default {
   '58': 'IP',
   '59': 'Group',
   '60': 'Confirm',
-  '61': 'Close',
+  '61': 'Cancel',
   '62': 'Edit AGV Info',
   '63': 'Route Type',
   '64': 'Route ID',

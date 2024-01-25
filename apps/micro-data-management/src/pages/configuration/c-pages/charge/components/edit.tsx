@@ -91,6 +91,92 @@ const EditDialog: React.FC<{
         type: 'select',
         items: ruleCarrierData
       },
+
+      {
+        name: 'startHour',
+        label: t('开始小时'),
+
+        type: 'number',
+        inputProps: {
+          min: 0,
+          max: 24,
+          onChange: (e: any) => {
+            if (e.target.value < 0) e.target.value = 0
+            if (e.target.value > 24) e.target.value = 24
+          }
+        },
+        endAdornment: (
+          <InputAdornment
+            position="start"
+            sx={{
+              '&::after': {
+                content: '"—"',
+                position: 'relative',
+                left: '45px'
+              }
+            }}
+          >
+            h
+          </InputAdornment>
+        )
+      },
+      {
+        name: 'startMinute',
+        label: t('开始分钟'),
+        type: 'number',
+        inputProps: {
+          min: 0,
+          max: 59,
+          onChange: (e: any) => {
+            if (e.target.value < 0) e.target.value = 0
+            if (e.target.value > 59) e.target.value = 59
+          }
+        },
+        endAdornment: <InputAdornment position="start">m</InputAdornment>
+      },
+      {
+        name: 'endHour',
+        label: t('结束小时'),
+        type: 'number',
+        inputProps: {
+          min: 0,
+          max: 24,
+          onChange: (e: any) => {
+            if (e.target.value < 0) e.target.value = 0
+            if (e.target.value > 24) e.target.value = 24
+          }
+        },
+        endAdornment: (
+          <InputAdornment
+            position="start"
+            sx={{
+              '&::after': {
+                content: '"—"',
+                position: 'relative',
+                left: '45px'
+              }
+            }}
+          >
+            h
+          </InputAdornment>
+        )
+      },
+
+      {
+        name: 'endMinute',
+        label: t('结束分钟'),
+        type: 'number',
+        inputProps: {
+          min: 0,
+          max: 59,
+          onChange: (e: any) => {
+            if (e.target.value < 0) e.target.value = 0
+            if (e.target.value > 59) e.target.value = 59
+          }
+        },
+        endAdornment: <InputAdornment position="start">m</InputAdornment>
+      },
+
       {
         name: 'priority',
         label: t('任务优先级'),
@@ -112,62 +198,6 @@ const EditDialog: React.FC<{
             if (e.target.value < 0) e.target.value = 0
           }
         }
-      },
-      {
-        name: 'startHour',
-        label: t('开始小时'),
-        type: 'number',
-        inputProps: {
-          min: 0,
-          max: 24,
-          onChange: (e: any) => {
-            if (e.target.value < 0) e.target.value = 0
-            if (e.target.value > 24) e.target.value = 24
-          }
-        },
-        endAdornment: <InputAdornment position="start">h</InputAdornment>
-      },
-      {
-        name: 'endHour',
-        label: t('结束小时'),
-        type: 'number',
-        inputProps: {
-          min: 0,
-          max: 24,
-          onChange: (e: any) => {
-            if (e.target.value < 0) e.target.value = 0
-            if (e.target.value > 24) e.target.value = 24
-          }
-        },
-        endAdornment: <InputAdornment position="start">h</InputAdornment>
-      },
-      {
-        name: 'startMinute',
-        label: t('起始分钟'),
-        type: 'number',
-        inputProps: {
-          min: 0,
-          max: 59,
-          onChange: (e: any) => {
-            if (e.target.value < 0) e.target.value = 0
-            if (e.target.value > 59) e.target.value = 59
-          }
-        },
-        endAdornment: <InputAdornment position="start">m</InputAdornment>
-      },
-      {
-        name: 'endMinute',
-        label: t('结束分钟'),
-        type: 'number',
-        inputProps: {
-          min: 0,
-          max: 59,
-          onChange: (e: any) => {
-            if (e.target.value < 0) e.target.value = 0
-            if (e.target.value > 59) e.target.value = 59
-          }
-        },
-        endAdornment: <InputAdornment position="start">m</InputAdornment>
       },
 
       {
@@ -259,7 +289,7 @@ const EditDialog: React.FC<{
   }, [row?.completeType])
 
   return (
-    <Dialog maxWidth="md" open={open} onClose={onClose}>
+    <Dialog maxWidth="sm" open={open} onClose={onClose}>
       <DialogTitle>{t('修改充电策略')}</DialogTitle>
       <DialogContent
         sx={{
@@ -267,7 +297,7 @@ const EditDialog: React.FC<{
         }}
       >
         <MaterialForm
-          columns={3}
+          columns={2}
           ref={formRef}
           defaultValue={{
             ...row,

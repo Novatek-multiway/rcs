@@ -1159,7 +1159,7 @@
     "jp": "終了時間",
     "kor": "종료 시간"
   },
-  "起始分钟": {
+  "开始分钟": {
     "en": "Start Minute",
     "$files": [
       "pages/configuration/c-pages/charge/components/add.tsx",
