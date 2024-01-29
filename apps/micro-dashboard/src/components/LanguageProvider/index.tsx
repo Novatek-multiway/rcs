@@ -3,6 +3,7 @@ import { useUpdateEffect } from 'ahooks'
 import type { FC, PropsWithChildren } from 'react'
 import { memo } from 'react'
 import { useGlobalStore } from 'store'
+import { setMRTL } from 'ui/src/muiTable/localization'
 
 import { i18nScope } from '@/languages'
 
@@ -12,6 +13,7 @@ const LanguageProviderInternal: FC<PropsWithChildren> = (props) => {
 
   useUpdateEffect(() => {
     changeLanguage(language)
+    setMRTL(language)
   }, [language])
   return props.children
 }

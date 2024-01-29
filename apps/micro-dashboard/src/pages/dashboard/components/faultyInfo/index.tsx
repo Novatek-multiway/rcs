@@ -2,9 +2,10 @@ import { useVoerkaI18n } from '@voerkai18n/react'
 import { useAsyncEffect, useUpdateEffect } from 'ahooks'
 import { getAgvAbnormal } from 'apis'
 import type { FC, PropsWithChildren } from 'react'
-import React, { memo, useMemo, useState } from 'react'
+import React, { memo, useEffect, useMemo, useState } from 'react'
 import AutoSizer from 'react-virtualized-auto-sizer'
 import { MaterialReactTable, MRT_ColumnDef, Panel, useMaterialReactTable } from 'ui'
+import { mRTL, mRTLEmitter } from 'ui/src/muiTable/localization'
 
 import { useWebsocketStore } from '../../store/websocket'
 
@@ -21,6 +22,13 @@ const ERROR_COLOR = 'rgba(247, 86, 79, 0.7)'
 const FaultyInfoTable = memo((props: { data: FaultyInfoItem[]; maxHeight?: number }) => {
   const { data, maxHeight } = props
   const { t, activeLanguage } = useVoerkaI18n()
+  const [currentMRTL, setCurrentMRTL] = useState(mRTL)
+
+  useEffect(() => {
+    mRTLEmitter.subscribe((mRTL) => {
+      setCurrentMRTL(mRTL)
+    })
+  }, [])
   //should be memoized or stable
   const columns = useMemo<MRT_ColumnDef<FaultyInfoItem>[]>(
     () => [
@@ -101,7 +109,8 @@ const FaultyInfoTable = memo((props: { data: FaultyInfoItem[]; maxHeight?: numbe
         fontSize: '13px',
         textAlign: 'center'
       }
-    }
+    },
+    localization: currentMRTL
   })
 
   return <MaterialReactTable table={table} />

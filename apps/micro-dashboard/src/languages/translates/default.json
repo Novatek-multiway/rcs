@@ -207,12 +207,6 @@
     "jp": "時間",
     "kor": "시간"
   },
-  "{value}个": {
-    "en": "{Value}",
-    "$files": ["pages/dashboard/components/timeStats/index.tsx"],
-    "jp": "{value}個",
-    "kor": "{value} 건"
-  },
   "车辆时间统计": {
     "en": "AGV Time Statistics",
     "$files": ["pages/dashboard/components/timeStats/index.tsx"],
@@ -459,12 +453,6 @@
     "jp": "IDを入力してください",
     "kor": "ID를 입력하십시오."
   },
-  "关闭": {
-    "en": "Cancel",
-    "$files": ["pages/dashboard/components/twoDMap/components/searchArea/index.tsx"],
-    "jp": "閉じる",
-    "kor": "닫기"
-  },
   "台": {
     "en": "Units",
     "$files": ["pages/dashboard/components/vehicleStatus/components/vehicleStatusItem/index.tsx"],
@@ -482,5 +470,29 @@
     "$files": ["pages/dashboard/components/twoDMap/components/toolbar/components/settings/index.tsx"],
     "jp": "ブロックの描画",
     "kor": "블록 매핑"
+  },
+  "车体名称": {
+    "en": "Vehicle",
+    "jp": "車両名",
+    "kor": "로봇명",
+    "$files": ["pages/dashboard/components/faultyInfo/index.tsx"]
+  },
+  "异常码": {
+    "en": "Abnormal Code",
+    "jp": "異常コード",
+    "kor": "문제 코드",
+    "$files": ["pages/dashboard/components/faultyInfo/index.tsx"]
+  },
+  "异常明细": {
+    "en": "Abnormal Detail",
+    "jp": "異常リスト",
+    "kor": "문제 내역",
+    "$files": ["pages/dashboard/components/faultyInfo/index.tsx"]
+  },
+  "异常信息": {
+    "en": "Abnormal Info",
+    "jp": "異常リスト",
+    "kor": "문제 정보",
+    "$files": ["pages/dashboard/components/faultyInfo/index.tsx"]
   }
 }
