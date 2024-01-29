@@ -129,6 +129,7 @@ const Settings: FC<PropsWithChildren<ISettingsProps>> = (props) => {
           }
         }}
         keepMounted
+        variant="persistent"
       >
         <Box
           sx={{
