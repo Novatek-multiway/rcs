@@ -7,7 +7,8 @@ export enum EWebsocketMessagePath {
   ReportGetTimeSum = 'Report/GetTimeSum', // 获取时间统计
   ReportGetAgvThroughs = 'Report/GetAgvThroughs', // 获取稼动率统计
   ReportGetAgvStatus = 'Report/GetAgvStatus', // 获取车辆状态统计
-  ReportGetJobSumByAgv = 'Report/GetJobSumByAgv' // 获取车辆任务统计
+  ReportGetJobSumByAgv = 'Report/GetJobSumByAgv', // 获取车辆任务统计
+  ReportGetAgvAbnormal = 'Report/GetCarrierAbnormal' // 获取车辆异常信息
 }
 
 type TWebsocketState = {
@@ -17,6 +18,7 @@ type TWebsocketState = {
   [EWebsocketMessagePath.ReportGetAgvThroughs]: ReportAPI.Through | null
   [EWebsocketMessagePath.ReportGetAgvStatus]: ReportAPI.CarrierStatus | null
   [EWebsocketMessagePath.ReportGetJobSumByAgv]: ReportAPI.AgvTaskRoot | null
+  [EWebsocketMessagePath.ReportGetAgvAbnormal]: ReportAPI.AbnormalCarrier[] | null
 }
 
 type TWebsocketActions = {
@@ -28,6 +30,7 @@ type TWebsocketActions = {
   setReportGetAgvThroughs: (agvThroughs: TWebsocketState['Report/GetAgvThroughs']) => void
   setReportGetAgvStatus: (agvStatus: TWebsocketState['Report/GetAgvStatus']) => void
   setReportGetJobSumByAgv: (jobSumByAgv: TWebsocketState['Report/GetJobSumByAgv']) => void
+  setReportGetAgvAbnormal: (agvAbnormal: TWebsocketState['Report/GetCarrierAbnormal']) => void
 }
 
 export const useWebsocketStore = createWithEqualityFn<TWebsocketState & TWebsocketActions>(
@@ -38,6 +41,7 @@ export const useWebsocketStore = createWithEqualityFn<TWebsocketState & TWebsock
     'Report/GetAgvThroughs': null,
     'Report/GetAgvStatus': null,
     'Report/GetJobSumByAgv': null,
+    'Report/GetCarrierAbnormal': null,
     setReportGetOnLineCarriers: (onlineCarriers: TWebsocketState['Report/GetOnLineCarriers']) =>
       set({ 'Report/GetOnLineCarriers': onlineCarriers }),
     setReportGetHomeChargeGoodsStations: (chargeGoodsStations: TWebsocketState['Report/GetHomeChargeGoodsStations']) =>
@@ -48,7 +52,9 @@ export const useWebsocketStore = createWithEqualityFn<TWebsocketState & TWebsock
     setReportGetAgvStatus: (agvStatus: TWebsocketState['Report/GetAgvStatus']) =>
       set({ 'Report/GetAgvStatus': agvStatus }),
     setReportGetJobSumByAgv: (jobSumByAgv: TWebsocketState['Report/GetJobSumByAgv']) =>
-      set({ 'Report/GetJobSumByAgv': jobSumByAgv })
+      set({ 'Report/GetJobSumByAgv': jobSumByAgv }),
+    setReportGetAgvAbnormal: (agvAbnormal: TWebsocketState['Report/GetCarrierAbnormal']) =>
+      set({ 'Report/GetCarrierAbnormal': agvAbnormal })
   }),
   shallow
 )

@@ -48,6 +48,15 @@ export const getTaskReport = () =>
   })
 
 /**
+ * @description: 车辆异常信息
+ * @return {*}
+ */
+export const getAgvAbnormal = () =>
+  request<IResponse<any>>('/Report/GetCarrierAbnormal', {
+    method: 'GET'
+  })
+
+/**
  * @description: 获取车辆电量统计
  * @return {*}
  */

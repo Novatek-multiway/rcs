@@ -9,6 +9,7 @@ import { toastError } from 'utils'
 import { SystemConfigContext } from '@/components/SystemConfig'
 
 import Aside, { IAsideProps } from './components/aside'
+import FaultyInfo from './components/faultyInfo'
 import TaskStats from './components/taskStats'
 import TimeStats from './components/timeStats'
 import TwoDMap from './components/twoDMap'
@@ -27,7 +28,8 @@ const MESSAGE_INTERVAL_MAP = {
   [EWebsocketMessagePath.ReportGetTimeSum]: 1000,
   [EWebsocketMessagePath.ReportGetAgvThroughs]: 1000,
   [EWebsocketMessagePath.ReportGetAgvStatus]: 1000,
-  [EWebsocketMessagePath.ReportGetJobSumByAgv]: 1000
+  [EWebsocketMessagePath.ReportGetJobSumByAgv]: 1000,
+  [EWebsocketMessagePath.ReportGetAgvAbnormal]: 1000
 }
 
 const Dashboard = () => {
@@ -42,14 +44,16 @@ const Dashboard = () => {
     setReportGetTimeSum,
     setReportGetAgvThroughs,
     setReportGetAgvStatus,
-    setReportGetJobSumByAgv
+    setReportGetJobSumByAgv,
+    setReportGetAgvAbnormal
   } = useWebsocketStore((state) => ({
     setReportGetOnLineCarriers: state.setReportGetOnLineCarriers,
     setReportGetHomeChargeGoodsStations: state.setReportGetHomeChargeGoodsStations,
     setReportGetTimeSum: state.setReportGetTimeSum,
     setReportGetAgvThroughs: state.setReportGetAgvThroughs,
     setReportGetAgvStatus: state.setReportGetAgvStatus,
-    setReportGetJobSumByAgv: state.setReportGetJobSumByAgv
+    setReportGetJobSumByAgv: state.setReportGetJobSumByAgv,
+    setReportGetAgvAbnormal: state.setReportGetAgvAbnormal
   }))
   const { activeLanguage } = useVoerkaI18n()
 
@@ -62,7 +66,8 @@ const Dashboard = () => {
       [EWebsocketMessagePath.ReportGetTimeSum]: (data: any) => setReportGetTimeSum(JSON.parse(data.Model)),
       [EWebsocketMessagePath.ReportGetAgvThroughs]: (data: any) => setReportGetAgvThroughs(JSON.parse(data.Model)),
       [EWebsocketMessagePath.ReportGetAgvStatus]: (data: any) => setReportGetAgvStatus(JSON.parse(data.Model)),
-      [EWebsocketMessagePath.ReportGetJobSumByAgv]: (data: any) => setReportGetJobSumByAgv(JSON.parse(data.Model))
+      [EWebsocketMessagePath.ReportGetJobSumByAgv]: (data: any) => setReportGetJobSumByAgv(JSON.parse(data.Model)),
+      [EWebsocketMessagePath.ReportGetAgvAbnormal]: (data: any) => setReportGetAgvAbnormal(JSON.parse(data.Model))
     }),
     [
       setReportGetOnLineCarriers,
@@ -70,7 +75,8 @@ const Dashboard = () => {
       setReportGetTimeSum,
       setReportGetAgvThroughs,
       setReportGetAgvStatus,
-      setReportGetJobSumByAgv
+      setReportGetJobSumByAgv,
+      setReportGetAgvAbnormal
     ]
   )
   const systemConfig = useContext(SystemConfigContext)
@@ -148,6 +154,7 @@ const Dashboard = () => {
             <>
               <VehicleStatus />
               <TaskStats />
+              <FaultyInfo />
             </>
           }
           onSizeChange={handleSizeChange}

@@ -432,6 +432,20 @@ declare namespace ReportAPI {
     usageCount: number
     workAreaTypeStr: string
   }
+
+  interface AbnormalCarrier {
+    id: number
+    carrier: number
+    status: number
+    duration: number
+    startTime: string
+    endTime: any
+    errorCode: number
+    errorDesc: string
+    createTime: string
+    updateTime: string
+    type: number
+  }
 }
 
 declare namespace TrafficAPI {

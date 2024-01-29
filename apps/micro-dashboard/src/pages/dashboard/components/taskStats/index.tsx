@@ -3,11 +3,17 @@ import { useAsyncEffect, useUpdateEffect } from 'ahooks'
 import { getTaskReport } from 'apis'
 import { echarts, useEcharts, useIsLongLengthLanguage } from 'hooks'
 import type { FC, PropsWithChildren } from 'react'
-import React, { memo, useCallback, useMemo, useRef, useState } from 'react'
+import React, {
+  memo,
+  useCallback,
+  // useMemo,
+  useRef,
+  useState
+} from 'react'
 import { Panel } from 'ui'
 
 import { useWebsocketStore } from '../../store/websocket'
-import TaskStatsList from './components/taskStatsList'
+// import TaskStatsList from './components/taskStatsList'
 import { TaskStatusWrapper } from './style'
 
 interface ITaskStatsProps {}
@@ -90,17 +96,17 @@ const TaskStats: FC<PropsWithChildren<ITaskStatsProps>> = () => {
   }, [isLongLengthLanguage])
 
   const [taskStatsData, setTaskStatsData] = useState<ReportAPI.AgvTaskRoot>()
-  const taskStatsList = useMemo(
-    () =>
-      taskStatsData?.agvList
-        ?.map((item) => ({
-          id: item.id,
-          finishedCount: item.taskQty,
-          time: item.consumeTime
-        }))
-        .sort((a, b) => b.finishedCount - a.finishedCount) || [],
-    [taskStatsData]
-  )
+  // const taskStatsList = useMemo(
+  //   () =>
+  //     taskStatsData?.agvList
+  //       ?.map((item) => ({
+  //         id: item.id,
+  //         finishedCount: item.taskQty,
+  //         time: item.consumeTime
+  //       }))
+  //       .sort((a, b) => b.finishedCount - a.finishedCount) || [],
+  //   [taskStatsData]
+  // )
 
   useAsyncEffect(async () => {
     const res = await getTaskReport()
@@ -142,7 +148,7 @@ const TaskStats: FC<PropsWithChildren<ITaskStatsProps>> = () => {
     <Panel
       title={t('车辆任务统计')}
       wrapperStyle={{
-        height: '71.5%'
+        height: '36.5%'
       }}
       contentStyle={{
         padding: 0
@@ -161,10 +167,10 @@ const TaskStats: FC<PropsWithChildren<ITaskStatsProps>> = () => {
             {t('个')}
           </div>
         </div>
-        <div style={{ width: '100%', height: '40%' }} ref={el}></div>
-        <div style={{ width: '100%', flex: 1 }}>
+        <div style={{ width: '100%', height: '100%' }} ref={el}></div>
+        {/* <div style={{ width: '100%', flex: 1 }}>
           <TaskStatsList data={taskStatsList} />
-        </div>
+        </div> */}
       </TaskStatusWrapper>
     </Panel>
   )
