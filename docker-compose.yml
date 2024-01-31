@@ -1,42 +1,15 @@
 version: '3'
 services: # 集合
   rcs-web:
-    restart: always # 重启方式
+    image: registry.cn-shenzhen.aliyuncs.com/mwlogistics/frontend-rcs:standard-1.0.10
+    restart: always
+    depends_on:
+      - rcs
     ports:
       - 6990:80
-      # - 6991:6991
-      # - 6992:6992
-      - 6993:8080
-    build:
-      # args:
-      #   - APP=main
-      context: .
-      dockerfile: Dockerfile
-    container_name: rcs-web # 容器名称
-    image: registry.cn-shenzhen.aliyuncs.com/multiway/rcs_web:latest
-    # volumes: # 卷挂载路径
-    #   - /Users/luyao/works/mw/wcs/wcs-monorepo-frontend/dist/:/source/dist/
-
-  # rcs-micro-dashboard:
-  #   restart: always # 重启方式
-  #   ports:
-  #     - 6992:80
-  #     - 6993:8080
-  #   build:
-  #     args:
-  #       - APP=micro-dashboard
-  #     context: .
-  #     dockerfile: Dockerfile
-  #   container_name: rcs-micro-dashboard # 容器名称
-
-  # rcs-micro-data-management:
-  #   restart: always # 重启方式
-  #   ports:
-  #     - 6994:80
-  #     - 6995:8080
-  #   build:
-  #     args:
-  #       - APP=micro-data-management
-  #     context: .
-  #     dockerfile: Dockerfile
-  #   container_name: rcs-micro-data-management # 容器名称
+      - 6991:8080
+    volumes:
+      - /opt/store/logistics/rcs-web/nginxWebUI:/home/nginxWebUI
+      - /opt/store/logistics/rcs-web/config.json:/usr/share/nginx/html/module/micro-dashboard/config.json
+    networks:
+      - multiway_logistics
