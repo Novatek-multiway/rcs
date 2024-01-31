@@ -116,47 +116,49 @@ const Settings: FC<PropsWithChildren<ISettingsProps>> = (props) => {
   return (
     <div>
       <SettingIcon fontSize="medium" sx={{ cursor: 'pointer' }} onClick={() => setIsSettingsDrawerOpen(true)} />
-      <Drawer
-        anchor="right"
-        open={isSettingsDrawerOpen}
-        onClose={() => {
-          setIsSettingsDrawerOpen(false)
-        }}
-        sx={{
-          '& .MuiDrawer-paper': {
-            borderRadius: '10px 0 0 10px',
-            width: '400px'
-          }
-        }}
-        keepMounted
-        variant="persistent"
-      >
-        <Box
-          sx={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            padding: '16px',
-            width: '100%',
-            lineHeight: '2'
+      {isSettingsDrawerOpen && (
+        <Drawer
+          anchor="right"
+          open={isSettingsDrawerOpen}
+          onClose={() => {
+            setIsSettingsDrawerOpen(false)
           }}
+          sx={{
+            '& .MuiDrawer-paper': {
+              borderRadius: '10px 0 0 10px',
+              width: '400px'
+            }
+          }}
+          keepMounted
+          variant="persistent"
         >
-          <span>{SettingTitleMessages['setting'][currentLanguage]}</span>
-          <CloseOutlined sx={{ cursor: 'pointer' }} onClick={() => setIsSettingsDrawerOpen(false)} />
-        </Box>
-        <Divider />
-        {toggleSettings.map((setting) => (
           <Box
             sx={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
               padding: '16px',
               width: '100%',
               lineHeight: '2'
             }}
           >
-            <SettingItem {...setting} />
+            <span>{SettingTitleMessages['setting'][currentLanguage]}</span>
+            <CloseOutlined sx={{ cursor: 'pointer' }} onClick={() => setIsSettingsDrawerOpen(false)} />
           </Box>
-        ))}
-      </Drawer>
+          <Divider />
+          {toggleSettings.map((setting) => (
+            <Box
+              sx={{
+                padding: '16px',
+                width: '100%',
+                lineHeight: '2'
+              }}
+            >
+              <SettingItem {...setting} />
+            </Box>
+          ))}
+        </Drawer>
+      )}
     </div>
   )
 }
